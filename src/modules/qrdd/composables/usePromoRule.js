@@ -189,7 +189,7 @@ export function usePromoRule() {
   ]
 
   function exportFiltered() {
-    const rows = filtered.value.length ? filtered.value : items.value
+    const rows = searchQuery.value ? filtered.value : items.value
     if (!rows.length) {
       toast.error('No data to export')
       return
