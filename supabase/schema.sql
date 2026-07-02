@@ -365,10 +365,12 @@ drop policy if exists "qris_history_own_delete" on public.qris_history;
 create policy "qris_history_own_delete" on public.qris_history
   for delete to authenticated using (auth.uid() = user_id);
 
--- insert_qris_history(): prune-then-insert in one transaction. Reads auth.uid()
+-- insert_qris_history(): insert-then-prune in one transaction. Reads auth.uid()
 -- itself (RPC is security definer, so RLS is bypassed; we enforce ownership
--- manually). Prunes this user's rows older than 14 days OR outside the latest
--- 50, then inserts and returns the new row.
+-- manually). Inserts the new row first, then deletes this user's rows older
+-- than 14 days OR outside the latest 50. Pruning after the insert is what makes
+-- the cap exactly 50 — prune-before-insert left 51 (off-by-one). The row just
+-- inserted is the newest, so it is always retained by the top-50 filter.
 create or replace function public.insert_qris_history(
   p_type          text,
   p_qr_value      text,
@@ -390,6 +392,12 @@ begin
     raise exception 'not authenticated';
   end if;
 
+  insert into public.qris_history
+    (user_id, type, qr_value, qr_data_url, merchant_name, mpan, merchant_id, amount)
+  values
+    (v_user, p_type, p_qr_value, p_qr_data_url, p_merchant_name, p_mpan, p_merchant_id, p_amount)
+  returning * into v_row;
+
   delete from public.qris_history
    where user_id = v_user
      and (
@@ -401,12 +409,6 @@ begin
           limit 50
        )
      );
-
-  insert into public.qris_history
-    (user_id, type, qr_value, qr_data_url, merchant_name, mpan, merchant_id, amount)
-  values
-    (v_user, p_type, p_qr_value, p_qr_data_url, p_merchant_name, p_mpan, p_merchant_id, p_amount)
-  returning * into v_row;
 
   return v_row;
 end;
