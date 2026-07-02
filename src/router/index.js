@@ -40,6 +40,12 @@ const routes = [
     meta: { requiresAdmin: true, label: 'Admin', icon: 'admin_panel_settings' },
     component: () => import('../modules/admin/views/AdminView.vue'),
   },
+  {
+    path: '/profile',
+    name: 'profile',
+    meta: { label: 'Profile', icon: 'account_circle' },
+    component: () => import('../modules/profile/views/ProfileView.vue'),
+  },
 ]
 
 const router = createRouter({

@@ -57,10 +57,15 @@
       </nav>
 
       <div class="sp-sidebar__footer">
-        <div class="sp-sidebar__user">
+        <router-link
+          to="/profile"
+          class="sp-sidebar__user"
+          :class="{ 'sp-sidebar__user--active': isActive('/profile') }"
+          @click="sidebarOpen = false"
+        >
           <span class="material-symbols-outlined">account_circle</span>
           <span class="sp-sidebar__user-name">{{ profile?.username || session?.user?.email }}</span>
-        </div>
+        </router-link>
         <button class="sp-sidebar__source sp-sidebar__logout" @click="handleLogout">
           <span class="material-symbols-outlined">logout</span>
           <span>Sign out</span>
@@ -113,7 +118,8 @@ const sidebarOpen = ref(false)
 
 const currentModule = computed(() =>
   modules.find(m => route.path.startsWith(m.path)) ||
-  (route.path.startsWith('/admin') ? { label: 'Admin' } : undefined),
+  (route.path.startsWith('/admin') ? { label: 'Admin' } : undefined) ||
+  (route.path.startsWith('/profile') ? { label: 'Profile' } : undefined),
 )
 
 function isActive(path) {
@@ -320,6 +326,14 @@ watch(() => route.path, () => {
   font-size: 12px;
   font-weight: 600;
   color: var(--color-gray-900, #1a1a2e);
+  text-decoration: none;
+  border-radius: 10px;
+  transition: background 0.2s ease;
+}
+
+.sp-sidebar__user:hover,
+.sp-sidebar__user--active {
+  background: rgba(0, 0, 0, 0.03);
 }
 
 .sp-sidebar__user .material-symbols-outlined {

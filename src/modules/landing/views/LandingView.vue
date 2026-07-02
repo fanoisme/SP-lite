@@ -29,12 +29,6 @@
         <p class="landing__feature-desc">{{ f.desc }}</p>
       </LiCard>
     </section>
-
-    <footer class="landing__footer">
-      <a href="https://github.com/fanoisme/SP-lite" target="_blank" rel="noopener">
-        Source on GitHub
-      </a>
-    </footer>
   </div>
 </template>
 
@@ -165,17 +159,4 @@ function scrollToFeatures() {
   line-height: 1.5;
 }
 
-.landing__footer {
-  text-align: center;
-}
-
-.landing__footer a {
-  color: var(--color-gray-500, #999999);
-  font-size: var(--text-xs, 14px);
-  text-decoration: none;
-}
-
-.landing__footer a:hover {
-  color: var(--color-gray-900, #1a1a2e);
-}
 </style>

@@ -94,6 +94,38 @@ async function signOut() {
   profile.value = null
 }
 
+async function updateFullName(fullName) {
+  const userId = session.value?.user?.id
+  if (!userId) throw new Error('Tidak ada sesi aktif')
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ full_name: fullName.trim() })
+    .eq('id', userId)
+    .select()
+    .single()
+
+  if (error) throw error
+  profile.value = data
+}
+
+async function changePassword({ currentPassword, newPassword }) {
+  const email = session.value?.user?.email
+  if (!email) throw new Error('Tidak ada sesi aktif')
+
+  // Supabase's updateUser() doesn't ask for the current password, so it's
+  // verified explicitly here first (mirrors SO-Platform's change-password
+  // flow) rather than letting anyone with an open session set a new one.
+  const { error: reauthError } = await supabase.auth.signInWithPassword({
+    email,
+    password: currentPassword,
+  })
+  if (reauthError) throw new Error('Password saat ini salah')
+
+  const { error } = await supabase.auth.updateUser({ password: newPassword })
+  if (error) throw error
+}
+
 export function useAuth() {
   return {
     session,
@@ -106,5 +138,7 @@ export function useAuth() {
     signInWithMagicLink,
     signUp,
     signOut,
+    updateFullName,
+    changePassword,
   }
 }
