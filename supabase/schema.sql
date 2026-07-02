@@ -368,9 +368,7 @@ create policy "qris_history_own_delete" on public.qris_history
 -- insert_qris_history(): insert-then-prune in one transaction. Reads auth.uid()
 -- itself (RPC is security definer, so RLS is bypassed; we enforce ownership
 -- manually). Inserts the new row first, then deletes this user's rows older
--- than 14 days OR outside the latest 50. Pruning after the insert is what makes
--- the cap exactly 50 — prune-before-insert left 51 (off-by-one). The row just
--- inserted is the newest, so it is always retained by the top-50 filter.
+-- than 14 days (no row-count cap).
 create or replace function public.insert_qris_history(
   p_type          text,
   p_qr_value      text,
@@ -398,17 +396,10 @@ begin
     (v_user, p_type, p_qr_value, p_qr_data_url, p_merchant_name, p_mpan, p_merchant_id, p_amount)
   returning * into v_row;
 
+  -- Only prune by age — no row-count cap.
   delete from public.qris_history
    where user_id = v_user
-     and (
-       created_at < now() - interval '14 days'
-       or id not in (
-         select id from public.qris_history
-          where user_id = v_user
-          order by created_at desc
-          limit 50
-       )
-     );
+     and created_at < now() - interval '14 days';
 
   return v_row;
 end;
