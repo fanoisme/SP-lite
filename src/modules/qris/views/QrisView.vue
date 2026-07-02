@@ -131,8 +131,13 @@
             <QrisHistory
               :history="history"
               :loading="historyLoading"
+              :currentPage="currentPage"
+              :totalPages="totalPages"
               @detail="onHistoryDetail"
               @delete="onDeleteHistory"
+              @clear="onClearHistory"
+              @export="onExportHistory"
+              @update:currentPage="onPageChange"
             />
           </div>
 
@@ -152,6 +157,7 @@
 <script setup>
 import { ref, computed, nextTick, onMounted, onUnmounted, watch } from 'vue'
 import { useAccess } from '@/composables/useAccess.js'
+import { useToast } from '@lib/composables/useToast'
 import { useQris } from '../composables/useQris.js'
 import QrisGenerator from '../components/QrisGenerator.vue'
 import QrisReader from '../components/QrisReader.vue'
@@ -160,7 +166,8 @@ import QrisTagViewer from '../components/QrisTagViewer.vue'
 import QrisHistoryDetail from '../components/QrisHistoryDetail.vue'
 
 const { canFeature } = useAccess()
-const { result, history, historyLoading, loadHistory, deleteHistory, loadFromHistory, clearResult } = useQris()
+const toast = useToast()
+const { result, history, historyLoading, currentPage, totalPages, loadHistory, deleteHistory, clearAllHistory, exportHistory, loadFromHistory, clearResult } = useQris()
 
 const tabs = computed(() =>
   [
@@ -217,6 +224,30 @@ function onLoadFromHistory(entry) {
 
 async function onDeleteHistory(id) {
   await deleteHistory(id)
+}
+
+async function onClearHistory() {
+  try {
+    await clearAllHistory()
+    toast.success('History cleared')
+  } catch (e) {
+    console.warn('[qris] clear history failed', e)
+    toast.error('Failed to clear history')
+  }
+}
+
+async function onExportHistory({ format, mode }) {
+  try {
+    await exportHistory(format, mode)
+    toast.success(`Exported as ${format.toUpperCase()}`)
+  } catch (e) {
+    console.warn('[qris] export failed', e)
+    toast.error('Export failed')
+  }
+}
+
+async function onPageChange(page) {
+  await loadHistory(page)
 }
 
 onMounted(() => {
