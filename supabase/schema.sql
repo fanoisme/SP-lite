@@ -84,7 +84,12 @@ security definer
 set search_path = public
 as $$
 begin
-  if not public.is_admin() then
+  -- auth.uid() is null when running outside PostgREST's authenticated
+  -- context (SQL Editor, service_role, migrations) — those already bypass
+  -- RLS and should be able to set role/is_active directly (this is how the
+  -- first admin gets bootstrapped). Only block requests that arrive as a
+  -- specific logged-in (non-admin) end user.
+  if auth.uid() is not null and not public.is_admin() then
     new.role := old.role;
     new.is_active := old.is_active;
   end if;
