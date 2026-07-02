@@ -178,7 +178,7 @@ async function onPasswordSubmit() {
   try {
     if (mode.value === 'signin') {
       await signInWithPassword({ identifier: identifier.value, password: password.value })
-      router.push({ name: 'qris' })
+      router.push({ name: 'dashboard' })
     } else {
       await signUp({
         email: signupEmail.value,

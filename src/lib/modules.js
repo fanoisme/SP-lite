@@ -5,6 +5,11 @@
 
 export const MODULE_REGISTRY = [
   {
+    id: 'dashboard', label: 'Dashboard', icon: 'dashboard', path: '/dashboard',
+    desc: 'Overview and quick links to your tools.',
+    features: [],
+  },
+  {
     id: 'qris', label: 'QRIS Tools', icon: 'qr_code_2', path: '/qris',
     desc: 'Generate, read, and review QRIS codes.',
     features: [

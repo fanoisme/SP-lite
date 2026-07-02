@@ -310,12 +310,12 @@ insert into public.roles (name, is_system) values
 on conflict (name) do nothing;
 
 -- Admin gets every module; other default roles get every tool module except
--- the admin panel.
+-- the admin panel. Dashboard is granted to all roles (post-login landing).
 insert into public.module_access (role, module_id)
 select r.name, m.id
 from (values ('Admin'), ('QA'), ('ITPM'), ('IT Operations')) as r(name)
 cross join (values
-  ('qris'), ('template-tools'), ('video-frames'), ('admin')
+  ('dashboard'), ('qris'), ('template-tools'), ('video-frames'), ('admin')
 ) as m(id)
 where not (r.name <> 'Admin' and m.id = 'admin')
 on conflict (role, module_id) do nothing;

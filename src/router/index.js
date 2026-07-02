@@ -18,6 +18,12 @@ const routes = [
     component: () => import('../modules/auth/views/LoginView.vue'),
   },
   {
+    path: '/dashboard',
+    name: 'dashboard',
+    meta: { module: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
+    component: () => import('../modules/dashboard/views/DashboardView.vue'),
+  },
+  {
     path: '/qris',
     name: 'qris',
     meta: { module: 'qris', label: 'QRIS Tools', icon: 'qr_code_2' },
@@ -55,10 +61,11 @@ const router = createRouter({
 })
 
 // First route a signed-in user lands on when they have no specific destination
-// (post-login, or visiting a public route while authed). Picks the first module
-// their role grants, falling back to /profile.
+// (post-login, or visiting a public route while authed). Dashboard if they have
+// it, else the first granted module, else /profile.
 export function firstAccessibleRoute() {
   const { userModules } = useAuth()
+  if (userModules.value.includes('dashboard')) return { name: 'dashboard' }
   const mod = userModules.value.find(m => m !== 'admin') || userModules.value[0]
   return mod ? { name: mod } : { name: 'profile' }
 }
