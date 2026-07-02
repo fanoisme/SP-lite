@@ -240,13 +240,22 @@ export function useQris() {
     return `${header}\n${body}`
   }
 
+  function htmlCell(val, colKey) {
+    if (val == null) return '<td></td>'
+    // Prevent Excel from mangling numeric IDs
+    if (CSV_NUMERIC_ID_COLS.has(colKey)) {
+      return `<td>="${String(val).replace(/"/g, '""')}"</td>`
+    }
+    return `<td>${val}</td>`
+  }
+
   function buildHtml(rows, mode) {
     const cols = mode === 'simple' ? SIMPLE_COLS : FULL_COLS
     const thead = `<thead><tr>${cols.map(c => `<th>${c.label}</th>`).join('')}</tr></thead>`
     const tbody = `<tbody>${rows.map(row =>
       `<tr>${cols.map(c => {
-        const val = c.key === 'created_at' ? formatExportDate(row[c.key]) : (row[c.key] ?? '')
-        return `<td>${val}</td>`
+        const val = c.key === 'created_at' ? formatExportDate(row[c.key]) : row[c.key]
+        return htmlCell(val, c.key)
       }).join('')}</tr>`
     ).join('\n')}</tbody>`
     return `<!DOCTYPE html>
