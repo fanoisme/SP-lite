@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
     "docx-preview": "^0.3.7",
     "file-saver": "^2.0.5",
     "jsqr": "^1.4.0",

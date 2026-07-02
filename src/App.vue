@@ -1,7 +1,10 @@
 <template>
   <LiToast />
 
-  <div class="sp-app" :class="{ 'sp-app--sidebar-open': sidebarOpen }">
+  <!-- Landing/login render full-bleed, without the app shell -->
+  <router-view v-if="isBareRoute" />
+
+  <div v-else class="sp-app" :class="{ 'sp-app--sidebar-open': sidebarOpen }">
     <!-- Ambient mesh background -->
     <div class="sp-mesh-bg">
       <div class="mesh-orb mesh-orb--1"></div>
@@ -37,9 +40,31 @@
           <span class="material-symbols-outlined sp-sidebar__item-icon">{{ mod.icon }}</span>
           <span class="sp-sidebar__item-label">{{ mod.label }}</span>
         </router-link>
+
+        <template v-if="isAdmin">
+          <div class="sp-sidebar__section-label">Admin</div>
+          <router-link
+            to="/admin"
+            class="sp-sidebar__item"
+            :class="{ 'sp-sidebar__item--active': isActive('/admin') }"
+            @click="sidebarOpen = false"
+          >
+            <span class="sp-sidebar__item-indicator"></span>
+            <span class="material-symbols-outlined sp-sidebar__item-icon">admin_panel_settings</span>
+            <span class="sp-sidebar__item-label">Admin</span>
+          </router-link>
+        </template>
       </nav>
 
       <div class="sp-sidebar__footer">
+        <div class="sp-sidebar__user">
+          <span class="material-symbols-outlined">account_circle</span>
+          <span class="sp-sidebar__user-name">{{ profile?.username || session?.user?.email }}</span>
+        </div>
+        <button class="sp-sidebar__source sp-sidebar__logout" @click="handleLogout">
+          <span class="material-symbols-outlined">logout</span>
+          <span>Sign out</span>
+        </button>
         <a href="https://github.com/fanoisme/SP-lite" target="_blank" rel="noopener" class="sp-sidebar__source">
           <span class="material-symbols-outlined">code</span>
           <span>Source on GitHub</span>
@@ -68,12 +93,17 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import router from './router/index.js'
+import { useAuth } from './composables/useAuth.js'
 import LiToast from './lib/components/LiToast.vue'
 import LiLogo from './lib/components/LiLogo.vue'
 
 const route = useRoute()
+const routerInstance = useRouter()
+const { session, profile, isAdmin, signOut } = useAuth()
+
+const isBareRoute = computed(() => route.name === 'landing' || route.name === 'login')
 
 const modules = router.options.routes
   .filter(r => r.meta?.module)
@@ -82,11 +112,17 @@ const modules = router.options.routes
 const sidebarOpen = ref(false)
 
 const currentModule = computed(() =>
-  modules.find(m => route.path.startsWith(m.path)),
+  modules.find(m => route.path.startsWith(m.path)) ||
+  (route.path.startsWith('/admin') ? { label: 'Admin' } : undefined),
 )
 
 function isActive(path) {
   return route.path.startsWith(path)
+}
+
+async function handleLogout() {
+  await signOut()
+  routerInstance.push({ name: 'landing' })
 }
 
 watch(() => route.path, () => {
@@ -274,6 +310,36 @@ watch(() => route.path, () => {
 .sp-sidebar__footer {
   padding: 12px 14px;
   border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.sp-sidebar__user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-gray-900, #1a1a2e);
+}
+
+.sp-sidebar__user .material-symbols-outlined {
+  font-size: 20px;
+  color: var(--cta-primary-bg, #FFBC25);
+}
+
+.sp-sidebar__user-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-sidebar__logout {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
 }
 
 .sp-sidebar__source {
