@@ -2,6 +2,7 @@ import { ref, computed, watch } from 'vue'
 import { supabase } from '@/lib/supabase.js'
 import { useAuth } from '@/composables/useAuth.js'
 import { useToast } from '@/lib/composables/useToast.js'
+import { exportToXlsx } from '@/lib/export-xlsx.js'
 
 export function useBuAccounts() {
   const { session } = useAuth()
@@ -152,6 +153,32 @@ export function useBuAccounts() {
     return true
   }
 
+  const exportColumns = [
+    { key: 'name', label: 'Name' },
+    { key: 'sof', label: 'SOF' },
+    { key: 'account1', label: 'Expense Account', textFormula: true },
+    { key: 'acctname1', label: 'Expense Name' },
+    { key: 'percentage1', label: 'Expense %', format: v => Math.round(Number(v) * 100) + '%' },
+    { key: 'account2', label: 'Receivable Account', textFormula: true },
+    { key: 'acctname2', label: 'Receivable Name' },
+    { key: 'percentage2', label: 'Receivable %', format: v => Math.round(Number(v) * 100) + '%' },
+    { key: 'updated_at', label: 'Updated', format: v => v ? new Date(v).toISOString().slice(0, 10) : '' },
+  ]
+
+  function exportFiltered() {
+    const rows = filtered.value.length ? filtered.value : items.value
+    if (!rows.length) {
+      toast.error('No data to export')
+      return
+    }
+    try {
+      exportToXlsx(rows, exportColumns, 'qrdd_bu_accounts')
+      toast.success(`Exported ${rows.length} BU accounts`)
+    } catch (e) {
+      toast.error('Export failed: ' + e.message)
+    }
+  }
+
   const nameOptions = computed(() =>
     items.value.map(r => ({ label: r.name, value: r.name })),
   )
@@ -159,7 +186,8 @@ export function useBuAccounts() {
   return {
     items, loading, error,
     searchQuery, currentPage, pageSize,
-    paginatedItems, totalPages, nameOptions,
+    filtered, paginatedItems, totalPages, nameOptions,
     loadItems, createItem, updateItem, deleteItem,
+    exportFiltered,
   }
 }
