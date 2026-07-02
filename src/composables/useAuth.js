@@ -78,6 +78,11 @@ async function signInWithPassword({ identifier, password }) {
     await supabase.auth.signOut()
     throw new Error('Akun belum diaktivasi. Hubungi admin.')
   }
+  // Set session synchronously from the response — the router guard runs
+  // before onAuthStateChange fires, so relying on the callback leaves
+  // session.value stale and the guard blocks the post-login navigation.
+  session.value = data.session
+  await loadProfile(data.user.id)
 }
 
 function redirectUrl() {
@@ -103,11 +108,14 @@ async function signUp({ email, password, username, fullName }) {
 }
 
 async function signOut() {
-  await supabase.auth.signOut()
+  // Clear optimistically before the network call — the router guard runs the
+  // instant push() happens, so session.value must already be null or the
+  // guard's "authed user hitting a public route" branch bounces nav back.
   session.value = null
   profile.value = null
   userModules.value = []
   userFeatures.value = {}
+  await supabase.auth.signOut()
 }
 
 async function updateFullName(fullName) {
