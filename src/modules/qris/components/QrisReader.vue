@@ -7,7 +7,6 @@
       @dragover.prevent="dragging = true"
       @dragleave="dragging = false"
       @drop.prevent="handleDrop"
-      @paste="handlePaste"
       tabindex="0"
     >
       <span class="material-symbols-outlined reader__dropzone-icon">qr_code_scanner</span>
@@ -52,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import jsQR from 'jsqr'
 import { useQris } from '../composables/useQris.js'
 
@@ -63,6 +62,11 @@ const { parsing, error, parse } = useQris()
 const dragging = ref(false)
 const rawValue = ref('')
 const decodedImage = ref(null)
+
+// Global paste listener — active only while Reader tab is mounted.
+// Removes the "must click dropzone first" pain point.
+onMounted(() => window.addEventListener('paste', handlePaste))
+onUnmounted(() => window.removeEventListener('paste', handlePaste))
 
 function handleDrop(e) {
   dragging.value = false
