@@ -407,3 +407,79 @@ $$;
 
 revoke all on function public.insert_qris_history(text, text, text, text, text, text, text) from public, anon;
 grant  execute on function public.insert_qris_history(text, text, text, text, text, text, text) to authenticated;
+
+-- ── 11. QR DD Module ────────────────────────────────────────────────────────
+
+create table if not exists public.qrdd_bu_accounts (
+  id           uuid primary key default gen_random_uuid(),
+  name         text not null unique,
+  sof          text not null check (sof in ('PRIME', 'PAYLATER')),
+  account1     text not null,
+  acctname1    text not null,
+  percentage1  numeric(5,4) not null check (percentage1 > 0 and percentage1 < 1),
+  account2     text not null,
+  acctname2    text not null,
+  percentage2  numeric(5,4) not null check (percentage2 > 0 and percentage2 < 1),
+  created_at   timestamptz not null default now(),
+  updated_at   timestamptz not null default now(),
+  constraint qrdd_bu_accounts_pct_sum check (percentage1 + percentage2 = 1.0000)
+);
+
+create unique index if not exists idx_qrdd_bu_accounts_name on public.qrdd_bu_accounts (name);
+
+alter table public.qrdd_bu_accounts enable row level security;
+grant select, insert, update, delete on public.qrdd_bu_accounts to authenticated;
+create policy "qrdd_bu_accounts_all" on public.qrdd_bu_accounts
+  for all to authenticated using (true) with check (true);
+
+create table if not exists public.qrdd_merchant_whitelist (
+  id             uuid primary key default gen_random_uuid(),
+  merchant_id    text not null unique,
+  merchant_name  text not null,
+  bu_name        text not null references public.qrdd_bu_accounts (name) on delete restrict,
+  status         text not null default 'ACTIVE' check (status in ('ACTIVE', 'INACTIVE')),
+  created_by     text not null,
+  created_at     timestamptz not null default now(),
+  updated_by     text not null,
+  updated_at     timestamptz not null default now()
+);
+
+create unique index if not exists idx_qrdd_mw_merchant_id on public.qrdd_merchant_whitelist (merchant_id);
+create index if not exists idx_qrdd_mw_bu_name on public.qrdd_merchant_whitelist (bu_name);
+
+alter table public.qrdd_merchant_whitelist enable row level security;
+grant select, insert, update, delete on public.qrdd_merchant_whitelist to authenticated;
+create policy "qrdd_mw_all" on public.qrdd_merchant_whitelist
+  for all to authenticated using (true) with check (true);
+
+create table if not exists public.qrdd_promo_rules (
+  promo_id          text primary key,
+  promo_name        text not null,
+  merchant_id       text references public.qrdd_merchant_whitelist (merchant_id) on delete set null,
+  bu_name           text not null,
+  start_date        date not null,
+  end_date          date not null,
+  prm_discount_type  text not null check (prm_discount_type in ('PERCENTAGE', 'FIXED')),
+  prm_discount_value numeric not null,
+  prm_max_discount   numeric not null,
+  pl_discount_type   text not null check (pl_discount_type in ('PERCENTAGE', 'FIXED')),
+  pl_discount_value  numeric not null,
+  pl_max_discount    numeric not null,
+  min_txn_amount     numeric not null,
+  max_txn_amount     numeric,
+  budget_amount      numeric,
+  priority          integer not null default 0,
+  status            text not null default 'ACTIVE' check (status in ('ACTIVE', 'INACTIVE')),
+  created_by        text not null,
+  created_at        timestamptz not null default now(),
+  updated_by        text not null,
+  updated_at        timestamptz not null default now()
+);
+
+create index if not exists idx_qrdd_pr_merchant_id on public.qrdd_promo_rules (merchant_id);
+create index if not exists idx_qrdd_pr_bu_name on public.qrdd_promo_rules (bu_name);
+
+alter table public.qrdd_promo_rules enable row level security;
+grant select, insert, update, delete on public.qrdd_promo_rules to authenticated;
+create policy "qrdd_pr_all" on public.qrdd_promo_rules
+  for all to authenticated using (true) with check (true);

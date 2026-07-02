@@ -42,6 +42,12 @@ const routes = [
     component: () => import('../modules/video-frames/views/VideoFramesView.vue'),
   },
   {
+    path: '/qrdd',
+    name: 'qrdd',
+    meta: { module: 'qrdd', label: 'QR DD', icon: 'database' },
+    component: () => import('../modules/qrdd/views/QrddView.vue'),
+  },
+  {
     path: '/admin',
     name: 'admin',
     meta: { module: 'admin', requiresAdmin: true, label: 'Admin', icon: 'admin_panel_settings' },
