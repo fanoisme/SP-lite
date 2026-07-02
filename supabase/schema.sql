@@ -333,8 +333,8 @@ on conflict (role, module_id) do nothing;
 
 -- ── 10. QR history (per-user, 14-day retention, cap 50) ──────────────────
 -- QRIS generate/parse history. Written through insert_qris_history() (below),
--- which prunes rows older than 14 days and anything beyond the latest 50 per
--- user before inserting. Reads/deletes go direct through RLS (own-row only).
+-- which inserts a row then prunes entries older than 14 days or beyond the
+-- latest 50 per user. Reads/deletes go direct through RLS (own-row only).
 create table if not exists public.qris_history (
   id            uuid primary key default gen_random_uuid(),
   user_id       uuid not null references public.profiles (id) on delete cascade,
