@@ -483,3 +483,28 @@ alter table public.qrdd_promo_rules enable row level security;
 grant select, insert, update, delete on public.qrdd_promo_rules to authenticated;
 create policy "qrdd_pr_all" on public.qrdd_promo_rules
   for all to authenticated using (true) with check (true);
+
+-- Seed qrdd module + features (idempotent). Admin gets all 12 features;
+-- other roles only get module access (no features until assigned in Admin UI).
+insert into public.module_state (module_id, is_enabled)
+values ('qrdd', true)
+on conflict (module_id) do update set is_enabled = true;
+
+insert into public.module_access (role, module_id)
+select r.name, 'qrdd'
+from public.roles r
+where not exists (
+  select 1 from public.module_access ma where ma.role = r.name and ma.module_id = 'qrdd'
+);
+
+insert into public.feature_access (role, module_id, feature_id)
+select 'Admin', 'qrdd', f.feature_id
+from (values
+  ('bu-accounts.read'), ('bu-accounts.create'), ('bu-accounts.update'), ('bu-accounts.delete'),
+  ('merchant-whitelist.read'), ('merchant-whitelist.create'), ('merchant-whitelist.update'), ('merchant-whitelist.delete'),
+  ('promo-rule.read'), ('promo-rule.create'), ('promo-rule.update'), ('promo-rule.delete')
+) as f(feature_id)
+where not exists (
+  select 1 from public.feature_access fa
+  where fa.role = 'Admin' and fa.module_id = 'qrdd' and fa.feature_id = f.feature_id
+);
