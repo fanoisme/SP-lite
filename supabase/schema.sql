@@ -330,3 +330,87 @@ on conflict (role, module_id) do nothing;
 --   where username = 'your_username';
 --
 -- (signups are inactive by default — is_active = true here unlocks you.)
+
+-- ── 10. QR history (per-user, 14-day retention, cap 50) ──────────────────
+-- QRIS generate/parse history. Written through insert_qris_history() (below),
+-- which prunes rows older than 14 days and anything beyond the latest 50 per
+-- user before inserting. Reads/deletes go direct through RLS (own-row only).
+create table if not exists public.qris_history (
+  id            uuid primary key default gen_random_uuid(),
+  user_id       uuid not null references public.profiles (id) on delete cascade,
+  type          text not null check (type in ('emvco','proprietary')),
+  qr_value      text not null,
+  qr_data_url   text,
+  merchant_name text,
+  mpan          text,
+  merchant_id   text,
+  amount        text,
+  created_at    timestamptz not null default now()
+);
+
+create index if not exists idx_qris_history_user_created
+  on public.qris_history (user_id, created_at desc);
+
+alter table public.qris_history enable row level security;
+
+-- Client reads/deletes its own rows. Insert is RPC-only (security definer),
+-- so no insert grant or insert policy is needed here.
+grant select, delete on public.qris_history to authenticated;
+
+drop policy if exists "qris_history_own_select" on public.qris_history;
+create policy "qris_history_own_select" on public.qris_history
+  for select to authenticated using (auth.uid() = user_id);
+
+drop policy if exists "qris_history_own_delete" on public.qris_history;
+create policy "qris_history_own_delete" on public.qris_history
+  for delete to authenticated using (auth.uid() = user_id);
+
+-- insert_qris_history(): prune-then-insert in one transaction. Reads auth.uid()
+-- itself (RPC is security definer, so RLS is bypassed; we enforce ownership
+-- manually). Prunes this user's rows older than 14 days OR outside the latest
+-- 50, then inserts and returns the new row.
+create or replace function public.insert_qris_history(
+  p_type          text,
+  p_qr_value      text,
+  p_qr_data_url   text,
+  p_merchant_name text,
+  p_mpan          text,
+  p_merchant_id   text,
+  p_amount        text
+) returns public.qris_history
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_row  public.qris_history;
+  v_user uuid := auth.uid();
+begin
+  if v_user is null then
+    raise exception 'not authenticated';
+  end if;
+
+  delete from public.qris_history
+   where user_id = v_user
+     and (
+       created_at < now() - interval '14 days'
+       or id not in (
+         select id from public.qris_history
+          where user_id = v_user
+          order by created_at desc
+          limit 50
+       )
+     );
+
+  insert into public.qris_history
+    (user_id, type, qr_value, qr_data_url, merchant_name, mpan, merchant_id, amount)
+  values
+    (v_user, p_type, p_qr_value, p_qr_data_url, p_merchant_name, p_mpan, p_merchant_id, p_amount)
+  returning * into v_row;
+
+  return v_row;
+end;
+$$;
+
+revoke all on function public.insert_qris_history(text, text, text, text, text, text, text) from public, anon;
+grant  execute on function public.insert_qris_history(text, text, text, text, text, text, text) to authenticated;
