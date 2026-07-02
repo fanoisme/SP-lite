@@ -162,6 +162,40 @@ $$;
 revoke all on function public.email_for_username(text) from public;
 grant execute on function public.email_for_username(text) to anon, authenticated;
 
+-- ── 6b. ensure_profile() — self-heal missing profile rows ─────────────
+-- The on_auth_user_created trigger is the primary mechanism, but it doesn't
+-- fire reliably for every auth.users insert. The client calls this on profile
+-- load; it returns the caller's profile, creating it from auth.users if the
+-- trigger missed. profiles then drives activation + access as normal.
+create or replace function public.ensure_profile()
+returns public.profiles
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  p public.profiles;
+begin
+  select * into p from public.profiles where id = auth.uid();
+  if found then return p; end if;
+
+  insert into public.profiles (id, username, full_name)
+  select
+    u.id,
+    coalesce(u.raw_user_meta_data ->> 'username', split_part(u.email, '@', 1)),
+    u.raw_user_meta_data ->> 'full_name'
+  from auth.users u
+  where u.id = auth.uid()
+  on conflict (id) do nothing
+  returning * into p;
+
+  return p;
+end;
+$$;
+
+revoke all on function public.ensure_profile() from public, anon;
+grant execute on function public.ensure_profile() to authenticated;
+
 -- ── 7. RBAC tables (roles + module/feature/per-user access) ─────────────
 -- Mirror SO-Platform's schema. Access resolution lives in the client
 -- (src/lib/access.js); these tables are read by every authenticated user to

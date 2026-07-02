@@ -18,13 +18,12 @@ async function loadProfile(userId) {
     userFeatures.value = {}
     return
   }
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .single()
+  // ensure_profile returns the profile, creating it from auth.users if the
+  // on_auth_user_created trigger missed (it doesn't fire reliably for every
+  // signup). Self-heals instead of depending on the trigger alone.
+  const { data, error } = await supabase.rpc('ensure_profile')
 
-  if (error) {
+  if (error || !data) {
     console.error('[auth] failed to load profile', error)
     profile.value = null
     userModules.value = []

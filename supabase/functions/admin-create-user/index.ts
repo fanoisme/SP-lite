@@ -54,12 +54,17 @@ Deno.serve(async (req: Request) => {
   });
   if (error) return json({ error: error.message }, 400);
 
-  // handle_new_user already inserted a profile (is_active=false, role=QA).
-  // Apply the admin-chosen role and activate immediately.
+  // Upsert the profile — don't assume handle_new_user fired (it doesn't,
+  // reliably, for every auth.users insert). Admin-created users are active.
   const { data: profile, error: profErr } = await admin
     .from("profiles")
-    .update({ role: role || "QA", is_active: true, username, full_name })
-    .eq("id", data.user.id)
+    .upsert({
+      id: data.user.id,
+      username: username || data.user.email.split("@")[0],
+      full_name: full_name || null,
+      role: role || "QA",
+      is_active: true,
+    })
     .select("id, username, role, full_name, is_active, created_at, updated_at")
     .single();
   if (profErr) return json({ error: profErr.message }, 500);
