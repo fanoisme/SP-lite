@@ -15,69 +15,91 @@
       </div>
     </header>
 
-    <!-- Tabs -->
-    <LiTabs v-model="activeTab" :tabs="visibleTabs" />
+    <!-- Pill Tabs -->
+    <nav class="qrdd__tabs-wrapper">
+      <div class="qrdd__tabs">
+        <button
+          v-for="(tab, index) in visibleTabs"
+          :key="tab.id"
+          class="qrdd__tab"
+          :class="{ 'qrdd__tab--active': activeTab === tab.id }"
+          @click="switchTab(tab.id, index)"
+        >
+          <span class="material-symbols-outlined qrdd__tab-icon">{{ tab.icon }}</span>
+          <span class="qrdd__tab-label">{{ tab.label }}</span>
+          <span class="qrdd__tab-desc">{{ tab.desc }}</span>
+        </button>
+        <div class="qrdd__tab-indicator" :style="indicatorStyle" />
+      </div>
+    </nav>
 
     <!-- Tab Content -->
     <Transition name="panel-slide" mode="out-in">
-      <BuAccountsTab
-        v-if="activeTab === tabIndex('bu-accounts.read') && can('bu-accounts.read')"
-        key="bu"
-        :items="buAccounts.paginatedItems.value"
-        :loading="buAccounts.loading.value"
-        :searchQuery="buAccounts.searchQuery.value"
-        :currentPage="buAccounts.currentPage.value"
-        :totalPages="buAccounts.totalPages.value"
-        :canCreate="can('bu-accounts.create')"
-        :canUpdate="can('bu-accounts.update')"
-        :canDelete="can('bu-accounts.delete')"
-        @update:searchQuery="buAccounts.searchQuery.value = $event"
-        @update:currentPage="buAccounts.currentPage.value = $event"
-        @add="onAddBuAccount"
-        @edit="onEditBuAccount"
-        @delete="onDeleteBuAccount"
-      />
+      <div :key="activeTab" class="qrdd__panel-wrap">
+        <BuAccountsTab
+          v-if="activeTab === 'bu-accounts' && can('bu-accounts.read')"
+          key="bu"
+          :items="buAccounts.paginatedItems.value"
+          :loading="buAccounts.loading.value"
+          :searchQuery="buAccounts.searchQuery.value"
+          :currentPage="buAccounts.currentPage.value"
+          :totalPages="buAccounts.totalPages.value"
+          :canCreate="can('bu-accounts.create')"
+          :canUpdate="can('bu-accounts.update')"
+          :canDelete="can('bu-accounts.delete')"
+          @update:searchQuery="buAccounts.searchQuery.value = $event"
+          @update:currentPage="buAccounts.currentPage.value = $event"
+          @add="onAddBuAccount"
+          @edit="onEditBuAccount"
+          @delete="onDeleteBuAccount"
+          @export="buAccounts.exportFiltered()"
+        />
 
-      <MerchantWhitelistTab
-        v-else-if="activeTab === tabIndex('merchant-whitelist.read') && can('merchant-whitelist.read')"
-        key="mw"
-        :items="mw.paginatedItems.value"
-        :loading="mw.loading.value"
-        :searchQuery="mw.searchQuery.value"
-        :currentPage="mw.currentPage.value"
-        :totalPages="mw.totalPages.value"
-        :buNameOptions="buAccounts.nameOptions.value"
-        :canCreate="can('merchant-whitelist.create')"
-        :canUpdate="can('merchant-whitelist.update')"
-        :canDelete="can('merchant-whitelist.delete')"
-        @update:searchQuery="mw.searchQuery.value = $event"
-        @update:currentPage="mw.currentPage.value = $event"
-        @add="onAddMerchant"
-        @edit="onEditMerchant"
-        @delete="onDeleteMerchant"
-      />
+        <MerchantWhitelistTab
+          v-else-if="activeTab === 'merchant-whitelist' && can('merchant-whitelist.read')"
+          key="mw"
+          :items="mw.paginatedItems.value"
+          :loading="mw.loading.value"
+          :searchQuery="mw.searchQuery.value"
+          :currentPage="mw.currentPage.value"
+          :totalPages="mw.totalPages.value"
+          :buNameOptions="buAccounts.nameOptions.value"
+          :canCreate="can('merchant-whitelist.create')"
+          :canUpdate="can('merchant-whitelist.update')"
+          :canDelete="can('merchant-whitelist.delete')"
+          @update:searchQuery="mw.searchQuery.value = $event"
+          @update:currentPage="mw.currentPage.value = $event"
+          @add="onAddMerchant"
+          @edit="onEditMerchant"
+          @delete="onDeleteMerchant"
+          @export="mw.exportFiltered()"
+        />
 
-      <PromoRuleTab
-        v-else-if="activeTab === tabIndex('promo-rule.read') && can('promo-rule.read')"
-        key="pr"
-        :items="pr.paginatedItems.value"
-        :loading="pr.loading.value"
-        :searchQuery="pr.searchQuery.value"
-        :searchColumn="pr.searchColumn.value"
-        :currentPage="pr.currentPage.value"
-        :totalPages="pr.totalPages.value"
-        :merchantOptions="merchantOptions"
-        :buNameOptions="buAccounts.nameOptions.value"
-        :canCreate="can('promo-rule.create')"
-        :canUpdate="can('promo-rule.update')"
-        :canDelete="can('promo-rule.delete')"
-        @update:searchQuery="pr.searchQuery.value = $event"
-        @update:searchColumn="pr.searchColumn.value = $event"
-        @update:currentPage="pr.currentPage.value = $event"
-        @add="onAddPromo"
-        @edit="onEditPromo"
-        @delete="onDeletePromo"
-      />
+        <PromoRuleTab
+          v-else-if="activeTab === 'promo-rule' && can('promo-rule.read')"
+          key="pr"
+          :items="pr.paginatedItems.value"
+          :loading="pr.loading.value"
+          :searchQuery="pr.searchQuery.value"
+          :searchColumn="pr.searchColumn.value"
+          :currentPage="pr.currentPage.value"
+          :totalPages="pr.totalPages.value"
+          :merchantOptions="merchantOptions"
+          :buNameOptions="buAccounts.nameOptions.value"
+          :canCreate="can('promo-rule.create')"
+          :canUpdate="can('promo-rule.update')"
+          :canDelete="can('promo-rule.delete')"
+          @update:searchQuery="pr.searchQuery.value = $event"
+          @update:searchColumn="pr.searchColumn.value = $event"
+          @update:currentPage="pr.currentPage.value = $event"
+          @add="onAddPromo"
+          @edit="onEditPromo"
+          @delete="onDeletePromo"
+          @export="pr.exportFiltered()"
+        />
+
+        <DashboardTab v-else-if="activeTab === 'dashboard'" key="dash" />
+      </div>
     </Transition>
 
     <!-- BU Account Form Modal -->
@@ -131,7 +153,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useAccess } from '@/composables/useAccess.js'
 import { useBuAccounts } from '../composables/useBuAccounts.js'
 import { useMerchantWhitelist } from '../composables/useMerchantWhitelist.js'
@@ -142,7 +164,7 @@ import MerchantWhitelistTab from '../components/MerchantWhitelistTab.vue'
 import MerchantForm from '../components/MerchantForm.vue'
 import PromoRuleTab from '../components/PromoRuleTab.vue'
 import PromoRuleForm from '../components/PromoRuleForm.vue'
-import LiTabs from '@lib/components/LiTabs.vue'
+import DashboardTab from '../components/DashboardTab.vue'
 import LiModal from '@lib/components/LiModal.vue'
 
 const { canFeature } = useAccess()
@@ -152,38 +174,46 @@ const pr = usePromoRule()
 
 function can(feature) { return canFeature('qrdd', feature) }
 
-// Tabs — LiTabs expects { label, icon? } objects. We build the visible list
-// and expose a helper that maps a feature key to its position in visibleTabs.
+// ── Pill Tabs ──
+
 const allTabDefs = [
-  { label: 'BU Accounts' },
-  { label: 'Merchant Whitelist' },
-  { label: 'Promo Rule' },
+  { id: 'bu-accounts', label: 'BU Accounts', desc: 'Manage accounts', icon: 'account_balance', gate: 'bu-accounts.read' },
+  { id: 'merchant-whitelist', label: 'Merchants', desc: 'Whitelist management', icon: 'store', gate: 'merchant-whitelist.read' },
+  { id: 'promo-rule', label: 'Promo Rules', desc: 'Discount rules', icon: 'discount', gate: 'promo-rule.read' },
+  { id: 'dashboard', label: 'Dashboard', desc: 'Reports & stats', icon: 'monitoring', gate: null },
 ]
-const tabFeatureKeys = ['bu-accounts.read', 'merchant-whitelist.read', 'promo-rule.read']
 
 const visibleTabs = computed(() =>
-  allTabDefs.filter((_, i) => can(tabFeatureKeys[i]))
+  allTabDefs.filter(t => !t.gate || can(t.gate))
 )
 
-// Build a map: featureKey → index in the filtered visibleTabs
-const tabIndexMap = computed(() => {
-  const map = {}
-  let vi = 0
-  for (let i = 0; i < tabFeatureKeys.length; i++) {
-    if (can(tabFeatureKeys[i])) {
-      map[tabFeatureKeys[i]] = vi++
-    }
+const activeTab = ref(visibleTabs.value[0]?.id)
+const indicatorStyle = ref({})
+
+watch(visibleTabs, (list) => {
+  if (list.length && !list.find(t => t.id === activeTab.value)) {
+    activeTab.value = list[0].id
   }
-  return map
 })
 
-function tabIndex(featureKey) {
-  return tabIndexMap.value[featureKey] ?? -1
+function switchTab(id, index) {
+  activeTab.value = id
+  nextTick(() => updateIndicator(index))
 }
 
-const activeTab = ref(0)
+function updateIndicator(targetIndex) {
+  const idx = targetIndex ?? visibleTabs.value.findIndex(t => t.id === activeTab.value)
+  const tabEl = document.querySelectorAll('.qrdd__tab')[idx]
+  if (tabEl) {
+    indicatorStyle.value = {
+      left: `${tabEl.offsetLeft}px`,
+      width: `${tabEl.offsetWidth}px`,
+    }
+  }
+}
 
-// Form modals
+// ── Form modals ──
+
 const showBuForm = ref(false)
 const editingBu = ref(null)
 const showMwForm = ref(false)
@@ -191,10 +221,8 @@ const editingMw = ref(null)
 const showPrForm = ref(false)
 const editingPr = ref(null)
 
-// Delete confirm
 const deleteTarget = ref(null)
 
-// Merchant dropdown for PromoRule form
 const merchantOptions = computed(() =>
   mw.items.value.map(r => ({
     label: `${r.merchant_id} — ${r.merchant_name}`,
@@ -202,97 +230,49 @@ const merchantOptions = computed(() =>
   })),
 )
 
-// ── Handlers: BU Accounts ──
+// ── Handlers ──
 
-function onAddBuAccount() {
-  editingBu.value = null
-  showBuForm.value = true
-}
+function onAddBuAccount() { editingBu.value = null; showBuForm.value = true }
+function onEditBuAccount(row) { editingBu.value = row; showBuForm.value = true }
+function onDeleteBuAccount(row) { deleteTarget.value = { type: 'bu', id: row.id, label: row.name } }
 
-function onEditBuAccount(row) {
-  editingBu.value = row
-  showBuForm.value = true
-}
+function onAddMerchant() { editingMw.value = null; showMwForm.value = true }
+function onEditMerchant(row) { editingMw.value = row; showMwForm.value = true }
+function onDeleteMerchant(row) { deleteTarget.value = { type: 'mw', id: row.id, label: row.merchant_id } }
 
-function onDeleteBuAccount(row) {
-  deleteTarget.value = { type: 'bu', id: row.id, label: row.name }
-}
-
-// ── Handlers: Merchant Whitelist ──
-
-function onAddMerchant() {
-  editingMw.value = null
-  showMwForm.value = true
-}
-
-function onEditMerchant(row) {
-  editingMw.value = row
-  showMwForm.value = true
-}
-
-function onDeleteMerchant(row) {
-  deleteTarget.value = { type: 'mw', id: row.id, label: row.merchant_id }
-}
-
-// ── Handlers: Promo Rule ──
-
-function onAddPromo() {
-  editingPr.value = null
-  showPrForm.value = true
-}
-
-function onEditPromo(row) {
-  editingPr.value = row
-  showPrForm.value = true
-}
-
-function onDeletePromo(row) {
-  deleteTarget.value = { type: 'pr', id: row.promo_id, label: row.promo_id }
-}
-
-// ── Form save/close ──
+function onAddPromo() { editingPr.value = null; showPrForm.value = true }
+function onEditPromo(row) { editingPr.value = row; showPrForm.value = true }
+function onDeletePromo(row) { deleteTarget.value = { type: 'pr', id: row.promo_id, label: row.promo_id } }
 
 function closeBuForm() { showBuForm.value = false; editingBu.value = null }
 function closeMwForm() { showMwForm.value = false; editingMw.value = null }
 function closePrForm() { showPrForm.value = false; editingPr.value = null }
 
 async function onSaveBuAccount(formData) {
-  let ok
-  if (editingBu.value) {
-    ok = await buAccounts.updateItem(editingBu.value.id, formData)
-  } else {
-    ok = await buAccounts.createItem(formData)
-  }
+  const ok = editingBu.value
+    ? await buAccounts.updateItem(editingBu.value.id, formData)
+    : await buAccounts.createItem(formData)
   if (ok) closeBuForm()
 }
 
 async function onSaveMerchant(formData) {
-  let ok
-  if (editingMw.value) {
-    ok = await mw.updateItem(editingMw.value.id, formData)
-  } else {
-    ok = await mw.createItem(formData)
-  }
+  const ok = editingMw.value
+    ? await mw.updateItem(editingMw.value.id, formData)
+    : await mw.createItem(formData)
   if (ok) closeMwForm()
 }
 
 async function onSavePromo(formData) {
-  let ok
-  if (editingPr.value) {
-    ok = await pr.updateItem(editingPr.value.promo_id, formData)
-  } else {
-    ok = await pr.createItem(formData)
-  }
+  const ok = editingPr.value
+    ? await pr.updateItem(editingPr.value.promo_id, formData)
+    : await pr.createItem(formData)
   if (ok) closePrForm()
 }
-
-// ── Confirm delete ──
 
 async function confirmDelete() {
   const t = deleteTarget.value
   deleteTarget.value = null
   if (!t) return
-
   if (t.type === 'bu') await buAccounts.deleteItem(t.id, t.label)
   else if (t.type === 'mw') await mw.deleteItem(t.id, t.label)
   else if (t.type === 'pr') await pr.deleteItem(t.id)
@@ -304,6 +284,12 @@ onMounted(() => {
   buAccounts.loadItems()
   mw.loadItems()
   pr.loadItems()
+  nextTick(() => updateIndicator())
+  window.addEventListener('resize', () => nextTick(() => updateIndicator()))
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', () => nextTick(() => updateIndicator()))
 })
 </script>
 
@@ -330,8 +316,40 @@ onMounted(() => {
 .qrdd__title { font-size: 26px; font-weight: 800; margin: 0; letter-spacing: -0.5px; }
 .qrdd__subtitle { font-size: 14px; color: var(--color-gray-500, #8e8ea0); margin: 2px 0 0; }
 
-.qrdd__delete-text { font-size: 14px; color: var(--color-gray-700, #666); line-height: 1.6; margin: 0; }
+/* Pill Tabs */
+.qrdd__tabs-wrapper { }
+.qrdd__tabs {
+  display: flex; position: relative;
+  background: rgba(255,255,255,0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-md, 16px);
+  padding: 5px; gap: 2px;
+}
+.qrdd__tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 14px 12px; border: none; border-radius: var(--radius-sm, 12px);
+  background: transparent; cursor: pointer;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  transition: all 300ms ease-out;
+  position: relative; z-index: 1;
+}
+.qrdd__tab:hover { background: rgba(255,255,255,0.5); }
+.qrdd__tab--active { color: var(--color-on-surface, #1a1a2e); }
+.qrdd__tab-icon { font-size: 22px; color: var(--color-gray-500, #8e8ea0); transition: color 300ms ease-out, transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+.qrdd__tab--active .qrdd__tab-icon { color: #6366F1; transform: scale(1.1); }
+.qrdd__tab-label { font-size: 13px; font-weight: 600; color: var(--color-gray-700, #555); transition: color 300ms ease-out; }
+.qrdd__tab--active .qrdd__tab-label { color: var(--color-on-surface, #1a1a2e); }
+.qrdd__tab-desc { font-size: 11px; color: var(--color-gray-400, #aaa); font-weight: 400; transition: color 300ms ease-out; }
+.qrdd__tab--active .qrdd__tab-desc { color: var(--color-gray-500, #8e8ea0); }
+.qrdd__tab-indicator {
+  position: absolute; top: 5px; height: calc(100% - 10px);
+  background: #fff; border-radius: var(--radius-sm, 12px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.02);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 0;
+}
 
+/* Delete */
+.qrdd__delete-text { font-size: 14px; color: var(--color-gray-700, #666); line-height: 1.6; margin: 0; }
 .qrdd__btn {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 18px; border: 1px solid transparent;
@@ -348,4 +366,23 @@ onMounted(() => {
 .panel-slide-leave-active { transition: all 0.2s ease-in; }
 .panel-slide-enter-from { opacity: 0; transform: translateY(12px); }
 .panel-slide-leave-to { opacity: 0; transform: translateY(-8px); }
+
+@media (max-width: 768px) {
+  .qrdd { padding: var(--space-md, 16px); gap: var(--space-md, 16px); }
+  .qrdd__title { font-size: 20px; }
+  .qrdd__icon-badge { width: 40px; height: 40px; }
+  .qrdd__icon-badge .material-symbols-outlined { font-size: 22px; }
+  .qrdd__tab { padding: 10px 8px; min-width: 0; flex-shrink: 0; }
+  .qrdd__tab-desc { display: none; }
+}
+@media (max-width: 480px) {
+  .qrdd__icon-badge { display: none; }
+  .qrdd__tab-label { font-size: 12px; }
+  .qrdd__tab-icon { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qrdd__tab-indicator { transition: none; }
+  .qrdd__tab-icon { transition: none; }
+  .panel-slide-enter-active, .panel-slide-leave-active { transition-duration: 0.01ms; }
+}
 </style>
