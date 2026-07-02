@@ -61,11 +61,14 @@ async function signInWithPassword({ identifier, password }) {
   if (error) throw error
 }
 
+function redirectUrl() {
+  return `${window.location.origin}${window.location.pathname}`
+}
+
 async function signInWithMagicLink(email) {
-  const redirectTo = `${window.location.origin}${window.location.pathname}`
   const { error } = await supabase.auth.signInWithOtp({
     email: email.trim(),
-    options: { emailRedirectTo: redirectTo },
+    options: { emailRedirectTo: redirectUrl() },
   })
   if (error) throw error
 }
@@ -75,6 +78,7 @@ async function signUp({ email, password, username, fullName }) {
     email: email.trim(),
     password,
     options: {
+      emailRedirectTo: redirectUrl(),
       data: {
         username: username?.trim() || undefined,
         full_name: fullName?.trim() || undefined,
