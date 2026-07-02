@@ -132,7 +132,7 @@ const modules = computed(() =>
 const sidebarOpen = ref(false)
 
 const currentModule = computed(() =>
-  modules.find(m => route.path.startsWith(m.path)) ||
+  modules.value.find(m => route.path.startsWith(m.path)) ||
   (route.path.startsWith('/admin') ? { label: 'Admin' } : undefined) ||
   (route.path.startsWith('/profile') ? { label: 'Profile' } : undefined),
 )
