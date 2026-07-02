@@ -2,6 +2,7 @@ import { ref, computed, watch } from 'vue'
 import { supabase } from '@/lib/supabase.js'
 import { useAuth } from '@/composables/useAuth.js'
 import { useToast } from '@/lib/composables/useToast.js'
+import { exportToXlsx } from '@/lib/export-xlsx.js'
 
 // Sentinel constants
 const UNLIMITED_AMOUNT = 50000000000.00
@@ -164,10 +165,47 @@ export function usePromoRule() {
     return true
   }
 
+  const exportColumns = [
+    { key: 'promo_id', label: 'Promo ID' },
+    { key: 'promo_name', label: 'Promo Name' },
+    { key: 'merchant_id', label: 'Merchant ID', textFormula: true, format: v => v || 'All Merchants' },
+    { key: 'bu_name', label: 'BU Name' },
+    { key: 'start_date', label: 'Start Date' },
+    { key: 'end_date', label: 'End Date' },
+    { key: 'prm_discount_type', label: 'PRM Discount Type' },
+    { key: 'prm_discount_value', label: 'PRM Discount Value', format: (v, row) => row.prm_discount_type === 'PERCENTAGE' ? v + '%' : v },
+    { key: 'prm_max_discount', label: 'PRM Max Discount', format: v => Number(v) >= 49999999999 ? 'Unlimited' : v },
+    { key: 'pl_discount_type', label: 'PL Discount Type' },
+    { key: 'pl_discount_value', label: 'PL Discount Value', format: (v, row) => row.pl_discount_type === 'PERCENTAGE' ? v + '%' : v },
+    { key: 'pl_max_discount', label: 'PL Max Discount', format: v => Number(v) >= 49999999999 ? 'Unlimited' : v },
+    { key: 'min_txn_amount', label: 'Min Txn Amount', format: v => Number(v) <= 1 ? 'No Minimum' : v },
+    { key: 'max_txn_amount', label: 'Max Txn Amount', format: v => v == null ? 'Unlimited' : v },
+    { key: 'budget_amount', label: 'Budget Amount', format: v => v == null ? 'Unlimited' : v },
+    { key: 'priority', label: 'Priority' },
+    { key: 'status', label: 'Status' },
+    { key: 'created_by', label: 'Created By' },
+    { key: 'updated_by', label: 'Updated By' },
+    { key: 'updated_at', label: 'Updated At', format: v => v ? new Date(v).toISOString().slice(0, 10) : '' },
+  ]
+
+  function exportFiltered() {
+    const rows = filtered.value.length ? filtered.value : items.value
+    if (!rows.length) {
+      toast.error('No data to export')
+      return
+    }
+    try {
+      exportToXlsx(rows, exportColumns, 'qrdd_promo_rules')
+      toast.success(`Exported ${rows.length} promo rules`)
+    } catch (e) {
+      toast.error('Export failed: ' + e.message)
+    }
+  }
+
   return {
     items, loading, error,
     searchQuery, searchColumn, currentPage, pageSize,
     paginatedItems, totalPages,
-    loadItems, createItem, updateItem, deleteItem,
+    loadItems, createItem, updateItem, deleteItem, exportFiltered,
   }
 }
