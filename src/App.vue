@@ -70,10 +70,6 @@
           <span class="material-symbols-outlined">logout</span>
           <span>Sign out</span>
         </button>
-        <a href="https://github.com/fanoisme/SP-lite" target="_blank" rel="noopener" class="sp-sidebar__source">
-          <span class="material-symbols-outlined">code</span>
-          <span>Source on GitHub</span>
-        </a>
       </div>
     </aside>
 
@@ -101,12 +97,23 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import router from './router/index.js'
 import { useAuth } from './composables/useAuth.js'
+import { useToast } from './lib/composables/useToast.js'
 import LiToast from './lib/components/LiToast.vue'
 import LiLogo from './lib/components/LiLogo.vue'
 
 const route = useRoute()
 const routerInstance = useRouter()
 const { session, profile, isAdmin, signOut } = useAuth()
+
+// Supabase appends ?error=...&error_description=... to the redirect URL when
+// an email link (magic link/signup confirmation) is invalid or expired.
+// Surface it as a toast instead of leaving the raw params in the URL.
+const authError = new URLSearchParams(window.location.search).get('error')
+if (authError) {
+  const description = new URLSearchParams(window.location.search).get('error_description')
+  useToast().error(description?.replace(/\+/g, ' ') || 'Link tidak valid atau sudah kedaluwarsa.')
+  window.history.replaceState(null, '', window.location.pathname + window.location.hash)
+}
 
 const isBareRoute = computed(() => route.name === 'landing' || route.name === 'login')
 
