@@ -5,10 +5,16 @@
         <LiSelect v-model="searchColumnProxy" :options="searchColumns" class="tab__search-col" />
         <LiTextField v-model="searchQueryProxy" :placeholder="'Search ' + searchColumnLabel + '...'" iconLeft="search" class="tab__search" />
       </div>
-      <button v-if="canCreate" class="tab__add-btn" @click="$emit('add')">
-        <span class="material-symbols-outlined">add</span>
-        Add Promo
-      </button>
+      <div class="tab__toolbar-actions">
+        <button class="tab__export-btn" @click="$emit('export')">
+          <span class="material-symbols-outlined">file_save</span>
+          Export
+        </button>
+        <button v-if="canCreate" class="tab__add-btn" @click="$emit('add')">
+          <span class="material-symbols-outlined">add</span>
+          Add Promo
+        </button>
+      </div>
     </div>
 
     <LiGlassCard variant="light" size="md" :hoverable="false" class="tab__card">
@@ -92,7 +98,7 @@ const props = defineProps({
   merchantOptions: Array, buNameOptions: Array,
   canCreate: Boolean, canUpdate: Boolean, canDelete: Boolean,
 })
-const emit = defineEmits(['update:searchQuery', 'update:searchColumn', 'update:currentPage', 'add', 'edit', 'delete'])
+const emit = defineEmits(['update:searchQuery', 'update:searchColumn', 'update:currentPage', 'add', 'edit', 'delete', 'export'])
 
 const searchQueryProxy = computed({ get: () => props.searchQuery, set: v => emit('update:searchQuery', v) })
 const searchColumnProxy = computed({ get: () => props.searchColumn, set: v => emit('update:searchColumn', v) })
@@ -174,4 +180,18 @@ function fmtMaxDiscount(v) {
 .tab__del-btn:hover { color: var(--color-red-400, #C83E3B); background: rgba(200,62,59,0.08); }
 .tab__edit-btn .material-symbols-outlined, .tab__del-btn .material-symbols-outlined { font-size: 18px; }
 .tab__pagination { display: flex; justify-content: center; padding: 16px; border-top: 1px solid rgba(0,0,0,0.04); }
+.tab__toolbar-actions { display: flex; align-items: center; gap: 8px; }
+.tab__export-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--color-gray-600, #666);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: var(--radius-pill, 999px);
+  font-weight: 600; font-size: 13px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  cursor: pointer; transition: all 200ms; white-space: nowrap;
+}
+.tab__export-btn:hover { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.2); }
+.tab__export-btn .material-symbols-outlined { font-size: 18px; }
 </style>
