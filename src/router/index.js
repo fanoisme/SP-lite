@@ -64,7 +64,7 @@ export function firstAccessibleRoute() {
 }
 
 router.beforeEach(async (to) => {
-  const { ensureAuthLoaded, isAuthenticated, isAdmin } = useAuth()
+  const { ensureAuthLoaded, isAuthenticated, isAdmin, profile, signOut } = useAuth()
   const { canModule } = useAccess()
   await ensureAuthLoaded()
 
@@ -75,6 +75,14 @@ router.beforeEach(async (to) => {
   }
 
   if (!isAuthenticated.value && !isPublic) {
+    return { name: 'login' }
+  }
+
+  // Defense against inactive sessions (e.g. admin deactivated a logged-in
+  // user, or a stale session from before activation). Login itself blocks
+  // inactive accounts at signInWithPassword; this covers the in-session case.
+  if (isAuthenticated.value && profile.value && !profile.value.is_active) {
+    await signOut()
     return { name: 'login' }
   }
 

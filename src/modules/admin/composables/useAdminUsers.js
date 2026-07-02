@@ -85,6 +85,33 @@ export function useAdminUsers() {
     loading.value = false
   }
 
+  async function createUser(userData) {
+    error.value = null
+    // Delegated to the admin-create-user Edge Function — only the server
+    // holds the service_role key needed to create an auth.users row.
+    const { data, error: fnErr } = await supabase.functions.invoke('admin-create-user', {
+      body: {
+        email: userData.email,
+        password: userData.password,
+        username: userData.username,
+        full_name: userData.fullName,
+        role: userData.role,
+      },
+    })
+    if (fnErr) {
+      error.value = fnErr.message
+      toast.error('Failed to create user')
+      return false
+    }
+    if (data?.error) {
+      error.value = data.error
+      return false
+    }
+    users.value.unshift({ ...data.user, has_overrides: false })
+    toast.success(`User ${data.user.username || data.user.email} created`)
+    return true
+  }
+
   async function updateUserRole(userId, newRole) {
     error.value = null
     const { data, error: e } = await supabase
@@ -118,10 +145,30 @@ export function useAdminUsers() {
     return true
   }
 
+  async function updateUserActive(userId, is_active) {
+    error.value = null
+    if (userId === session.value?.user?.id && !is_active) {
+      toast.error('Cannot deactivate your own account')
+      return false
+    }
+    const { data, error: e } = await supabase
+      .from('profiles').update({ is_active }).eq('id', userId)
+      .select('id, username, role, full_name, is_active, created_at, updated_at').single()
+    if (e) {
+      error.value = e.message
+      toast.error('Failed to update status')
+      return false
+    }
+    const idx = users.value.findIndex(u => u.id === userId)
+    if (idx !== -1) users.value[idx] = { ...users.value[idx], ...data, has_overrides: users.value[idx].has_overrides }
+    toast.success(`${data.username || 'User'} ${is_active ? 'activated' : 'deactivated'}`)
+    return true
+  }
+
   return {
     users, loading, error, currentUser,
     searchQuery, sortKey, sortOrder, currentPage, pageSize,
     filteredUsers, sortedUsers, paginatedUsers, totalPages,
-    setSort, loadUsers, updateUserRole, deleteUser,
+    setSort, loadUsers, createUser, updateUserRole, updateUserActive, deleteUser,
   }
 }

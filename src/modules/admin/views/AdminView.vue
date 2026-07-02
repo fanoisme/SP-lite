@@ -50,8 +50,10 @@
         @update:searchQuery="searchQuery = $event"
         @update:currentPage="currentPage = $event"
         @sort="onSort"
+        @add-user="showUserModal = true"
         @delete-user="onDeleteUser"
         @update-role="onUpdateRole"
+        @update-active="onUpdateActive"
         @open-user="onOpenUser"
       />
 
@@ -82,6 +84,14 @@
       :role="editingRole"
       @save="onSaveRole"
       @close="showRoleModal = false; editingRole = null"
+    />
+
+    <!-- Admin create-user modal (delegated to the admin-create-user Edge Function) -->
+    <AdminUserModal
+      v-if="showUserModal"
+      :roleOptions="roleOptions"
+      @save="onCreateUser"
+      @close="showUserModal = false"
     />
 
     <!-- Per-user access drawer -->
@@ -141,6 +151,7 @@ import AdminUsersTab from '../components/AdminUsersTab.vue'
 import AdminRolesTab from '../components/AdminRolesTab.vue'
 import AdminModulesTab from '../components/AdminModulesTab.vue'
 import AdminRoleModal from '../components/AdminRoleModal.vue'
+import AdminUserModal from '../components/AdminUserModal.vue'
 import AdminUserDrawer from '../components/AdminUserDrawer.vue'
 import AdminRoleDrawer from '../components/AdminRoleDrawer.vue'
 import AdminModuleDrawer from '../components/AdminModuleDrawer.vue'
@@ -152,7 +163,7 @@ const {
   users, loading: usersLoading, error: usersError, currentUser,
   searchQuery, sortKey, sortOrder, currentPage, pageSize,
   filteredUsers, sortedUsers, paginatedUsers, totalPages,
-  setSort, loadUsers, updateUserRole, deleteUser,
+  setSort, loadUsers, createUser, updateUserRole, updateUserActive, deleteUser,
 } = useAdminUsers()
 
 const {
@@ -189,6 +200,7 @@ const roleOptions = computed(() =>
 )
 
 // Modals
+const showUserModal = ref(false)
 const showRoleModal = ref(false)
 const editingRole = ref(null)
 const deleteTarget = ref(null)  // { type: 'user'|'role', id, label }
@@ -214,6 +226,20 @@ function onSort({ key, order }) {
 
 async function onUpdateRole(userId, newRole) {
   await updateUserRole(userId, newRole)
+}
+
+async function onCreateUser(userData, done) {
+  const ok = await createUser(userData)
+  if (ok) {
+    showUserModal.value = false
+    done(null)
+  } else {
+    done(usersError.value || 'Failed to create user')
+  }
+}
+
+async function onUpdateActive(userId, is_active) {
+  await updateUserActive(userId, is_active)
 }
 
 function onDeleteUser(user) {

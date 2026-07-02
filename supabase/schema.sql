@@ -18,7 +18,7 @@ create table if not exists public.profiles (
   username text unique,
   full_name text,
   role text not null default 'QA',
-  is_active boolean not null default true,
+  is_active boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -31,6 +31,10 @@ alter table public.profiles drop constraint if exists profiles_role_check;
 update public.profiles set role = 'Admin' where role = 'admin';
 update public.profiles set role = 'QA'     where role = 'user';
 alter table public.profiles alter column role set default 'QA';
+
+-- New self-signups are inactive by default — an admin must activate them
+-- (and assign a role) before they can sign in. Covers existing installs too.
+alter table public.profiles alter column is_active set default false;
 
 alter table public.profiles add column if not exists updated_at timestamptz not null default now();
 
@@ -151,7 +155,7 @@ as $$
   select u.email
   from public.profiles p
   join auth.users u on u.id = p.id
-  where p.username = p_username and p.is_active
+  where p.username = p_username
   limit 1;
 $$;
 
@@ -287,4 +291,8 @@ on conflict (role, module_id) do nothing;
 -- create admins. After you sign up once through the app, run this once (with
 -- your own username) directly in the SQL Editor:
 --
---   update public.profiles set role = 'Admin' where username = 'your_username';
+--   update public.profiles
+--   set role = 'Admin', is_active = true
+--   where username = 'your_username';
+--
+-- (signups are inactive by default — is_active = true here unlocks you.)

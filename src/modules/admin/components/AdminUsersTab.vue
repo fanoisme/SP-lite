@@ -8,11 +8,16 @@
         iconLeft="search"
         class="adm-users__search"
       />
-      <p class="adm-users__hint">
-        <span class="material-symbols-outlined">info</span>
-        Users self-register via the login screen; manage their role, active state and access here.
-      </p>
+      <button class="adm-users__add-btn" @click="$emit('add-user')">
+        <span class="material-symbols-outlined">person_add</span>
+        Add User
+      </button>
     </div>
+
+    <p class="adm-users__hint">
+      <span class="material-symbols-outlined">info</span>
+      Users can also self-register — those accounts stay pending until you activate them.
+    </p>
 
     <!-- Users table inside glass card -->
     <LiGlassCard variant="light" size="md" :hoverable="false" class="adm-users__card">
@@ -33,6 +38,8 @@
               class="adm-users__custom-dot"
               title="Has custom access overrides"
             >●</span>
+            <LiChip v-if="!row.is_active" variant="warning" size="sm" iconLeft="schedule">pending</LiChip>
+            <LiChip v-else variant="success" size="sm" iconLeft="check_circle">active</LiChip>
             <LiChip v-if="row.id === currentUserId" variant="brand" size="sm">you</LiChip>
           </div>
         </template>
@@ -56,6 +63,15 @@
         <!-- Actions cell -->
         <template #cell-actions="{ row }">
           <div class="adm-users__actions">
+            <button
+              class="adm-users__status-btn"
+              :class="row.is_active ? 'is-active' : 'is-pending'"
+              :disabled="row.id === currentUserId"
+              :title="row.is_active ? 'Deactivate account' : 'Activate account'"
+              @click="$emit('update-active', row.id, !row.is_active)"
+            >
+              <span class="material-symbols-outlined">{{ row.is_active ? 'check_circle' : 'hourglass_empty' }}</span>
+            </button>
             <button
               class="adm-users__manage-btn"
               @click="$emit('open-user', row)"
@@ -117,8 +133,10 @@ const props = defineProps({
 const emit = defineEmits([
   'update:searchQuery',
   'update:currentPage',
+  'add-user',
   'delete-user',
   'update-role',
+  'update-active',
   'open-user',
   'sort',
 ])
@@ -139,7 +157,7 @@ const columns = [
   { key: 'full_name', label: 'Full Name', sortable: true },
   { key: 'role', label: 'Role' },
   { key: 'created_at', label: 'Created', sortable: true },
-  { key: 'actions', label: '', width: '96px' },
+  { key: 'actions', label: '', width: '128px' },
 ]
 
 function onSort({ key, order }) {
@@ -164,6 +182,32 @@ function formatDate(dateStr) {
 .adm-users__search {
   flex: 1;
   max-width: 320px;
+}
+
+.adm-users__add-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-s, 6px);
+  padding: 10px 20px;
+  background: var(--cta-primary-bg, #FFBC25);
+  color: var(--cta-primary-text, #1E1E1E);
+  border: none;
+  border-radius: var(--radius-pill, 999px);
+  font-weight: 600;
+  font-size: 13px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  cursor: pointer;
+  transition: all var(--dur-short, 200ms) var(--ease-out);
+  white-space: nowrap;
+}
+
+.adm-users__add-btn:hover {
+  background: var(--cta-primary-hover, #FFB60A);
+  transform: translateY(-2px);
+}
+
+.adm-users__add-btn .material-symbols-outlined {
+  font-size: 18px;
 }
 
 .adm-users__hint {
@@ -220,6 +264,39 @@ function formatDate(dateStr) {
   display: inline-flex;
   align-items: center;
   gap: 2px;
+}
+
+.adm-users__status-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-s, 6px);
+  border-radius: var(--radius-sm, 12px);
+  transition: all var(--dur-short, 200ms) var(--ease-out);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.adm-users__status-btn .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.adm-users__status-btn.is-active {
+  color: var(--color-success, #10B981);
+}
+
+.adm-users__status-btn.is-pending {
+  color: var(--color-on-surface-muted, #999);
+}
+
+.adm-users__status-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.adm-users__status-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .adm-users__manage-btn {

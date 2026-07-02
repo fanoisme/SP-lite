@@ -69,8 +69,16 @@ async function resolveEmail(identifier) {
 
 async function signInWithPassword({ identifier, password }) {
   const email = await resolveEmail(identifier.trim())
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
   if (error) throw error
+  // Block accounts pending admin activation (is_active defaults to false on
+  // signup). Checked here so it covers both username and email logins.
+  const { data: prof } = await supabase
+    .from('profiles').select('is_active').eq('id', data.user.id).single()
+  if (!prof?.is_active) {
+    await supabase.auth.signOut()
+    throw new Error('Akun belum diaktivasi. Hubungi admin.')
+  }
 }
 
 function redirectUrl() {
@@ -90,6 +98,9 @@ async function signUp({ email, password, username, fullName }) {
     },
   })
   if (error) throw error
+  // New signups are inactive until an admin activates them. If signUp created
+  // a session (email-confirm disabled), drop it — they must wait for approval.
+  await supabase.auth.signOut()
 }
 
 async function signOut() {

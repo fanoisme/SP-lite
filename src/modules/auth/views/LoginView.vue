@@ -185,7 +185,7 @@ async function onPasswordSubmit() {
         password: password.value,
         username: signupUsername.value,
       })
-      showBanner('Akun dibuat — cek email untuk konfirmasi, lalu sign in.', 'info')
+      showBanner('Akun dibuat. Menunggu aktivasi dari admin sebelum bisa sign in.', 'info')
       mode.value = 'signin'
     }
   } catch (err) {
