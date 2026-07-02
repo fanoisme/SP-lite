@@ -1,5 +1,29 @@
 <template>
   <div class="hist">
+    <!-- Toolbar -->
+    <div v-if="history.length > 0 || !loading" class="hist__toolbar">
+      <button class="hist__btn hist__btn--clear" @click="showClearConfirm = true">
+        <span class="material-symbols-outlined">delete_sweep</span>
+        Clear History
+      </button>
+
+      <div class="hist__export-wrap" ref="exportWrap">
+        <button class="hist__btn hist__btn--export" @click.stop="toggleExportMenu">
+          <span class="material-symbols-outlined">download</span>
+          Export
+        </button>
+        <div v-if="exportOpen" class="hist__export-menu">
+          <div class="hist__export-section-label">CSV</div>
+          <button class="hist__export-item" @click="doExport('csv', 'simple')">Simple</button>
+          <button class="hist__export-item" @click="doExport('csv', 'full')">Full</button>
+          <div class="hist__export-divider"></div>
+          <div class="hist__export-section-label">HTML</div>
+          <button class="hist__export-item" @click="doExport('html', 'simple')">Simple</button>
+          <button class="hist__export-item" @click="doExport('html', 'full')">Full</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Loading skeletons -->
     <div v-if="loading" class="hist__list">
       <div v-for="i in 5" :key="'skel-' + i" class="hist__item hist__item--skeleton">
@@ -34,23 +58,99 @@
               {{ (entry.type || 'emvco').toUpperCase() }}
             </span>
           </span>
-          <span class="hist__date">{{ formatDate(entry.created_at) }}</span>
+          <span class="hist__date-row">
+            <span class="hist__date">{{ formatDate(entry.created_at) }}</span>
+            <span class="hist__expiry" :class="expiryClass(entry.created_at)">
+              &middot; {{ expiryLabel(entry.created_at) }}
+            </span>
+          </span>
         </div>
         <button class="hist__delete" @click.stop="$emit('delete', entry.id)" title="Delete">
           <span class="material-symbols-outlined">delete</span>
         </button>
       </div>
     </div>
+
+    <!-- Pagination -->
+    <div v-if="totalPages > 1" class="hist__pagination">
+      <LiPagination v-model="localPage" :totalPages="totalPages" />
+    </div>
+
+    <!-- Clear Confirm Modal -->
+    <LiModal v-if="showClearConfirm" :modelValue="true" title="Clear All History" size="sm"
+             @update:modelValue="showClearConfirm = false">
+      <p class="hist__confirm-text">
+        This will permanently delete all your QR scan history.
+        This action cannot be undone.
+      </p>
+      <template #footer>
+        <button class="hist__btn hist__btn--cancel" @click="showClearConfirm = false">Cancel</button>
+        <button class="hist__btn hist__btn--confirm-clear" @click="confirmClear">Clear All</button>
+      </template>
+    </LiModal>
   </div>
 </template>
 
 <script setup>
-defineProps({
+import { ref, watch, onMounted, onUnmounted } from 'vue'
+import LiModal from '@lib/components/LiModal.vue'
+import LiPagination from '@lib/components/LiPagination.vue'
+
+const props = defineProps({
   history: { type: Array, default: () => [] },
   loading: { type: Boolean, default: false },
+  currentPage: { type: Number, default: 1 },
+  totalPages: { type: Number, default: 1 },
 })
 
-defineEmits(['detail', 'delete'])
+const emit = defineEmits(['detail', 'delete', 'clear', 'export', 'update:currentPage'])
+
+const showClearConfirm = ref(false)
+const exportOpen = ref(false)
+const exportWrap = ref(null)
+
+// Two-way page binding for LiPagination (v-model)
+const localPage = ref(props.currentPage)
+
+// Sync parent → local when page changes (e.g. on new load)
+watch(() => props.currentPage, (v) => { localPage.value = v })
+
+// Sync local → parent on user click
+watch(localPage, (v) => {
+  if (v !== props.currentPage && v >= 1 && v <= props.totalPages) {
+    emit('update:currentPage', v)
+  }
+})
+
+// ── Export ──
+
+function toggleExportMenu() {
+  exportOpen.value = !exportOpen.value
+}
+
+function doExport(format, mode) {
+  exportOpen.value = false
+  emit('export', { format, mode })
+}
+
+// Close export menu when clicking outside
+function onDocClick(e) {
+  if (exportWrap.value && !exportWrap.value.contains(e.target)) {
+    exportOpen.value = false
+  }
+}
+
+onMounted(() => { document.addEventListener('click', onDocClick) })
+onUnmounted(() => { document.removeEventListener('click', onDocClick) })
+
+// ── Clear ──
+
+function confirmClear() {
+  showClearConfirm.value = false
+  emit('clear')
+}
+
+// ── Dates ──
 
 function formatDate(dateStr) {
   if (!dateStr) return ''
@@ -61,6 +161,25 @@ function formatDate(dateStr) {
   if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`
   if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+function expiryDaysLeft(dateStr) {
+  if (!dateStr) return 0
+  const expiredDate = new Date(new Date(dateStr).getTime() + 14 * 86400000)
+  return Math.ceil((expiredDate - Date.now()) / 86400000)
+}
+
+function expiryLabel(dateStr) {
+  const days = expiryDaysLeft(dateStr)
+  if (days <= 0) return 'Expires today'
+  if (days === 1) return 'Expires tomorrow'
+  return `Expires in ${days}d`
+}
+
+function expiryClass(dateStr) {
+  const days = expiryDaysLeft(dateStr)
+  if (days <= 1) return 'hist__expiry--warn'
+  return ''
 }
 </script>
 
@@ -235,5 +354,153 @@ function formatDate(dateStr) {
   0% { opacity: 1; }
   50% { opacity: 0.4; }
   100% { opacity: 1; }
+}
+
+/* ── Toolbar ── */
+.hist__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.hist__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill, 999px);
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms;
+  background: transparent;
+}
+
+.hist__btn .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.hist__btn--clear {
+  color: var(--color-red-400, #C83E3B);
+  border-color: rgba(200, 62, 59, 0.25);
+}
+
+.hist__btn--clear:hover {
+  background: rgba(200, 62, 59, 0.06);
+}
+
+.hist__btn--export {
+  color: var(--color-gray-700, #666);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.hist__btn--export:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.hist__btn--cancel {
+  color: var(--color-gray-700, #666);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.hist__btn--cancel:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.hist__btn--confirm-clear {
+  color: #fff;
+  background: var(--color-red-400, #C83E3B);
+  border-color: var(--color-red-400, #C83E3B);
+}
+
+.hist__btn--confirm-clear:hover {
+  opacity: 0.9;
+}
+
+/* ── Export Dropdown ── */
+.hist__export-wrap {
+  position: relative;
+}
+
+.hist__export-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  min-width: 120px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: var(--radius-sm, 12px);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.hist__export-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-gray-400, #B3B3B3);
+  padding: 4px 8px 2px;
+  letter-spacing: 0.5px;
+}
+
+.hist__export-item {
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 13px;
+  color: var(--color-gray-900, #333);
+  text-align: left;
+  border-radius: var(--radius-xs, 8px);
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.hist__export-item:hover {
+  background: var(--color-gray-100, #F2F2F2);
+}
+
+.hist__export-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.06);
+  margin: 4px 6px;
+}
+
+/* ── Expiry ── */
+.hist__date-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hist__expiry {
+  font-size: 10px;
+  color: var(--color-gray-400, #B3B3B3);
+}
+
+.hist__expiry--warn {
+  color: var(--color-red-400, #C83E3B);
+  font-weight: 600;
+}
+
+/* ── Pagination ── */
+.hist__pagination {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* ── Confirm Modal Text ── */
+.hist__confirm-text {
+  font-size: 14px;
+  color: var(--color-gray-700, #666);
+  line-height: 1.6;
+  margin: 0;
 }
 </style>
