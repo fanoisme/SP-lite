@@ -1,16 +1,21 @@
 import { ref, computed } from 'vue'
 import { supabase } from '../lib/supabase.js'
+import { resolveUserAccess } from '../lib/access.js'
 
 // Module-level state so every component sharing useAuth() sees the same
-// session/profile, matching the existing useToast.js singleton pattern.
+// session/profile/access set, matching the existing useToast.js singleton pattern.
 const session = ref(null)
 const profile = ref(null)
 const loading = ref(true)
+const userModules = ref([])
+const userFeatures = ref({})
 let initialized = null
 
 async function loadProfile(userId) {
   if (!userId) {
     profile.value = null
+    userModules.value = []
+    userFeatures.value = {}
     return
   }
   const { data, error } = await supabase
@@ -22,9 +27,16 @@ async function loadProfile(userId) {
   if (error) {
     console.error('[auth] failed to load profile', error)
     profile.value = null
+    userModules.value = []
+    userFeatures.value = {}
     return
   }
   profile.value = data
+  // Resolve module/feature access (port of SO-Platform's resolveUserAccess).
+  // Admin → all non-disabled modules; others → role baseline + per-user overrides.
+  const access = await resolveUserAccess({ id: data.id, role: data.role })
+  userModules.value = access.modules
+  userFeatures.value = access.features
 }
 
 function ensureAuthLoaded() {
@@ -84,6 +96,8 @@ async function signOut() {
   await supabase.auth.signOut()
   session.value = null
   profile.value = null
+  userModules.value = []
+  userFeatures.value = {}
 }
 
 async function updateFullName(fullName) {
@@ -123,8 +137,10 @@ export function useAuth() {
     session,
     profile,
     loading,
+    userModules,
+    userFeatures,
     isAuthenticated: computed(() => !!session.value),
-    isAdmin: computed(() => profile.value?.role === 'admin'),
+    isAdmin: computed(() => profile.value?.role === 'Admin'),
     ensureAuthLoaded,
     signInWithPassword,
     signUp,

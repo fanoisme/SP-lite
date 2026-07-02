@@ -97,6 +97,7 @@ import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import router from './router/index.js'
 import { useAuth } from './composables/useAuth.js'
+import { useAccess } from './composables/useAccess.js'
 import { useToast } from './lib/composables/useToast.js'
 import LiToast from './lib/components/LiToast.vue'
 import LiLogo from './lib/components/LiLogo.vue'
@@ -104,6 +105,7 @@ import LiLogo from './lib/components/LiLogo.vue'
 const route = useRoute()
 const routerInstance = useRouter()
 const { session, profile, isAdmin, signOut } = useAuth()
+const { canModule } = useAccess()
 
 // Supabase appends ?error=...&error_description=... to the redirect URL when
 // an email link (magic link/signup confirmation) is invalid or expired.
@@ -117,9 +119,15 @@ if (authError) {
 
 const isBareRoute = computed(() => route.name === 'landing' || route.name === 'login')
 
-const modules = router.options.routes
-  .filter(r => r.meta?.module)
-  .map(r => ({ path: r.path, label: r.meta.label, icon: r.meta.icon }))
+// Sidebar Tools list — only modules the user's role grants (canModule reads
+// the session-resolved set, which already excludes globally-disabled modules).
+// 'admin' is rendered separately under the Admin section.
+const modules = computed(() =>
+  router.options.routes
+    .filter(r => r.meta?.module && r.meta.module !== 'admin')
+    .filter(r => canModule(r.meta.module))
+    .map(r => ({ path: r.path, label: r.meta.label, icon: r.meta.icon }))
+)
 
 const sidebarOpen = ref(false)
 

@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { useAuth } from '../composables/useAuth.js'
+import { useAccess } from '../composables/useAccess.js'
 
 // SP-lite — hash history so GitHub Pages (no server-side rewrites) can
 // serve deep links correctly.
@@ -37,7 +38,7 @@ const routes = [
   {
     path: '/admin',
     name: 'admin',
-    meta: { requiresAdmin: true, label: 'Admin', icon: 'admin_panel_settings' },
+    meta: { module: 'admin', requiresAdmin: true, label: 'Admin', icon: 'admin_panel_settings' },
     component: () => import('../modules/admin/views/AdminView.vue'),
   },
   {
@@ -53,22 +54,38 @@ const router = createRouter({
   routes,
 })
 
+// First route a signed-in user lands on when they have no specific destination
+// (post-login, or visiting a public route while authed). Picks the first module
+// their role grants, falling back to /profile.
+export function firstAccessibleRoute() {
+  const { userModules } = useAuth()
+  const mod = userModules.value.find(m => m !== 'admin') || userModules.value[0]
+  return mod ? { name: mod } : { name: 'profile' }
+}
+
 router.beforeEach(async (to) => {
   const { ensureAuthLoaded, isAuthenticated, isAdmin } = useAuth()
+  const { canModule } = useAccess()
   await ensureAuthLoaded()
 
   const isPublic = PUBLIC_ROUTES.includes(to.name)
 
   if (isAuthenticated.value && isPublic) {
-    return { name: 'qris' }
+    return firstAccessibleRoute()
   }
 
   if (!isAuthenticated.value && !isPublic) {
     return { name: 'login' }
   }
 
+  // Module-level gate: role must grant the module (covers /admin too — only
+  // the Admin role is seeded with the admin module). requiresAdmin is kept as
+  // a belt-and-suspenders check.
   if (to.meta.requiresAdmin && !isAdmin.value) {
-    return { name: 'qris' }
+    return firstAccessibleRoute()
+  }
+  if (to.meta.module && !canModule(to.meta.module)) {
+    return firstAccessibleRoute()
   }
 
   return true

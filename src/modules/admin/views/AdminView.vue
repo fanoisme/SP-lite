@@ -9,149 +9,281 @@
           </div>
           <div>
             <h1 class="admin__title">Admin Panel</h1>
-            <p class="admin__subtitle">Kelola role dan status akun pengguna</p>
+            <p class="admin__subtitle">Manage users, roles, and module access</p>
           </div>
         </div>
         <div class="admin__stats">
           <span class="admin__stat-chip">
             <span class="material-symbols-outlined">group</span>
-            {{ profiles.length }} users
+            {{ stats.users }} users
           </span>
           <span class="admin__stat-chip">
             <span class="material-symbols-outlined">shield_person</span>
-            {{ adminCount }} admin
+            {{ stats.roles }} roles
           </span>
           <span class="admin__stat-chip">
-            <span class="material-symbols-outlined">toggle_on</span>
-            {{ activeCount }} active
+            <span class="material-symbols-outlined">apps</span>
+            {{ stats.modulesEnabled }}/{{ stats.modulesTotal }} modules
           </span>
         </div>
       </div>
     </header>
 
-    <div v-if="loading" class="admin__loading">
-      <span class="admin__spinner"></span>
-      Loading users...
-    </div>
+    <!-- Tabs -->
+    <LiTabs v-model="activeTab" :tabs="tabDefs" />
 
-    <div v-else-if="profiles.length === 0" class="admin__empty">
-      <span class="material-symbols-outlined">group_off</span>
-      <p>Belum ada user yang signup.</p>
-    </div>
+    <!-- Tab Content -->
+    <Transition name="panel-slide" mode="out-in">
+      <AdminUsersTab
+        v-if="activeTab === 0"
+        key="users"
+        :users="users"
+        :paginatedUsers="paginatedUsers"
+        :loading="usersLoading"
+        :searchQuery="searchQuery"
+        :currentPage="currentPage"
+        :totalPages="totalPages"
+        :roleOptions="roleOptions"
+        :currentUserId="currentUserId"
+        :sortKey="sortKey"
+        :sortOrder="sortOrder"
+        @update:searchQuery="searchQuery = $event"
+        @update:currentPage="currentPage = $event"
+        @sort="onSort"
+        @delete-user="onDeleteUser"
+        @update-role="onUpdateRole"
+        @open-user="onOpenUser"
+      />
 
-    <div v-else class="admin__list">
-      <div
-        v-for="(row, idx) in profiles"
-        :key="row.id"
-        class="admin__user-item"
-        :style="{ '--item-idx': idx }"
-      >
-        <div class="admin__user-avatar">
-          <span>{{ (row.username || row.id).charAt(0).toUpperCase() }}</span>
+      <AdminRolesTab
+        v-else-if="activeTab === 1"
+        key="roles"
+        :roles="roles"
+        :loading="rolesLoading"
+        @add-role="editingRole = null; showRoleModal = true"
+        @edit-role="onOpenRole"
+        @rename-role="editingRole = $event; showRoleModal = true"
+        @delete-role="onDeleteRole"
+      />
+
+      <AdminModulesTab
+        v-else-if="activeTab === 2"
+        key="modules"
+        :modules="allModules"
+        :loading="modulesLoading"
+        @open-module="openModule = $event"
+        @toggle-enabled="onToggleEnabled"
+      />
+    </Transition>
+
+    <!-- Per-role create/rename modal -->
+    <AdminRoleModal
+      v-if="showRoleModal"
+      :role="editingRole"
+      @save="onSaveRole"
+      @close="showRoleModal = false; editingRole = null"
+    />
+
+    <!-- Per-user access drawer -->
+    <AdminUserDrawer
+      v-if="openUser"
+      :user="openUser"
+      @close="openUser = null"
+      @changed="loadUsers"
+    />
+
+    <!-- Per-role access drawer -->
+    <AdminRoleDrawer
+      v-if="openRole"
+      :role="openRole"
+      @close="openRole = null"
+    />
+
+    <!-- Module global-state drawer -->
+    <AdminModuleDrawer
+      v-if="openModule"
+      :mod="openModule"
+      :roles="roles"
+      @close="openModule = null"
+    />
+
+    <!-- Delete Confirm -->
+    <LiModal
+      v-if="deleteTarget"
+      :modelValue="true"
+      title="Confirm Delete"
+      size="sm"
+      @update:modelValue="deleteTarget = null"
+    >
+      <p class="admin__delete-text">
+        Are you sure you want to delete <strong>{{ deleteTarget.label }}</strong>?
+        This action cannot be undone.
+      </p>
+      <template #footer>
+        <div class="admin__delete-actions">
+          <button class="admin__cancel-btn" @click="deleteTarget = null">Cancel</button>
+          <button class="admin__danger-btn" @click="confirmDelete">
+            <span class="material-symbols-outlined">delete</span>
+            Delete
+          </button>
         </div>
-
-        <div class="admin__user-body">
-          <span class="admin__user-name">
-            {{ row.username || '—' }}
-            <span v-if="row.id === currentUserId" class="admin__you-badge">you</span>
-          </span>
-          <span class="admin__user-meta">{{ row.full_name || 'Tanpa nama' }} · sejak {{ formatDate(row.created_at) }}</span>
-        </div>
-
-        <div class="admin__user-controls">
-          <select
-            class="admin__role-select"
-            :class="`admin__role-select--${row.role}`"
-            :value="row.role"
-            :disabled="row.id === currentUserId"
-            @change="updateRole(row, $event.target.value)"
-          >
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-          </select>
-
-          <label class="admin__toggle" :class="{ 'admin__toggle--disabled': row.id === currentUserId }">
-            <input
-              type="checkbox"
-              :checked="row.is_active"
-              :disabled="row.id === currentUserId"
-              @change="updateActive(row, $event.target.checked)"
-            />
-            <span class="admin__toggle-track">
-              <span class="admin__toggle-thumb"></span>
-            </span>
-          </label>
-        </div>
-      </div>
-    </div>
+      </template>
+    </LiModal>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { supabase } from '../../../lib/supabase.js'
-import { useAuth } from '../../../composables/useAuth.js'
-import { useToast } from '../../../lib/composables/useToast.js'
+import { useAdminUsers } from '../composables/useAdminUsers.js'
+import { useAdminRoles } from '../composables/useAdminRoles.js'
+import { useAdminAccess } from '../composables/useAdminAccess.js'
+import AdminUsersTab from '../components/AdminUsersTab.vue'
+import AdminRolesTab from '../components/AdminRolesTab.vue'
+import AdminModulesTab from '../components/AdminModulesTab.vue'
+import AdminRoleModal from '../components/AdminRoleModal.vue'
+import AdminUserDrawer from '../components/AdminUserDrawer.vue'
+import AdminRoleDrawer from '../components/AdminRoleDrawer.vue'
+import AdminModuleDrawer from '../components/AdminModuleDrawer.vue'
+import LiTabs from '@lib/components/LiTabs.vue'
+import LiModal from '@lib/components/LiModal.vue'
 
-const { session } = useAuth()
-const toast = useToast()
+// Composables
+const {
+  users, loading: usersLoading, error: usersError, currentUser,
+  searchQuery, sortKey, sortOrder, currentPage, pageSize,
+  filteredUsers, sortedUsers, paginatedUsers, totalPages,
+  setSort, loadUsers, updateUserRole, deleteUser,
+} = useAdminUsers()
 
-const currentUserId = session.value?.user?.id
-const profiles = ref([])
-const loading = ref(true)
+const {
+  roles, loading: rolesLoading, error: rolesError,
+  loadRoles, createRole, renameRole, deleteRole,
+} = useAdminRoles()
 
-const adminCount = computed(() => profiles.value.filter(p => p.role === 'admin').length)
-const activeCount = computed(() => profiles.value.filter(p => p.is_active).length)
+const {
+  allModules, accessMap,
+  loadModules, loadAccess, isModuleGranted, toggleModule,
+  loadFeatureAccess, setModuleEnabled,
+} = useAdminAccess()
 
-function formatDate(value) {
-  return new Date(value).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+// Tab state
+const activeTab = ref(0)
+const tabDefs = [
+  { label: 'Users', icon: 'group' },
+  { label: 'Roles', icon: 'shield_person' },
+  { label: 'Modules', icon: 'apps' },
+]
+
+// Header quick-stats
+const stats = computed(() => ({
+  users: users.value.length,
+  roles: roles.value.length,
+  modulesEnabled: allModules.value.filter(m => m.is_enabled !== false).length,
+  modulesTotal: allModules.value.length,
+}))
+
+// Derived
+const currentUserId = computed(() => currentUser.value?.id)
+const roleOptions = computed(() =>
+  roles.value.map(r => ({ label: r.name, value: r.name })),
+)
+
+// Modals
+const showRoleModal = ref(false)
+const editingRole = ref(null)
+const deleteTarget = ref(null)  // { type: 'user'|'role', id, label }
+const openUser = ref(null)
+const openRole = ref(null)
+const openModule = ref(null)
+const modulesLoading = ref(true)
+
+function onOpenUser(u) {
+  openUser.value = u
 }
 
-async function loadProfiles() {
-  loading.value = true
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .order('created_at', { ascending: false })
+function onOpenRole(r) {
+  openRole.value = r
+}
 
-  if (error) {
-    toast.error('Gagal memuat daftar pengguna')
+// ── Users ──
+
+function onSort({ key, order }) {
+  sortKey.value = key
+  sortOrder.value = order
+}
+
+async function onUpdateRole(userId, newRole) {
+  await updateUserRole(userId, newRole)
+}
+
+function onDeleteUser(user) {
+  deleteTarget.value = { type: 'user', id: user.id, label: user.username }
+}
+
+// ── Roles ──
+
+async function onSaveRole(name, done) {
+  let ok
+  if (editingRole.value) {
+    ok = await renameRole(editingRole.value.id, name)
   } else {
-    profiles.value = data
+    ok = await createRole(name)
   }
-  loading.value = false
+  if (ok) {
+    showRoleModal.value = false
+    editingRole.value = null
+    done(null)
+    // Reload access map since role names may have changed
+    await loadAccess(roles.value.map(r => r.name))
+  } else {
+    done(rolesError.value || 'Failed to save role')
+  }
 }
 
-async function updateRole(row, role) {
-  const { error } = await supabase.from('profiles').update({ role }).eq('id', row.id)
-  if (error) {
-    toast.error('Gagal mengubah role')
-    return
-  }
-  row.role = role
-  toast.success(`${row.username || row.id} sekarang ${role}`)
+function onDeleteRole(role) {
+  deleteTarget.value = { type: 'role', id: role.id, label: role.name }
 }
 
-async function updateActive(row, is_active) {
-  const { error } = await supabase.from('profiles').update({ is_active }).eq('id', row.id)
-  if (error) {
-    toast.error('Gagal mengubah status')
-    return
+// ── Modules ──
+
+async function onToggleEnabled(moduleId, on) {
+  await setModuleEnabled(moduleId, on)
+  await loadModules()  // refresh is_enabled + role counts
+  if (openModule.value && openModule.value.id === moduleId) {
+    openModule.value = allModules.value.find(m => m.id === moduleId) || openModule.value
   }
-  row.is_active = is_active
-  toast.success(`${row.username || row.id} ${is_active ? 'diaktifkan' : 'dinonaktifkan'}`)
 }
 
-onMounted(loadProfiles)
+// ── Delete Confirm ──
+
+async function confirmDelete() {
+  if (!deleteTarget.value) return
+  const { type, id } = deleteTarget.value
+  if (type === 'user') {
+    await deleteUser(id)
+  } else if (type === 'role') {
+    await deleteRole(id)
+  }
+  deleteTarget.value = null
+}
+
+// ── Init ──
+
+onMounted(async () => {
+  await Promise.all([loadUsers(), loadRoles(), loadModules(), loadFeatureAccess()])
+  modulesLoading.value = false
+  await loadAccess(roles.value.map(r => r.name))
+})
 </script>
 
 <style scoped>
 .admin {
-  max-width: 900px;
+  max-width: 1280px;
   margin: 0 auto;
+  padding: var(--space-lg, 24px) var(--space-xl, 32px);
   display: flex;
   flex-direction: column;
-  gap: var(--space-l, 16px);
+  gap: var(--space-lg, 24px);
   animation: admin-in 500ms var(--ease-smooth, cubic-bezier(0.16, 1, 0.3, 1)) both;
 }
 
@@ -162,7 +294,7 @@ onMounted(loadProfiles)
 
 /* ── Header ── */
 .admin__header {
-  animation: headerReveal 600ms var(--ease-smooth) both;
+  animation: headerReveal 600ms var(--ease-smooth, cubic-bezier(0.16, 1, 0.3, 1)) both;
 }
 
 @keyframes headerReveal {
@@ -174,8 +306,7 @@ onMounted(loadProfiles)
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-l, 16px);
-  flex-wrap: wrap;
+  gap: var(--space-lg, 16px);
 }
 
 .admin__title-group {
@@ -216,6 +347,7 @@ onMounted(loadProfiles)
   margin: 0;
 }
 
+/* ── Header Stats ── */
 .admin__stats {
   display: flex;
   gap: var(--space-s, 8px);
@@ -225,8 +357,8 @@ onMounted(loadProfiles)
 .admin__stat-chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
+  gap: var(--space-xs, 6px);
+  padding: var(--space-xs, 6px) var(--space-m, 12px);
   border-radius: var(--radius-pill, 999px);
   background: rgba(255, 255, 255, 0.6);
   border: 1px solid var(--glass-border, rgba(0, 0, 0, 0.06));
@@ -242,223 +374,122 @@ onMounted(loadProfiles)
   color: var(--cta-primary-bg, #FFBC25);
 }
 
-/* ── Loading / empty ── */
-.admin__loading,
-.admin__empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-m, 12px);
-  padding: var(--space-3xl, 48px);
-  color: var(--color-on-surface-muted, #999);
+/* ── Panel Transitions ── */
+.panel-slide-enter-active {
+  transition: all var(--dur-medium, 300ms) var(--ease-smooth, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.panel-slide-leave-active {
+  transition: all var(--dur-short, 200ms) var(--ease-snap, cubic-bezier(0.6, 0, 0.2, 1));
+}
+
+.panel-slide-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.panel-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* ── Delete Modal ── */
+.admin__delete-text {
   font-size: 14px;
+  color: var(--color-on-surface-variant, #666);
+  line-height: 1.6;
+  margin: 0;
 }
 
-.admin__loading {
-  flex-direction: row;
+.admin__delete-text strong {
+  color: var(--color-on-surface, #333);
+  font-weight: 600;
 }
 
-.admin__empty .material-symbols-outlined {
-  font-size: 36px;
-  color: var(--color-gray-300, #ccc);
-}
-
-.admin__spinner {
-  width: 18px;
-  height: 18px;
-  border: 2.5px solid rgba(0, 0, 0, 0.15);
-  border-bottom-color: transparent;
-  border-radius: 50%;
-  animation: admin-spin 700ms var(--ease-out) infinite;
-}
-
-@keyframes admin-spin {
-  to { transform: rotate(360deg); }
-}
-
-/* ── List ── */
-.admin__list {
+.admin__delete-actions {
   display: flex;
-  flex-direction: column;
   gap: var(--space-s, 8px);
+  justify-content: flex-end;
 }
 
-.admin__user-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-m, 12px);
-  padding: var(--space-m, 12px) var(--space-l, 16px);
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: var(--radius-md, 16px);
-  transition: background 200ms var(--ease-out), box-shadow 300ms var(--ease-out), transform 300ms var(--ease-out);
-  animation: admin-item-in 400ms var(--ease-smooth) both;
-  animation-delay: calc(var(--item-idx, 0) * 60ms);
+.admin__cancel-btn {
+  padding: 10px 20px;
+  background: none;
+  border: 1.5px solid var(--color-outline, #CCC);
+  border-radius: var(--radius-pill, 999px);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  color: var(--color-on-surface-variant, #666);
+  cursor: pointer;
+  transition: all var(--dur-short, 200ms) var(--ease-out);
 }
 
-@keyframes admin-item-in {
-  from { opacity: 0; transform: translateX(-12px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-.admin__user-item:hover {
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: var(--shadow-sm);
-  transform: translateX(2px);
-}
-
-.admin__user-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radius-sm, 12px);
-  background: linear-gradient(135deg, var(--cta-primary-bg, #FFBC25), var(--color-orange-200, #FFA726));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  font-family: var(--font-display, 'Inter', sans-serif);
-  font-weight: 700;
-  color: var(--cta-primary-text, #1E1E1E);
-}
-
-.admin__user-body {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.admin__user-name {
-  font-size: 14px;
-  font-weight: 700;
+.admin__cancel-btn:hover {
+  border-color: var(--color-gray-400, #B3B3B3);
   color: var(--color-on-surface, #333);
 }
 
-.admin__you-badge {
-  margin-left: 6px;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--color-orange-400, #FF6B00);
-}
-
-.admin__user-meta {
-  font-size: 12px;
-  color: var(--color-on-surface-muted, #999);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.admin__user-controls {
-  display: flex;
+.admin__danger-btn {
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-m, 12px);
-  flex-shrink: 0;
-}
-
-.admin__role-select {
-  appearance: none;
-  padding: 6px 28px 6px 12px;
+  gap: var(--space-s, 8px);
+  padding: 10px 24px;
+  background: var(--color-error, #C83E3B);
+  color: #fff;
+  border: none;
   border-radius: var(--radius-pill, 999px);
-  border: 1.5px solid rgba(0, 0, 0, 0.08);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
   font-family: var(--font-body, 'Inter', sans-serif);
   cursor: pointer;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 8px center;
-  transition: opacity 200ms var(--ease-out);
+  transition: all var(--dur-short, 200ms) var(--ease-out);
 }
 
-.admin__role-select:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.admin__danger-btn:hover {
+  background: #A33129;
+  transform: translateY(-1px);
 }
 
-.admin__role-select--user {
-  background-color: var(--color-gray-100, #F2F2F2);
-  color: var(--color-on-surface-variant, #666);
-}
-
-.admin__role-select--admin {
-  background-color: var(--color-error-container, #FDECEE);
-  color: var(--color-on-error-container, #A33129);
-}
-
-.admin__toggle {
-  display: inline-flex;
-  cursor: pointer;
-}
-
-.admin__toggle--disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.admin__toggle input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-}
-
-.admin__toggle-track {
-  position: relative;
-  width: 40px;
-  height: 22px;
-  border-radius: var(--radius-pill, 999px);
-  background: var(--color-gray-300, #CCCCCC);
-  transition: background 200ms var(--ease-out);
-}
-
-.admin__toggle input:checked + .admin__toggle-track {
-  background: var(--color-success, #10B981);
-}
-
-.admin__toggle-thumb {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--color-gray-0, #fff);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  transition: transform 200ms var(--ease-out);
-}
-
-.admin__toggle input:checked + .admin__toggle-track .admin__toggle-thumb {
-  transform: translateX(18px);
+.admin__danger-btn .material-symbols-outlined {
+  font-size: 16px;
 }
 
 /* ── Responsive ── */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  .admin {
+    padding: var(--space-l, 16px);
+    gap: var(--space-l, 16px);
+  }
+
   .admin__header-content {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .admin__user-item {
-    flex-wrap: wrap;
+  .admin__title {
+    font-size: 20px;
   }
 
-  .admin__user-controls {
-    width: 100%;
-    justify-content: space-between;
-    padding-left: 52px;
+  .admin__icon-badge {
+    width: 40px;
+    height: 40px;
+  }
+
+  .admin__icon-badge .material-symbols-outlined {
+    font-size: 20px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .admin,
-  .admin__header,
-  .admin__user-item {
-    animation: none !important;
+  .admin__header {
+    animation: none;
+  }
+
+  .panel-slide-enter-active,
+  .panel-slide-leave-active {
+    transition-duration: 0ms;
   }
 }
 </style>
