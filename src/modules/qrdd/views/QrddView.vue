@@ -280,16 +280,18 @@ async function confirmDelete() {
 
 // ── Init ──
 
+function onResize() { nextTick(() => updateIndicator()) }
+
 onMounted(() => {
   buAccounts.loadItems()
   mw.loadItems()
   pr.loadItems()
   nextTick(() => updateIndicator())
-  window.addEventListener('resize', () => nextTick(() => updateIndicator()))
+  window.addEventListener('resize', onResize)
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', () => nextTick(() => updateIndicator()))
+  window.removeEventListener('resize', onResize)
 })
 </script>
 
