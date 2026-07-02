@@ -29,8 +29,22 @@
       </div>
     </header>
 
-    <!-- Tabs -->
-    <LiTabs v-model="activeTab" :tabs="tabDefs" />
+    <!-- Pill Tabs -->
+    <nav class="admin__tabs-wrapper">
+      <div class="admin__tabs">
+        <button
+          v-for="(tab, index) in tabDefs"
+          :key="tab.id"
+          class="admin__tab"
+          :class="{ 'admin__tab--active': activeTab === index }"
+          @click="switchTab(index)"
+        >
+          <span class="material-symbols-outlined admin__tab-icon">{{ tab.icon }}</span>
+          <span class="admin__tab-label">{{ tab.label }}</span>
+        </button>
+        <div class="admin__tab-indicator" :style="indicatorStyle" />
+      </div>
+    </nav>
 
     <!-- Tab Content -->
     <Transition name="panel-slide" mode="out-in">
@@ -143,7 +157,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useAdminUsers } from '../composables/useAdminUsers.js'
 import { useAdminRoles } from '../composables/useAdminRoles.js'
 import { useAdminAccess } from '../composables/useAdminAccess.js'
@@ -155,7 +169,6 @@ import AdminUserModal from '../components/AdminUserModal.vue'
 import AdminUserDrawer from '../components/AdminUserDrawer.vue'
 import AdminRoleDrawer from '../components/AdminRoleDrawer.vue'
 import AdminModuleDrawer from '../components/AdminModuleDrawer.vue'
-import LiTabs from '@lib/components/LiTabs.vue'
 import LiModal from '@lib/components/LiModal.vue'
 
 // Composables
@@ -180,10 +193,30 @@ const {
 // Tab state
 const activeTab = ref(0)
 const tabDefs = [
-  { label: 'Users', icon: 'group' },
-  { label: 'Roles', icon: 'shield_person' },
-  { label: 'Modules', icon: 'apps' },
+  { id: 'users', label: 'Users', desc: 'Manage users', icon: 'group' },
+  { id: 'roles', label: 'Roles', desc: 'Role management', icon: 'shield_person' },
+  { id: 'modules', label: 'Modules', desc: 'Module access', icon: 'apps' },
 ]
+
+// Pill tab indicator
+const indicatorStyle = ref({})
+
+function switchTab(index) {
+  activeTab.value = index
+  nextTick(() => updateIndicator())
+}
+
+function updateIndicator() {
+  const tabEl = document.querySelectorAll('.admin__tab')[activeTab.value]
+  if (tabEl) {
+    indicatorStyle.value = {
+      left: `${tabEl.offsetLeft}px`,
+      width: `${tabEl.offsetWidth}px`,
+    }
+  }
+}
+
+function onResize() { nextTick(() => updateIndicator()) }
 
 // Header quick-stats
 const stats = computed(() => ({
@@ -299,6 +332,12 @@ onMounted(async () => {
   await Promise.all([loadUsers(), loadRoles(), loadModules(), loadFeatureAccess()])
   modulesLoading.value = false
   await loadAccess(roles.value.map(r => r.name))
+  nextTick(() => updateIndicator())
+  window.addEventListener('resize', onResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', onResize)
 })
 </script>
 
@@ -517,5 +556,46 @@ onMounted(async () => {
   .panel-slide-leave-active {
     transition-duration: 0ms;
   }
+}
+
+/* ── Pill Tabs ── */
+.admin__tabs-wrapper { }
+.admin__tabs {
+  display: flex; position: relative;
+  background: rgba(255,255,255,0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-md, 16px);
+  padding: 5px; gap: 2px;
+}
+.admin__tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 14px 12px; border: none; border-radius: var(--radius-sm, 12px);
+  background: transparent; cursor: pointer;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  transition: all 300ms ease-out;
+  position: relative; z-index: 1;
+}
+.admin__tab:hover { background: rgba(255,255,255,0.5); }
+.admin__tab--active { color: var(--color-on-surface, #1a1a2e); }
+.admin__tab-icon { font-size: 22px; color: var(--color-gray-500, #8e8ea0); transition: color 300ms ease-out, transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+.admin__tab--active .admin__tab-icon { color: var(--cta-primary-bg, #FFBC25); transform: scale(1.1); }
+.admin__tab-label { font-size: 13px; font-weight: 600; color: var(--color-gray-700, #555); transition: color 300ms ease-out; }
+.admin__tab--active .admin__tab-label { color: var(--color-on-surface, #1a1a2e); }
+.admin__tab-indicator {
+  position: absolute; top: 5px; height: calc(100% - 10px);
+  background: #fff; border-radius: var(--radius-sm, 12px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.02);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 0;
+}
+@media (max-width: 768px) {
+  .admin__tab { padding: 10px 8px; min-width: 0; flex-shrink: 0; }
+}
+@media (max-width: 480px) {
+  .admin__tab-label { font-size: 12px; }
+  .admin__tab-icon { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin__tab-indicator { transition: none; }
+  .admin__tab-icon { transition: none; }
 }
 </style>
