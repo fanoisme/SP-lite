@@ -2,10 +2,16 @@
   <div class="tab">
     <div class="tab__toolbar">
       <LiTextField v-model="searchQueryProxy" placeholder="Search BU accounts..." iconLeft="search" class="tab__search" />
-      <button v-if="canCreate" class="tab__add-btn" @click="$emit('add')">
-        <span class="material-symbols-outlined">add</span>
-        Add BU Account
-      </button>
+      <div class="tab__toolbar-actions">
+        <button v-if="canExport" class="tab__export-btn" @click="$emit('export')">
+          <span class="material-symbols-outlined">file_save</span>
+          Export
+        </button>
+        <button v-if="canCreate" class="tab__add-btn" @click="$emit('add')">
+          <span class="material-symbols-outlined">add</span>
+          Add BU Account
+        </button>
+      </div>
     </div>
 
     <LiGlassCard variant="light" size="md" :hoverable="false" class="tab__card">
@@ -56,8 +62,9 @@ const props = defineProps({
   items: Array, loading: Boolean,
   searchQuery: String, currentPage: Number, totalPages: Number,
   canCreate: Boolean, canUpdate: Boolean, canDelete: Boolean,
+  canExport: { type: Boolean, default: true },
 })
-const emit = defineEmits(['update:searchQuery', 'update:currentPage', 'add', 'edit', 'delete'])
+const emit = defineEmits(['update:searchQuery', 'update:currentPage', 'add', 'edit', 'delete', 'export'])
 
 const searchQueryProxy = computed({ get: () => props.searchQuery, set: v => emit('update:searchQuery', v) })
 const currentPageProxy = computed({ get: () => props.currentPage, set: v => emit('update:currentPage', v) })
@@ -103,4 +110,18 @@ function formatDate(d) { return d ? new Date(d).toLocaleDateString('en-US', { ye
 .tab__del-btn:hover { color: var(--color-red-400, #C83E3B); background: rgba(200,62,59,0.08); }
 .tab__edit-btn .material-symbols-outlined, .tab__del-btn .material-symbols-outlined { font-size: 18px; }
 .tab__pagination { display: flex; justify-content: center; padding: 16px; border-top: 1px solid rgba(0,0,0,0.04); }
+.tab__toolbar-actions { display: flex; align-items: center; gap: 8px; }
+.tab__export-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 16px;
+  background: transparent;
+  color: var(--color-gray-600, #666);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: var(--radius-pill, 999px);
+  font-weight: 600; font-size: 13px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  cursor: pointer; transition: all 200ms; white-space: nowrap;
+}
+.tab__export-btn:hover { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.2); }
+.tab__export-btn .material-symbols-outlined { font-size: 18px; }
 </style>
