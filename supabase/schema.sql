@@ -18,6 +18,12 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
+-- RLS policies (below) control which *rows* a role can see/touch, but
+-- Postgres also requires a base table-level grant before that even gets
+-- evaluated — without this, every request fails with "permission denied
+-- for table profiles" (42501) regardless of how the RLS policies are set.
+grant select, update on public.profiles to authenticated;
+
 -- ── 2. auto-create a profile row on signup ──────────────────────────────
 create or replace function public.handle_new_user()
 returns trigger
