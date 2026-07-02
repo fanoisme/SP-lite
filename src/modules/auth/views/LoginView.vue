@@ -16,28 +16,6 @@
       <h1 class="login-title">SP-lite</h1>
       <p class="login-subtitle">QRIS · Template · Video Tools</p>
 
-      <!-- Method switcher -->
-      <div class="login-methods" role="tablist">
-        <button
-          type="button"
-          class="login-methods__btn"
-          :class="{ 'is-active': method === 'password' }"
-          @click="method = 'password'"
-        >
-          <span class="material-symbols-outlined">password</span>
-          Password
-        </button>
-        <button
-          type="button"
-          class="login-methods__btn"
-          :class="{ 'is-active': method === 'magic' }"
-          @click="method = 'magic'"
-        >
-          <span class="material-symbols-outlined">mail</span>
-          Magic Link
-        </button>
-      </div>
-
       <!-- Error / info banner -->
       <Transition name="login-error-slide">
         <div v-if="bannerMsg" class="login-error" :class="{ 'login-error--info': bannerType === 'info' }" role="alert">
@@ -48,8 +26,7 @@
         </div>
       </Transition>
 
-      <!-- Password method -->
-      <form v-if="method === 'password'" class="login-form" @submit.prevent="onPasswordSubmit" novalidate>
+      <form class="login-form" @submit.prevent="onPasswordSubmit" novalidate>
         <div class="login-field" v-if="mode === 'signin'">
           <label class="login-field__label" for="identifier">Username atau Email</label>
           <div class="login-field__input-group" :class="{ 'is-focused': focus.identifier }">
@@ -138,38 +115,7 @@
         </button>
       </form>
 
-      <!-- Magic link method -->
-      <form v-else class="login-form" @submit.prevent="onMagicLinkSubmit" novalidate>
-        <p class="login-hint">Kami kirim link login ke email kamu, tanpa password.</p>
-        <div class="login-field">
-          <label class="login-field__label" for="magic-email">Email</label>
-          <div class="login-field__input-group" :class="{ 'is-focused': focus.magicEmail }">
-            <span class="material-symbols-outlined login-field__icon" aria-hidden="true">mail</span>
-            <input
-              id="magic-email"
-              v-model="magicEmail"
-              type="email"
-              class="login-field__input"
-              placeholder="nama@perusahaan.com"
-              autocomplete="email"
-              @focus="focus.magicEmail = true"
-              @blur="focus.magicEmail = false"
-            />
-          </div>
-        </div>
-
-        <button type="submit" class="login-submit" :class="{ 'login-submit--loading': submitting }" :disabled="submitting">
-          <Transition name="login-btn-crossfade" mode="out-in">
-            <span v-if="submitting" key="spinner" class="login-submit__spinner-wrap">
-              <span class="login-submit__spinner"></span>
-              Mengirim...
-            </span>
-            <span v-else key="label">Kirim Magic Link</span>
-          </Transition>
-        </button>
-      </form>
-
-      <button v-if="method === 'password'" type="button" class="login-mode-switch" @click="toggleMode">
+      <button type="button" class="login-mode-switch" @click="toggleMode">
         {{ mode === 'signin' ? "Belum punya akun? Sign up" : 'Sudah punya akun? Sign in' }}
       </button>
 
@@ -188,9 +134,8 @@ import { useAuth } from '../../../composables/useAuth.js'
 import LiLogo from '../../../lib/components/LiLogo.vue'
 
 const router = useRouter()
-const { signInWithPassword, signInWithMagicLink, signUp } = useAuth()
+const { signInWithPassword, signUp } = useAuth()
 
-const method = ref('password') // 'password' | 'magic'
 const mode = ref('signin') // 'signin' | 'signup'
 const submitting = ref(false)
 const showPassword = ref(false)
@@ -199,14 +144,12 @@ const identifier = ref('')
 const password = ref('')
 const signupEmail = ref('')
 const signupUsername = ref('')
-const magicEmail = ref('')
 
 const focus = ref({
   identifier: false,
   signupEmail: false,
   signupUsername: false,
   password: false,
-  magicEmail: false,
 })
 
 const bannerMsg = ref('')
@@ -252,18 +195,6 @@ async function onPasswordSubmit() {
   }
 }
 
-async function onMagicLinkSubmit() {
-  submitting.value = true
-  bannerMsg.value = ''
-  try {
-    await signInWithMagicLink(magicEmail.value)
-    showBanner('Magic link terkirim, cek email kamu', 'info')
-  } catch (err) {
-    showBanner(err.message || 'Gagal mengirim magic link')
-  } finally {
-    submitting.value = false
-  }
-}
 </script>
 
 <style scoped>
@@ -393,55 +324,6 @@ async function onMagicLinkSubmit() {
   font-weight: 500;
   color: var(--color-on-surface-muted, #999);
   margin: 0 0 clamp(20px, 2.5vw, 28px);
-}
-
-/* ── Method switcher ── */
-.login-methods {
-  display: flex;
-  gap: 4px;
-  background: rgba(0, 0, 0, 0.04);
-  border-radius: var(--radius-sm, 12px);
-  padding: 3px;
-  margin-bottom: clamp(16px, 2vw, 22px);
-}
-
-.login-methods__btn {
-  flex: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 8px 12px;
-  background: none;
-  border: none;
-  border-radius: var(--radius-xs, 8px);
-  font-size: 13px;
-  font-weight: 600;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  color: var(--color-on-surface-muted, #999);
-  cursor: pointer;
-  transition: all 200ms var(--ease-out);
-}
-
-.login-methods__btn .material-symbols-outlined {
-  font-size: 16px;
-}
-
-.login-methods__btn:hover {
-  color: var(--color-on-surface-variant, #666);
-}
-
-.login-methods__btn.is-active {
-  background: var(--color-gray-0, #fff);
-  color: var(--color-on-surface, #333);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
-
-/* ── Hint ── */
-.login-hint {
-  margin: 0 0 4px;
-  font-size: 13px;
-  color: var(--color-on-surface-muted, #999);
 }
 
 /* ── Form ── */

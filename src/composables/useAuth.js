@@ -65,14 +65,6 @@ function redirectUrl() {
   return `${window.location.origin}${window.location.pathname}`
 }
 
-async function signInWithMagicLink(email) {
-  const { error } = await supabase.auth.signInWithOtp({
-    email: email.trim(),
-    options: { emailRedirectTo: redirectUrl() },
-  })
-  if (error) throw error
-}
-
 async function signUp({ email, password, username, fullName }) {
   const { error } = await supabase.auth.signUp({
     email: email.trim(),
@@ -135,7 +127,6 @@ export function useAuth() {
     isAdmin: computed(() => profile.value?.role === 'admin'),
     ensureAuthLoaded,
     signInWithPassword,
-    signInWithMagicLink,
     signUp,
     signOut,
     updateFullName,
