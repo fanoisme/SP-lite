@@ -2,6 +2,7 @@ import { ref, computed, watch } from 'vue'
 import { supabase } from '@/lib/supabase.js'
 import { useAuth } from '@/composables/useAuth.js'
 import { useToast } from '@/lib/composables/useToast.js'
+import { exportToXlsx } from '@/lib/export-xlsx.js'
 
 export function useMerchantWhitelist() {
   const { session } = useAuth()
@@ -134,10 +135,36 @@ export function useMerchantWhitelist() {
     return true
   }
 
+  const exportColumns = [
+    { key: 'merchant_id', label: 'Merchant ID', textFormula: true },
+    { key: 'merchant_name', label: 'Merchant Name' },
+    { key: 'bu_name', label: 'BU Name' },
+    { key: 'status', label: 'Status' },
+    { key: 'created_by', label: 'Created By' },
+    { key: 'created_at', label: 'Created At', format: v => v ? new Date(v).toISOString().slice(0, 10) : '' },
+    { key: 'updated_by', label: 'Updated By' },
+    { key: 'updated_at', label: 'Updated At', format: v => v ? new Date(v).toISOString().slice(0, 10) : '' },
+  ]
+
+  function exportFiltered() {
+    const rows = filtered.value.length ? filtered.value : items.value
+    if (!rows.length) {
+      toast.error('No data to export')
+      return
+    }
+    try {
+      exportToXlsx(rows, exportColumns, 'qrdd_merchant_whitelist')
+      toast.success(`Exported ${rows.length} merchants`)
+    } catch (e) {
+      toast.error('Export failed: ' + e.message)
+    }
+  }
+
   return {
     items, loading, error,
     searchQuery, currentPage, pageSize,
-    paginatedItems, totalPages,
+    filtered, paginatedItems, totalPages,
     loadItems, createItem, updateItem, deleteItem,
+    exportFiltered,
   }
 }
