@@ -12,33 +12,59 @@
     </div>
 
     <LiGlassCard variant="light" size="md" :hoverable="false" class="tab__card">
-      <LiTable :data="items" :columns="columns" :loading="loading" rowKey="promo_id">
-        <template #cell-promo_id="{ value }">
-          <span class="tab__code">{{ value }}</span>
-        </template>
-        <template #cell-merchant_id="{ value }">
-          <span v-if="value" class="tab__code">{{ value }}</span>
-          <span v-else class="tab__all">All Merchants</span>
-        </template>
-        <template #cell-discount="{ row }">
-          <span class="tab__discount">
-            PRM: {{ row.prm_discount_value }}{{ row.prm_discount_type === 'PERCENTAGE' ? '%' : '' }}
-            / PL: {{ row.pl_discount_value }}{{ row.pl_discount_type === 'PERCENTAGE' ? '%' : '' }}
-          </span>
-        </template>
-        <template #cell-dates="{ row }">
-          <span class="tab__date">{{ fmt(row.start_date) }} – {{ fmt(row.end_date) }}</span>
-        </template>
-        <template #cell-status="{ value }">
-          <span class="tab__status" :class="'tab__status--' + (value || 'active').toLowerCase()">{{ value }}</span>
-        </template>
-        <template #cell-actions="{ row }">
-          <div class="tab__actions">
-            <button v-if="canUpdate" class="tab__edit-btn" @click="$emit('edit', row)" title="Edit"><span class="material-symbols-outlined">edit</span></button>
-            <button v-if="canDelete" class="tab__del-btn" @click="$emit('delete', row)" title="Delete"><span class="material-symbols-outlined">delete</span></button>
-          </div>
-        </template>
-      </LiTable>
+      <div class="tab__table-wrap">
+        <LiTable :data="items" :columns="columns" :loading="loading" rowKey="promo_id">
+          <template #cell-promo_id="{ value }">
+            <span class="tab__code">{{ value }}</span>
+          </template>
+          <template #cell-merchant_id="{ value }">
+            <span v-if="value" class="tab__code">{{ value }}</span>
+            <span v-else class="tab__all">All Merchants</span>
+          </template>
+          <template #cell-prm_discount_type="{ row }">
+            <span class="tab__discount-type" :class="'tab__discount-type--' + (row.prm_discount_type || '').toLowerCase()">{{ row.prm_discount_type }}</span>
+          </template>
+          <template #cell-pl_discount_type="{ row }">
+            <span class="tab__discount-type" :class="'tab__discount-type--' + (row.pl_discount_type || '').toLowerCase()">{{ row.pl_discount_type }}</span>
+          </template>
+          <template #cell-prm_max_discount="{ value }">
+            <span>{{ fmtMaxDiscount(value) }}</span>
+          </template>
+          <template #cell-pl_max_discount="{ value }">
+            <span>{{ fmtMaxDiscount(value) }}</span>
+          </template>
+          <template #cell-min_txn_amount="{ value }">
+            <span v-if="Number(value) <= 1">—</span>
+            <span v-else>{{ value }}</span>
+          </template>
+          <template #cell-max_txn_amount="{ value }">
+            <span v-if="value == null">Unlimited</span>
+            <span v-else>{{ value }}</span>
+          </template>
+          <template #cell-budget_amount="{ value }">
+            <span v-if="value == null">Unlimited</span>
+            <span v-else>{{ value }}</span>
+          </template>
+          <template #cell-status="{ value }">
+            <span class="tab__status" :class="'tab__status--' + (value || 'active').toLowerCase()">{{ value }}</span>
+          </template>
+          <template #cell-created_by="{ value }">
+            <span class="tab__meta">{{ value || '—' }}</span>
+          </template>
+          <template #cell-updated_by="{ value }">
+            <span class="tab__meta">{{ value || '—' }}</span>
+          </template>
+          <template #cell-updated_at="{ value }">
+            <span class="tab__date">{{ formatDate(value) }}</span>
+          </template>
+          <template #cell-actions="{ row }">
+            <div class="tab__actions">
+              <button v-if="canUpdate" class="tab__edit-btn" @click="$emit('edit', row)" title="Edit"><span class="material-symbols-outlined">edit</span></button>
+              <button v-if="canDelete" class="tab__del-btn" @click="$emit('delete', row)" title="Delete"><span class="material-symbols-outlined">delete</span></button>
+            </div>
+          </template>
+        </LiTable>
+      </div>
 
       <LiEmptyState v-if="!loading && items.length === 0" icon="discount" title="No promo rules"
         :description="searchQueryProxy ? 'Try a different search' : 'Add your first promo rule.'" />
@@ -85,18 +111,33 @@ const searchColumnLabel = computed(() => {
 })
 
 const columns = [
-  { key: 'promo_id', label: 'Promo ID' },
+  { key: 'promo_id', label: 'Promo ID', width: '140px' },
   { key: 'promo_name', label: 'Name' },
   { key: 'merchant_id', label: 'Merchant' },
   { key: 'bu_name', label: 'BU' },
-  { key: 'discount', label: 'Discounts' },
-  { key: 'dates', label: 'Period' },
+  { key: 'prm_discount_type', label: 'PRM Type' },
+  { key: 'prm_discount_value', label: 'PRM Value' },
+  { key: 'prm_max_discount', label: 'PRM Max' },
+  { key: 'pl_discount_type', label: 'PL Type' },
+  { key: 'pl_discount_value', label: 'PL Value' },
+  { key: 'pl_max_discount', label: 'PL Max' },
+  { key: 'min_txn_amount', label: 'Min Txn' },
+  { key: 'max_txn_amount', label: 'Max Txn' },
+  { key: 'budget_amount', label: 'Budget' },
   { key: 'priority', label: 'Pri' },
   { key: 'status', label: 'Status' },
+  { key: 'created_by', label: 'Created By' },
+  { key: 'updated_by', label: 'Updated By' },
+  { key: 'updated_at', label: 'Updated' },
   { key: 'actions', label: '', width: '100px' },
 ]
 
-function fmt(d) { return d || '—' }
+function formatDate(d) { return d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '—' }
+
+function fmtMaxDiscount(v) {
+  if (Number(v) >= 49999999999) return 'Unlimited'
+  return v
+}
 </script>
 
 <style scoped>
@@ -114,8 +155,12 @@ function fmt(d) { return d || '—' }
 .tab__card { padding: 0; overflow: hidden; }
 .tab__code { font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; color: var(--color-gray-700, #666); }
 .tab__all { font-size: 12px; color: var(--color-gray-400, #B3B3B3); font-style: italic; }
-.tab__discount { font-size: 12px; }
+.tab__table-wrap { overflow-x: auto; }
+.tab__discount-type { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+.tab__discount-type--percentage { background: #E6E6FF; color: #0047B2; }
+.tab__discount-type--fixed { background: #E6F4EA; color: #137333; }
 .tab__date { font-size: 12px; color: var(--color-gray-400, #B3B3B3); }
+.tab__meta { font-size: 12px; color: var(--color-gray-500, #8e8ea0); }
 .tab__status { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
 .tab__status--active { background: #E6F4EA; color: #137333; }
 .tab__status--inactive { background: #F1F3F4; color: #5F6368; }
