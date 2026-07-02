@@ -37,17 +37,42 @@
         <p>Role lo belum dikasih akses tools. Hubungi admin.</p>
       </div>
     </section>
+
+    <!-- QR DD Summary -->
+    <section v-if="showQrddSummary" class="dash__section">
+      <h2 class="dash__section-title">QR DD Summary</h2>
+      <div class="dash__summary-grid">
+        <div class="dash__summary-card">
+          <span class="dash__summary-num">{{ qrddStats.buCount }}</span>
+          <span class="dash__summary-label">BU Accounts</span>
+        </div>
+        <div class="dash__summary-card">
+          <span class="dash__summary-num">{{ qrddStats.merchantActive }}</span>
+          <span class="dash__summary-label">Active Merchants</span>
+        </div>
+        <div class="dash__summary-card">
+          <span class="dash__summary-num">{{ qrddStats.promoActive }}</span>
+          <span class="dash__summary-label">Active Promos</span>
+        </div>
+        <div class="dash__summary-card">
+          <span class="dash__summary-num">{{ qrddStats.expiringCount }}</span>
+          <span class="dash__summary-label">Expiring ≤30 days</span>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { MODULE_REGISTRY } from '@/lib/modules.js'
 import { useAuth } from '@/composables/useAuth.js'
 import { useAccess } from '@/composables/useAccess.js'
+import { useQrddDashboard } from '@/modules/qrdd/composables/useQrddDashboard.js'
 
 const { profile, session } = useAuth()
 const { canModule } = useAccess()
+const qrddDash = useQrddDashboard()
 
 const displayName = computed(() =>
   profile.value?.full_name || profile.value?.username || session.value?.user?.email || 'ada'
@@ -62,6 +87,21 @@ const tools = computed(() =>
     .filter(m => !['dashboard', 'admin'].includes(m.id))
     .filter(m => canModule(m.id))
 )
+
+const showQrddSummary = computed(() => canModule('qrdd'))
+
+const qrddStats = computed(() => ({
+  buCount: qrddDash.stats.value.buCount,
+  merchantActive: qrddDash.stats.value.merchantActive,
+  promoActive: qrddDash.stats.value.promoActive,
+  expiringCount: qrddDash.expiringPromos.value.length,
+}))
+
+onMounted(() => {
+  if (canModule('qrdd')) {
+    qrddDash.loadAll()
+  }
+})
 </script>
 
 <style scoped>
@@ -236,5 +276,33 @@ const tools = computed(() =>
 @media (max-width: 640px) {
   .dash__title { font-size: 18px; }
   .dash__avatar { width: 44px; height: 44px; font-size: 18px; }
+}
+
+.dash__summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-m, 12px);
+}
+.dash__summary-card {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: var(--space-l, 16px);
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(99,102,241,0.1);
+  border-radius: var(--radius-md, 16px);
+  transition: all 200ms;
+}
+.dash__summary-card:hover {
+  border-color: rgba(99,102,241,0.3);
+  box-shadow: 0 4px 16px rgba(99,102,241,0.08);
+  transform: translateY(-2px);
+}
+.dash__summary-num {
+  font-size: 28px; font-weight: 800; color: #6366F1;
+  letter-spacing: -0.5px; font-family: var(--font-display, 'Inter', sans-serif);
+}
+.dash__summary-label {
+  font-size: 11px; font-weight: 600; color: var(--color-gray-500, #8e8ea0);
+  text-transform: uppercase; text-align: center;
 }
 </style>
