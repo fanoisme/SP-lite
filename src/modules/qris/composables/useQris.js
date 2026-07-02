@@ -205,9 +205,18 @@ export function useQris() {
     { key: 'amount', label: 'Amount' },
   ]
 
-  function csvEscape(val) {
+  // Numeric-id-like columns that Excel mangles into scientific notation
+  // (e.g. 605900000000000 → 6.059E+14). Prefix with ="..." so Excel reads
+  // them as verbatim text.
+  const CSV_NUMERIC_ID_COLS = new Set(['merchant_id', 'mpan', 'amount'])
+
+  function csvEscape(val, colKey) {
     if (val == null) return ''
     const s = String(val)
+    // Excel text-preservation formula: ="value"
+    if (CSV_NUMERIC_ID_COLS.has(colKey)) {
+      return `="${s.replace(/"/g, '""')}"`
+    }
     if (s.includes(',') || s.includes('"') || s.includes('\n')) {
       return `"${s.replace(/"/g, '""')}"`
     }
@@ -224,7 +233,8 @@ export function useQris() {
     const header = cols.map(c => csvEscape(c.label)).join(',')
     const body = rows.map(row =>
       cols.map(c => csvEscape(
-        c.key === 'created_at' ? formatExportDate(row[c.key]) : row[c.key]
+        c.key === 'created_at' ? formatExportDate(row[c.key]) : row[c.key],
+        c.key
       )).join(',')
     ).join('\n')
     return `${header}\n${body}`
