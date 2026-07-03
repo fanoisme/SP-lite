@@ -56,10 +56,27 @@
         <div class="profile__fields">
           <div class="profile__field">
             <label class="profile__label">Username</label>
-            <div class="profile__input-wrap profile__input-wrap--disabled">
+            <div class="profile__input-wrap" :class="{ 'profile__input-wrap--error': usernameError }">
               <span class="material-symbols-outlined profile__input-icon">badge</span>
-              <input :value="profile?.username" type="text" class="profile__input" disabled />
+              <input
+                v-model="username"
+                type="text"
+                class="profile__input"
+                :class="{ 'profile__input--error': usernameError }"
+                placeholder="Username kamu"
+                @input="usernameError = ''"
+              />
+              <button
+                class="profile__input-action"
+                :disabled="savingUsername || username === (profile?.username || '')"
+                @click="onSaveUsername"
+                title="Simpan username"
+              >
+                <span v-if="savingUsername" class="profile__spinner profile__spinner--sm"></span>
+                <span v-else class="material-symbols-outlined">check</span>
+              </button>
             </div>
+            <span v-if="usernameError" class="profile__field-error">{{ usernameError }}</span>
           </div>
           <div class="profile__field">
             <label class="profile__label">Email</label>
@@ -135,10 +152,14 @@
 import { ref } from 'vue'
 import { useAuth } from '../../../composables/useAuth.js'
 
-const { session, profile, isAdmin, updateFullName, changePassword } = useAuth()
+const { session, profile, isAdmin, updateFullName, updateUsername, changePassword } = useAuth()
 
 const fullName = ref(profile.value?.full_name || '')
 const savingName = ref(false)
+
+const username = ref(profile.value?.username || '')
+const usernameError = ref('')
+const savingUsername = ref(false)
 
 const currentPassword = ref('')
 const newPassword = ref('')
@@ -165,6 +186,43 @@ async function onSaveName() {
     errorMsg.value = err.message || 'Gagal menyimpan nama'
   } finally {
     savingName.value = false
+  }
+}
+
+function validateUsername() {
+  const val = username.value.trim().toLowerCase()
+  if (!val) {
+    usernameError.value = 'Username tidak boleh kosong'
+    return false
+  }
+  if (val.length < 3) {
+    usernameError.value = 'Minimal 3 karakter'
+    return false
+  }
+  if (val.length > 32) {
+    usernameError.value = 'Maksimal 32 karakter'
+    return false
+  }
+  if (!/^[a-z0-9._-]+$/.test(val)) {
+    usernameError.value = 'Hanya huruf, angka, underscore, titik, dan strip'
+    return false
+  }
+  return true
+}
+
+async function onSaveUsername() {
+  clearMessages()
+  if (!validateUsername()) return
+
+  savingUsername.value = true
+  try {
+    await updateUsername(username.value)
+    successMsg.value = 'Username berhasil disimpan'
+    usernameError.value = ''
+  } catch (err) {
+    usernameError.value = err.message || 'Gagal menyimpan username'
+  } finally {
+    savingUsername.value = false
   }
 }
 
@@ -574,6 +632,62 @@ async function onChangePassword() {
 
 @keyframes profile-spin {
   to { transform: rotate(360deg); }
+}
+
+/* ── Input error state ── */
+.profile__input-wrap--error .profile__input {
+  border-color: var(--color-error, #CC3B33);
+  box-shadow: 0 0 0 3px rgba(204, 59, 51, 0.1);
+}
+
+.profile__input--error {
+  border-color: var(--color-error, #CC3B33);
+}
+
+.profile__field-error {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-error, #CC3B33);
+  margin-top: 2px;
+}
+
+/* ── Inline input action button ── */
+.profile__input-action {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-xs, 8px);
+  border: none;
+  background: transparent;
+  color: var(--color-on-surface-muted, #B3B3B3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 200ms var(--ease-out), color 200ms var(--ease-out);
+}
+
+.profile__input-action:hover:not(:disabled) {
+  background: var(--color-success-container, #ECFF8F);
+  color: var(--color-on-success-container, #17A3E6);
+}
+
+.profile__input-action:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.profile__input-action .material-symbols-outlined {
+  font-size: 16px;
+}
+
+.profile__spinner--sm {
+  width: 14px;
+  height: 14px;
+  border-width: 2px;
 }
 
 /* ── Responsive ── */
