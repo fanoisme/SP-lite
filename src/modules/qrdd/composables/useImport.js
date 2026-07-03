@@ -23,10 +23,12 @@ export function useImport() {
     discount_bu_accounts: {
       headers: ['name', 'sof', 'account1', 'acctname1', 'percentage1', 'account2', 'acctname2', 'percentage2'],
       required: ['name', 'sof', 'account1', 'acctname1', 'percentage1', 'account2', 'acctname2', 'percentage2'],
+      numeric: ['percentage1', 'percentage2'],
     },
     merchant_whitelist: {
       headers: ['merchant_id', 'merchant_name', 'bu_name', 'status'],
       required: ['merchant_id', 'merchant_name', 'bu_name'],
+      numeric: [],
     },
     promo_rule: {
       headers: ['promo_id', 'promo_name', 'merchant_id', 'bu_name', 'start_date', 'end_date',
@@ -34,6 +36,8 @@ export function useImport() {
         'pl_discount_type', 'pl_discount_value', 'pl_max_discount',
         'min_txn_amount', 'max_txn_amount', 'budget_amount', 'priority', 'status'],
       required: ['promo_id', 'promo_name', 'bu_name', 'start_date', 'end_date', 'min_txn_amount'],
+      numeric: ['prm_discount_value', 'prm_max_discount', 'pl_discount_value', 'pl_max_discount',
+        'min_txn_amount', 'max_txn_amount', 'budget_amount', 'priority'],
       // ponytail: prm/pl discount fields not in required — promo may have only one discount type, other is NULL
     },
   }
@@ -76,6 +80,8 @@ export function useImport() {
             let val = raw[i][j]
             if (val != null) val = String(val).trim()
             if (val === 'NULL' || val === '') val = null
+            // Convert string back to number for numeric columns (raw:false makes everything string)
+            if (val != null && config.numeric.includes(key)) val = Number(val)
             obj[key] = val
           }
         }
