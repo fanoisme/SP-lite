@@ -133,6 +133,31 @@ async function updateFullName(fullName) {
   profile.value = data
 }
 
+async function updateUsername(username) {
+  const userId = session.value?.user?.id
+  if (!userId) throw new Error('Tidak ada sesi aktif')
+
+  const trimmed = username.trim().toLowerCase()
+
+  if (!trimmed) throw new Error('Username tidak boleh kosong')
+  if (trimmed.length < 3) throw new Error('Minimal 3 karakter')
+  if (trimmed.length > 32) throw new Error('Maksimal 32 karakter')
+  if (!/^[a-z0-9._-]+$/.test(trimmed)) throw new Error('Hanya huruf, angka, underscore, titik, dan strip')
+
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ username: trimmed })
+    .eq('id', userId)
+    .select()
+    .single()
+
+  if (error) {
+    if (error.code === '23505') throw new Error('Username tidak tersedia')
+    throw error
+  }
+  profile.value = data
+}
+
 async function changePassword({ currentPassword, newPassword }) {
   const email = session.value?.user?.email
   if (!email) throw new Error('Tidak ada sesi aktif')
@@ -164,6 +189,7 @@ export function useAuth() {
     signUp,
     signOut,
     updateFullName,
+    updateUsername,
     changePassword,
   }
 }
