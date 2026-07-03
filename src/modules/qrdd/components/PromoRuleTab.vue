@@ -35,11 +35,21 @@
             <span v-if="!value" class="tab__discount-type tab__discount-type--none">Not Eligible</span>
             <span v-else class="tab__discount-type" :class="'tab__discount-type--' + value.toLowerCase()">{{ value }}</span>
           </template>
-          <template #cell-prm_max_discount="{ value }">
-            <span>{{ fmtMaxDiscount(value) }}</span>
+          <template #cell-prm_discount_value="{ row }">
+            <span v-if="!row.prm_discount_type">—</span>
+            <span v-else>{{ row.prm_discount_value }}{{ row.prm_discount_type === 'PERCENTAGE' ? '%' : '' }}</span>
           </template>
-          <template #cell-pl_max_discount="{ value }">
-            <span>{{ fmtMaxDiscount(value) }}</span>
+          <template #cell-pl_discount_value="{ row }">
+            <span v-if="!row.pl_discount_type">—</span>
+            <span v-else>{{ row.pl_discount_value }}{{ row.pl_discount_type === 'PERCENTAGE' ? '%' : '' }}</span>
+          </template>
+          <template #cell-prm_max_discount="{ row }">
+            <span v-if="!row.prm_discount_type">—</span>
+            <span v-else>{{ fmtMaxDiscount(row.prm_max_discount) }}</span>
+          </template>
+          <template #cell-pl_max_discount="{ row }">
+            <span v-if="!row.pl_discount_type">—</span>
+            <span v-else>{{ fmtMaxDiscount(row.pl_max_discount) }}</span>
           </template>
           <template #cell-min_txn_amount="{ value }">
             <span v-if="Number(value) <= 1">—</span>

@@ -14,7 +14,7 @@ export function exportToXlsx(rows, columns, filename) {
     for (const col of columns) {
       const raw = row[col.key]
       const v = col.format ? col.format(raw, row) : raw
-      obj[col.label] = col.textFormula ? textFormula(v) : (v ?? '')
+      obj[col.label] = col.textFormula ? textFormula(v) : (v != null ? v : '')
     }
     return obj
   })
@@ -33,7 +33,7 @@ export function exportMultiSheetXlsx(sheets, filename) {
       for (const col of sh.columns) {
         const raw = row[col.key]
         const v = col.format ? col.format(raw, row) : raw
-        obj[col.label] = col.textFormula ? textFormula(v) : (v ?? '')
+        obj[col.label] = col.textFormula ? textFormula(v) : (v != null ? v : '')
       }
       return obj
     })
