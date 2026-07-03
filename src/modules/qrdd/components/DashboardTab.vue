@@ -284,8 +284,10 @@ onMounted(() => dash.loadAll())
   .dash-tab__charts { grid-template-columns: 1fr; }
   .dash-tab__recent { grid-template-columns: 1fr; }
   .dash-tab__cards { grid-template-columns: 1fr 1fr; }
+  .dash-tab__toolbar { justify-content: center; }
 }
 @media (max-width: 480px) {
   .dash-tab__cards { grid-template-columns: 1fr; }
+  .dash-tab__export-btn { width: 100%; justify-content: center; }
 }
 </style>

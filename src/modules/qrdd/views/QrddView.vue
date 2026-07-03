@@ -376,6 +376,14 @@ onUnmounted(() => {
   .qrdd__icon-badge .material-symbols-outlined { font-size: 22px; }
   .qrdd__tab { padding: 10px 8px; min-width: 0; flex-shrink: 0; }
   .qrdd__tab-desc { display: none; }
+
+  .qrdd__tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .qrdd__tabs::-webkit-scrollbar { display: none; }
 }
 @media (max-width: 480px) {
   .qrdd__icon-badge { display: none; }

@@ -124,4 +124,34 @@ function formatDate(d) { return d ? new Date(d).toLocaleDateString('en-US', { ye
 }
 .tab__export-btn:hover { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.2); }
 .tab__export-btn .material-symbols-outlined { font-size: 18px; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .tab__toolbar {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .tab__search {
+    max-width: 100%;
+  }
+
+  .tab__toolbar-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab__toolbar-actions {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .tab__add-btn,
+  .tab__export-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
 </style>

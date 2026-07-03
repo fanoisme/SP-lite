@@ -164,4 +164,9 @@ function onSave() {
 .form__btn--save { color: var(--cta-primary-text, #1E1E1E); background: var(--cta-primary-bg, #FFBC25); border-color: var(--cta-primary-bg, #FFBC25); }
 .form__btn--save:hover { transform: translateY(-1px); }
 .form__btn--save:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .form__row { flex-direction: column; gap: 8px; }
+}
 </style>
