@@ -16,29 +16,41 @@
         <LiTextField v-model="form.end_date" label="End Date" type="date" />
       </div>
 
-      <!-- Section: PRM Discount -->
-      <div class="form__section"><span class="form__section-label">PRM Discount</span></div>
-      <div class="form__row">
-        <LiSelect v-model="form.prm_discount_type" label="Type" :options="discountTypeOptions" />
-        <LiTextField v-model.number="form.prm_discount_value" label="Value" type="number" :suffix="form.prm_discount_type === 'PERCENTAGE' ? '%' : ''" />
-      </div>
-      <div class="form__row">
-        <LiTextField v-model.number="form.prm_max_discount" label="Max Discount" type="number" :disabled="form.prm_unlimited" />
-        <label class="form__toggle-label">
-          <input type="checkbox" v-model="form.prm_unlimited" />
-          Unlimited
-        </label>
-      </div>
+      <!-- Section: PRIME & PAYLATER Discount (side by side) -->
+      <div class="form__section"><span class="form__section-label">PRIME &amp; PAYLATER Discount</span></div>
+      <div class="form__side-by-side">
+        <!-- PRIME -->
+        <div class="form__discount-panel">
+          <span class="form__discount-panel-label">PRIME</span>
+          <div class="form__row">
+            <LiSelect v-model="form.prm_discount_type" label="Type" :options="discountTypeOptions" />
+          </div>
+          <div class="form__row" v-if="form.prm_discount_type !== NULL_SENTINEL">
+            <LiTextField v-model.number="form.prm_discount_value" label="Value" type="number" :suffix="form.prm_discount_type === 'PERCENTAGE' ? '%' : ''" />
+          </div>
+          <div class="form__row" v-if="form.prm_discount_type !== NULL_SENTINEL">
+            <LiTextField v-model.number="form.prm_max_discount" label="Max Discount" type="number" :disabled="form.prm_unlimited" />
+            <label class="form__toggle-label">
+              <input type="checkbox" v-model="form.prm_unlimited" />
+              Unlimited
+            </label>
+          </div>
+        </div>
 
-      <!-- Section: PL Discount -->
-      <div class="form__section"><span class="form__section-label">PL Discount</span></div>
-      <div class="form__row">
-        <LiSelect v-model="form.pl_discount_type" label="Type" :options="discountTypeOptions" />
-        <LiTextField v-model.number="form.pl_discount_value" label="Value" type="number" :suffix="form.pl_discount_type === 'PERCENTAGE' ? '%' : ''" />
-      </div>
-      <div class="form__row">
-        <LiTextField v-model.number="form.pl_max_discount" label="Max Discount" type="number" :disabled="form.pl_unlimited" />
-        <label class="form__toggle-label"><input type="checkbox" v-model="form.pl_unlimited" /> Unlimited</label>
+        <!-- PAYLATER -->
+        <div class="form__discount-panel">
+          <span class="form__discount-panel-label">PAYLATER</span>
+          <div class="form__row">
+            <LiSelect v-model="form.pl_discount_type" label="Type" :options="discountTypeOptions" />
+          </div>
+          <div class="form__row" v-if="form.pl_discount_type !== NULL_SENTINEL">
+            <LiTextField v-model.number="form.pl_discount_value" label="Value" type="number" :suffix="form.pl_discount_type === 'PERCENTAGE' ? '%' : ''" />
+          </div>
+          <div class="form__row" v-if="form.pl_discount_type !== NULL_SENTINEL">
+            <LiTextField v-model.number="form.pl_max_discount" label="Max Discount" type="number" :disabled="form.pl_unlimited" />
+            <label class="form__toggle-label"><input type="checkbox" v-model="form.pl_unlimited" /> Unlimited</label>
+          </div>
+        </div>
       </div>
 
       <!-- Section: Limits -->
@@ -85,7 +97,10 @@ const props = defineProps({
 })
 const emit = defineEmits(['save', 'close'])
 
+const NULL_SENTINEL = '__NULL__'
+
 const discountTypeOptions = [
+  { label: 'Not Eligible', value: NULL_SENTINEL },
   { label: 'PERCENTAGE', value: 'PERCENTAGE' },
   { label: 'FIXED', value: 'FIXED' },
 ]
@@ -112,9 +127,13 @@ const form = reactive({
 })
 
 const valid = computed(() => {
-  return form.promo_id.trim() && form.promo_name.trim() && form.bu_name &&
-    form.start_date && form.end_date &&
-    Number(form.prm_discount_value) >= 0 && Number(form.pl_discount_value) >= 0
+  if (!form.promo_id.trim() || !form.promo_name.trim() || !form.bu_name || !form.start_date || !form.end_date) return false
+  // PRIME: skip value/max validation if Not Eligible
+  if (form.prm_discount_type !== NULL_SENTINEL && Number(form.prm_discount_value) < 0) return false
+  // PAYLATER: at least one side must be eligible
+  if (form.prm_discount_type === NULL_SENTINEL && form.pl_discount_type === NULL_SENTINEL) return false
+  if (form.pl_discount_type !== NULL_SENTINEL && Number(form.pl_discount_value) < 0) return false
+  return true
 })
 
 onMounted(() => {
@@ -126,13 +145,13 @@ onMounted(() => {
     form.bu_name = e.bu_name
     form.start_date = e.start_date
     form.end_date = e.end_date
-    form.prm_discount_type = e.prm_discount_type
-    form.prm_discount_value = Number(e.prm_discount_value)
-    form.prm_max_discount = Number(e.prm_max_discount)
+    form.prm_discount_type = e.prm_discount_type || NULL_SENTINEL
+    form.prm_discount_value = Number(e.prm_discount_value) || 0
+    form.prm_max_discount = Number(e.prm_max_discount) || 0
     form.prm_unlimited = Number(e.prm_max_discount) >= 49999999999
-    form.pl_discount_type = e.pl_discount_type
-    form.pl_discount_value = Number(e.pl_discount_value)
-    form.pl_max_discount = Number(e.pl_max_discount)
+    form.pl_discount_type = e.pl_discount_type || NULL_SENTINEL
+    form.pl_discount_value = Number(e.pl_discount_value) || 0
+    form.pl_max_discount = Number(e.pl_max_discount) || 0
     form.pl_unlimited = Number(e.pl_max_discount) >= 49999999999
     form.min_txn_amount = Number(e.min_txn_amount)
     form.min_no_minimum = Number(e.min_txn_amount) <= 1
@@ -147,7 +166,21 @@ onMounted(() => {
 
 function onSave() {
   if (!valid.value) return
-  emit('save', { ...form })
+  const payload = { ...form }
+  // NULL_SENTINEL → actual null for DB
+  if (payload.prm_discount_type === NULL_SENTINEL) {
+    payload.prm_discount_type = null
+    payload.prm_discount_value = null
+    payload.prm_max_discount = null
+    payload.prm_unlimited = false
+  }
+  if (payload.pl_discount_type === NULL_SENTINEL) {
+    payload.pl_discount_type = null
+    payload.pl_discount_value = null
+    payload.pl_max_discount = null
+    payload.pl_unlimited = false
+  }
+  emit('save', payload)
 }
 </script>
 
@@ -158,6 +191,9 @@ function onSave() {
 .form__row { display: flex; gap: 12px; align-items: flex-end; }
 .form__row > * { flex: 1; }
 .form__toggle-label { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--color-gray-600, #888); white-space: nowrap; flex: 0 0 auto; cursor: pointer; }
+.form__side-by-side { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form__discount-panel { display: flex; flex-direction: column; gap: 12px; padding: 12px; background: rgba(0,0,0,0.02); border-radius: var(--radius-sm, 12px); border: 1px solid rgba(0,0,0,0.06); }
+.form__discount-panel-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--color-gray-600, #888); }
 .form__btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border: 1px solid transparent; border-radius: var(--radius-pill, 999px); font-family: var(--font-body, 'Inter', sans-serif); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 200ms; }
 .form__btn--cancel { color: var(--color-gray-700, #666); border-color: rgba(0,0,0,0.1); background: transparent; }
 .form__btn--cancel:hover { background: rgba(0,0,0,0.04); }
@@ -166,6 +202,9 @@ function onSave() {
 .form__btn--save:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ── Responsive ── */
+@media (max-width: 768px) {
+  .form__side-by-side { grid-template-columns: 1fr; }
+}
 @media (max-width: 480px) {
   .form__row { flex-direction: column; gap: 8px; }
 }

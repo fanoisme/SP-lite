@@ -27,11 +27,13 @@
             <span v-if="value" class="tab__code">{{ value }}</span>
             <span v-else class="tab__all">All Merchants</span>
           </template>
-          <template #cell-prm_discount_type="{ row }">
-            <span class="tab__discount-type" :class="'tab__discount-type--' + (row.prm_discount_type || '').toLowerCase()">{{ row.prm_discount_type }}</span>
+          <template #cell-prm_discount_type="{ value }">
+            <span v-if="!value" class="tab__discount-type tab__discount-type--none">Not Eligible</span>
+            <span v-else class="tab__discount-type" :class="'tab__discount-type--' + value.toLowerCase()">{{ value }}</span>
           </template>
-          <template #cell-pl_discount_type="{ row }">
-            <span class="tab__discount-type" :class="'tab__discount-type--' + (row.pl_discount_type || '').toLowerCase()">{{ row.pl_discount_type }}</span>
+          <template #cell-pl_discount_type="{ value }">
+            <span v-if="!value" class="tab__discount-type tab__discount-type--none">Not Eligible</span>
+            <span v-else class="tab__discount-type" :class="'tab__discount-type--' + value.toLowerCase()">{{ value }}</span>
           </template>
           <template #cell-prm_max_discount="{ value }">
             <span>{{ fmtMaxDiscount(value) }}</span>
@@ -121,12 +123,12 @@ const columns = [
   { key: 'promo_name', label: 'Name' },
   { key: 'merchant_id', label: 'Merchant' },
   { key: 'bu_name', label: 'BU' },
-  { key: 'prm_discount_type', label: 'PRM Type' },
-  { key: 'prm_discount_value', label: 'PRM Value' },
-  { key: 'prm_max_discount', label: 'PRM Max' },
-  { key: 'pl_discount_type', label: 'PL Type' },
-  { key: 'pl_discount_value', label: 'PL Value' },
-  { key: 'pl_max_discount', label: 'PL Max' },
+  { key: 'prm_discount_type', label: 'PRIME Type' },
+  { key: 'prm_discount_value', label: 'PRIME Value' },
+  { key: 'prm_max_discount', label: 'PRIME Max' },
+  { key: 'pl_discount_type', label: 'PAYLATER Type' },
+  { key: 'pl_discount_value', label: 'PAYLATER Value' },
+  { key: 'pl_max_discount', label: 'PAYLATER Max' },
   { key: 'min_txn_amount', label: 'Min Txn' },
   { key: 'max_txn_amount', label: 'Max Txn' },
   { key: 'budget_amount', label: 'Budget' },
@@ -165,6 +167,7 @@ function fmtMaxDiscount(v) {
 .tab__discount-type { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
 .tab__discount-type--percentage { background: #E6E6FF; color: #0047B2; }
 .tab__discount-type--fixed { background: #E6F4EA; color: #137333; }
+.tab__discount-type--none { background: #F1F3F4; color: #5F6368; }
 .tab__date { font-size: 12px; color: var(--color-gray-400, #B3B3B3); }
 .tab__meta { font-size: 12px; color: var(--color-gray-500, #8e8ea0); }
 .tab__status { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
