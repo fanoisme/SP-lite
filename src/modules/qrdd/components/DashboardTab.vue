@@ -46,7 +46,7 @@
 
         <div class="dash-tab__card">
           <div class="dash-tab__card-icon dash-tab__card-icon--pr">
-            <span class="material-symbols-outlined">discount</span>
+            <span class="material-symbols-outlined">percent</span>
           </div>
           <div class="dash-tab__card-body">
             <div class="dash-tab__card-value">{{ dash.stats.value.promoCount }}</div>

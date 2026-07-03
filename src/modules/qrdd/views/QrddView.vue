@@ -179,7 +179,7 @@ function can(feature) { return canFeature('qrdd', feature) }
 const allTabDefs = [
   { id: 'bu-accounts', label: 'BU Accounts', desc: 'Manage accounts', icon: 'account_balance', gate: 'bu-accounts.read' },
   { id: 'merchant-whitelist', label: 'Merchants', desc: 'Whitelist management', icon: 'store', gate: 'merchant-whitelist.read' },
-  { id: 'promo-rule', label: 'Promo Rules', desc: 'Discount rules', icon: 'discount', gate: 'promo-rule.read' },
+  { id: 'promo-rule', label: 'Promo Rules', desc: 'Discount rules', icon: 'percent', gate: 'promo-rule.read' },
   { id: 'dashboard', label: 'Dashboard', desc: 'Reports & stats', icon: 'monitoring', gate: null },
 ]
 

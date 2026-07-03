@@ -72,7 +72,7 @@
         </LiTable>
       </div>
 
-      <LiEmptyState v-if="!loading && items.length === 0" icon="discount" title="No promo rules"
+      <LiEmptyState v-if="!loading && items.length === 0" icon="percent" title="No promo rules"
         :description="searchQueryProxy ? 'Try a different search' : 'Add your first promo rule.'" />
 
       <div v-if="totalPages > 1" class="tab__pagination">
