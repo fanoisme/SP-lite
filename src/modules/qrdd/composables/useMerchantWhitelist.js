@@ -135,6 +135,61 @@ export function useMerchantWhitelist() {
     return true
   }
 
+  async function bulkUpsert(rows) {
+    let inserted = 0
+    let updated = 0
+    const errors = []
+
+    const { data: existing } = await supabase
+      .from('qrdd_merchant_whitelist')
+      .select('id, merchant_id')
+
+    const existingMap = new Map()
+    for (const r of (existing || [])) {
+      existingMap.set(r.merchant_id, r.id)
+    }
+
+    const toInsert = []
+    const toUpdate = []
+
+    for (const row of rows) {
+      const existingId = existingMap.get(row.merchant_id)
+      if (existingId) {
+        toUpdate.push({ ...row, _id: existingId })
+      } else {
+        toInsert.push(row)
+      }
+    }
+
+    for (let i = 0; i < toInsert.length; i += 50) {
+      const batch = toInsert.slice(i, i + 50)
+      const { error: e } = await supabase
+        .from('qrdd_merchant_whitelist')
+        .insert(batch)
+      if (e) { errors.push(...batch.map(r => ({ row: r.merchant_id, error: e.message }))) }
+      else { inserted += batch.length }
+    }
+
+    for (const row of toUpdate) {
+      const { error: e } = await supabase
+        .from('qrdd_merchant_whitelist')
+        .update({
+          merchant_name: row.merchant_name,
+          bu_name: row.bu_name,
+          status: row.status || 'ACTIVE',
+          updated_by: row.updated_by,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', row._id)
+      if (e) { errors.push({ row: row.merchant_id, error: e.message }) }
+      else { updated++ }
+    }
+
+    if (inserted > 0 || updated > 0) await loadItems()
+
+    return { inserted, updated, errors }
+  }
+
   const exportColumns = [
     { key: 'merchant_id', label: 'Merchant ID', textFormula: true },
     { key: 'merchant_name', label: 'Merchant Name' },
@@ -164,7 +219,7 @@ export function useMerchantWhitelist() {
     items, loading, error,
     searchQuery, currentPage, pageSize,
     filtered, paginatedItems, totalPages,
-    loadItems, createItem, updateItem, deleteItem,
+    loadItems, createItem, updateItem, deleteItem, bulkUpsert,
     exportFiltered,
   }
 }

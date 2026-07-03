@@ -165,6 +165,70 @@ export function usePromoRule() {
     return true
   }
 
+  async function bulkUpsert(rows) {
+    let inserted = 0
+    let updated = 0
+    const errors = []
+
+    const { data: existing } = await supabase
+      .from('qrdd_promo_rules')
+      .select('promo_id')
+
+    const existingSet = new Set((existing || []).map(r => r.promo_id))
+
+    const toInsert = []
+    const toUpdate = []
+
+    for (const row of rows) {
+      if (existingSet.has(row.promo_id)) {
+        toUpdate.push(row)
+      } else {
+        toInsert.push(row)
+      }
+    }
+
+    for (let i = 0; i < toInsert.length; i += 50) {
+      const batch = toInsert.slice(i, i + 50)
+      const { error: e } = await supabase
+        .from('qrdd_promo_rules')
+        .insert(batch)
+      if (e) { errors.push(...batch.map(r => ({ row: r.promo_id, error: e.message }))) }
+      else { inserted += batch.length }
+    }
+
+    for (const row of toUpdate) {
+      const { error: e } = await supabase
+        .from('qrdd_promo_rules')
+        .update({
+          promo_name: row.promo_name,
+          merchant_id: row.merchant_id,
+          bu_name: row.bu_name,
+          start_date: row.start_date,
+          end_date: row.end_date,
+          prm_discount_type: row.prm_discount_type,
+          prm_discount_value: row.prm_discount_value,
+          prm_max_discount: row.prm_max_discount,
+          pl_discount_type: row.pl_discount_type,
+          pl_discount_value: row.pl_discount_value,
+          pl_max_discount: row.pl_max_discount,
+          min_txn_amount: row.min_txn_amount,
+          max_txn_amount: row.max_txn_amount,
+          budget_amount: row.budget_amount,
+          priority: row.priority || 0,
+          status: row.status || 'ACTIVE',
+          updated_by: row.updated_by,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('promo_id', row.promo_id)
+      if (e) { errors.push({ row: row.promo_id, error: e.message }) }
+      else { updated++ }
+    }
+
+    if (inserted > 0 || updated > 0) await loadItems()
+
+    return { inserted, updated, errors }
+  }
+
   const exportColumns = [
     { key: 'promo_id', label: 'Promo ID' },
     { key: 'promo_name', label: 'Promo Name' },
@@ -206,6 +270,6 @@ export function usePromoRule() {
     items, loading, error,
     searchQuery, searchColumn, currentPage, pageSize,
     paginatedItems, totalPages,
-    loadItems, createItem, updateItem, deleteItem, exportFiltered,
+    loadItems, createItem, updateItem, deleteItem, bulkUpsert, exportFiltered,
   }
 }

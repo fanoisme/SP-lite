@@ -153,6 +153,70 @@ export function useBuAccounts() {
     return true
   }
 
+  async function bulkUpsert(rows) {
+    let inserted = 0
+    let updated = 0
+    const errors = []
+
+    // Pre-query existing rows by match key (name, sof, account1)
+    const { data: existing } = await supabase
+      .from('qrdd_bu_accounts')
+      .select('id, name, sof, account1')
+
+    const existingMap = new Map()
+    for (const r of (existing || [])) {
+      existingMap.set(`${r.name}::${r.sof}::${r.account1}`, r.id)
+    }
+
+    // Split into INSERT vs UPDATE
+    const toInsert = []
+    const toUpdate = []
+
+    for (const row of rows) {
+      const key = `${row.name}::${row.sof}::${row.account1}`
+      const existingId = existingMap.get(key)
+      if (existingId) {
+        toUpdate.push({ ...row, _id: existingId })
+      } else {
+        toInsert.push(row)
+      }
+    }
+
+    // Batch insert (50 at a time)
+    for (let i = 0; i < toInsert.length; i += 50) {
+      const batch = toInsert.slice(i, i + 50)
+      const { error: e } = await supabase
+        .from('qrdd_bu_accounts')
+        .insert(batch)
+      if (e) { errors.push(...batch.map(r => ({ row: r.name, error: e.message }))) }
+      else { inserted += batch.length }
+    }
+
+    // Update one-by-one (ponytail: fine for small update sets; batch upsert if grows)
+    for (const row of toUpdate) {
+      const { error: e } = await supabase
+        .from('qrdd_bu_accounts')
+        .update({
+          sof: row.sof,
+          account1: row.account1,
+          acctname1: row.acctname1,
+          percentage1: row.percentage1,
+          account2: row.account2,
+          acctname2: row.acctname2,
+          percentage2: row.percentage2,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', row._id)
+      if (e) { errors.push({ row: row.name, error: e.message }) }
+      else { updated++ }
+    }
+
+    // Reload if anything changed
+    if (inserted > 0 || updated > 0) await loadItems()
+
+    return { inserted, updated, errors }
+  }
+
   const exportColumns = [
     { key: 'name', label: 'Name' },
     { key: 'sof', label: 'SOF' },
@@ -187,7 +251,7 @@ export function useBuAccounts() {
     items, loading, error,
     searchQuery, currentPage, pageSize,
     filtered, paginatedItems, totalPages, nameOptions,
-    loadItems, createItem, updateItem, deleteItem,
+    loadItems, createItem, updateItem, deleteItem, bulkUpsert,
     exportFiltered,
   }
 }
