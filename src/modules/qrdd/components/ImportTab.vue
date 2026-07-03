@@ -40,7 +40,7 @@
           <div class="import-tab__card-header">
             <span class="import-tab__card-icon">
               <span class="material-symbols-outlined">
-                {{ sheet.config.table === 'bu' ? 'account_balance' : sheet.config.table === 'mw' ? 'store' : 'percent' }}
+                {{ sheet.name === 'discount_bu_accounts' ? 'account_balance' : sheet.name === 'merchant_whitelist' ? 'store' : 'percent' }}
               </span>
             </span>
             <div class="import-tab__card-info">
@@ -103,8 +103,7 @@
 
       <LiProgress
         v-if="importing"
-        :value="importCtx.progress.value"
-        :max="importCtx.progressTotal.value"
+        :value="progressPct"
         class="import-tab__progress"
       />
     </template>
@@ -133,6 +132,11 @@ const canImport = computed(() => {
   if (importCtx.fullNameMissing.value) return false
   if (!sheets.value) return false
   return sheets.value.some(s => s.rows.length > 0 && s.errors.length === 0)
+})
+
+const progressPct = computed(() => {
+  if (!importCtx.progressTotal.value) return 0
+  return Math.round((importCtx.progress.value / importCtx.progressTotal.value) * 100)
 })
 
 function sheetNameLabel(name) {

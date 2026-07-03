@@ -167,10 +167,15 @@ export function useImport() {
 
     for (const sheetName of order) {
       const sheet = sheets.find(s => s.name === sheetName)
-      if (!sheet || sheet.errors.length > 0) continue
-      if (!sheet.rows.length) continue
+      if (!sheet || !sheet.rows.length) continue
 
-      const rowsWithMeta = sheet.rows.map(r => ({
+      // Filter out errored rows, import the rest
+      const validRows = sheet.rows.filter((_, i) =>
+        !sheet.errors.some(e => e.row === i + 1)
+      )
+      if (!validRows.length) continue
+
+      const rowsWithMeta = validRows.map(r => ({
         ...r,
         created_by: fullName,
         updated_by: fullName,
@@ -186,7 +191,7 @@ export function useImport() {
       }
 
       results.push({ name: sheetName, ...result })
-      progress.value += sheet.rows.length
+      progress.value += validRows.length
 
       toast.success(`${sheetName}: ${result.inserted} inserted, ${result.updated} updated${result.errors.length ? `, ${result.errors.length} failed` : ''}`)
     }
