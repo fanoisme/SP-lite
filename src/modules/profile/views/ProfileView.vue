@@ -217,6 +217,7 @@ async function onSaveUsername() {
   savingUsername.value = true
   try {
     await updateUsername(username.value)
+    username.value = profile.value.username
     successMsg.value = 'Username berhasil disimpan'
     usernameError.value = ''
   } catch (err) {
