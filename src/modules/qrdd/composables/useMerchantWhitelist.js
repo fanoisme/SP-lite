@@ -5,7 +5,7 @@ import { useToast } from '@/lib/composables/useToast.js'
 import { exportToXlsx } from '@/lib/export-xlsx.js'
 
 export function useMerchantWhitelist() {
-  const { session } = useAuth()
+  const { session, profile } = useAuth()
   const toast = useToast()
 
   const items = ref([])
@@ -139,6 +139,7 @@ export function useMerchantWhitelist() {
     let inserted = 0
     let updated = 0
     const errors = []
+    const fullName = profile.value?.full_name || 'SYSTEM'
 
     const { data: existing } = await supabase
       .from('qrdd_merchant_whitelist')
@@ -157,7 +158,7 @@ export function useMerchantWhitelist() {
       if (existingId) {
         toUpdate.push({ ...row, _id: existingId })
       } else {
-        toInsert.push(row)
+        toInsert.push({ ...row, created_by: row.created_by || fullName, updated_by: row.updated_by || fullName })
       }
     }
 
@@ -177,7 +178,7 @@ export function useMerchantWhitelist() {
           merchant_name: row.merchant_name,
           bu_name: row.bu_name,
           status: row.status || 'ACTIVE',
-          updated_by: row.updated_by,
+          updated_by: row.updated_by || fullName,
           updated_at: new Date().toISOString(),
         })
         .eq('id', row._id)

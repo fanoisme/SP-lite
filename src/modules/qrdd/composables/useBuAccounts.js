@@ -5,7 +5,7 @@ import { useToast } from '@/lib/composables/useToast.js'
 import { exportToXlsx } from '@/lib/export-xlsx.js'
 
 export function useBuAccounts() {
-  const { session } = useAuth()
+  const { session, profile } = useAuth()
   const toast = useToast()
 
   const items = ref([])
@@ -157,6 +157,7 @@ export function useBuAccounts() {
     let inserted = 0
     let updated = 0
     const errors = []
+    const fullName = profile.value?.full_name || 'SYSTEM'
 
     // Pre-query existing rows by match key (name, sof, account1)
     const { data: existing } = await supabase
@@ -178,7 +179,7 @@ export function useBuAccounts() {
       if (existingId) {
         toUpdate.push({ ...row, _id: existingId })
       } else {
-        toInsert.push(row)
+        toInsert.push({ ...row, created_by: row.created_by || fullName, updated_by: row.updated_by || fullName })
       }
     }
 
@@ -204,6 +205,7 @@ export function useBuAccounts() {
           account2: row.account2,
           acctname2: row.acctname2,
           percentage2: row.percentage2,
+          updated_by: row.updated_by || fullName,
           updated_at: new Date().toISOString(),
         })
         .eq('id', row._id)

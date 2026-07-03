@@ -11,7 +11,7 @@ const NO_MINIMUM = 1.00
 export { UNLIMITED_AMOUNT, NO_MINIMUM }
 
 export function usePromoRule() {
-  const { session } = useAuth()
+  const { session, profile } = useAuth()
   const toast = useToast()
 
   const items = ref([])
@@ -169,6 +169,7 @@ export function usePromoRule() {
     let inserted = 0
     let updated = 0
     const errors = []
+    const fullName = profile.value?.full_name || 'SYSTEM'
 
     const { data: existing } = await supabase
       .from('qrdd_promo_rules')
@@ -183,7 +184,7 @@ export function usePromoRule() {
       if (existingSet.has(row.promo_id)) {
         toUpdate.push(row)
       } else {
-        toInsert.push(row)
+        toInsert.push({ ...row, created_by: row.created_by || fullName, updated_by: row.updated_by || fullName })
       }
     }
 
@@ -216,7 +217,7 @@ export function usePromoRule() {
           budget_amount: row.budget_amount,
           priority: row.priority || 0,
           status: row.status || 'ACTIVE',
-          updated_by: row.updated_by,
+          updated_by: row.updated_by || fullName,
           updated_at: new Date().toISOString(),
         })
         .eq('promo_id', row.promo_id)
