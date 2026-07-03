@@ -206,6 +206,11 @@ async function onPasswordSubmit() {
         showBanner('Username is required')
         return
       }
+      const usernameRegex = /^[a-z0-9._-]{3,32}$/
+      if (!usernameRegex.test(signupUsername.value.trim())) {
+        showBanner('Username: 3-32 characters, lowercase letters, numbers, dots, hyphens, underscores only')
+        return
+      }
       await signUp({
         email: signupEmail.value,
         password: password.value,
