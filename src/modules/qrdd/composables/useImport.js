@@ -13,7 +13,6 @@ export function useImport() {
   const pr = usePromoRule()
   const toast = useToast()
 
-  const loading = ref(false)
   const progress = ref(0)
   const progressTotal = ref(0)
 
@@ -56,7 +55,6 @@ export function useImport() {
 
     const buKeys = new Set((existingBu || []).map(r => `${r.name}::${r.sof}::${r.account1}`))
     // ponytail: bu_name must reference name only (no SOF filtering) since FK is on name column
-    const buNames = new Set((existingBu || []).map(r => r.name))
     const merchantIds = new Set((existingMw || []).map(r => r.merchant_id))
 
     const sheets = []
@@ -133,9 +131,13 @@ export function useImport() {
         } else if (sheetName === 'merchant_whitelist') {
           merchantIds.has(row.merchant_id) ? updateCount++ : newCount++
         } else if (sheetName === 'promo_rule') {
-          // We'll query in runImport
-          updateCount = null
-          newCount = rows.length
+          const { data: existingPr } = await supabase
+            .from('qrdd_promo_rules')
+            .select('promo_id')
+          const promoIds = new Set((existingPr || []).map(r => r.promo_id))
+          for (const row of rows) {
+            promoIds.has(row.promo_id) ? updateCount++ : newCount++
+          }
         }
       }
 
@@ -157,6 +159,11 @@ export function useImport() {
   }
 
   async function runImport(sheets) {
+    if (fullNameMissing.value) {
+      toast.error('Please set your full name in Profile before importing')
+      return { results: [] }
+    }
+
     const results = []
     progressTotal.value = sheets.reduce((s, sh) => s + sh.rows.length, 0)
     progress.value = 0
@@ -196,7 +203,7 @@ export function useImport() {
   }
 
   return {
-    loading, progress, progressTotal,
+    progress, progressTotal,
     fullNameMissing,
     parseFile, runImport,
   }
