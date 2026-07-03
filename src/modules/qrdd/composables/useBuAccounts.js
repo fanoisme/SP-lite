@@ -183,14 +183,24 @@ export function useBuAccounts() {
       }
     }
 
-    // Batch insert (50 at a time)
+    // Batch insert (50 at a time); fall back row-by-row on failure
     for (let i = 0; i < toInsert.length; i += 50) {
       const batch = toInsert.slice(i, i + 50)
       const { error: e } = await supabase
         .from('qrdd_bu_accounts')
         .insert(batch)
-      if (e) { errors.push(...batch.map(r => ({ row: r.name, error: e.message }))) }
-      else { inserted += batch.length }
+      if (e) {
+        // Batch failed — try row-by-row so one bad row doesn't kill the batch
+        for (const row of batch) {
+          const { error: e2 } = await supabase
+            .from('qrdd_bu_accounts')
+            .insert(row)
+          if (e2) { errors.push({ row: row.name, error: e2.message }) }
+          else { inserted++ }
+        }
+      } else {
+        inserted += batch.length
+      }
     }
 
     // Update one-by-one (ponytail: fine for small update sets; batch upsert if grows)
