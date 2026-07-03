@@ -98,6 +98,8 @@
           @export="pr.exportFiltered()"
         />
 
+        <ImportTab v-else-if="activeTab === 'import' && can('bu-accounts.read')" key="import" />
+
         <DashboardTab v-else-if="activeTab === 'dashboard'" key="dash" />
       </div>
     </Transition>
@@ -165,6 +167,7 @@ import MerchantForm from '../components/MerchantForm.vue'
 import PromoRuleTab from '../components/PromoRuleTab.vue'
 import PromoRuleForm from '../components/PromoRuleForm.vue'
 import DashboardTab from '../components/DashboardTab.vue'
+import ImportTab from '../components/ImportTab.vue'
 import LiModal from '@lib/components/LiModal.vue'
 
 const { canFeature } = useAccess()
@@ -180,6 +183,7 @@ const allTabDefs = [
   { id: 'bu-accounts', label: 'BU Accounts', desc: 'Manage accounts', icon: 'account_balance', gate: 'bu-accounts.read' },
   { id: 'merchant-whitelist', label: 'Merchants', desc: 'Whitelist management', icon: 'store', gate: 'merchant-whitelist.read' },
   { id: 'promo-rule', label: 'Promo Rules', desc: 'Discount rules', icon: 'percent', gate: 'promo-rule.read' },
+  { id: 'import', label: 'Import', desc: 'Bulk data import', icon: 'upload', gate: 'bu-accounts.read' },
   { id: 'dashboard', label: 'Dashboard', desc: 'Reports & stats', icon: 'monitoring', gate: null },
 ]
 
