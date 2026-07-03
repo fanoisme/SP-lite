@@ -33,9 +33,8 @@ export function useImport() {
         'prm_discount_type', 'prm_discount_value', 'prm_max_discount',
         'pl_discount_type', 'pl_discount_value', 'pl_max_discount',
         'min_txn_amount', 'max_txn_amount', 'budget_amount', 'priority', 'status'],
-      required: ['promo_id', 'promo_name', 'bu_name', 'start_date', 'end_date',
-        'prm_discount_type', 'prm_discount_value', 'prm_max_discount',
-        'pl_discount_type', 'pl_discount_value', 'pl_max_discount', 'min_txn_amount'],
+      required: ['promo_id', 'promo_name', 'bu_name', 'start_date', 'end_date', 'min_txn_amount'],
+      // ponytail: prm/pl discount fields not in required — promo may have only one discount type, other is NULL
     },
   }
 
