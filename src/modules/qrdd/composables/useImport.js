@@ -21,17 +21,14 @@ export function useImport() {
   // Sheet name → expected config
   const SHEET_CONFIG = {
     discount_bu_accounts: {
-      table: 'bu',
       headers: ['name', 'sof', 'account1', 'acctname1', 'percentage1', 'account2', 'acctname2', 'percentage2'],
       required: ['name', 'sof', 'account1', 'acctname1', 'percentage1', 'account2', 'acctname2', 'percentage2'],
     },
     merchant_whitelist: {
-      table: 'mw',
       headers: ['merchant_id', 'merchant_name', 'bu_name', 'status'],
       required: ['merchant_id', 'merchant_name', 'bu_name'],
     },
     promo_rule: {
-      table: 'pr',
       headers: ['promo_id', 'promo_name', 'merchant_id', 'bu_name', 'start_date', 'end_date',
         'prm_discount_type', 'prm_discount_value', 'prm_max_discount',
         'pl_discount_type', 'pl_discount_value', 'pl_max_discount',
@@ -48,14 +45,16 @@ export function useImport() {
     const wb = XLSX.read(new Uint8Array(buf), { type: 'array' })
 
     // Load DB context for FK validation
-    const [{ data: existingBu }, { data: existingMw }] = await Promise.all([
+    const [{ data: existingBu }, { data: existingMw }, { data: existingPr }] = await Promise.all([
       supabase.from('qrdd_bu_accounts').select('name, sof, account1'),
       supabase.from('qrdd_merchant_whitelist').select('merchant_id'),
+      supabase.from('qrdd_promo_rules').select('promo_id'),
     ])
 
     const buKeys = new Set((existingBu || []).map(r => `${r.name}::${r.sof}::${r.account1}`))
     // ponytail: bu_name must reference name only (no SOF filtering) since FK is on name column
     const merchantIds = new Set((existingMw || []).map(r => r.merchant_id))
+    const promoIds = new Set((existingPr || []).map(r => r.promo_id))
 
     const sheets = []
 
@@ -131,13 +130,7 @@ export function useImport() {
         } else if (sheetName === 'merchant_whitelist') {
           merchantIds.has(row.merchant_id) ? updateCount++ : newCount++
         } else if (sheetName === 'promo_rule') {
-          const { data: existingPr } = await supabase
-            .from('qrdd_promo_rules')
-            .select('promo_id')
-          const promoIds = new Set((existingPr || []).map(r => r.promo_id))
-          for (const row of rows) {
-            promoIds.has(row.promo_id) ? updateCount++ : newCount++
-          }
+          promoIds.has(row.promo_id) ? updateCount++ : newCount++
         }
       }
 
