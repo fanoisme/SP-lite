@@ -61,7 +61,7 @@ export function useImport() {
       const ws = wb.Sheets[sheetName]
       if (!ws) continue
 
-      const raw = XLSX.utils.sheet_to_json(ws, { header: 1 })
+      const raw = XLSX.utils.sheet_to_json(ws, { header: 1, raw: false })
       if (raw.length < 2) continue
 
       const headers = raw[0].map(h => String(h).trim())
