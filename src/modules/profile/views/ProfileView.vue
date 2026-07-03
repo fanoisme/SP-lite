@@ -56,7 +56,7 @@
         <div class="profile__fields">
           <div class="profile__field">
             <label class="profile__label">Username</label>
-            <div class="profile__input-wrap" :class="{ 'profile__input-wrap--error': usernameError }">
+            <div class="profile__input-wrap profile__input-wrap--has-action" :class="{ 'profile__input-wrap--error': usernameError }">
               <span class="material-symbols-outlined profile__input-icon">badge</span>
               <input
                 v-model="username"
@@ -149,7 +149,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useAuth } from '../../../composables/useAuth.js'
 
 const { session, profile, isAdmin, updateFullName, updateUsername, changePassword } = useAuth()
@@ -169,7 +169,7 @@ const changingPassword = ref(false)
 const errorMsg = ref('')
 const successMsg = ref('')
 
-const avatarLetter = (profile.value?.full_name || profile.value?.username || '?').charAt(0).toUpperCase()
+const avatarLetter = computed(() => (profile.value?.full_name || profile.value?.username || '?').charAt(0).toUpperCase())
 
 function clearMessages() {
   errorMsg.value = ''
@@ -641,8 +641,10 @@ async function onChangePassword() {
   box-shadow: 0 0 0 3px rgba(204, 59, 51, 0.1);
 }
 
-.profile__input--error {
-  border-color: var(--color-error, #CC3B33);
+/* Input with inline action button needs extra right padding so text
+   doesn't clip behind the absolutely-positioned check button */
+.profile__input-wrap--has-action .profile__input {
+  padding-right: 40px;
 }
 
 .profile__field-error {
