@@ -46,6 +46,22 @@
 
         <template v-else>
           <div class="login-field">
+            <label class="login-field__label" for="signup-fullname">Full Name</label>
+            <div class="login-field__input-group" :class="{ 'is-focused': focus.signupFullName }">
+              <span class="material-symbols-outlined login-field__icon" aria-hidden="true">badge</span>
+              <input
+                id="signup-fullname"
+                v-model="signupFullName"
+                type="text"
+                class="login-field__input"
+                placeholder="Your full name"
+                autocomplete="name"
+                @focus="focus.signupFullName = true"
+                @blur="focus.signupFullName = false"
+              />
+            </div>
+          </div>
+          <div class="login-field">
             <label class="login-field__label" for="signup-email">Email</label>
             <div class="login-field__input-group" :class="{ 'is-focused': focus.signupEmail }">
               <span class="material-symbols-outlined login-field__icon" aria-hidden="true">mail</span>
@@ -62,9 +78,9 @@
             </div>
           </div>
           <div class="login-field">
-            <label class="login-field__label" for="signup-username">Username <span class="login-field__optional">(opsional)</span></label>
+            <label class="login-field__label" for="signup-username">Username</label>
             <div class="login-field__input-group" :class="{ 'is-focused': focus.signupUsername }">
-              <span class="material-symbols-outlined login-field__icon" aria-hidden="true">badge</span>
+              <span class="material-symbols-outlined login-field__icon" aria-hidden="true">alternate_email</span>
               <input
                 id="signup-username"
                 v-model="signupUsername"
@@ -144,9 +160,11 @@ const identifier = ref('')
 const password = ref('')
 const signupEmail = ref('')
 const signupUsername = ref('')
+const signupFullName = ref('')
 
 const focus = ref({
   identifier: false,
+  signupFullName: false,
   signupEmail: false,
   signupUsername: false,
   password: false,
@@ -180,12 +198,24 @@ async function onPasswordSubmit() {
       await signInWithPassword({ identifier: identifier.value, password: password.value })
       router.push({ name: 'dashboard' })
     } else {
+      if (!signupFullName.value.trim()) {
+        showBanner('Full name is required')
+        return
+      }
+      if (!signupUsername.value.trim()) {
+        showBanner('Username is required')
+        return
+      }
       await signUp({
         email: signupEmail.value,
         password: password.value,
         username: signupUsername.value,
+        fullName: signupFullName.value,
       })
       showBanner('Akun dibuat. Menunggu aktivasi dari admin sebelum bisa sign in.', 'info')
+      signupFullName.value = ''
+      signupUsername.value = ''
+      signupEmail.value = ''
       mode.value = 'signin'
     }
   } catch (err) {
