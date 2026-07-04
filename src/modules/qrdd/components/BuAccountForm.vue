@@ -1,18 +1,68 @@
 <template>
-  <LiModal :modelValue="true" :title="editing ? 'Edit BU Account' : 'Add BU Account'" size="md" @update:modelValue="$emit('close')">
+  <LiModal
+    :modelValue="true"
+    :title="editing ? 'Edit BU Account' : 'Add BU Account'"
+    size="md"
+    @update:modelValue="$emit('close')"
+  >
     <div class="form">
-      <LiTextField v-model="form.name" label="Name" placeholder="e.g. Antavaya" />
-      <LiSelect v-model="form.sof" label="SOF" :options="sofOptions" placeholder="Select SOF..." />
+      <LiTextField
+        v-model="form.name"
+        label="Name"
+        placeholder="e.g. Antavaya"
+        :disabled="!!editing"
+      />
+      <LiSelect
+        v-model="form.sof"
+        label="SOF"
+        :options="sofOptions"
+        placeholder="Select SOF..."
+        :disabled="!!editing"
+      />
 
-      <div class="form__section"><span class="form__section-label">Allo Expense</span></div>
-      <LiTextField v-model="form.account1" label="Account Number" placeholder="e.g. 101001360540601269000005" />
-      <LiTextField v-model="form.acctname1" label="Account Name" placeholder="e.g. CTBU Prime Discount Expense - Antavaya" />
-      <LiTextField v-model.number="form.percentage1" label="Percentage (%)" type="number" placeholder="50" />
+      <div class="form__columns">
+        <!-- Allo Expense -->
+        <div class="form__col">
+          <div class="form__section"><span class="form__section-label">Allo Expense</span></div>
+          <template v-if="!editing">
+            <LiTextField v-model="form.account1" label="Account Number" placeholder="e.g. 101001360540601269000005" />
+            <LiTextField v-model="form.acctname1" label="Account Name" placeholder="e.g. CTBU Prime Discount Expense - Antavaya" />
+          </template>
+          <template v-else>
+            <div class="form__readonly">
+              <span class="form__readonly-label">Account Name</span>
+              <span class="form__readonly-value">{{ form.acctname1 || '—' }}</span>
+            </div>
+          </template>
+          <LiTextField
+            v-model.number="form.percentage1"
+            label="Percentage (%)"
+            type="number"
+            placeholder="50"
+          />
+        </div>
 
-      <div class="form__section"><span class="form__section-label">Receivable</span></div>
-      <LiTextField v-model="form.account2" label="Account Number" placeholder="e.g. 101001360540601279000006" />
-      <LiTextField v-model="form.acctname2" label="Account Name" placeholder="e.g. CTBU Prime Discount Receivable - Antavaya" />
-      <LiTextField v-model.number="form.percentage2" label="Percentage (%)" type="number" placeholder="50" />
+        <!-- Receivable -->
+        <div class="form__col">
+          <div class="form__section"><span class="form__section-label">Receivable</span></div>
+          <template v-if="!editing">
+            <LiTextField v-model="form.account2" label="Account Number" placeholder="e.g. 101001360540601279000006" />
+            <LiTextField v-model="form.acctname2" label="Account Name" placeholder="e.g. CTBU Prime Discount Receivable - Antavaya" />
+          </template>
+          <template v-else>
+            <div class="form__readonly">
+              <span class="form__readonly-label">Account Name</span>
+              <span class="form__readonly-value">{{ form.acctname2 || '—' }}</span>
+            </div>
+          </template>
+          <LiTextField
+            v-model.number="form.percentage2"
+            label="Percentage (%)"
+            type="number"
+            placeholder="50"
+          />
+        </div>
+      </div>
 
       <p v-if="pctError" class="form__error">{{ pctError }}</p>
     </div>
@@ -26,7 +76,7 @@
 </template>
 
 <script setup>
-import { reactive, computed, onMounted } from 'vue'
+import { reactive, computed, onMounted, watch } from 'vue'
 import LiModal from '@lib/components/LiModal.vue'
 import LiTextField from '@lib/components/LiTextField.vue'
 import LiSelect from '@lib/components/LiSelect.vue'
@@ -43,6 +93,29 @@ const form = reactive({
   name: '', sof: 'PRIME',
   account1: '', acctname1: '', percentage1: 50,
   account2: '', acctname2: '', percentage2: 50,
+})
+
+// Auto-percentage: two-way, last-write wins. Guard against recursive loops.
+let syncing = false
+
+watch(() => form.percentage1, (v) => {
+  if (syncing) return
+  const n = Number(v)
+  if (n > 0 && n <= 100) {
+    syncing = true
+    form.percentage2 = 100 - n
+    syncing = false
+  }
+})
+
+watch(() => form.percentage2, (v) => {
+  if (syncing) return
+  const n = Number(v)
+  if (n > 0 && n <= 100) {
+    syncing = true
+    form.percentage1 = 100 - n
+    syncing = false
+  }
 })
 
 const valid = computed(() => {
@@ -83,19 +156,110 @@ function onSave() {
 </script>
 
 <style scoped>
-.form { display: flex; flex-direction: column; gap: 12px; }
-.form__section { border-top: 1px solid rgba(0,0,0,0.06); padding-top: 8px; margin-top: 4px; }
-.form__section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--color-gray-400, #B3B3B3); }
-.form__error { color: var(--color-red-400, #C83E3B); font-size: 12px; font-weight: 500; margin: 0; }
-.form__btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border: 1px solid transparent; border-radius: var(--radius-pill, 999px); font-family: var(--font-body, 'Inter', sans-serif); font-size: 13px; font-weight: 600; cursor: pointer; transition: all 200ms; }
-.form__btn--cancel { color: var(--color-gray-700, #666); border-color: rgba(0,0,0,0.1); background: transparent; }
-.form__btn--cancel:hover { background: rgba(0,0,0,0.04); }
-.form__btn--save { color: var(--cta-primary-text, #1E1E1E); background: var(--cta-primary-bg, #FFBC25); border-color: var(--cta-primary-bg, #FFBC25); }
-.form__btn--save:hover { transform: translateY(-1px); }
-.form__btn--save:disabled { opacity: 0.4; cursor: not-allowed; }
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form__columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form__col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form__section {
+  border-top: 1px solid rgba(0,0,0,0.06);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+
+.form__section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-gray-400, #B3B3B3);
+}
+
+.form__readonly {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.form__readonly-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-gray-400, #B3B3B3);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.form__readonly-value {
+  font-size: 13px;
+  color: var(--color-gray-600, #999);
+  padding: 8px 12px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 8px;
+  word-break: break-all;
+}
+
+.form__error {
+  color: var(--color-red-400, #C83E3B);
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.form__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill, 999px);
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.form__btn--cancel {
+  color: var(--color-gray-700, #666);
+  border-color: rgba(0,0,0,0.1);
+  background: transparent;
+}
+
+.form__btn--cancel:hover {
+  background: rgba(0,0,0,0.04);
+}
+
+.form__btn--save {
+  color: var(--cta-primary-text, #1E1E1E);
+  background: var(--cta-primary-bg, #FFBC25);
+  border-color: var(--cta-primary-bg, #FFBC25);
+}
+
+.form__btn--save:hover {
+  transform: translateY(-1px);
+}
+
+.form__btn--save:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
 
 /* ── Responsive ── */
 @media (max-width: 480px) {
   .form { padding: 0 4px; }
+  .form__columns { grid-template-columns: 1fr; }
 }
 </style>
