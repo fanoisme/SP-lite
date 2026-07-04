@@ -256,7 +256,7 @@ export function useBuAccounts() {
   }
 
   const nameOptions = computed(() =>
-    items.value.map(r => ({ label: r.name, value: r.name })),
+    [...new Set(items.value.map(r => r.name))].map(name => ({ label: name, value: name })),
   )
 
   return {
