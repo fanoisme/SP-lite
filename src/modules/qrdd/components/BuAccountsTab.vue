@@ -3,6 +3,10 @@
     <div class="tab__toolbar">
       <LiTextField v-model="searchQueryProxy" placeholder="Search BU accounts..." iconLeft="search" class="tab__search" />
       <div class="tab__toolbar-actions">
+        <button v-if="canExport" class="tab__export-btn" @click="showDateFilter = !showDateFilter" :class="{ 'tab__export-btn--active': showDateFilter }">
+          <span class="material-symbols-outlined">filter_alt</span>
+          Filter
+        </button>
         <button v-if="canExport" class="tab__export-btn" @click="$emit('export')">
           <span class="material-symbols-outlined">file_save</span>
           Export
@@ -12,6 +16,11 @@
           Add BU Account
         </button>
       </div>
+    </div>
+
+    <div v-if="showDateFilter" class="tab__date-filter">
+      <LiTextField v-model="dateFromProxy" label="Updated from" type="date" />
+      <LiTextField v-model="dateToProxy" label="Updated to" type="date" />
     </div>
 
     <LiGlassCard variant="light" size="md" :hoverable="false" class="tab__card">
@@ -61,13 +70,20 @@ import LiEmptyState from '@lib/components/LiEmptyState.vue'
 const props = defineProps({
   items: Array, loading: Boolean,
   searchQuery: String, currentPage: Number, totalPages: Number,
+  dateFrom: String, dateTo: String,
   canCreate: Boolean, canUpdate: Boolean, canDelete: Boolean,
   canExport: { type: Boolean, default: true },
 })
-const emit = defineEmits(['update:searchQuery', 'update:currentPage', 'add', 'edit', 'delete', 'export'])
+const emit = defineEmits(['update:searchQuery', 'update:currentPage', 'update:dateFrom', 'update:dateTo', 'add', 'edit', 'delete', 'export'])
 
 const searchQueryProxy = computed({ get: () => props.searchQuery, set: v => emit('update:searchQuery', v) })
 const currentPageProxy = computed({ get: () => props.currentPage, set: v => emit('update:currentPage', v) })
+const dateFromProxy = computed({ get: () => props.dateFrom, set: v => emit('update:dateFrom', v) })
+const dateToProxy = computed({ get: () => props.dateTo, set: v => emit('update:dateTo', v) })
+const showDateFilter = computed({
+  get: () => !!(props.dateFrom || props.dateTo),
+  set: v => { if (!v) { emit('update:dateFrom', ''); emit('update:dateTo', '') } },
+})
 
 const columns = [
   { key: 'name', label: 'Name', sortable: true },
@@ -124,6 +140,9 @@ function formatDate(d) { return d ? new Date(d).toLocaleDateString('en-US', { ye
 }
 .tab__export-btn:hover { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.2); }
 .tab__export-btn .material-symbols-outlined { font-size: 18px; }
+.tab__export-btn--active { background: rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.3); color: #6366F1; }
+.tab__date-filter { display: flex; gap: 12px; margin-bottom: 16px; }
+.tab__date-filter > * { flex: 1; max-width: 220px; }
 
 /* ── Responsive ── */
 @media (max-width: 768px) {

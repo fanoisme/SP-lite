@@ -241,13 +241,26 @@ export function useBuAccounts() {
     { key: 'updated_at', label: 'Updated', format: v => v ? new Date(v).toISOString().slice(0, 10) : '' },
   ]
 
-  function exportFiltered() {
-    const rows = searchQuery.value ? filtered.value : items.value
-    if (!rows.length) {
-      toast.error('No data to export')
-      return
-    }
+  const dateFrom = ref('')
+  const dateTo = ref('')
+  const showDateFilter = ref(false)
+
+  watch([dateFrom, dateTo], () => { currentPage.value = 1 })
+
+  async function exportFiltered() {
     try {
+      let query = supabase.from('qrdd_bu_accounts').select('*').order('name', { ascending: true })
+      if (dateFrom.value) query = query.gte('updated_at', dateFrom.value)
+      if (dateTo.value) {
+        // Include the whole end day (midnight of next day)
+        const end = new Date(dateTo.value)
+        end.setDate(end.getDate() + 1)
+        query = query.lt('updated_at', end.toISOString().slice(0, 10))
+      }
+      const { data, error: e } = await query
+      if (e) throw e
+      const rows = data || []
+      if (!rows.length) { toast.error('No data to export'); return }
       exportToXlsx(rows, exportColumns, 'qrdd_bu_accounts')
       toast.success(`Exported ${rows.length} BU accounts`)
     } catch (e) {
@@ -263,6 +276,7 @@ export function useBuAccounts() {
     items, loading, error,
     searchQuery, currentPage, pageSize,
     filtered, paginatedItems, totalPages, nameOptions,
+    dateFrom, dateTo, showDateFilter,
     loadItems, createItem, updateItem, deleteItem, bulkUpsert,
     exportFiltered,
   }

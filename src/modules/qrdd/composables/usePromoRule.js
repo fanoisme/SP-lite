@@ -253,13 +253,24 @@ export function usePromoRule() {
     { key: 'updated_at', label: 'Updated At', format: v => v ? new Date(v).toISOString().slice(0, 10) : '' },
   ]
 
-  function exportFiltered() {
-    const rows = searchQuery.value ? filtered.value : items.value
-    if (!rows.length) {
-      toast.error('No data to export')
-      return
-    }
+  const dateFrom = ref('')
+  const dateTo = ref('')
+
+  watch([dateFrom, dateTo], () => { currentPage.value = 1 })
+
+  async function exportFiltered() {
     try {
+      let query = supabase.from('qrdd_promo_rules').select('*').order('updated_at', { ascending: false })
+      if (dateFrom.value) query = query.gte('updated_at', dateFrom.value)
+      if (dateTo.value) {
+        const end = new Date(dateTo.value)
+        end.setDate(end.getDate() + 1)
+        query = query.lt('updated_at', end.toISOString().slice(0, 10))
+      }
+      const { data, error: e } = await query
+      if (e) throw e
+      const rows = data || []
+      if (!rows.length) { toast.error('No data to export'); return }
       exportToXlsx(rows, exportColumns, 'qrdd_promo_rules')
       toast.success(`Exported ${rows.length} promo rules`)
     } catch (e) {
@@ -271,6 +282,7 @@ export function usePromoRule() {
     items, loading, error,
     searchQuery, searchColumn, currentPage, pageSize,
     paginatedItems, totalPages,
+    dateFrom, dateTo,
     loadItems, createItem, updateItem, deleteItem, bulkUpsert, exportFiltered,
   }
 }
