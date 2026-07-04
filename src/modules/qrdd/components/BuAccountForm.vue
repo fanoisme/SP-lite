@@ -101,7 +101,7 @@ let syncing = false
 watch(() => form.percentage1, (v) => {
   if (syncing) return
   const n = Number(v)
-  if (n > 0 && n <= 100) {
+  if (n >= 0 && n <= 100) {
     syncing = true
     form.percentage2 = 100 - n
     syncing = false
@@ -111,7 +111,7 @@ watch(() => form.percentage1, (v) => {
 watch(() => form.percentage2, (v) => {
   if (syncing) return
   const n = Number(v)
-  if (n > 0 && n <= 100) {
+  if (n >= 0 && n <= 100) {
     syncing = true
     form.percentage1 = 100 - n
     syncing = false
@@ -122,7 +122,7 @@ const valid = computed(() => {
   return form.name.trim() && form.sof &&
     form.account1.trim() && form.acctname1.trim() &&
     form.account2.trim() && form.acctname2.trim() &&
-    Number(form.percentage1) > 0 && Number(form.percentage2) > 0 &&
+    Number(form.percentage1) >= 0 && Number(form.percentage2) >= 0 &&
     Math.abs(Number(form.percentage1) + Number(form.percentage2) - 100) < 0.01
 })
 
@@ -130,7 +130,7 @@ const pctError = computed(() => {
   const p1 = Number(form.percentage1) || 0
   const p2 = Number(form.percentage2) || 0
   const sum = p1 + p2
-  if (p1 > 0 && p2 > 0 && Math.abs(sum - 100) >= 0.01) {
+  if (p1 >= 0 && p2 >= 0 && Math.abs(sum - 100) >= 0.01) {
     return `Percentages must sum to 100% (currently ${sum}%)`
   }
   return null
