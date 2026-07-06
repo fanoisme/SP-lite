@@ -9,11 +9,25 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 function json(obj: unknown, status = 200): Response {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { "Content-Type": "application/json", "Connection": "keep-alive" },
+    headers: {
+      "Content-Type": "application/json",
+      "Connection": "keep-alive",
+      "Access-Control-Allow-Origin": "*",
+    },
   });
 }
 
 Deno.serve(async (req: Request) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Authorization, Content-Type",
+      },
+    });
+  }
   if (req.method !== "POST") return json({ error: "Method not allowed" }, 405);
 
   const authHeader = req.headers.get("Authorization");
