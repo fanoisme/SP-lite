@@ -25,7 +25,7 @@ six independently shippable phases, each with its own spec, plan and build:
 
 | # | Phase | Depends on |
 |---|---|---|
-| 1 | **Foundation** — module + route + schema mapping + audit log (table, triggers, screen) | — |
+| 1 | **Foundation** — module + nested routes + DD sidebar + two-axis access + schema mapping + audit log (table, triggers, screen) | — |
 | 2 | Core CRUD parity — BU / Merchant / Promo screens, shared validator, server-side paging, live change awareness | 1 |
 | 3 | Rich dashboard — expiring soon, needs attention, starting soon, BU coverage, recent changes | 2 |
 | 4 | Export Center + SQL export | 1, 2 |
@@ -50,6 +50,28 @@ commit once Phase 2 lands, so there is never a window without a working screen.
 - **Audit screen pulled into Phase 1** — it is cheap once the table exists and
   makes Phase 1 immediately useful, since it records every write made through
   the still-live `qrdd` screens.
+
+### Revision — 2026-08-13, after the first Task 4 attempt
+
+The first version of this spec gave `/dd` a single route with an eight-tab pill
+strip, matching SP-lite's existing `QrisView` / `QrddView` house style. That was
+built, reviewed, and **rejected on sight**: DD is not a tabbed screen.
+
+DD is a twelve-route application with its own grouped sidebar (Overview /
+Manage / Databases / Tools / Admin), where the Databases group is data-driven —
+it lists each database with its tables and live row counts — and where access
+runs on **two independent axes**, menu and database, granted separately per
+action. A tab strip loses all of that.
+
+Revised accordingly: §1b now states the two-axis model, §1c replaces the single
+route with a nested tree, §5a replaces the pill-tab shell with a second-level
+sidebar, and §5b adds the `useDdAccess()` composable that implements DD's
+`canWriteSheet` OR. The eight `db.*` features in §1a are new. Commit `6d91b54`
+(the pill-tab shell) was reverted in `e9bc758`.
+
+Tasks 1-3 were unaffected — the schema mapping, the audit log database objects
+and the module registration are all independent of UI shape, and none of that
+work was discarded.
 
 ---
 
@@ -84,11 +106,21 @@ commit once Phase 2 lands, so there is never a window without a working screen.
     { id: 'sql.write', label: 'SQL — Write',  desc: 'Run INSERT/UPDATE/DELETE that rewrite a table.' },
     { id: 'email.read',   label: 'Email Settings — Read',   desc: 'View scheduled email settings.' },
     { id: 'email.update', label: 'Email Settings — Update', desc: 'Edit and send scheduled emails.' },
+
+    // Database axis — see §1c. Granted independently of the menu features above.
+    { id: 'db.ihybrid_order.read',   label: 'DB ihybrid_order — Read',   desc: 'Browse raw tables in ihybrid_order.' },
+    { id: 'db.ihybrid_order.create', label: 'DB ihybrid_order — Create', desc: 'Insert rows into ihybrid_order tables.' },
+    { id: 'db.ihybrid_order.update', label: 'DB ihybrid_order — Update', desc: 'Edit rows in ihybrid_order tables.' },
+    { id: 'db.ihybrid_order.delete', label: 'DB ihybrid_order — Delete', desc: 'Delete rows from ihybrid_order tables.' },
+    { id: 'db.ihybrid_discount.read',   label: 'DB ihybrid_discount — Read',   desc: 'Browse raw tables in ihybrid_discount.' },
+    { id: 'db.ihybrid_discount.create', label: 'DB ihybrid_discount — Create', desc: 'Insert rows into ihybrid_discount tables.' },
+    { id: 'db.ihybrid_discount.update', label: 'DB ihybrid_discount — Update', desc: 'Edit rows in ihybrid_discount tables.' },
+    { id: 'db.ihybrid_discount.delete', label: 'DB ihybrid_discount — Delete', desc: 'Delete rows from ihybrid_discount tables.' },
   ],
 },
 ```
 
-Twenty features. Rationale for two of the splits:
+Twenty-eight features. Rationale for the splits:
 
 - `sql.write` is separate from `sql.read` because DD's SQL editor writes back by
   rewriting an entire table. That is a materially more dangerous capability than
@@ -100,21 +132,86 @@ Feature ids use DD's vocabulary (`merchants`, `promos`) rather than `qrdd`'s
 (`merchant-whitelist`, `promo-rule`). They live under a different `module_id`,
 so there is no collision; the seed migration in §4c maps old grants to new.
 
-### 1b. Route
+DD's third database, `app_config`, is **not** ported. It holds DD's own
+`user_access`, `role` and `email` sheets; in SP-lite the first two are already
+SP-lite's RBAC tables, owned by the existing `/admin` module. Only DD's Email
+Settings screen has no SP-lite equivalent, and it arrives in Phase 6 gated by
+`email.read` / `email.update` rather than by a database scope.
 
-**File:** `src/router/index.js` — insert after the `/qrdd` route:
+### 1b. The two access axes
+
+This is the part of DD most easily lost in translation, so it is stated
+explicitly. DD does not have one flat permission list. It has **two independent
+axes**, and a table is reachable through either:
+
+- **Menu scopes** — `dashboard`, `business-units`, `merchants`, `promos`,
+  `export`, `audit`, `sql`, `admin`. These gate the guided screens.
+- **Database scopes** — `ihybrid_order`, `ihybrid_discount`. These gate the raw
+  table browser and which tables the SQL editor mounts.
+
+Each axis is granted per action (view / create / update / delete). From
+`src/stores/access.js` in the DD repo:
+
+```js
+// A sheet is reachable through its menu or through its database.
+const canWriteSheet = (action, sheet, database) => {
+  const menu = SHEET_MENU[sheet]
+  if (menu && can(action, menu)) return true
+  return !!(database && can(action, database))
+}
+```
+
+The consequence worth preserving: granting `ihybrid_order` alone opens
+`discount_bu_accounts` as a raw table **without** opening `ihybrid_discount`,
+and without needing a blanket "databases" permission. The SQL editor honours the
+same split — ungranted tables are never mounted into the query engine, and a
+query naming one is refused with *"Not available in this connection"* rather
+than a SQL error.
+
+SP-lite's `computeAccess` resolves a flat `features[moduleId] = [ids]` array, so
+both axes are encoded as feature ids under the single `dd` module and the OR is
+applied by a DD-specific composable (§5b) rather than by `computeAccess`. This
+keeps SP-lite's access engine untouched — a deliberate constraint, since it is a
+verbatim port of SO-Platform's and is shared with every other module.
+
+### 1c. Routes
+
+DD is a multi-screen app with its own navigation, not a single tabbed view. It
+gets a **nested route tree** under `/dd`, mirroring the DD repo's router 1:1.
+
+**File:** `src/router/index.js` — replace the single `/dd` route with:
 
 ```js
 {
   path: '/dd',
-  name: 'dd',
   meta: { module: 'dd', label: 'DD MPM', icon: 'inventory' },
-  component: () => import('../modules/dd/views/DdView.vue'),
+  component: () => import('../modules/dd/views/DdLayout.vue'),
+  children: [
+    { path: '',                name: 'dd',                meta: { ddMenu: 'dashboard' },      component: () => import('../modules/dd/views/DdDashboard.vue') },
+    { path: 'business-units',  name: 'dd-business-units', meta: { ddMenu: 'bu-accounts' },    component: () => import('../modules/dd/views/DdBuAccounts.vue') },
+    { path: 'merchants',       name: 'dd-merchants',      meta: { ddMenu: 'merchants' },      component: () => import('../modules/dd/views/DdMerchants.vue') },
+    { path: 'promos',          name: 'dd-promos',         meta: { ddMenu: 'promos' },         component: () => import('../modules/dd/views/DdPromos.vue') },
+    { path: 'table/:name',     name: 'dd-table',          meta: { ddDatabaseParam: 'name' },  component: () => import('../modules/dd/views/DdTableExplorer.vue') },
+    { path: 'export',          name: 'dd-export',         meta: { ddMenu: 'export' },         component: () => import('../modules/dd/views/DdExport.vue') },
+    { path: 'audit',           name: 'dd-audit',          meta: { ddMenu: 'audit' },          component: () => import('../modules/dd/views/DdAudit.vue') },
+    { path: 'sql',             name: 'dd-sql',            meta: { ddMenu: 'sql' },            component: () => import('../modules/dd/views/DdSqlEditor.vue') },
+  ],
 },
 ```
 
-The sidebar auto-discovers routes, and `router.beforeEach` already gates on
-`to.meta.module` via `canModule()`. No other wiring is required.
+`name: 'dd'` stays on the index child so SP-lite's global sidebar and
+`firstAccessibleRoute()` — which resolve a module to `{ name: moduleId }` — keep
+working with no change to `App.vue` or `router/index.js`'s helper.
+
+`meta.module` on the parent means SP-lite's existing `beforeEach` gate covers
+every child. A second, DD-specific guard clause handles the per-screen axes:
+`meta.ddMenu` gates on `canMenu(...)`, and `meta.ddDatabaseParam` gates a raw
+table on the database that owns it — matching DD's guard, which special-cases
+`to.name === 'table'` for exactly this reason.
+
+Phase 1 builds `DdLayout.vue` and `DdAudit.vue` for real; the other six children
+render a shared placeholder naming the phase they arrive in, so the navigation is
+complete and honest from the start rather than being restructured six times.
 
 ---
 
@@ -490,13 +587,23 @@ from (values
   ('audit.read'), ('export.read'),
   ('tables.read'), ('tables.update'),
   ('sql.read'), ('sql.write'),
-  ('email.read'), ('email.update')
+  ('email.read'), ('email.update'),
+  ('db.ihybrid_order.read'), ('db.ihybrid_order.create'),
+  ('db.ihybrid_order.update'), ('db.ihybrid_order.delete'),
+  ('db.ihybrid_discount.read'), ('db.ihybrid_discount.create'),
+  ('db.ihybrid_discount.update'), ('db.ihybrid_discount.delete')
 ) as f(feature_id)
 where not exists (
   select 1 from public.feature_access fa
   where fa.role = 'Admin' and fa.module_id = 'dd' and fa.feature_id = f.feature_id
 );
 ```
+
+The eight `db.*` features were added after the original twenty were already
+seeded, so they ship as a second migration
+(`20260813_dd_module_seed_db_axis.sql`) with the same `not exists` guard rather
+than by editing the applied one. `schema.sql`'s section 12b carries the full
+twenty-eight so a from-scratch run needs only one pass.
 
 ### 4c. Carrying existing grants across
 
@@ -537,31 +644,96 @@ exactly as it is; it is removed when `qrdd` is retired after Phase 2.
 ### 5a. Shell — `src/modules/dd/views/DdView.vue`
 
 Reuses the animated pill-tab pattern from `QrisView.vue` / `QrddView.vue`: a
-`<nav>` of buttons with an absolutely-positioned indicator whose `left` / `width`
-are computed from the active button's `offsetLeft` / `offsetWidth`, transitioned
-with `all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)`, recomputed on tab switch and
-on window resize.
+a DD-specific secondary sidebar plus a `<RouterView>`, mirroring
+`src/components/AppSidebar.vue` in the DD repo.
 
-Tabs are declared for every phase up front so the shell does not need
-restructuring five more times:
+**Why a second sidebar rather than pill tabs.** DD is a twelve-screen app whose
+navigation is grouped and, in the Databases group, data-driven — it lists each
+database with its tables and a live row count. That does not compress into a tab
+strip without losing the structure. SP-lite's global sidebar stays as it is, with
+one `DD MPM` entry; the DD navigation lives one level in. Nothing about `App.vue`
+or SP-lite's other modules changes.
 
-| Tab | Gate | Phase 1 state |
+Five groups, in DD's order:
+
+| Group | Items | Gate |
 |---|---|---|
-| Dashboard | — | placeholder |
-| BU Accounts | `bu-accounts.read` | placeholder |
-| Merchants | `merchants.read` | placeholder |
-| Promo Rules | `promos.read` | placeholder |
-| Audit Log | `audit.read` | **built** |
-| Export | `export.read` | placeholder |
-| Tables | `tables.read` | placeholder |
-| SQL | `sql.read` | placeholder |
+| **Overview** | Dashboard | `dashboard` menu |
+| **Manage** | Business Units, Merchants, Promos | respective menu |
+| **Databases** | per database → its tables, each with a row-count badge; plus a Reload button | `db.<name>.read` |
+| **Tools** | Export, Audit Log, SQL Editor | respective menu |
+| **Admin** | Email Settings | `email.read` |
 
-A tab whose gate is denied is not rendered at all (same as `QrddView`). A tab
-that is granted but not yet built renders a shared `<DdPlaceholder>` naming the
-phase it arrives in — the shell tells the truth about what exists rather than
-showing a blank panel. Default tab is Audit Log while it is the only real one.
+A group whose items are all denied renders no heading at all — DD's sidebar does
+this with `v-if="visibleEasyNav.length"`, and the effect is that a viewer-level
+role sees a short, honest menu rather than a wall of disabled rows.
 
-### 5b. `src/modules/dd/composables/useAuditLog.js`
+The Databases group is built from `DD_TABLES` (§2) filtered by
+`canDatabase('read', targetDb)`, grouped by `targetDb`, and shows the downstream
+table name (`discount_bu_accounts`, `merchant_whitelist`, `promo_info`) rather
+than the local `qrdd_*` name — the sidebar is a view of the target schema, which
+is what the person reading it is reasoning about. Row counts come from one
+`count: 'exact', head: true` query per table.
+
+Two items carry a badge in DD, and both are deferred rather than faked:
+Export's count of pending exportable changes needs Phase 4's session changelog,
+and the footer's stale-data dot needs Phase 2's realtime subscription. Phase 1
+renders neither — an always-zero badge would be worse than none.
+
+The footer carries what DD's does, minus the parts that have no meaning here:
+the signed-in user's role, and a link to the Supabase table editor in place of
+DD's link to the spreadsheet. DD's `live` / `dev mock` indicator is dropped —
+SP-lite has no mock backend, so it would always read `live`.
+
+Every screen except Dashboard and Audit Log renders `DdPlaceholder` naming its
+phase. Dashboard renders a minimal card in Phase 1 (the rich version is Phase 3)
+because it is the module's index route and a placeholder as the landing screen
+would be the first thing anyone sees.
+
+### 5b. `src/modules/dd/composables/useDdAccess.js`
+
+The two-axis model from §1b, as a composable over SP-lite's flat feature list.
+This is the piece that makes the port faithful rather than approximate.
+
+```js
+export function useDdAccess() {
+  const { canFeature, canModule } = useAccess()
+
+  const can = (action, scope) => canFeature('dd', `${scope}.${action}`)
+
+  // Menu axis.
+  const canMenu = (menu, action = 'read') => can(action, menu)
+
+  // Database axis, granted independently of any menu.
+  const canDatabase = (action, db) => can(action, `db.${db}`)
+
+  // DD's rule, verbatim: a table is reachable through its menu OR its database.
+  const canTable = (action, tableId) => {
+    const t = DD_TABLES[tableId]
+    if (!t) return false
+    return can(action, tableId) || canDatabase(action, t.targetDb)
+  }
+
+  // No create/update/delete on any scope at all.
+  const isReadOnly = computed(() => ...)
+
+  // First screen this person may open, in DD's own precedence order.
+  const firstAllowedDdRoute = computed(() => ...)
+}
+```
+
+`canTable` uses the *menu* action name for the guided screens — `bu-accounts`,
+`merchants`, `promos` are both the `DD_TABLES` keys and the menu scope names, so
+`can('update', 'merchants')` and `canDatabase('update', 'ihybrid_discount')` are
+the two halves of DD's `canWriteSheet`. Keeping those names identical is why
+§2's table ids are what they are.
+
+`isReadOnly` exists because DD uses it to switch whole screens into a read-only
+presentation rather than showing buttons that will fail. Phase 1 does not consume
+it — the Audit Log is read-only for everyone — but it belongs with the rest of
+the model, and Phase 2's three managers are its first consumers.
+
+### 5c. `src/modules/dd/composables/useAuditLog.js`
 
 Server-side paged. Shape follows the existing `qrdd` composables (a `rows` ref,
 a `loading` ref, an async loader) so the module reads consistently.
@@ -583,7 +755,7 @@ Ordering is on `audit_id desc`, not `ts desc`: two rows written inside one
 statement share a timestamp to the microsecond, and only the identity column
 orders them deterministically.
 
-### 5c. `src/modules/dd/components/AuditLogTab.vue`
+### 5d. `src/modules/dd/views/DdAudit.vue`
 
 Filter bar — table select, action select, actor select, search box, Reset —
 above an `LiTable`. Columns:
@@ -608,22 +780,41 @@ actions, no editing.
 
 | File | Change |
 |---|---|
-| `supabase/migrations/20260813_dd_audit_log.sql` | **New** |
-| `supabase/migrations/20260813_dd_module_seed.sql` | **New** |
-| `supabase/schema.sql` | Append section 12 |
-| `src/lib/modules.js` | Add `dd` entry (20 features) |
-| `src/router/index.js` | Add `/dd` route |
-| `src/modules/dd/lib/schema.js` | **New** |
-| `src/modules/dd/views/DdView.vue` | **New** |
+| `supabase/migrations/20260813_dd_audit_log.sql` | **New** — done |
+| `supabase/migrations/20260813_dd_module_seed.sql` | **New** — done |
+| `supabase/migrations/20260813_dd_module_seed_db_axis.sql` | **New** — the 8 `db.*` features |
+| `supabase/schema.sql` | Append sections 12, 12b (12b carries all 28 features) |
+| `src/lib/modules.js` | `dd` entry — 28 features |
+| `src/router/index.js` | `/dd` parent + 8 nested children |
+| `src/modules/dd/lib/schema.js` | **New** — done |
+| `src/modules/dd/views/DdLayout.vue` | **New** — sidebar + `<RouterView>` |
+| `src/modules/dd/components/DdSidebar.vue` | **New** — the five groups |
 | `src/modules/dd/components/DdPlaceholder.vue` | **New** |
-| `src/modules/dd/components/AuditLogTab.vue` | **New** |
+| `src/modules/dd/composables/useDdAccess.js` | **New** — the two-axis model |
+| `src/modules/dd/composables/useDdTableCounts.js` | **New** — row counts for the Databases group |
+| `src/modules/dd/views/DdDashboard.vue` | **New** — minimal in Phase 1 |
+| `src/modules/dd/views/DdAudit.vue` | **New** — the one full screen |
+| `src/modules/dd/views/DdBuAccounts.vue` | **New** — placeholder (Phase 2) |
+| `src/modules/dd/views/DdMerchants.vue` | **New** — placeholder (Phase 2) |
+| `src/modules/dd/views/DdPromos.vue` | **New** — placeholder (Phase 2) |
+| `src/modules/dd/views/DdTableExplorer.vue` | **New** — placeholder (Phase 5) |
+| `src/modules/dd/views/DdExport.vue` | **New** — placeholder (Phase 4) |
+| `src/modules/dd/views/DdSqlEditor.vue` | **New** — placeholder (Phase 5) |
 | `src/modules/dd/composables/useAuditLog.js` | **New** |
+| `src/modules/dd/lib/csv.js` | **New** |
 
-`CLAUDE.md` gets a `dd` row in the Modules table and a note that `dd_audit_log`
-is append-only.
+`DdView.vue` from the reverted pill-tab attempt is deleted; `DdLayout.vue`
+replaces it.
 
-No changes to any `qrdd` file. No changes to the three existing tables' columns,
-constraints or policies — only triggers are attached.
+`CLAUDE.md` gets a `dd` row in the Modules table, a note that `dd_audit_log` is
+append-only, and a note that `dd` is the only module with its own nested router
+and second-level sidebar.
+
+No changes to any `qrdd` file, and no changes to `src/lib/access.js`,
+`src/composables/useAccess.js` or `App.vue` — the two-axis OR lives in
+`useDdAccess()` so SP-lite's shared access engine stays a verbatim port of
+SO-Platform's. No changes to the three existing tables' columns, constraints or
+policies — only triggers are attached.
 
 ---
 
@@ -651,13 +842,31 @@ Supabase project:
 6. **Filters and paging.** Each filter narrows correctly; combining filters
    ANDs them; paging holds the filter; fast typing in search never leaves an
    older result rendered.
-7. **Access gating.** A role without `audit.read` does not see the Audit Log
-   tab. A role without the `dd` module is redirected away from `/dd` by the
-   router guard.
-8. **`schema.sql` is still idempotent.** Run it twice against a scratch
-   project; the second run must succeed, in particular the publication guard
-   and the three `drop trigger if exists` statements.
-9. **`npm run build` succeeds.**
+7. **Menu-axis gating.** A role without `audit.read` does not see the Audit Log
+   item in the Tools group, and navigating to `/dd/audit` directly is refused by
+   the DD guard. A role without the `dd` module is redirected away from `/dd`
+   entirely by SP-lite's existing guard.
+8. **Database-axis gating — the one that proves the port is faithful.** Grant a
+   role `db.ihybrid_order.read` and **not** `db.ihybrid_discount.read`. The
+   Databases group must list `ihybrid_order` with `discount_bu_accounts` under it
+   and must not mention `ihybrid_discount` or its two tables at all. Navigating
+   directly to `/dd/table/merchant_whitelist` must be refused. Then remove both
+   `db.*.read` grants: the entire Databases group and its heading disappear,
+   while the Manage group is unaffected — the two axes are independent.
+9. **The OR in `canTable`.** With `merchants.update` granted but
+   `db.ihybrid_discount.update` denied, `canTable('update', 'merchants')` is
+   true. With both denied it is false. With only the database granted it is true
+   again. This is DD's `canWriteSheet` and it must hold in all three
+   combinations.
+10. **Nested routing.** `/dd` renders the Dashboard child, and SP-lite's global
+   sidebar link to the `dd` route resolves without error — `firstAccessibleRoute()`
+   resolves a module to `{ name: moduleId }`, so the index child must keep
+   `name: 'dd'`.
+11. **`schema.sql` is still idempotent.** Run it twice; the second run must
+   succeed, in particular the publication guard, the three
+   `drop trigger if exists` statements, and both feature-seed blocks (Admin must
+   still hold 28 `dd` features, not 56).
+12. **`npm run build` succeeds.**
 
 ---
 
@@ -665,12 +874,19 @@ Supabase project:
 
 Deferred to the phase named, not dropped:
 
-- Any BU / Merchant / Promo screen under `/dd` — Phase 2. `/qrdd` remains the
-  working surface until then.
+- Any BU / Merchant / Promo screen content under `/dd` — Phase 2. Their routes,
+  sidebar entries and gates exist now; the screens themselves are placeholders,
+  and `/qrdd` remains the working surface until then.
 - Retiring the `qrdd` module — one commit after Phase 2 lands.
-- Live change awareness / stale banners — Phase 2 (the publication is added
-  here, but nothing subscribes).
-- Rich dashboard — Phase 3.
+- Live change awareness / stale banners, and the sidebar footer's stale-data dot
+  — Phase 2 (the realtime publication is added here, but nothing subscribes).
+- The Export item's pending-changes badge — Phase 4, which introduces the session
+  changelog it counts. Phase 1 renders no badge rather than an always-zero one.
+- `isReadOnly` from `useDdAccess()` has no consumer in Phase 1 — Phase 2's three
+  managers are the first, and it is specified here so the access model is
+  complete in one place.
+- Rich dashboard — Phase 3. `/dd` renders a minimal Dashboard card in Phase 1
+  because it is the index route.
 - SQL export, Export Center, `app_instances` cache-reset statements — Phase 4.
   `schema.js` declares the mapping they need; nothing reads it yet.
 - Table Explorer, SQL Editor, `REPLACE` audit rows — Phase 5. The `REPLACE`
