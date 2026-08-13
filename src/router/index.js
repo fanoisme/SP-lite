@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { useAuth } from '../composables/useAuth.js'
 import { useAccess } from '../composables/useAccess.js'
+import { useDdAccess } from '../modules/dd/composables/useDdAccess.js'
+import { byTargetTable } from '../modules/dd/lib/schema.js'
 
 // SP-lite — hash history so GitHub Pages (no server-side rewrites) can
 // serve deep links correctly.
@@ -49,9 +51,23 @@ const routes = [
   },
   {
     path: '/dd',
-    name: 'dd',
     meta: { module: 'dd', label: 'DD MPM', icon: 'inventory' },
-    component: () => import('../modules/dd/views/DdView.vue'),
+    component: () => import('../modules/dd/views/DdLayout.vue'),
+    children: [
+      // `name: 'dd'` must stay on the index child: SP-lite's sidebar and
+      // firstAccessibleRoute() resolve a module to { name: moduleId }.
+      // No ddMenu gate on the index child: the dashboard follows module access,
+      // so /dd always has a valid landing screen. `dashboard.read` is not a
+      // seeded feature — gating on it would refuse everyone, Admin included.
+      { path: '',               name: 'dd',                                                   component: () => import('../modules/dd/views/DdDashboard.vue') },
+      { path: 'business-units', name: 'dd-business-units', meta: { ddMenu: 'bu-accounts' },   component: () => import('../modules/dd/views/DdBuAccounts.vue') },
+      { path: 'merchants',      name: 'dd-merchants',      meta: { ddMenu: 'merchants' },     component: () => import('../modules/dd/views/DdMerchants.vue') },
+      { path: 'promos',         name: 'dd-promos',         meta: { ddMenu: 'promos' },        component: () => import('../modules/dd/views/DdPromos.vue') },
+      { path: 'table/:name',    name: 'dd-table',          meta: { ddTableParam: 'name' },    component: () => import('../modules/dd/views/DdTableExplorer.vue') },
+      { path: 'export',         name: 'dd-export',         meta: { ddMenu: 'export' },        component: () => import('../modules/dd/views/DdExport.vue') },
+      { path: 'audit',          name: 'dd-audit',          meta: { ddMenu: 'audit' },         component: () => import('../modules/dd/views/DdAudit.vue') },
+      { path: 'sql',            name: 'dd-sql',            meta: { ddMenu: 'sql' },           component: () => import('../modules/dd/views/DdSqlEditor.vue') },
+    ],
   },
   {
     path: '/admin',
@@ -113,6 +129,24 @@ router.beforeEach(async (to) => {
   }
   if (to.meta.module && !canModule(to.meta.module)) {
     return firstAccessibleRoute()
+  }
+
+  // DD's second access axis. A guided screen is gated by its menu; a raw table
+  // is gated by the database that owns it. Mirrors the DD app's own guard,
+  // which special-cases the table route for exactly this reason.
+  if (to.matched.some(r => r.meta.module === 'dd')) {
+    const { canMenu, canDatabase, firstAllowedDdRoute } = useDdAccess()
+
+    if (to.meta.ddMenu && !canMenu(to.meta.ddMenu)) {
+      return firstAllowedDdRoute.value ?? firstAccessibleRoute()
+    }
+
+    if (to.meta.ddTableParam) {
+      const t = byTargetTable(String(to.params[to.meta.ddTableParam] || ''))
+      if (!t || !canDatabase(t.targetDb)) {
+        return firstAllowedDdRoute.value ?? firstAccessibleRoute()
+      }
+    }
   }
 
   return true
