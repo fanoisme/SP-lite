@@ -5,7 +5,13 @@
         <h1 class="ddaudit__title">Audit Log</h1>
         <p class="ddaudit__sub">Who changed what, and when.</p>
       </div>
-      <p class="ddaudit__count">{{ total }} {{ total === 1 ? 'entry' : 'entries' }}</p>
+      <div class="ddaudit__actions">
+        <p class="ddaudit__count">{{ total }} {{ total === 1 ? 'entry' : 'entries' }}</p>
+        <button class="ddaudit__export" type="button" :disabled="!rows.length" @click="exportCsv">
+          <span class="material-symbols-outlined">file_save</span>
+          Export page
+        </button>
+      </div>
     </header>
 
     <div class="ddaudit__filters">
@@ -20,9 +26,32 @@
 
     <LiTable :data="rows" :columns="columns" row-key="audit_id" :loading="loading">
       <template #cell-ts="{ value }">{{ formatTs(value) }}</template>
+      <template #cell-action="{ value }">
+        <LiBadge :label="value" :variant="actionVariant(value)" size="sm" is-pill />
+      </template>
       <template #cell-table_id="{ value }">{{ tableLabel(value) }}</template>
-      <template #cell-column_name="{ value }">{{ value || '—' }}</template>
-      <template #cell-detail="{ value }">{{ value || '—' }}</template>
+      <template #cell-column_name="{ value }">
+        <code v-if="value" class="ddaudit__col">{{ value }}</code>
+        <span v-else class="ddaudit__muted">—</span>
+      </template>
+      <template #cell-change="{ row }">
+        <span v-if="!row.column_name" class="ddaudit__muted">—</span>
+        <span v-else class="ddaudit__change">
+          <span class="ddaudit__old">
+            <template v-if="row.old_value !== null">{{ row.old_value }}</template>
+            <i v-else class="ddaudit__null">NULL</i>
+          </span>
+          <span class="ddaudit__arrow">→</span>
+          <span class="ddaudit__new">
+            <template v-if="row.new_value !== null">{{ row.new_value }}</template>
+            <i v-else class="ddaudit__null">NULL</i>
+          </span>
+        </span>
+      </template>
+      <template #cell-detail="{ value }">
+        <template v-if="value">{{ value }}</template>
+        <span v-else class="ddaudit__muted">—</span>
+      </template>
     </LiTable>
 
     <div v-if="totalPages > 1" class="ddaudit__pagination">
@@ -37,13 +66,14 @@ import LiTable from '@lib/components/LiTable.vue'
 import LiPagination from '@lib/components/LiPagination.vue'
 import LiSelect from '@lib/components/LiSelect.vue'
 import LiTextField from '@lib/components/LiTextField.vue'
+import LiBadge from '@lib/components/LiBadge.vue'
 import { TABLE_IDS, tableLabel } from '../lib/schema.js'
 import { useAuditLog } from '../composables/useAuditLog.js'
 
 const {
   rows, loading, error, total, currentPage, totalPages,
   filterTable, filterAction, filterActor, search, actors,
-  load, loadActors, resetFilters,
+  load, loadActors, resetFilters, exportCsv,
 } = useAuditLog()
 
 const columns = [
@@ -53,8 +83,7 @@ const columns = [
   { key: 'table_id', label: 'Table' },
   { key: 'record_key', label: 'Record' },
   { key: 'column_name', label: 'Column' },
-  { key: 'old_value', label: 'Old' },
-  { key: 'new_value', label: 'New' },
+  { key: 'change', label: 'Old → New' },
   { key: 'detail', label: 'Detail' },
 ]
 
@@ -83,6 +112,13 @@ function formatTs(v) {
     day: '2-digit', month: 'short', year: 'numeric',
     hour: '2-digit', minute: '2-digit',
   })
+}
+
+function actionVariant(action) {
+  if (action === 'INSERT') return 'success'
+  if (action === 'UPDATE') return 'warning'
+  if (action === 'DELETE') return 'error'
+  return 'neutral'
 }
 
 onMounted(() => { load(); loadActors() })
@@ -116,5 +152,34 @@ onMounted(() => { load(); loadActors() })
 
 @media (max-width: 1100px) {
   .ddaudit__filters { grid-template-columns: 1fr 1fr; }
+}
+
+.ddaudit__actions { display: flex; align-items: center; gap: 12px; }
+.ddaudit__export {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-pill, 999px); background: transparent;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 13px; font-weight: 600; color: var(--color-gray-700, #666);
+  cursor: pointer; transition: all 200ms; white-space: nowrap;
+}
+.ddaudit__export:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
+.ddaudit__export:disabled { opacity: 0.45; cursor: not-allowed; }
+.ddaudit__export .material-symbols-outlined { font-size: 17px; }
+
+.ddaudit__col {
+  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  background: rgba(0, 0, 0, 0.04); border-radius: 5px; padding: 1px 6px;
+}
+.ddaudit__muted { color: var(--color-gray-400, #aaa); }
+.ddaudit__change { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 13px; }
+/* Struck through so a removed value reads as removed at a glance. */
+.ddaudit__old { text-decoration: line-through; color: var(--color-gray-500, #8e8ea0); }
+.ddaudit__new { font-weight: 600; }
+.ddaudit__arrow { color: var(--color-gray-400, #aaa); }
+/* A NULL must not look like an empty string — the difference matters here. */
+.ddaudit__null {
+  font-style: normal; font-size: 11px; letter-spacing: 0.4px;
+  color: var(--color-gray-400, #aaa);
 }
 </style>

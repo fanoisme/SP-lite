@@ -1,5 +1,7 @@
 import { ref, computed, watch } from 'vue'
 import { supabase } from '@/lib/supabase.js'
+import { downloadCsv } from '../lib/csv.js'
+import { tableLabel } from '../lib/schema.js'
 
 const SEARCH_DEBOUNCE_MS = 250
 
@@ -101,10 +103,27 @@ export function useAuditLog() {
     search.value = ''
   }
 
+  // Exports the current page, matching the DD app this replaces. The whole log
+  // is deliberately not dumped — narrow it with the filters first.
+  function exportCsv() {
+    downloadCsv(rows.value, [
+      { key: 'ts', label: 'When', format: v => (v ? new Date(v).toISOString() : '') },
+      { key: 'actor', label: 'Who' },
+      { key: 'action', label: 'Action' },
+      { key: 'target_db', label: 'Database' },
+      { key: 'table_id', label: 'Table', format: v => tableLabel(v) },
+      { key: 'record_key', label: 'Record' },
+      { key: 'column_name', label: 'Column' },
+      { key: 'old_value', label: 'Old Value' },
+      { key: 'new_value', label: 'New Value' },
+      { key: 'detail', label: 'Detail' },
+    ], `dd-audit-log-page-${currentPage.value}`)
+  }
+
   return {
     rows, loading, error, total,
     currentPage, pageSize, totalPages,
     filterTable, filterAction, filterActor, search, actors,
-    load, loadActors, resetFilters,
+    load, loadActors, resetFilters, exportCsv,
   }
 }
