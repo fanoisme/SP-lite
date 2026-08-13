@@ -43,8 +43,8 @@ export const DD_TABLES = {
     label: 'Promo Rules',
     local: 'qrdd_promo_rules',
     targetDb: 'ihybrid_discount',
-    // The sheet was promo_rule; the table downstream is promo_info.
-    targetTable: 'promo_info',
+    // Downstream table name.
+    targetTable: 'promo_rule',
     keyColumns: ['promo_id'],
     timestamps: { created_at: 'created_time', updated_at: 'updated_time' },
     textColumns: ['merchant_id'],

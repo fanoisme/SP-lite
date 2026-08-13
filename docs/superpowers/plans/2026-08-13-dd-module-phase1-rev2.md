@@ -19,7 +19,7 @@
 - **Path aliases:** `@` → `src/`, `@lib` → `src/lib/`. `src/router/index.js` uses relative `../modules/...` imports as its established local convention — follow it there.
 - **The three existing tables keep their `qrdd_*` names.** Do not alter their columns, constraints or policies.
 - **All new database objects use the `dd_` prefix.**
-- **Downstream mapping is fixed:** `qrdd_bu_accounts` → `ihybrid_order.discount_bu_accounts`; `qrdd_merchant_whitelist` → `ihybrid_discount.merchant_whitelist`; `qrdd_promo_rules` → `ihybrid_discount.promo_info`.
+- **Downstream mapping is fixed:** `qrdd_bu_accounts` → `ihybrid_order.discount_bu_accounts`; `qrdd_merchant_whitelist` → `ihybrid_discount.merchant_whitelist`; `qrdd_promo_rules` → `ihybrid_discount.promo_rule`.
 - **`supabase/schema.sql` must stay idempotent and re-runnable.** Sections 12 and 12b are DD's. Section 11 (`QR DD Module`) is left exactly as-is.
 - **The `qrdd` module must keep working untouched.** No file under `src/modules/qrdd/` is modified.
 - **Do not modify `src/lib/access.js`, `src/composables/useAccess.js`, or `src/App.vue`.** `access.js` is a verbatim port of SO-Platform's and is shared by every module. The two-axis OR belongs in `useDdAccess()`.
@@ -232,12 +232,12 @@ export function byTargetTable(name) {
 }
 ```
 
-`byTargetTable` looks up by the **downstream** name (`discount_bu_accounts`, `merchant_whitelist`, `promo_info`) because that is what the sidebar displays and what the `/dd/table/:name` route carries, matching DD's own `/table/:name`.
+`byTargetTable` looks up by the **downstream** name (`discount_bu_accounts`, `merchant_whitelist`, `promo_rule`) because that is what the sidebar displays and what the `/dd/table/:name` route carries, matching DD's own `/table/:name`.
 
 - [ ] **Step 2: Verify schema.js still loads and the new fields are right**
 
 ```bash
-node -e "import('./src/modules/dd/lib/schema.js').then(m=>{const a=(c,l)=>{if(!c)throw new Error('FAIL: '+l);console.log('ok  '+l)};a(m.DD_TABLES.bu_accounts.menu==='bu-accounts','bu menu is hyphenated');a(m.DD_TABLES.merchants.menu==='merchants','merchants menu');a(m.DD_TABLES.promos.menu==='promos','promos menu');a(!('readGate' in m.DD_TABLES.bu_accounts),'readGate removed');a(m.byTargetTable('promo_info').id==='promos','byTargetTable promo_info');a(m.byTargetTable('discount_bu_accounts').targetDb==='ihybrid_order','byTargetTable db');a(m.byTargetTable('qrdd_promo_rules')===undefined,'byTargetTable does not match local names');a(m.byLocal('qrdd_promo_rules').id==='promos','byLocal still works');console.log('ALL PASS')})"
+node -e "import('./src/modules/dd/lib/schema.js').then(m=>{const a=(c,l)=>{if(!c)throw new Error('FAIL: '+l);console.log('ok  '+l)};a(m.DD_TABLES.bu_accounts.menu==='bu-accounts','bu menu is hyphenated');a(m.DD_TABLES.merchants.menu==='merchants','merchants menu');a(m.DD_TABLES.promos.menu==='promos','promos menu');a(!('readGate' in m.DD_TABLES.bu_accounts),'readGate removed');a(m.byTargetTable('promo_rule').id==='promos','byTargetTable promo_rule');a(m.byTargetTable('discount_bu_accounts').targetDb==='ihybrid_order','byTargetTable db');a(m.byTargetTable('qrdd_promo_rules')===undefined,'byTargetTable does not match local names');a(m.byLocal('qrdd_promo_rules').id==='promos','byLocal still works');console.log('ALL PASS')})"
 ```
 
 Expected: eight `ok` lines then `ALL PASS`.
@@ -1083,8 +1083,8 @@ Confirm with `read_page`:
 
 1. The sidebar renders five group headings in order: **Overview**, **Manage**, **Databases**, **Tools** — and no **Admin** heading, because Email Settings is Phase 6 and has no route yet.
 2. **Manage** lists Business Units, Merchants, Promos.
-3. **Databases** lists `ihybrid_order` with `discount_bu_accounts` under it, and `ihybrid_discount` with `merchant_whitelist` and `promo_info` under it. The downstream names, not `qrdd_*`.
-4. Row-count badges show **24** on `discount_bu_accounts`, **1** on `merchant_whitelist`, **0** on `promo_info`.
+3. **Databases** lists `ihybrid_order` with `discount_bu_accounts` under it, and `ihybrid_discount` with `merchant_whitelist` and `promo_rule` under it. The downstream names, not `qrdd_*`.
+4. Row-count badges show **24** on `discount_bu_accounts`, **1** on `merchant_whitelist`, **0** on `promo_rule`.
 5. **Tools** lists Export, Audit Log, SQL Editor.
 6. The main pane shows the Dashboard with three cards and correct counts.
 7. The footer shows the role chip (`Admin`) and no `read only` chip.
@@ -1094,7 +1094,7 @@ Confirm with `read_page`:
 
 Click Merchants, then `read_page`: the main pane shows the Phase 2 placeholder, the URL is `#/dd/merchants`, and the Merchants sidebar item is the active one.
 
-Click `promo_info` under Databases: URL is `#/dd/table/promo_info` and the placeholder titles itself `promo_info` (proving `byTargetTable` resolved the param).
+Click `promo_rule` under Databases: URL is `#/dd/table/promo_rule` and the placeholder titles itself `promo_rule` (proving `byTargetTable` resolved the param).
 
 Navigate directly to `http://localhost:5173/#/dd/audit` — the temporary Audit Log placeholder renders, confirming the guard permits a granted menu.
 
@@ -1924,7 +1924,7 @@ on conflict do nothing;
 Sign in as a user holding that role (or temporarily set your own profile's role — recording the original so you can restore it). On `/dd`, confirm with `read_page`:
 
 1. The **Databases** group lists `ihybrid_order` with `discount_bu_accounts` under it.
-2. It does **not** mention `ihybrid_discount`, `merchant_whitelist` or `promo_info` anywhere.
+2. It does **not** mention `ihybrid_discount`, `merchant_whitelist` or `promo_rule` anywhere.
 3. The **Manage** group heading does not render at all — no menu grants.
 4. The **Tools** group heading does not render at all.
 5. The footer shows a `read only` chip, because no create/update/delete scope is held on either axis.
