@@ -725,7 +725,11 @@ from (values
   ('audit.read'), ('export.read'),
   ('tables.read'), ('tables.update'),
   ('sql.read'), ('sql.write'),
-  ('email.read'), ('email.update')
+  ('email.read'), ('email.update'),
+  ('db.ihybrid_order.read'), ('db.ihybrid_order.create'),
+  ('db.ihybrid_order.update'), ('db.ihybrid_order.delete'),
+  ('db.ihybrid_discount.read'), ('db.ihybrid_discount.create'),
+  ('db.ihybrid_discount.update'), ('db.ihybrid_discount.delete')
 ) as f(feature_id)
 where not exists (
   select 1 from public.feature_access fa

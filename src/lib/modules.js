@@ -75,6 +75,17 @@ export const MODULE_REGISTRY = [
       { id: 'sql.write', label: 'SQL — Write',  desc: 'Run INSERT/UPDATE/DELETE that rewrite a table.' },
       { id: 'email.read',   label: 'Email Settings — Read',   desc: 'View scheduled email settings.' },
       { id: 'email.update', label: 'Email Settings — Update', desc: 'Edit and send scheduled emails.' },
+      // Database axis. DD grants raw-table and SQL-editor access per database,
+      // independently of the menu features above, so someone can be given
+      // ihybrid_order alone without ihybrid_discount.
+      { id: 'db.ihybrid_order.read',   label: 'DB ihybrid_order — Read',   desc: 'Browse raw tables in ihybrid_order.' },
+      { id: 'db.ihybrid_order.create', label: 'DB ihybrid_order — Create', desc: 'Insert rows into ihybrid_order tables.' },
+      { id: 'db.ihybrid_order.update', label: 'DB ihybrid_order — Update', desc: 'Edit rows in ihybrid_order tables.' },
+      { id: 'db.ihybrid_order.delete', label: 'DB ihybrid_order — Delete', desc: 'Delete rows from ihybrid_order tables.' },
+      { id: 'db.ihybrid_discount.read',   label: 'DB ihybrid_discount — Read',   desc: 'Browse raw tables in ihybrid_discount.' },
+      { id: 'db.ihybrid_discount.create', label: 'DB ihybrid_discount — Create', desc: 'Insert rows into ihybrid_discount tables.' },
+      { id: 'db.ihybrid_discount.update', label: 'DB ihybrid_discount — Update', desc: 'Edit rows in ihybrid_discount tables.' },
+      { id: 'db.ihybrid_discount.delete', label: 'DB ihybrid_discount — Delete', desc: 'Delete rows from ihybrid_discount tables.' },
     ],
   },
   {
