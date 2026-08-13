@@ -43,7 +43,7 @@ commit once Phase 2 lands, so there is never a window without a working screen.
 - **Table names** — the three existing tables keep their `qrdd_*` names. No
   rename migration.
 - **Downstream mapping** — `ihybrid_order.discount_bu_accounts`,
-  `ihybrid_discount.merchant_whitelist`, `ihybrid_discount.promo_info`.
+  `ihybrid_discount.merchant_whitelist`, `ihybrid_discount.promo_rule`.
 - **SMTP (Phase 6)** — Zimbra, via `denomailer` in a Supabase Edge Function.
   Blocked on confirming the Zimbra host is reachable from the public internet;
   Supabase's Edge runtime cannot reach an internal-only mail server.
@@ -251,7 +251,7 @@ export const DD_TABLES = {
     label: 'Promo Rules',
     local: 'qrdd_promo_rules',
     targetDb: 'ihybrid_discount',
-    targetTable: 'promo_info',
+    targetTable: 'promo_rule',
     keyColumns: ['promo_id'],
     timestamps: { created_at: 'created_time', updated_at: 'updated_time' },
     textColumns: ['merchant_id'],
@@ -670,7 +670,7 @@ role sees a short, honest menu rather than a wall of disabled rows.
 
 The Databases group is built from `DD_TABLES` (§2) filtered by
 `canDatabase('read', targetDb)`, grouped by `targetDb`, and shows the downstream
-table name (`discount_bu_accounts`, `merchant_whitelist`, `promo_info`) rather
+table name (`discount_bu_accounts`, `merchant_whitelist`, `promo_rule`) rather
 than the local `qrdd_*` name — the sidebar is a view of the target schema, which
 is what the person reading it is reasoning about. Row counts come from one
 `count: 'exact', head: true` query per table.
