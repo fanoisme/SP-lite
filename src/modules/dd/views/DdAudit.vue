@@ -8,6 +8,14 @@
       <p class="ddaudit__count">{{ total }} {{ total === 1 ? 'entry' : 'entries' }}</p>
     </header>
 
+    <div class="ddaudit__filters">
+      <LiSelect v-model="filterTable" :options="tableOptions" placeholder="All tables" />
+      <LiSelect v-model="filterAction" :options="actionOptions" placeholder="All actions" />
+      <LiSelect v-model="filterActor" :options="actorOptions" placeholder="All people" />
+      <LiTextField v-model="search" placeholder="Search record, column or value…" />
+      <button class="ddaudit__reset" type="button" @click="resetFilters">Reset</button>
+    </div>
+
     <p v-if="error" class="ddaudit__error">{{ error }}</p>
 
     <LiTable :data="rows" :columns="columns" row-key="audit_id" :loading="loading">
@@ -24,13 +32,19 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import LiTable from '@lib/components/LiTable.vue'
 import LiPagination from '@lib/components/LiPagination.vue'
-import { tableLabel } from '../lib/schema.js'
+import LiSelect from '@lib/components/LiSelect.vue'
+import LiTextField from '@lib/components/LiTextField.vue'
+import { TABLE_IDS, tableLabel } from '../lib/schema.js'
 import { useAuditLog } from '../composables/useAuditLog.js'
 
-const { rows, loading, error, total, currentPage, totalPages, load } = useAuditLog()
+const {
+  rows, loading, error, total, currentPage, totalPages,
+  filterTable, filterAction, filterActor, search, actors,
+  load, loadActors, resetFilters,
+} = useAuditLog()
 
 const columns = [
   { key: 'ts', label: 'When' },
@@ -44,6 +58,25 @@ const columns = [
   { key: 'detail', label: 'Detail' },
 ]
 
+// '' is the "no filter" sentinel the composable expects.
+const tableOptions = computed(() => [
+  { label: 'All tables', value: '' },
+  ...TABLE_IDS.map(id => ({ label: tableLabel(id), value: id })),
+])
+
+const actionOptions = [
+  { label: 'All actions', value: '' },
+  { label: 'Insert', value: 'INSERT' },
+  { label: 'Update', value: 'UPDATE' },
+  { label: 'Delete', value: 'DELETE' },
+  { label: 'Replace', value: 'REPLACE' },
+]
+
+const actorOptions = computed(() => [
+  { label: 'All people', value: '' },
+  ...actors.value.map(a => ({ label: a, value: a })),
+])
+
 function formatTs(v) {
   if (!v) return '—'
   return new Date(v).toLocaleString('en-GB', {
@@ -52,7 +85,7 @@ function formatTs(v) {
   })
 }
 
-onMounted(load)
+onMounted(() => { load(); loadActors() })
 </script>
 
 <style scoped>
@@ -67,4 +100,21 @@ onMounted(load)
   border-radius: var(--radius-sm, 12px); padding: 10px 14px; margin: 0;
 }
 .ddaudit__pagination { display: flex; justify-content: center; }
+
+.ddaudit__filters {
+  display: grid; grid-template-columns: 1fr 1fr 1fr 2fr auto;
+  gap: var(--space-sm, 12px); align-items: end;
+}
+.ddaudit__reset {
+  padding: 10px 18px; border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-pill, 999px); background: transparent;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 13px; font-weight: 600; color: var(--color-gray-700, #666);
+  cursor: pointer; transition: all 200ms;
+}
+.ddaudit__reset:hover { background: rgba(0, 0, 0, 0.04); }
+
+@media (max-width: 1100px) {
+  .ddaudit__filters { grid-template-columns: 1fr 1fr; }
+}
 </style>
