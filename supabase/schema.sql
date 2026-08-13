@@ -715,7 +715,7 @@ where not exists (
   select 1 from public.module_access ma where ma.role = r.name and ma.module_id = 'dd'
 );
 
--- Admin gets all twenty features.
+-- Admin gets all twenty-eight features.
 insert into public.feature_access (role, module_id, feature_id)
 select 'Admin', 'dd', f.feature_id
 from (values
@@ -736,25 +736,16 @@ where not exists (
   where fa.role = 'Admin' and fa.module_id = 'dd' and fa.feature_id = f.feature_id
 );
 
--- Non-Admin roles inherit whatever they already hold on qrdd, translated to
--- the new feature ids, so nobody has to re-tick twenty boxes in Admin.
--- Only the twelve CRUD features can be inherited — they are all qrdd has.
--- audit.read, export.read, tables.*, sql.* and email.* stay Admin-only until
--- handed out deliberately; they are the powerful ones.
-insert into public.feature_access (role, module_id, feature_id)
-select fa.role, 'dd',
-       replace(replace(fa.feature_id, 'merchant-whitelist.', 'merchants.'),
-               'promo-rule.', 'promos.')
-from public.feature_access fa
-where fa.module_id = 'qrdd'
-  and fa.role <> 'Admin'
-  and not exists (
-    select 1 from public.feature_access x
-    where x.role = fa.role
-      and x.module_id = 'dd'
-      and x.feature_id = replace(replace(fa.feature_id, 'merchant-whitelist.', 'merchants.'),
-                                 'promo-rule.', 'promos.')
-  );
+-- The one-time carry-over of non-Admin roles' qrdd grants onto dd (translating
+-- merchant-whitelist.*/promo-rule.* to merchants.*/promos.*) deliberately does
+-- NOT live here. It ran once in
+-- supabase/migrations/20260813_dd_module_seed.sql. Keeping it out of the
+-- re-runnable schema is intentional: it is guarded only by "does this role
+-- already have this dd row", so if an admin later revokes, say,
+-- merchants.delete from a role in the Admin UI, re-running this file would
+-- silently re-derive it from qrdd and hand it straight back. A one-shot
+-- migration that already ran cannot do that; a re-runnable schema.sql block
+-- could, every time.
 
 -- 12c. Close the default-all gap for any role that holds the dd module but
 -- ended up with zero explicit dd feature rows (e.g. it never held qrdd
