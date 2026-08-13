@@ -48,6 +48,12 @@ const routes = [
     component: () => import('../modules/qrdd/views/QrddView.vue'),
   },
   {
+    path: '/dd',
+    name: 'dd',
+    meta: { module: 'dd', label: 'DD MPM', icon: 'inventory' },
+    component: () => import('../modules/dd/views/DdView.vue'),
+  },
+  {
     path: '/admin',
     name: 'admin',
     meta: { module: 'admin', requiresAdmin: true, label: 'Admin', icon: 'admin_panel_settings' },
