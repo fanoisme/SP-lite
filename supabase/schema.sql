@@ -756,3 +756,31 @@ where fa.module_id = 'qrdd'
                                  'promo-rule.', 'promos.')
   );
 
+-- 12c. Close the default-all gap for any role that holds the dd module but
+-- ended up with zero explicit dd feature rows (e.g. it never held qrdd
+-- grants for 12b to carry over). computeAccess's default-all branch
+-- (src/lib/access.js) hands such a role every dd feature — including
+-- audit.read, sql.write, tables.update, email.update and both database
+-- scopes — the moment it has zero rows. Seeding the 12 CRUD features closes
+-- that branch for it while leaving roles that already have explicit rows
+-- (e.g. Digital Lending's 9-feature grant) untouched.
+-- One-shot version already applied live: supabase/migrations/20260813_dd_seed_default_all_roles.sql.
+insert into public.feature_access (role, module_id, feature_id)
+select ma.role, 'dd', f.feature_id
+from public.module_access ma
+cross join (values
+  ('bu-accounts.read'), ('bu-accounts.create'), ('bu-accounts.update'), ('bu-accounts.delete'),
+  ('merchants.read'), ('merchants.create'), ('merchants.update'), ('merchants.delete'),
+  ('promos.read'), ('promos.create'), ('promos.update'), ('promos.delete')
+) as f(feature_id)
+where ma.module_id = 'dd'
+  and ma.role <> 'Admin'
+  and not exists (
+    select 1 from public.feature_access x
+    where x.role = ma.role and x.module_id = 'dd'
+  )
+  and not exists (
+    select 1 from public.feature_access y
+    where y.role = ma.role and y.module_id = 'dd' and y.feature_id = f.feature_id
+  );
+
