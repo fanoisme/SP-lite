@@ -13,8 +13,11 @@
     <div class="ddnav__scroll">
       <template v-if="canDashboard()">
         <p class="ddnav__label">Overview</p>
-        <RouterLink :to="{ name: 'dd' }" custom v-slot="{ isActive, navigate }">
-          <button class="ddnav__item" :class="{ 'ddnav__item--active': isActive }" @click="navigate">
+        <!-- isExactActive, not isActive: /dd is an ancestor of every child
+             route, so an inclusive match would keep Dashboard highlighted on
+             every DD screen. -->
+        <RouterLink :to="{ name: 'dd' }" custom v-slot="{ isExactActive, navigate }">
+          <button class="ddnav__item" :class="{ 'ddnav__item--active': isExactActive }" @click="navigate">
             <span class="material-symbols-outlined">dashboard</span>
             <span class="ddnav__text">Dashboard</span>
           </button>
