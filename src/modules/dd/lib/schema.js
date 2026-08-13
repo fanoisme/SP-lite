@@ -20,7 +20,10 @@ export const DD_TABLES = {
     // Local column -> downstream column. This table is the odd one out.
     timestamps: { created_at: 'created_datetime', updated_at: 'last_modified' },
     textColumns: [],
-    readGate: 'bu-accounts.read',
+    // Menu scope name for the access axis. Spelled with hyphens to match the
+    // seeded feature ids (`bu-accounts.read`), which differ from this object's
+    // underscored key — so it cannot be derived and is stated instead.
+    menu: 'bu-accounts',
   },
   merchants: {
     id: 'merchants',
@@ -33,7 +36,7 @@ export const DD_TABLES = {
     // merchant_id is varchar downstream — always export it quoted, never as a
     // bare number, or a leading zero is lost and the import mismatches.
     textColumns: ['merchant_id'],
-    readGate: 'merchants.read',
+    menu: 'merchants',
   },
   promos: {
     id: 'promos',
@@ -45,7 +48,7 @@ export const DD_TABLES = {
     keyColumns: ['promo_id'],
     timestamps: { created_at: 'created_time', updated_at: 'updated_time' },
     textColumns: ['merchant_id'],
-    readGate: 'promos.read',
+    menu: 'promos',
   },
 }
 
@@ -59,6 +62,10 @@ export const TABLE_IDS = Object.keys(DD_TABLES)
 
 export function byLocal(localName) {
   return Object.values(DD_TABLES).find(t => t.local === localName)
+}
+
+export function byTargetTable(name) {
+  return Object.values(DD_TABLES).find(t => t.targetTable === name)
 }
 
 export function targetDbs() {
