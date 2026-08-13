@@ -75,6 +75,8 @@ declare
   v_old       jsonb;
   v_new       jsonb;
   v_key       text;
+  v_old_key   text;
+  v_detail    text;
   k           text;
   ov          text;
   nv          text;
@@ -97,6 +99,12 @@ begin
   end if;
 
   v_old := to_jsonb(old);
+  v_old_key := public.dd_record_key(v_old, v_keys);
+  -- A key column is itself editable, so a rename would otherwise file the
+  -- history under two unrelated record_keys with no way to join them.
+  v_detail := case when v_old_key is distinct from v_key
+                   then 'previous key: ' || v_old_key
+                   else null end;
   for k in select jsonb_object_keys(v_new) loop
     if k = any(v_skip) then continue; end if;
     ov := v_old ->> k;
@@ -105,8 +113,8 @@ begin
     -- rather than silently skipped.
     if ov is distinct from nv then
       insert into public.dd_audit_log
-        (actor, actor_id, action, target_db, table_id, record_key, column_name, old_value, new_value)
-      values (v_actor, v_actor_id, 'UPDATE', v_target_db, v_table_id, v_key, k, ov, nv);
+        (actor, actor_id, action, target_db, table_id, record_key, column_name, old_value, new_value, detail)
+      values (v_actor, v_actor_id, 'UPDATE', v_target_db, v_table_id, v_key, k, ov, nv, v_detail);
     end if;
   end loop;
   return new;
@@ -135,6 +143,17 @@ create trigger trg_dd_audit_promos
 alter table public.dd_audit_log enable row level security;
 
 grant select on public.dd_audit_log to authenticated;
+
+-- The grant above is not sufficient on its own: Supabase's default privileges
+-- on `public` also hand new tables TRUNCATE. TRUNCATE bypasses both RLS and
+-- FOR EACH ROW triggers, so without this revoke a single statement would wipe
+-- the log unlogged — and truncating an audited table would be an unaudited
+-- mass delete. Revoke explicitly so the guarantee is fail-closed rather than
+-- resting on the absence of a grant.
+revoke insert, update, delete, truncate on public.dd_audit_log        from anon, authenticated;
+revoke truncate                          on public.qrdd_bu_accounts       from anon, authenticated;
+revoke truncate                          on public.qrdd_merchant_whitelist from anon, authenticated;
+revoke truncate                          on public.qrdd_promo_rules       from anon, authenticated;
 
 drop policy if exists "dd_audit_read" on public.dd_audit_log;
 create policy "dd_audit_read" on public.dd_audit_log
