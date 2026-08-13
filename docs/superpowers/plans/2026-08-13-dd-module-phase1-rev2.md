@@ -171,6 +171,29 @@ git commit -m "feat(dd): add the database access axis (8 features)"
 
 DD's rule, in one file: *a table is reachable through its menu or through its database.*
 
+> **Amended during execution.** Review of the first attempt found this task's
+> code as written below to be wrong in three ways, all of them defects in this
+> plan rather than in the implementation:
+>
+> 1. `canMenu('dashboard')` builds `dashboard.read`, which is **not** one of the
+>    28 seeded features — the dashboard would have been permanently unreachable.
+>    Resolved by the human: the DD dashboard follows module access. `'dashboard'`
+>    leaves `DD_MENUS`, a `canDashboard() => canModule('dd')` predicate replaces
+>    it, and the `/dd` index route carries no `ddMenu` gate.
+> 2. `isReadOnly`'s scope enumeration cannot see `tables.update` or `sql.write`.
+>    Replaced by deriving it from the granted feature list with the regex
+>    `/\.(create|update|delete|write)$/`, which closes the failure class rather
+>    than patching two instances.
+> 3. Argument order was inconsistent across the predicates and failed silently
+>    on misuse. **All public predicates are now scope-first with the action
+>    defaulting to `'read'`:** `canMenu(menu, action = 'read')`,
+>    `canDatabase(db, action = 'read')`, `canTable(idOrName, action = 'read')`.
+>    `canTable` also accepts a downstream table name via `byTargetTable`.
+>
+> Task 6's code below already calls the amended signatures. The code block in
+> Step 3 of this task, and its verification script in Step 4, are the superseded
+> originals — kept for the record, not to be re-applied.
+
 **Files:**
 - Modify: `src/modules/dd/lib/schema.js` (replace `readGate` with `menu`, add `byTargetTable`)
 - Create: `src/modules/dd/composables/useDdAccess.js`
@@ -409,7 +432,10 @@ In `src/router/index.js`, replace the entire existing `/dd` route object with:
     children: [
       // `name: 'dd'` must stay on the index child: SP-lite's sidebar and
       // firstAccessibleRoute() resolve a module to { name: moduleId }.
-      { path: '',               name: 'dd',                meta: { ddMenu: 'dashboard' },     component: () => import('../modules/dd/views/DdDashboard.vue') },
+      // No ddMenu gate on the index child: the dashboard follows module access,
+      // so /dd always has a valid landing screen. `dashboard.read` is not a
+      // seeded feature — gating on it would refuse everyone, Admin included.
+      { path: '',               name: 'dd',                                                   component: () => import('../modules/dd/views/DdDashboard.vue') },
       { path: 'business-units', name: 'dd-business-units', meta: { ddMenu: 'bu-accounts' },   component: () => import('../modules/dd/views/DdBuAccounts.vue') },
       { path: 'merchants',      name: 'dd-merchants',      meta: { ddMenu: 'merchants' },     component: () => import('../modules/dd/views/DdMerchants.vue') },
       { path: 'promos',         name: 'dd-promos',         meta: { ddMenu: 'promos' },        component: () => import('../modules/dd/views/DdPromos.vue') },
@@ -446,7 +472,7 @@ Then inside `router.beforeEach`, immediately **after** the existing
 
     if (to.meta.ddTableParam) {
       const t = byTargetTable(String(to.params[to.meta.ddTableParam] || ''))
-      if (!t || !canDatabase('read', t.targetDb)) {
+      if (!t || !canDatabase(t.targetDb)) {
         return firstAllowedDdRoute.value ?? firstAccessibleRoute()
       }
     }
@@ -665,7 +691,7 @@ Create `src/modules/dd/components/DdSidebar.vue`:
     </header>
 
     <div class="ddnav__scroll">
-      <template v-if="canMenu('dashboard')">
+      <template v-if="canDashboard()">
         <p class="ddnav__label">Overview</p>
         <RouterLink :to="{ name: 'dd' }" custom v-slot="{ isActive, navigate }">
           <button class="ddnav__item" :class="{ 'ddnav__item--active': isActive }" @click="navigate">
@@ -750,7 +776,7 @@ import { useDdTableCounts } from '../composables/useDdTableCounts.js'
 import { DD_TABLES } from '../lib/schema.js'
 
 const { profile } = useAuth()
-const { canMenu, visibleDatabases, isReadOnly } = useDdAccess()
+const { canMenu, canDashboard, visibleDatabases, isReadOnly } = useDdAccess()
 const { counts, load } = useDdTableCounts()
 
 const role = computed(() => profile.value?.role || '')
@@ -978,7 +1004,7 @@ const { counts, load } = useDdTableCounts()
 
 // Only count what this person may read, on either axis.
 const tables = computed(() =>
-  Object.values(DD_TABLES).filter(t => canTable('read', t.id)),
+  Object.values(DD_TABLES).filter(t => canTable(t.id)),
 )
 const dbCount = computed(() =>
   new Set(tables.value.map(t => t.targetDb)).size || visibleDatabases.value.length,
