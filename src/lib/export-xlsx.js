@@ -1,10 +1,15 @@
 import * as XLSX from 'xlsx'
 
-// Prefix numeric IDs ≥10 digits with ="" so Excel treats them as text
+// Wrap an all-digit id as ="…" so Excel stores it as text.
+//
+// Two distinct failure modes, both silent: a value past 15 digits loses its
+// tail to float precision, and a value with a leading zero loses the zero at
+// any length. The length threshold alone caught only the first, so a merchant
+// id like 0812 came back as 812 and no longer matched downstream.
 function textFormula(v) {
   if (v == null) return ''
   const s = String(v)
-  if (/^\d{10,}$/.test(s)) return `="${s}"`
+  if (/^\d{10,}$/.test(s) || /^0\d+$/.test(s)) return `="${s}"`
   return s
 }
 

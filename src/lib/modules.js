@@ -33,24 +33,11 @@ export const MODULE_REGISTRY = [
     desc: 'Extract distinct frames from a video clip.',
     features: [],
   },
-  {
-    id: 'qrdd', label: 'QR DD', icon: 'database', path: '/qrdd',
-    desc: 'Manage BU accounts, merchant whitelist, and promo rules.',
-    features: [
-      { id: 'bu-accounts.read',   label: 'BU Accounts — Read',   desc: 'View BU account list.' },
-      { id: 'bu-accounts.create', label: 'BU Accounts — Create', desc: 'Add new BU accounts.' },
-      { id: 'bu-accounts.update', label: 'BU Accounts — Update', desc: 'Edit existing BU accounts.' },
-      { id: 'bu-accounts.delete', label: 'BU Accounts — Delete', desc: 'Delete BU accounts.' },
-      { id: 'merchant-whitelist.read',   label: 'Merchant Whitelist — Read',   desc: 'View merchant whitelist.' },
-      { id: 'merchant-whitelist.create', label: 'Merchant Whitelist — Create', desc: 'Add new merchants.' },
-      { id: 'merchant-whitelist.update', label: 'Merchant Whitelist — Update', desc: 'Edit existing merchants.' },
-      { id: 'merchant-whitelist.delete', label: 'Merchant Whitelist — Delete', desc: 'Delete merchants.' },
-      { id: 'promo-rule.read',   label: 'Promo Rule — Read',   desc: 'View promo rules.' },
-      { id: 'promo-rule.create', label: 'Promo Rule — Create', desc: 'Add new promo rules.' },
-      { id: 'promo-rule.update', label: 'Promo Rule — Update', desc: 'Edit existing promo rules.' },
-      { id: 'promo-rule.delete', label: 'Promo Rule — Delete', desc: 'Delete promo rules.' },
-    ],
-  },
+  // `qrdd` was retired here once the dd module reached parity (Phase 2). Its
+  // three tables live on under their qrdd_* storage names — renaming them buys
+  // nothing and risks live data — but the module, its routes and its feature
+  // ids are gone. Grants were carried across to `dd` by the seed migration
+  // before removal, so nobody had to re-tick a box.
   {
     id: 'dd', label: 'DD MPM', icon: 'inventory', path: '/dd',
     desc: 'Business units, merchants, promo rules, audit and exports.',

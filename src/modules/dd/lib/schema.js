@@ -19,7 +19,10 @@ export const DD_TABLES = {
     keyColumns: ['name', 'sof'],
     // Local column -> downstream column. This table is the odd one out.
     timestamps: { created_at: 'created_datetime', updated_at: 'last_modified' },
-    textColumns: [],
+    // Bank account numbers — 20+ digit strings that must never export bare.
+    // Kept in sync with `textCol` in lib/columns.js, which is what code should
+    // read; this list exists for the table-level view of the same fact.
+    textColumns: ['account1', 'account2'],
     // Menu scope name for the access axis. Spelled with hyphens to match the
     // seeded feature ids (`bu-accounts.read`), which differ from this object's
     // underscored key — so it cannot be derived and is stated instead.

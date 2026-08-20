@@ -38,6 +38,24 @@ reachable through either — DD's `canWriteSheet` rule. Both are stored as
 `src/modules/dd/composables/useDdAccess.js`, never in `src/lib/access.js`, which
 is a verbatim port of SO-Platform's and shared by every module.
 
+**DD's shared layer.** Every DD screen is built on four files, and a change to
+what a column *is* belongs in them rather than in a screen:
+
+| File | Owns |
+|------|------|
+| `src/modules/dd/lib/schema.js` | table-level facts — local ↔ downstream names, `keyColumns`, timestamp renames, export order |
+| `src/modules/dd/lib/columns.js` | per-column facts — type, required, enum options, decimals, `textCol`, local primary keys, `coerce()` |
+| `src/modules/dd/lib/validate.js` | business rules ported from DD, incl. the BU percentages-sum-to-1.0000 rule that no CHECK constraint enforces |
+| `src/modules/dd/composables/useDdTable.js` | server-paged CRUD, bulk upsert, and realtime staleness for any of the three tables |
+
+Two of those facts bite silently if got wrong. `keyColumns` is the *downstream*
+key, not the local primary key — a BU account is `name` AND `sof` downstream but
+`id` locally, so anything deciding "same record?" (bulk upsert, SQL export) must
+read `keyColumns`, while anything issuing a PostgREST write must read
+`primaryKey()`. And `textCol` marks columns that are varchar downstream even
+when every value is digits (`merchant_id`, `account1`, `account2`); unmarked,
+they export bare and lose leading zeros.
+
 **Path aliases** (from `vite.config.js`):
 - `@` → `src/`
 - `@lib` → `src/lib/`
@@ -73,14 +91,13 @@ Each module lives under `src/modules/<name>/` with its own `views/`, `components
 | qris | `/qris` | localStorage + `qris_history` table (Supabase) |
 | template-tools | `/template-tools` | None (client-side DOCX→HTML→FTL) |
 | video-frames | `/video-frames` | None (canvas-based frame extraction) |
-| qrdd | `/qrdd` | Supabase tables: `qrdd_bu_accounts`, `qrdd_merchant_whitelist`, `qrdd_promo_rules` |
-| dd | `/dd` (nested) | Supabase: `dd_audit_log` (+ reads the `qrdd_*` tables) |
+| dd | `/dd` (nested) | Supabase: `qrdd_bu_accounts`, `qrdd_merchant_whitelist`, `qrdd_promo_rules`, `dd_audit_log`, `dd_email_settings`, `dd_email_log` + the `dd-send-email` Edge Function |
 | admin | `/admin` | Supabase RBAC tables |
 | profile | `/profile` | Supabase `profiles` table |
 
 ## Supabase schema
 
-All tables use Row Level Security. Key constraint: **only Admin can write to RBAC tables**; all authenticated users can read them (needed for access computation). `qris_history` is per-user via `insert_qris_history()` RPC (security definer). QRDD tables (`qrdd_bu_accounts`, `qrdd_merchant_whitelist`, `qrdd_promo_rules`) allow all authenticated users full CRUD (open RLS, gated by module/feature access at the app level).
+All tables use Row Level Security. Key constraint: **only Admin can write to RBAC tables**; all authenticated users can read them (needed for access computation). `qris_history` is per-user via `insert_qris_history()` RPC (security definer). The three DD data tables (`qrdd_bu_accounts`, `qrdd_merchant_whitelist`, `qrdd_promo_rules`) allow all authenticated users full CRUD (open RLS, gated by module/feature access at the app level). They keep their `qrdd_*` storage names although the module that gave them those names is gone — renaming means migrating foreign keys, indexes and RLS policies against live data for no functional gain.
 
 `supabase/schema.sql` is the full idempotent schema (safe to re-run). `supabase/migrations/` contains incremental changes as dated files.
 
@@ -111,5 +128,14 @@ lists all six phases. The plan was itself amended mid-flight: Phase 1 was
 originally specced with a single `/dd` route and a pill-tab strip, which was
 built, rejected on sight, and reverted in favour of DD's real nested-route-plus-
 sidebar shape described above — commit `6d91b54` in the log is that reverted
-attempt, not live code. `qrdd` is retired after Phase 2; until then both modules
-ship and `qrdd` is the working surface for BU accounts, merchants and promos.
+attempt, not live code.
+
+Phases 2–6 shipped together and are specced in
+`docs/superpowers/specs/2026-08-20-dd-module-phases-2-6.md`. `qrdd` was retired
+in the same commit; `dd` is now the only surface for BU accounts, merchants and
+promos. Two things from that work are still open and are flagged in the code
+rather than resolved: the downstream promo table name (`promo_rule` per
+`lib/schema.js` versus `promo_info` per DD's own `api/schema.js` — see the
+header of `src/modules/dd/lib/sql-export.js`), and whether Supabase's Edge
+runtime can reach the Zimbra SMTP host at all, which Phase 6's send path
+depends on.

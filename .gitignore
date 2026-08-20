@@ -8,3 +8,10 @@ dist/
 
 # Claude Code project memory (lives in ~/.claude, not the repo)
 memory/
+
+# Browser-tool scratch (console logs, cached fonts, page dumps)
+.playwright-mcp/
+
+# Debug screenshots
+*-screenshot.png
+*-font-test.png

@@ -38,24 +38,24 @@
       </div>
     </section>
 
-    <!-- QR DD Summary -->
-    <section v-if="showQrddSummary" class="dash__section">
-      <h2 class="dash__section-title">QR DD Summary</h2>
+    <!-- DD MPM Summary -->
+    <section v-if="showDdSummary" class="dash__section">
+      <h2 class="dash__section-title">DD MPM Summary</h2>
       <div class="dash__summary-grid">
         <div class="dash__summary-card">
-          <span class="dash__summary-num">{{ qrddStats.buCount }}</span>
+          <span class="dash__summary-num">{{ ddStats.buCount }}</span>
           <span class="dash__summary-label">BU Accounts</span>
         </div>
         <div class="dash__summary-card">
-          <span class="dash__summary-num">{{ qrddStats.merchantActive }}</span>
+          <span class="dash__summary-num">{{ ddStats.merchantActive }}</span>
           <span class="dash__summary-label">Active Merchants</span>
         </div>
         <div class="dash__summary-card">
-          <span class="dash__summary-num">{{ qrddStats.promoActive }}</span>
+          <span class="dash__summary-num">{{ ddStats.promoActive }}</span>
           <span class="dash__summary-label">Active Promos</span>
         </div>
         <div class="dash__summary-card">
-          <span class="dash__summary-num">{{ qrddStats.expiringCount }}</span>
+          <span class="dash__summary-num">{{ ddStats.expiringCount }}</span>
           <span class="dash__summary-label">Expiring ≤30 days</span>
         </div>
       </div>
@@ -68,11 +68,11 @@ import { computed, onMounted } from 'vue'
 import { MODULE_REGISTRY } from '@/lib/modules.js'
 import { useAuth } from '@/composables/useAuth.js'
 import { useAccess } from '@/composables/useAccess.js'
-import { useQrddDashboard } from '@/modules/qrdd/composables/useQrddDashboard.js'
+import { useDdSummary } from '@/modules/dd/composables/useDdSummary.js'
 
 const { profile, session } = useAuth()
 const { canModule } = useAccess()
-const qrddDash = useQrddDashboard()
+const ddSummary = useDdSummary()
 
 const displayName = computed(() =>
   profile.value?.full_name || profile.value?.username || session.value?.user?.email || 'ada'
@@ -88,18 +88,13 @@ const tools = computed(() =>
     .filter(m => canModule(m.id))
 )
 
-const showQrddSummary = computed(() => canModule('qrdd'))
+const showDdSummary = computed(() => canModule('dd'))
 
-const qrddStats = computed(() => ({
-  buCount: qrddDash.stats.value.buCount,
-  merchantActive: qrddDash.stats.value.merchantActive,
-  promoActive: qrddDash.stats.value.promoActive,
-  expiringCount: qrddDash.expiringPromos.value.length,
-}))
+const ddStats = computed(() => ddSummary.stats.value)
 
 onMounted(() => {
-  if (canModule('qrdd')) {
-    qrddDash.loadAll()
+  if (canModule('dd')) {
+    ddSummary.load()
   }
 })
 </script>

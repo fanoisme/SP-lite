@@ -81,6 +81,19 @@
           </button>
         </RouterLink>
       </template>
+
+      <template v-if="visibleAdmin.length">
+        <p class="ddnav__label">Admin</p>
+        <RouterLink
+          v-for="item in visibleAdmin" :key="item.name"
+          :to="{ name: item.name }" custom v-slot="{ isActive, navigate }"
+        >
+          <button class="ddnav__item" :class="{ 'ddnav__item--active': isActive }" @click="navigate">
+            <span class="material-symbols-outlined">{{ item.icon }}</span>
+            <span class="ddnav__text">{{ item.label }}</span>
+          </button>
+        </RouterLink>
+      </template>
     </div>
 
     <footer class="ddnav__foot">
@@ -118,8 +131,13 @@ const toolsNav = [
   { name: 'dd-sql',    label: 'SQL Editor', icon: 'terminal',  menu: 'sql' },
 ]
 
+const adminNav = [
+  { name: 'dd-email', label: 'Email Settings', icon: 'mail', menu: 'email' },
+]
+
 const visibleManage = computed(() => manageNav.filter(i => canMenu(i.menu)))
 const visibleTools = computed(() => toolsNav.filter(i => canMenu(i.menu)))
+const visibleAdmin = computed(() => adminNav.filter(i => canMenu(i.menu)))
 
 // Tables shown under a database use their downstream name — the sidebar is a
 // view of the target schema, which is what the reader is reasoning about.

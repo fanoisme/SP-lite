@@ -44,12 +44,6 @@ const routes = [
     component: () => import('../modules/video-frames/views/VideoFramesView.vue'),
   },
   {
-    path: '/qrdd',
-    name: 'qrdd',
-    meta: { module: 'qrdd', label: 'QR DD', icon: 'database' },
-    component: () => import('../modules/qrdd/views/QrddView.vue'),
-  },
-  {
     path: '/dd',
     meta: { module: 'dd', label: 'DD MPM', icon: 'inventory' },
     component: () => import('../modules/dd/views/DdLayout.vue'),
@@ -67,6 +61,7 @@ const routes = [
       { path: 'export',         name: 'dd-export',         meta: { ddMenu: 'export' },        component: () => import('../modules/dd/views/DdExport.vue') },
       { path: 'audit',          name: 'dd-audit',          meta: { ddMenu: 'audit' },         component: () => import('../modules/dd/views/DdAudit.vue') },
       { path: 'sql',            name: 'dd-sql',            meta: { ddMenu: 'sql' },           component: () => import('../modules/dd/views/DdSqlEditor.vue') },
+      { path: 'email',          name: 'dd-email',          meta: { ddMenu: 'email' },         component: () => import('../modules/dd/views/DdEmail.vue') },
     ],
   },
   {
