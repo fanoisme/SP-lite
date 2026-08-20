@@ -16,9 +16,9 @@ touched disjoint files and had no reason to wait on each other.
 
 Three decisions were taken before building:
 
-- **Phase 6 ships with SMTP unverified.** No mail has been sent from Supabase's
-  Edge runtime through the company mail host. The whole path is built; the
-  failure mode is made honest rather than hidden.
+- **Phase 6 shipped with SMTP unverified, and it since proved out.** The path
+  was built with an honest failure mode rather than hidden; the first real send
+  settled it on 2026-08-20. See §6 and §9.
 - **`qrdd` is retired in the same commit.** Phase 1 deferred this to "one commit
   after Phase 2 lands". Parity was reached, so it lands here.
 - **DD's bulk upload is ported.** Without it `/dd` could not replace `/qrdd`,
@@ -50,11 +50,13 @@ Two fields carry the whole weight of the module's correctness:
 - **`auto`** marks a column the app fills in itself. Auto columns are hidden from
   every input surface and excluded from the SQL export's column list.
 
-The sentinels (`UNLIMITED_AMOUNT = 50000000000.00`, `NO_MINIMUM = 1.00`) are
-SP-lite's, **not** DD's `99999999.00`. The live `qrdd_promo_rules` rows were
-written with SP-lite's values and changing them would silently reinterpret
-existing data. `isUnlimited()` tests a band rather than equality, because the
-sentinel has been written at slightly different magnitudes over the table's life.
+A discount cap needs an "unlimited" sentinel because the downstream column is
+NOT NULL — unlike `max_txn_amount` and `budget_amount`, which are nullable and
+use a real NULL. `UNLIMITED_AMOUNT` is `99999999999.00` (see §10); it was
+`50000000000.00` until the production import. `isUnlimited()` tests a band rather
+than equality so an export taken before that change still reads as Unlimited —
+free, since the largest genuine amount in the data is a 1,000,000 minimum
+transaction.
 
 ### 1b. `src/modules/dd/lib/validate.js`
 
@@ -357,13 +359,71 @@ will otherwise be re-raised every time someone reads DD's `api/schema.js`.
    the INSERTs fail.
 3. **Export timestamps are emitted in UTC**, stated in the generated file's
    header. Worth confirming downstream does not expect WIB.
-4. **Whether `mail.allobank.com:587` accepts a session from Supabase's Edge
-   runtime.** DNS and TCP both check out; the SMTP conversation itself is
-   untested. Everything in Phase 6's send path waits on one Send now. If it is
-   refused, the workable answer is to invert the direction — an internal job
-   pulling report data from the Supabase REST API and sending locally — because
-   Edge egress addresses rotate and cannot be allowlisted.
+4. ~~Whether `mail.allobank.com:587` accepts a session from Supabase's Edge
+   runtime.~~ **Settled 2026-08-20: it does.** `dd_email_log` id=3 records a
+   successful send. Only 587 is open (465 and 25 refuse), STARTTLS is mandatory,
+   and no AUTH mechanism is advertised until after the upgrade — so the
+   transport is `smtp.ts`, a hand-rolled client, rather than denomailer, whose
+   handshake failures are uncatchable and kill the isolate.
 5. **The Edge Function imports from `src/`** via relative paths outside
    `supabase/functions/`, which is what keeps the browser preview and the sent
    mail rendering from one source. Supabase's bundler following parent-directory
    imports needs confirming on first deploy.
+
+
+---
+
+## 10. What loading the real data changed
+
+Phases 2–6 were built against an empty schema. Importing the DD production
+extract — 24 BU accounts, 4,098 merchants, 2,546 promos — showed that schema had
+been scaffolded rather than modelled, and forced five corrections. Each is
+recorded because each was invisible until real rows arrived.
+
+**`merchant_id` is the whitelist's primary key.** The table carried an `id uuid`
+alongside a UNIQUE on `merchant_id`, so every row had two identities. Nothing
+used the uuid — the promo foreign key, the exporter's `keyColumns`, the bulk
+upload's dedupe and the audit record key all address a merchant by
+`merchant_id` — but `useDdTable` issued its writes against the uuid. The two
+could drift, and a spreadsheet, which has no uuid column, could never address an
+existing row.
+
+**A promo's discount channel can be absent.** Both the type and the amount
+columns were NOT NULL, so "not eligible" had nowhere to live. 2,514 of 2,546
+promos are Paylater-only: writing `0` for Prime would be a real discount value,
+indistinguishable from a channel nobody configured. The type columns already
+carried `check (… is null or …)` while being NOT NULL — a constraint permitting
+a value the column could not hold, so the NOT NULL was never deliberate.
+
+**Money columns are `numeric(18,2)`.** Bare `numeric` in Postgres has no scale:
+`10` stored as `10` while `10.5` stored as `10.5`, so amounts rendered
+inconsistently across the app and the export.
+
+**Row timestamps are naive WIB, not `timestamptz`.** DD kept them as spreadsheet
+wall-clock values in Asia/Jakarta with no zone attached. Modelling them as
+`timestamptz` added a zone the data never had, and with the database session in
+UTC the import read `'11:39:53'` (WIB) as 11:39:53 UTC — seven hours off, with
+the digits still looking correct in a listing, which is what made it easy to
+miss. Column defaults and `useDdTable`'s write path both had to follow, or every
+new row would reintroduce it. `dd_audit_log.ts` and `dd_email_log.ts` stay
+`timestamptz` on purpose: they record when something happened, and for an audit
+trail an unambiguous instant beats a familiar reading.
+
+**A static SPA makes schema and code a single deploy.** Changing the merchant
+primary key before pushing the matching bundle broke the live site with
+`column qrdd_merchant_whitelist.id does not exist`. There is no server tier to
+absorb the mismatch — a migration and its front-end change have to ship together.
+
+### On moving bulk data
+
+Do not route a bulk import through an agent's context. The first attempt passed
+SQL text through a model and silently normalised a U+00A0 to an ordinary space
+in three merchant names; row counts were perfect and the corruption was only
+caught by checksumming against the source. `Read` also truncates at ~25k tokens,
+so a 400-row file cannot even be relayed whole.
+
+What worked: generate the SQL to disk, keep it **pure ASCII** by emitting any
+non-ASCII value as `convert_from(decode('<hex>','hex'),'UTF8')`, run the files
+directly in the SQL editor, and verify with a collation-free content
+fingerprint — hash each row, sort the hashes, hash the result. Counts cannot
+detect a mangled character; the fingerprint can.

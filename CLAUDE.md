@@ -136,16 +136,22 @@ in the same commit; `dd` is now the only surface for BU accounts, merchants and
 promos. Two things from that work are still open and are flagged in the code
 rather than resolved: the downstream promo table name (`promo_rule` per
 `lib/schema.js` versus `promo_info` per DD's own `api/schema.js` — see the
-header of `src/modules/dd/lib/sql-export.js`), and whether the company SMTP host
-will accept a session from Supabase's Edge runtime, which Phase 6's send path
-depends on.
+header of `src/modules/dd/lib/sql-export.js`).
 
-**Phase 6's SMTP transport is new, not ported.** DD sent its three report mails
-with `MailApp.sendEmail` (`gas/Mailer.gs`), ie. through the Apps Script owner's
-Google Workspace account. SP-lite has no Apps Script tier, so the send moves to
-`mail.allobank.com:587` via `denomailer` in the `dd-send-email` Edge Function.
-The Phase 1 spec described this as "Zimbra, blocked on confirming the host is
-reachable from the public internet"; that assumption was never checked and is
-wrong — the host resolves publicly and answers on 587. What is still unproven is
-whether it will accept a *session* from a hosted function, which the first real
-send settles.
+**Phase 6's SMTP transport is new, not ported, and it works.** DD sent its three
+report mails with `MailApp.sendEmail` (`gas/Mailer.gs`), ie. through the Apps
+Script owner's Google Workspace account — it never spoke SMTP at all. SP-lite has
+no Apps Script tier, so the send moves to `mail.allobank.com:587` in the
+`dd-send-email` Edge Function. **Proven working 2026-08-20** (`dd_email_log`
+id=3): the Phase 1 spec's assumption that the host was internal-only and
+unroutable from a hosted function was never checked and is wrong twice over —
+the host is public and it accepts a session from Edge.
+
+Host facts, from probing: only 587 is open (465 and 25 refuse), so STARTTLS is
+mandatory rather than opportunistic, and no AUTH mechanism is advertised until
+after the upgrade. `supabase/functions/dd-send-email/smtp.ts` is a hand-rolled
+client rather than `denomailer` because denomailer opens its connection in the
+`SMTPClient` constructor, so a handshake failure surfaces as a Deno event loop
+error — uncatchable by the caller, fatal to the isolate, and reported to the
+browser as a CORS failure because the platform's 503 carries none of the
+function's headers.

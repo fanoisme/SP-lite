@@ -8,16 +8,6 @@
       <p class="ddmail__count">{{ settings.length }} {{ settings.length === 1 ? 'template' : 'templates' }}</p>
     </header>
 
-    <!-- Remove this banner once a real send has landed. Until then it is the
-         only thing on the screen telling someone why a send they are about to
-         make may fail, and a silent screen would make the failure look like
-         their mistake. -->
-    <LiBanner
-      variant="warning"
-      title="No mail has been sent from here yet"
-      message="The mail server is publicly reachable, but nothing has yet been sent through it from Supabase's Edge runtime, so it is not known whether it will accept a session from there. Send one to yourself first. Every attempt, successful or not, is recorded in the history below."
-    />
-
     <p v-if="error" class="ddmail__error">{{ error }}</p>
 
     <div v-if="loading" class="ddmail__loading">Loading…</div>
@@ -177,7 +167,6 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import LiBanner from '@lib/components/LiBanner.vue'
 import LiBadge from '@lib/components/LiBadge.vue'
 import LiButton from '@lib/components/LiButton.vue'
 import LiModal from '@lib/components/LiModal.vue'
