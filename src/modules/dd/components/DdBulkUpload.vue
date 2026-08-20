@@ -58,6 +58,16 @@
         title="Required columns are missing"
         :message="`Nothing can be imported until the file has a column for: ${headerInfo.missingRequired.join(', ')}.`"
       />
+      <!-- A date column nobody can read unambiguously stops the import outright.
+           Importing it on a guess would silently move promo periods by months,
+           and no later check would notice. -->
+      <LiBanner
+        v-for="b in dateBlocked" :key="b.column"
+        variant="error"
+        :title="`${b.column} cannot be read safely`"
+        :message="`${b.reason}. Re-save the file with that column as YYYY-MM-DD — in Google Sheets, Format > Number > Custom date and time.`"
+      />
+
       <!-- Only genuinely unplaceable headers warn. The ones we recognise and
            refuse on purpose get a quiet line below the toolbar instead — they
            appear in every DD export, and warning about them each time is how a
@@ -101,6 +111,11 @@
         <span class="material-symbols-outlined">info</span>
         Not imported: {{ headerInfo.ignored.join(', ') }} — the app keeps its own
         record id and stamps who wrote a row and when.
+      </p>
+
+      <p v-if="dateAssumed.length" class="ddbulk__ignored">
+        <span class="material-symbols-outlined">event</span>
+        Read {{ dateAssumed.join(', ') }} — converted to YYYY-MM-DD.
       </p>
 
       <div class="ddbulk__grid">
@@ -261,7 +276,7 @@ import { DD_TABLES } from '../lib/schema.js'
 import { editableColumns } from '../lib/columns.js'
 import { validateRow } from '../lib/validate.js'
 import { downloadCsv } from '../lib/csv.js'
-import { parseDelimited, parseWorkbook, mapHeaders, toRecords } from '../lib/tabular.js'
+import { parseDelimited, parseWorkbook, mapHeaders, toRecords, resolveDates, DATE_ORDER_LABEL } from '../lib/tabular.js'
 
 const props = defineProps({
   modelValue: { type: Boolean, default: false },
@@ -321,6 +336,9 @@ const FILTERS = [
 ]
 const statusFilter = ref('')
 const allowUpdate = ref(false)
+const dateOrders = ref({})
+const dateBlocked = ref([])
+const dateRowIssues = ref(new Map())
 const rowSearch = ref('')
 const detailLine = ref(null)
 const skipInvalid = ref(false)
@@ -454,12 +472,26 @@ async function toPreview() {
       return
     }
     parsed.value = grid
-    records.value = toRecords(props.tableId, grid.headers, grid.rows)
+    // Dates are normalised here, with the whole file in view: a column's own
+    // rows are the only honest evidence for whether it is day-first, and one
+    // value can never settle it.
+    const built = toRecords(props.tableId, grid.headers, grid.rows)
+    const dates = resolveDates(props.tableId, built)
+    records.value = dates.records
+    dateOrders.value = dates.orders
+    dateBlocked.value = dates.blocked
+    dateRowIssues.value = dates.rowIssues
     existingKeys.value = await loadExistingKeys()
     statusFilter.value = ''
     rowSearch.value = ''
     detailLine.value = null
     allowUpdate.value = false
+  dateOrders.value = {}
+  dateBlocked.value = []
+  dateRowIssues.value = new Map()
+    dateOrders.value = {}
+    dateBlocked.value = []
+    dateRowIssues.value = new Map()
     skipInvalid.value = false
     step.value = 1
   } catch (e) {
@@ -487,6 +519,7 @@ const checked = computed(() => {
     const k = keyOf(rec)
 
     if (blocked.length) problems.push(`missing column(s): ${blocked.join(', ')}`)
+    problems.push(...(dateRowIssues.value.get(i) ?? []))
     if (!isKeyBlank(rec)) {
       if (seen.has(k)) problems.push(`duplicate of line ${seen.get(k)} in this file`)
       else seen.set(k, line)
@@ -507,6 +540,14 @@ const checked = computed(() => {
 
 /** Rows whose key is already registered, whatever the current verdict — the
  *  opt-in has to stay visible after ticking it, or it could never be unticked. */
+/** Only worth saying when a conversion actually happened; a file already in
+ *  YYYY-MM-DD needs no explanation. */
+const dateAssumed = computed(() =>
+  Object.entries(dateOrders.value)
+    .filter(([, o]) => o === 'day' || o === 'month')
+    .map(([col, o]) => `${col} as ${DATE_ORDER_LABEL[o]}`),
+)
+
 const existingCount = computed(() => checked.value.filter(r => r.exists).length)
 
 const counts = computed(() => ({
@@ -605,6 +646,9 @@ const importable = computed(() =>
 const canImport = computed(() =>
   !importing.value
   && !headerInfo.value.missingRequired.length
+  // An unreadable date column blocks everything, not just its own rows: the
+  // alternative is importing a promo whose period is months off.
+  && !dateBlocked.value.length
   && importable.value.length > 0
   && (skipInvalid.value || !counts.value.error),
 )
@@ -694,6 +738,9 @@ function reset() {
   rowSearch.value = ''
   detailLine.value = null
   allowUpdate.value = false
+  dateOrders.value = {}
+  dateBlocked.value = []
+  dateRowIssues.value = new Map()
   skipInvalid.value = false
   progressDone.value = 0
   progressTotal.value = 0

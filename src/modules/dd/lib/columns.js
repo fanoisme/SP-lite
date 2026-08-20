@@ -188,8 +188,10 @@ export function coerce(tableId, name, value) {
     }
     case 'date':
       // Postgres `date` wants YYYY-MM-DD; an ISO timestamp would be truncated
-      // silently in one direction and rejected in another.
-      return String(s).slice(0, 10)
+      // silently in one direction and rejected in another. A value that is not
+      // already ISO is left untouched here and resolved by parseDate() with the
+      // whole column in view — see below for why one value is not enough.
+      return isoDateOrNull(String(s)) ?? String(s).trim()
     default:
       return String(s)
   }
@@ -198,4 +200,101 @@ export function coerce(tableId, name, value) {
 /** Every column of every table, keyed by table id — for the Table Explorer. */
 export function allColumns() {
   return Object.fromEntries(Object.keys(DD_TABLES).map(id => [id, columns(id)]))
+}
+
+
+/* ── Dates ─────────────────────────────────────────────────────────────────
+ *
+ * A spreadsheet exported through Google Sheets carries whatever the author's
+ * locale renders, so `2026-08-25` comes back as `25/08/2026`, `25-08-26`, or
+ * `8/25/2026` depending on who saved it. Postgres accepts none of those and
+ * rejects the row with "date/time field value out of range".
+ *
+ * The trap is that `05-08-26` is a legitimate reading as both 5 August and
+ * 8 May. Guessing shifts a promo's period by months and nothing downstream
+ * would flag it, so these helpers only convert what can be *known*, and the
+ * caller is expected to decide day-first from the whole column rather than from
+ * one value.
+ */
+
+/** `YYYY-MM-DD`, or null if the text is not already in that shape. */
+export function isoDateOrNull(text) {
+  const m = String(text ?? '').trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:[T ].*)?$/)
+  return m ? `${m[1]}-${m[2]}-${m[3]}` : null
+}
+
+/** Splits `d/m/y`, `d-m-y` or `d.m.y` into three numbers, or null. */
+function threeParts(text) {
+  const m = String(text ?? '').trim().match(/^(\d{1,4})[/.-](\d{1,2})[/.-](\d{1,4})$/)
+  if (!m) return null
+  return [Number(m[1]), Number(m[2]), Number(m[3])]
+}
+
+/**
+ * What a column's values prove about their own order.
+ *
+ * Returns 'iso' when every value is already YYYY-MM-DD, 'day' or 'month' when
+ * at least one value settles it (a part above 12 cannot be a month), 'mixed'
+ * when different rows contradict each other, and 'ambiguous' when nothing in
+ * the column decides it. Only the caller can turn 'ambiguous' into a refusal;
+ * this function never picks for you.
+ */
+export function inferDateOrder(values) {
+  let sawIso = false
+  let dayFirst = false
+  let monthFirst = false
+  let sawOther = false
+
+  for (const v of values) {
+    if (v == null || String(v).trim() === '') continue
+    if (isoDateOrNull(v)) { sawIso = true; continue }
+    const p = threeParts(v)
+    if (!p) { sawOther = true; continue }
+    // A four-digit leading part is a year, so the rest is already unambiguous.
+    if (String(p[0]).length === 4) { sawIso = true; continue }
+    if (p[0] > 12) dayFirst = true
+    if (p[1] > 12) monthFirst = true
+  }
+
+  if (dayFirst && monthFirst) return 'mixed'
+  if (dayFirst) return 'day'
+  if (monthFirst) return 'month'
+  if (sawOther) return 'unparseable'
+  return sawIso ? 'iso' : 'ambiguous'
+}
+
+/**
+ * Normalises one value to `YYYY-MM-DD` given a decided order. Returns null when
+ * the text cannot be read at all, so the caller reports it rather than sending
+ * Postgres something it will reject.
+ *
+ * Two-digit years pivot at 70: this data is promo periods, which sit within a
+ * few years of now, so 26 is 2026 and never 1926.
+ */
+export function parseDate(value, order) {
+  const iso = isoDateOrNull(value)
+  if (iso) return iso
+  const p = threeParts(value)
+  if (!p) return null
+
+  let [a, b, c] = p
+  let y, m, d
+  if (String(a).length === 4) { y = a; m = b; d = c }
+  else if (order === 'month') { m = a; d = b; y = c }
+  else { d = a; m = b; y = c }
+
+  if (y < 100) y += y < 70 ? 2000 : 1900
+  if (m < 1 || m > 12 || d < 1 || d > 31) return null
+
+  const pad = n => String(n).padStart(2, '0')
+  const out = `${y}-${pad(m)}-${pad(d)}`
+  // Round-trip through Date to reject 31 February and friends.
+  const probe = new Date(`${out}T00:00:00Z`)
+  if (Number.isNaN(+probe) || probe.getUTCDate() !== d || probe.getUTCMonth() + 1 !== m) return null
+  return out
+}
+
+/** The date columns of a table, for the caller's per-column inference. */
+export function dateColumns(tableId) {
+  return columns(tableId).filter(c => c.type === 'date' && !c.auto).map(c => c.name)
 }

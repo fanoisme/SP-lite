@@ -14,7 +14,7 @@
 // pasted TSV cannot disagree about what "1,500.00" means.
 
 import * as XLSX from 'xlsx'
-import { editableColumns, coerce, STAMP_COLUMNS } from './columns.js'
+import { editableColumns, coerce, STAMP_COLUMNS, dateColumns, inferDateOrder, parseDate } from './columns.js'
 import { DD_TABLES } from './schema.js'
 
 // ── Delimited text (paste, .csv, .tsv) ──────────────────────────────────────
@@ -245,4 +245,75 @@ export function toRecords(tableId, headers, rows) {
     })
     return rec
   })
+}
+
+
+/**
+ * Rewrites every date column to YYYY-MM-DD, deciding each column's order from
+ * the whole column rather than value by value.
+ *
+ * A CSV saved out of Google Sheets carries the author's locale, so 2026-08-25
+ * arrives as 25/08/2026 or 25-08-26 and Postgres answers "date/time field value
+ * out of range". Converting is easy; converting *safely* is the point. `05-08-26`
+ * reads equally well as 5 August and 8 May, and choosing wrong moves a promo's
+ * period by months with nothing downstream to catch it.
+ *
+ * So the column is the unit of evidence: one row containing 25 in the first
+ * position proves the whole column is day-first, and that verdict is then
+ * applied to its ambiguous neighbours. When a column offers no such proof
+ * anywhere, this refuses to guess and hands back a `blocked` entry for the
+ * caller to show.
+ *
+ * @returns {{ records: object[], orders: Record<string,string>,
+ *             blocked: {column: string, reason: string}[],
+ *             rowIssues: Map<number, string[]> }}
+ */
+export function resolveDates(tableId, records) {
+  const cols = dateColumns(tableId)
+  const orders = {}
+  const blocked = []
+  const rowIssues = new Map()
+  if (!cols.length || !records.length) return { records, orders, blocked, rowIssues }
+
+  for (const col of cols) {
+    const present = records.some(r => col in r)
+    if (!present) continue
+
+    const order = inferDateOrder(records.map(r => r[col]))
+    orders[col] = order
+
+    if (order === 'ambiguous') {
+      blocked.push({
+        column: col,
+        reason: 'every value could be read as either day-first or month-first, and reading it wrong would shift the date by months',
+      })
+      continue
+    }
+    if (order === 'mixed') {
+      blocked.push({
+        column: col,
+        reason: 'some rows are day-first and others month-first, so no single reading fits the column',
+      })
+      continue
+    }
+
+    records.forEach((r, i) => {
+      const raw = r[col]
+      if (raw == null || String(raw).trim() === '') return
+      const iso = parseDate(raw, order)
+      if (iso) { r[col] = iso; return }
+      const list = rowIssues.get(i) ?? []
+      list.push(`${col} is not a date this can read: "${raw}"`)
+      rowIssues.set(i, list)
+    })
+  }
+
+  return { records, orders, blocked, rowIssues }
+}
+
+/** How a resolved column was read, for telling the person what was assumed. */
+export const DATE_ORDER_LABEL = {
+  iso: 'YYYY-MM-DD',
+  day: 'day first (DD/MM/YYYY)',
+  month: 'month first (MM/DD/YYYY)',
 }
