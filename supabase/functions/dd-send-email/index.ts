@@ -1,7 +1,7 @@
 // SP-lite — dd-send-email Edge Function (DD module, Phase 6).
 //
-// Sends one of DD's three scheduled report mails over the company's Zimbra
-// SMTP. Called two ways:
+// Sends one of DD's three scheduled report mails over the company's SMTP
+// submission host. Called two ways:
 //   * a person pressing "Send now" on /dd/email, with their own JWT
 //   * pg_cron via pg_net, with the service-role key (see
 //     supabase/migrations/20260820_dd_email_settings.sql)
@@ -10,8 +10,8 @@
 // Set with `supabase secrets set NAME=value` (or Studio > Edge Functions >
 // Secrets). No host, port or credential is hardcoded anywhere in this file.
 //
-//   DD_SMTP_HOST       Zimbra SMTP hostname
-//   DD_SMTP_PORT       SMTP port
+//   DD_SMTP_HOST       SMTP hostname           (mail.allobank.com)
+//   DD_SMTP_PORT       SMTP port               (587 — submission, STARTTLS)
 //   DD_SMTP_USER       SMTP username           (optional: omit for an open relay)
 //   DD_SMTP_PASS       SMTP password           (optional, with the above)
 //   DD_SMTP_FROM       envelope/from address
@@ -23,12 +23,19 @@
 // Auto-injected by the platform: SUPABASE_URL, SUPABASE_ANON_KEY,
 // SUPABASE_SERVICE_ROLE_KEY.
 //
-// ── KNOWN UNVERIFIED ────────────────────────────────────────────────────────
-// It has NOT been confirmed that the Zimbra host is reachable from Supabase's
-// Edge runtime; an internal-only mail server is not routable from a hosted
-// function. That failure is handled explicitly rather than hidden: a connect
+// ── ON REACHABILITY ─────────────────────────────────────────────────────────
+// The Phase 1 spec assumed the mail server was internal-only and therefore
+// unroutable from a hosted function. That assumption was not checked and looks
+// wrong: mail.allobank.com resolves on public DNS to 103.161.143.17 and
+// accepts TCP on 587. What remains unproven is whether it accepts a *session*
+// from an arbitrary internet host — a public IP with an open port can still
+// refuse to relay, or drop anything outside an allowlist, and Supabase's Edge
+// egress addresses rotate, so an allowlist is not a workable answer if it does.
+//
+// Either way the failure is handled explicitly rather than hidden: a connect
 // that cannot be made returns a plain "could not reach the mail server" and is
 // written to dd_email_log as a failed attempt. Nothing here silently succeeds.
+// The first real Send now settles it.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts";
@@ -54,10 +61,15 @@ const SMTP_TIMEOUT_MS = 20000;
 
 const TZ = "Asia/Jakarta";
 
+// x-client-info and apikey are not optional here. supabase-js attaches both to
+// every functions.invoke() call, so a preflight that does not allow them makes
+// the browser refuse to send the POST at all — the function is never reached,
+// and the client reports the opaque "Failed to send a request to the Edge
+// Function". The symptom looks like the function is down; it is a CORS reply.
 const CORS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Authorization, Content-Type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 function json(obj: unknown, status = 200): Response {
@@ -82,16 +94,23 @@ async function mayUpdateEmail(
   admin: any,
   userId: string,
 ): Promise<boolean> {
-  const { data: state } = await admin
+  // Every read below is checked for an error and denies on one. Discarding the
+  // error would be worse than it looks: a failed feature_access read returns
+  // null, null is indistinguishable from "zero rows" here, and zero rows is
+  // computeAccess's default-all branch — so a permission error would silently
+  // grant every feature in the module rather than refusing. Fail closed.
+  const { data: state, error: stateErr } = await admin
     .from("module_state").select("is_enabled").eq("module_id", "dd").maybeSingle();
+  if (stateErr) return false;
   if (state && state.is_enabled === false) return false;
 
-  const { data: prof } = await caller
+  const { data: prof, error: profErr } = await caller
     .from("profiles").select("role, is_active").eq("id", userId).maybeSingle();
-  if (!prof || prof.is_active === false) return false;
+  if (profErr || !prof || prof.is_active === false) return false;
 
-  const { data: overrides } = await admin
+  const { data: overrides, error: ovErr } = await admin
     .from("user_access").select("module_id, feature_id, mode").eq("user_id", userId);
+  if (ovErr) return false;
   const ov = (overrides || []).filter((o: { module_id: string }) => o.module_id === "dd");
   // Deny wins, and a whole-module deny outranks any grant — checked first so a
   // later grant branch cannot reinstate what was denied.
@@ -107,14 +126,16 @@ async function mayUpdateEmail(
     if (!o.feature_id || o.feature_id === "email.update") return true;
   }
 
-  const { data: mod } = await admin
+  const { data: mod, error: modErr } = await admin
     .from("module_access").select("module_id").eq("role", prof.role).eq("module_id", "dd");
-  if (!mod || !mod.length) return false;
+  if (modErr || !mod || !mod.length) return false;
 
-  const { data: feats } = await admin
+  const { data: feats, error: featErr } = await admin
     .from("feature_access").select("feature_id").eq("role", prof.role).eq("module_id", "dd");
-  // Zero explicit rows is computeAccess's default-all branch: the role holds
-  // the module, so it holds every feature in it.
+  // The error check is load-bearing, not defensive noise: below it, zero rows
+  // is computeAccess's default-all branch — the role holds the module, so it
+  // holds every feature in it — and a failed read is also zero rows.
+  if (featErr) return false;
   if (!feats || !feats.length) return true;
   return feats.some((f: { feature_id: string }) => f.feature_id === "email.update");
 }
@@ -305,8 +326,8 @@ function describeSmtpFailure(e: unknown): SendError {
     /timed out|refused|dns|getaddrinfo|unreachable|no route/i.test(raw);
   if (unreachable) {
     return new SendError(
-      "Could not reach the mail server. The Zimbra host is not answering from " +
-        `Supabase's Edge runtime, which is the connectivity that has not been confirmed yet (${raw}).`,
+      "Could not reach the mail server. It is not answering from Supabase's " +
+        `Edge runtime, which is the connectivity that has not been confirmed yet (${raw}).`,
       false,
     );
   }

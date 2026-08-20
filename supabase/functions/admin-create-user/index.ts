@@ -24,7 +24,12 @@ Deno.serve(async (req: Request) => {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Authorization, Content-Type",
+        // supabase-js attaches x-client-info and apikey to every
+        // functions.invoke() call. Omitting them here makes the browser refuse
+        // to send the POST after a successful preflight, which surfaces as
+        // "Failed to send a request to the Edge Function" and looks like an
+        // outage rather than a CORS reply.
+        "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
       },
     });
   }

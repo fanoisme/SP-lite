@@ -136,6 +136,16 @@ in the same commit; `dd` is now the only surface for BU accounts, merchants and
 promos. Two things from that work are still open and are flagged in the code
 rather than resolved: the downstream promo table name (`promo_rule` per
 `lib/schema.js` versus `promo_info` per DD's own `api/schema.js` — see the
-header of `src/modules/dd/lib/sql-export.js`), and whether Supabase's Edge
-runtime can reach the Zimbra SMTP host at all, which Phase 6's send path
+header of `src/modules/dd/lib/sql-export.js`), and whether the company SMTP host
+will accept a session from Supabase's Edge runtime, which Phase 6's send path
 depends on.
+
+**Phase 6's SMTP transport is new, not ported.** DD sent its three report mails
+with `MailApp.sendEmail` (`gas/Mailer.gs`), ie. through the Apps Script owner's
+Google Workspace account. SP-lite has no Apps Script tier, so the send moves to
+`mail.allobank.com:587` via `denomailer` in the `dd-send-email` Edge Function.
+The Phase 1 spec described this as "Zimbra, blocked on confirming the host is
+reachable from the public internet"; that assumption was never checked and is
+wrong — the host resolves publicly and answers on 587. What is still unproven is
+whether it will accept a *session* from a hosted function, which the first real
+send settles.

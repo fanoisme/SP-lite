@@ -822,3 +822,27 @@ delete from public.feature_access where module_id = 'qrdd';
 delete from public.module_access  where module_id = 'qrdd';
 delete from public.module_state   where module_id = 'qrdd';
 delete from public.user_access    where module_id = 'qrdd';
+
+-- ── 15. service_role reads for the dd-send-email Edge Function ──────────────
+-- Supabase's default privileges normally give service_role full access to new
+-- public tables; on this project it holds only REFERENCES/TRIGGER/TRUNCATE on
+-- everything that predates the DD email work. The function builds its reports
+-- with the service-role client, which must see every row regardless of RLS, so
+-- the reads it needs are stated explicitly. Read-only, and only these tables.
+-- Mirrors supabase/migrations/20260820_dd_service_role_reads.sql.
+grant select on public.qrdd_bu_accounts        to service_role;
+grant select on public.qrdd_merchant_whitelist to service_role;
+grant select on public.qrdd_promo_rules        to service_role;
+
+-- Used by mayUpdateEmail(), which re-derives `email.update` server-side because
+-- src/lib/access.js runs in the browser. A failed feature_access read returns
+-- null, null is indistinguishable from "zero rows", and zero rows is
+-- computeAccess's default-all branch — so a missing grant here silently granted
+-- the whole module until the function was changed to deny on read error.
+grant select on public.module_state   to service_role;
+grant select on public.module_access  to service_role;
+grant select on public.feature_access to service_role;
+grant select on public.user_access    to service_role;
+
+-- profiles is deliberately NOT granted: the function reads it with the caller's
+-- own client so RLS still applies.

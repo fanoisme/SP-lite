@@ -16,9 +16,9 @@ touched disjoint files and had no reason to wait on each other.
 
 Three decisions were taken before building:
 
-- **Phase 6 ships with SMTP unverified.** Nobody has confirmed the Zimbra host
-  answers from Supabase's Edge runtime. The whole path is built; the failure
-  mode is made honest rather than hidden.
+- **Phase 6 ships with SMTP unverified.** No mail has been sent from Supabase's
+  Edge runtime through the company mail host. The whole path is built; the
+  failure mode is made honest rather than hidden.
 - **`qrdd` is retired in the same commit.** Phase 1 deferred this to "one commit
   after Phase 2 lands". Parity was reached, so it lands here.
 - **DD's bulk upload is ported.** Without it `/dd` could not replace `/qrdd`,
@@ -256,12 +256,28 @@ affected count.
 the `dd-send-email` Edge Function, `lib/email-templates.js`, `useDdEmail.js`,
 `DdEmail.vue`.
 
-**Blocked and shipped anyway, deliberately.** Zimbra's reachability from
-Supabase's Edge runtime is unconfirmed. The path is complete; the failure mode is
-honest: connection failures are classified and returned as a plain "could not
-reach the mail server", every attempt writes `dd_email_log` whether it succeeded
-or not, and a banner on the screen says connectivity is unverified. A silent
-failure would make it look like the sender's mistake.
+**The transport is new, not ported.** DD sent these three mails with
+`MailApp.sendEmail` — through the Apps Script owner's Google Workspace account.
+It never spoke SMTP to a company mail server at all. SP-lite has no Apps Script
+tier, so the send moves to `mail.allobank.com:587` (submission, STARTTLS) via
+`denomailer`. Phase 1 recorded this as a Zimbra dependency inherited from DD; it
+is not inherited, and nothing about it is proven by DD having worked.
+
+**Shipped unverified, deliberately.** The Phase 1 spec assumed the host was
+internal-only and therefore unroutable from a hosted function. That assumption
+was never checked and is wrong: `mail.allobank.com` resolves on public DNS to
+`103.161.143.17` and accepts TCP on 587. What remains unproven is whether it
+will accept a *session* from an arbitrary internet address — a public IP with an
+open port can still refuse to relay or drop anything outside an allowlist, and
+Supabase's Edge egress addresses rotate, so an allowlist is not a workable
+answer if it does.
+
+The failure mode is therefore honest rather than hidden: connection failures are
+classified and returned as a plain "could not reach the mail server", every
+attempt writes `dd_email_log` whether it succeeded or not, and a banner on the
+screen says nothing has been sent yet. A silent failure would make it look like
+the sender's mistake. The first real Send now settles the question in about a
+minute.
 
 - `dd_email_log` models its RLS on `dd_audit_log`: `authenticated` gets `select`
   and nothing else, TRUNCATE revoked, only the Edge Function writes.
@@ -341,8 +357,12 @@ will otherwise be re-raised every time someone reads DD's `api/schema.js`.
    the INSERTs fail.
 3. **Export timestamps are emitted in UTC**, stated in the generated file's
    header. Worth confirming downstream does not expect WIB.
-4. **Zimbra reachability from Supabase's Edge runtime.** Everything in Phase 6's
-   send path waits on this.
+4. **Whether `mail.allobank.com:587` accepts a session from Supabase's Edge
+   runtime.** DNS and TCP both check out; the SMTP conversation itself is
+   untested. Everything in Phase 6's send path waits on one Send now. If it is
+   refused, the workable answer is to invert the direction — an internal job
+   pulling report data from the Supabase REST API and sending locally — because
+   Edge egress addresses rotate and cannot be allowlisted.
 5. **The Edge Function imports from `src/`** via relative paths outside
    `supabase/functions/`, which is what keeps the browser preview and the sent
    mail rendering from one source. Supabase's bundler following parent-directory

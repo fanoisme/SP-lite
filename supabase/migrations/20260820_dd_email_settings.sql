@@ -1,17 +1,23 @@
 -- DD module — scheduled report emails (Phase 6).
 --
--- Ports the three mails DD MPM sends over Zimbra SMTP (gas/Mailer.gs):
--- promo_reminder, data_confirmation and weekly_export. In DD the recipients,
+-- Ports the three mails DD MPM sends (gas/Mailer.gs): promo_reminder,
+-- data_confirmation and weekly_export. DD sent them with MailApp.sendEmail, ie.
+-- through the Apps Script owner's Google Workspace account; SP-lite has no Apps
+-- Script tier, so the transport moves to the company's own SMTP submission host
+-- and that is a new dependency, not a ported one. In DD the recipients,
 -- subject, markup AND schedule all lived in one `email` sheet under
 -- Databases > app_config; here that sheet becomes dd_email_settings, one row
 -- per template, and the sending itself moves to the dd-send-email Edge
 -- Function.
 --
--- KNOWN UNVERIFIED: nobody has yet confirmed that the Zimbra host is reachable
--- from Supabase's Edge runtime — an internal-only mail server is not routable
--- from a hosted function. Everything below therefore assumes sends may fail,
--- and dd_email_log exists so a failure is a recorded attempt rather than a
--- silence. Remove the banner in DdEmail.vue once a real send has landed.
+-- KNOWN UNVERIFIED: no mail has yet been sent from Supabase's Edge runtime
+-- through the company's SMTP host. The original worry was that the host was
+-- internal-only and therefore unroutable; that turned out not to be the case
+-- (mail.allobank.com is public and answers on 587), but whether it will accept
+-- a session from an arbitrary internet address is still unproven. Everything
+-- below therefore assumes sends may fail, and dd_email_log exists so a failure
+-- is a recorded attempt rather than a silence. Remove the banner in DdEmail.vue
+-- once a real send has landed.
 
 -- ── dd_email_settings ───────────────────────────────────────────────────────
 -- One row per template. `template` is the primary key rather than a surrogate
