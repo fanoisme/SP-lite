@@ -4,7 +4,16 @@
 
 function escapeCell(v) {
   if (v == null) return ''
-  const s = String(v)
+  let s = String(v)
+  // CSV formula injection guard: old_value/new_value/record_key come verbatim
+  // from user-typed columns (BU name, merchant name, promo name) entered
+  // through the still-live /qrdd forms, and actor comes from
+  // profiles.full_name. A value starting with = + - @, a tab or a CR is a
+  // formula trigger in Excel/Sheets (e.g. =HYPERLINK("http://evil","click"))
+  // and this file deliberately prepends a UTF-8 BOM so Excel opens the file
+  // directly, making that live. Prefix a literal apostrophe so it is always
+  // read back as text. Do not remove this as noise.
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`
   // Quote when the value contains a delimiter, a quote or a newline; double any
   // embedded quote. That is the whole of RFC 4180 that matters here.
   if (/[",\r\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`

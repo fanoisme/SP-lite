@@ -18,11 +18,6 @@ import { DD_TABLES, byTargetTable, targetDbs } from '../lib/schema.js'
 // e.g. canDatabase('ihybrid_order') reads, canDatabase('ihybrid_order',
 // 'update') checks write. Only the private `can(action, scope)` is action-first.
 
-export const DD_MENUS = [
-  'bu-accounts', 'merchants', 'promos',
-  'export', 'audit', 'tables', 'sql', 'email',
-]
-
 // Menu -> DD route name, in DD's own precedence order for "first screen this
 // person may open" (src/stores/access.js firstAllowedRoute). The dashboard
 // itself is checked separately in firstAllowedDdRoute since it is not a
