@@ -228,7 +228,7 @@ import DdRowForm from '../components/DdRowForm.vue'
 import { useDdTable } from '../composables/useDdTable.js'
 import { useDdAccess } from '../composables/useDdAccess.js'
 import { DD_TABLES, TABLE_IDS, byTargetTable } from '../lib/schema.js'
-import { columns, searchableColumns, primaryKey, STAMP_COLUMNS } from '../lib/columns.js'
+import { columns, searchableColumns, primaryKey, STAMP_COLUMNS, rawSelectList } from '../lib/columns.js'
 import { downloadCsv } from '../lib/csv.js'
 
 const route = useRoute()
@@ -253,7 +253,11 @@ const PAGE_SIZES = [25, 50, 100]
 // changes (DdLayout's RouterView has no key). Building all three costs nothing
 // until load() is called, and it has the happy side effect that each table
 // keeps its own page, sort and filters while you move between them.
-const tables = Object.fromEntries(TABLE_IDS.map(id => [id, useDdTable(id)]))
+// Text casts, not '*': this screen shows what is stored, and JSON.parse would
+// turn a stored 10.00 into 10 before it ever reached a cell.
+const tables = Object.fromEntries(
+  TABLE_IDS.map(id => [id, useDdTable(id, { selectList: rawSelectList(id) })]),
+)
 
 const routeName = computed(() => String(route.params.name || ''))
 const meta = computed(() => byTargetTable(routeName.value) ?? null)

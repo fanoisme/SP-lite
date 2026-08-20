@@ -36,6 +36,10 @@ export function useDdTable(tableId, options = {}) {
   const { session, profile } = useAuth()
   const toast = useToast()
 
+  // '*' unless the caller wants a different projection — the raw Table Explorer
+  // asks for text casts so numeric scale survives JSON. See rawSelectList().
+  const selectList = options.selectList ?? '*'
+
   const rows = ref([])
   const loading = ref(true)
   const error = ref(null)
@@ -122,7 +126,7 @@ export function useDdTable(tableId, options = {}) {
     const from = (currentPage.value - 1) * pageSize.value
     const to = from + pageSize.value - 1
     try {
-      let q = supabase.from(localTable).select('*', { count: 'exact' })
+      let q = supabase.from(localTable).select(selectList, { count: 'exact' })
       q = applyFilters(q)
       // A stable tiebreak on the primary key: without it two rows sharing an
       // updated_at can swap places between pages and one of them is never seen.
@@ -149,7 +153,7 @@ export function useDdTable(tableId, options = {}) {
   /** Every row matching the current filters, unpaged. For export and for the
    *  bulk-upload duplicate check — never for rendering. */
   async function fetchAll() {
-    let q = supabase.from(localTable).select('*')
+    let q = supabase.from(localTable).select(selectList)
     q = applyFilters(q)
     const { data, error: e } = await q.order(sortKey.value, { ascending: sortAsc.value })
     if (e) throw e

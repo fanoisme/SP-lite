@@ -298,3 +298,22 @@ export function parseDate(value, order) {
 export function dateColumns(tableId) {
   return columns(tableId).filter(c => c.type === 'date' && !c.auto).map(c => c.name)
 }
+
+
+/**
+ * A PostgREST select list that returns every column as Postgres renders it.
+ *
+ * `select('*')` sends numeric as a JSON number, and JSON numbers have no scale:
+ * `10.00` survives the wire intact and then becomes `10` at JSON.parse, so a
+ * screen whose whole purpose is showing what is stored would show something
+ * else. Dates and timestamps get the same treatment so their punctuation is
+ * Postgres's rather than the JSON encoder's.
+ *
+ * Only for the raw Table Explorer. The guided screens want typed values they
+ * can compute with, and casting there would turn every amount into a string.
+ */
+export function rawSelectList(tableId) {
+  return columns(tableId)
+    .map(c => (['number', 'date', 'timestamp'].includes(c.type) ? `${c.name}::text` : c.name))
+    .join(',')
+}
