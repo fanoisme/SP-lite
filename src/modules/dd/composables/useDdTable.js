@@ -295,46 +295,61 @@ export function useDdTable(tableId, options = {}) {
 
     if (!valid.length) return results
 
-    // One read to decide insert versus update, rather than one probe per row.
-    const { data: existing } = await supabase.from(localTable).select(keyCols.join(','))
-    const taken = new Set((existing || []).map(keyOf))
-
-    const toInsert = []
-    const toUpdate = []
-    valid.forEach((entry) => {
-      (taken.has(keyOf(entry.row)) ? toUpdate : toInsert).push(entry)
-    })
+    // Which keys already exist, read in pages. PostgREST caps an unbounded
+    // response at 1000 rows, and an unpaged read here silently reported every
+    // row past the first thousand as new — which is how a merchant that plainly
+    // existed ended up on the insert path and came back as "already exists".
+    // These counts are for the report only; correctness no longer rests on them,
+    // because the write below is a real upsert.
+    const taken = new Set()
+    const PAGE = 1000
+    for (let from = 0; ; from += PAGE) {
+      const { data, error: e } = await supabase
+        .from(localTable)
+        .select(keyCols.join(','))
+        .range(from, from + PAGE - 1)
+      if (e) break
+      ;(data || []).forEach(r => taken.add(keyOf(r)))
+      if (!data || data.length < PAGE) break
+    }
 
     let done = 0
     const tick = () => onProgress?.(++done, valid.length)
 
-    for (let i = 0; i < toInsert.length; i += BULK_BATCH) {
-      const slice = toInsert.slice(i, i + BULK_BATCH)
+    // `on conflict (business key) do update` in one statement, so a row that
+    // already exists updates instead of raising 23505. The previous version
+    // split the set itself and sent plain inserts, which meant one pre-existing
+    // row failed the whole batch — and, worse, the batch error was then attached
+    // to all fifty rows in it, naming forty-nine that were never at fault.
+    const conflict = keyCols.join(',')
+    for (let i = 0; i < valid.length; i += BULK_BATCH) {
+      const slice = valid.slice(i, i + BULK_BATCH)
+      const payload = slice.map(({ row }) => toRow(row, { isNew: !taken.has(keyOf(row)) }))
       const { error: e } = await supabase
         .from(localTable)
-        .insert(slice.map(({ row }) => toRow(row, { isNew: true })))
-      if (e) {
-        slice.forEach(({ row, line }) => results.errors.push({
-          line, key: keyOf(row), problems: [explain(e, row)],
-        }))
-      } else {
-        results.inserted += slice.length
-      }
-      slice.forEach(tick)
-    }
+        .upsert(payload, { onConflict: conflict })
 
-    // Updates go one at a time: they address different rows by different key
-    // values, which PostgREST cannot express as a single statement. `.match()`
-    // rather than `.eq()` because the key may be composite.
-    for (const { row, line } of toUpdate) {
-      const match = Object.fromEntries(keyCols.map(c => [c, row[c]]))
-      const { error: e } = await supabase
-        .from(localTable)
-        .update(toRow(row, { isNew: false }))
-        .match(match)
-      if (e) results.errors.push({ line, key: keyOf(row), problems: [explain(e, row)] })
-      else results.updated++
-      tick()
+      if (e) {
+        // Something in this batch is genuinely wrong — a bad foreign key, a
+        // failed CHECK. Retry row by row so the report blames the row that
+        // actually failed instead of everything sharing its batch.
+        for (const { row, line } of slice) {
+          const { error: rowErr } = await supabase
+            .from(localTable)
+            .upsert([toRow(row, { isNew: !taken.has(keyOf(row)) })], { onConflict: conflict })
+          if (rowErr) results.errors.push({ line, key: keyOf(row), problems: [explain(rowErr, row)] })
+          else if (taken.has(keyOf(row))) results.updated++
+          else results.inserted++
+          tick()
+        }
+        continue
+      }
+
+      slice.forEach(({ row }) => {
+        if (taken.has(keyOf(row))) results.updated++
+        else results.inserted++
+      })
+      slice.forEach(tick)
     }
 
     if (results.inserted || results.updated) await load()

@@ -938,3 +938,15 @@ alter table public.qrdd_merchant_whitelist
 alter table public.qrdd_promo_rules
   alter column created_at set default (now() at time zone 'Asia/Jakarta'),
   alter column updated_at set default (now() at time zone 'Asia/Jakarta');
+
+-- ── 20. qrdd_bu_accounts business key ───────────────────────────────────────
+-- (name, sof) is the key DD_TABLES.bu_accounts.keyColumns has always declared —
+-- a business unit is identified downstream by its name and source of fund, and
+-- the local uuid is a surrogate PostgREST needs to address a row by. Nothing
+-- enforced it, so the same BU could exist twice with different uuids and the
+-- SQL export would emit two UPDATEs matching one downstream row. It is also
+-- what lets the bulk upload use `on conflict (name, sof)` instead of deciding
+-- insert-versus-update from a client-side read.
+-- Mirrors supabase/migrations/20260821_dd_bu_accounts_business_key.sql.
+create unique index if not exists qrdd_bu_accounts_name_sof_key
+  on public.qrdd_bu_accounts (name, sof);
