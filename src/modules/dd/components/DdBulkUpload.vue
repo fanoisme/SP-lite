@@ -58,11 +58,15 @@
         title="Required columns are missing"
         :message="`Nothing can be imported until the file has a column for: ${headerInfo.missingRequired.join(', ')}.`"
       />
+      <!-- Only genuinely unplaceable headers warn. The ones we recognise and
+           refuse on purpose get a quiet line below the toolbar instead — they
+           appear in every DD export, and warning about them each time is how a
+           warning stops being read. -->
       <LiBanner
         v-if="headerInfo.unknown.length"
         variant="warning"
-        title="Some columns were ignored"
-        :message="`${headerInfo.unknown.join(', ')} — not a column of ${meta.label}, or a repeat of one already read.`"
+        title="Some columns could not be matched"
+        :message="`${headerInfo.unknown.join(', ')} — not a column of ${meta.label}, or a repeat of one already read. Check the spelling if one of these was meant to be imported.`"
       />
       <!-- Toolbar: what the file contains, and the two ways to narrow it.
            The counts are the filter rather than a caption beside one, so there
@@ -92,6 +96,12 @@
           >Clear</button>
         </div>
       </div>
+
+      <p v-if="headerInfo.ignored.length" class="ddbulk__ignored">
+        <span class="material-symbols-outlined">info</span>
+        Not imported: {{ headerInfo.ignored.join(', ') }} — the app keeps its own
+        record id and stamps who wrote a row and when.
+      </p>
 
       <div class="ddbulk__grid">
         <LiTable :data="visibleRows" :columns="previewColumns" row-key="__line">
@@ -841,6 +851,12 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
 @media (max-width: 640px) {
   .ddbulk__tiles { grid-template-columns: 1fr; }
 }
+.ddbulk__ignored {
+  display: flex; align-items: center; gap: 6px; margin: 0;
+  font-size: 12px; color: var(--color-gray-500, #8e8ea0);
+}
+.ddbulk__ignored .material-symbols-outlined { font-size: 15px; }
+
 /* ── Preview toolbar ─────────────────────────────────────────────────────── */
 .ddbulk__toolbar {
   display: flex; align-items: center; justify-content: space-between;

@@ -14,7 +14,8 @@
 // pasted TSV cannot disagree about what "1,500.00" means.
 
 import * as XLSX from 'xlsx'
-import { editableColumns, coerce } from './columns.js'
+import { editableColumns, coerce, STAMP_COLUMNS } from './columns.js'
+import { DD_TABLES } from './schema.js'
 
 // ── Delimited text (paste, .csv, .tsv) ──────────────────────────────────────
 
@@ -161,8 +162,32 @@ export function normalizeHeader(h) {
  *   missingRequired: string[],  // required columns with no header at all — a hard stop
  * }}
  */
+/**
+ * Headers we recognise and deliberately refuse, as distinct from headers we do
+ * not recognise at all. A straight DD export carries all of these, so treating
+ * them as mistakes meant every upload opened with a warning about columns that
+ * were never wanted — and a warning that fires every time is a warning people
+ * stop reading.
+ *
+ *  - `id`             the source system's surrogate key. Ours is merchant_id /
+ *                     promo_id, or a uuid we generate; theirs means nothing here.
+ *  - the auto columns created_by / created_at / updated_by / updated_at, which
+ *    the app stamps itself so a file cannot backdate or misattribute a write.
+ *  - the downstream spellings of those timestamps (created_time / updated_time,
+ *    created_datetime / last_modified) — same columns, DD's names for them.
+ */
+function ignorableHeaders(tableId) {
+  const t = DD_TABLES[tableId]
+  return new Set([
+    'id',
+    ...STAMP_COLUMNS,
+    ...Object.values(t?.timestamps ?? {}),
+  ].map(normalizeHeader))
+}
+
 export function mapHeaders(tableId, headers) {
   const cols = editableColumns(tableId)
+  const ignorable = ignorableHeaders(tableId)
   const lookup = new Map()
   // Column names first, then labels, so a label that normalises onto another
   // column's name can never steal it — bu_accounts' "BU Name" label and
@@ -175,6 +200,7 @@ export function mapHeaders(tableId, headers) {
 
   const mapping = []
   const unknown = []
+  const ignored = []
   const taken = new Set()
 
   ;(headers || []).forEach((h) => {
@@ -183,13 +209,19 @@ export function mapHeaders(tableId, headers) {
     // worth reporting.
     if (!key) { mapping.push(null); return }
     const col = lookup.get(key)
-    if (!col || taken.has(col)) { mapping.push(null); unknown.push(String(h).trim()); return }
+    if (!col || taken.has(col)) {
+      mapping.push(null)
+      // A recognised-but-unwanted column is reported separately from one we
+      // cannot place at all: only the second is likely to be a typo.
+      ;(ignorable.has(key) && !taken.has(col) ? ignored : unknown).push(String(h).trim())
+      return
+    }
     taken.add(col)
     mapping.push(col)
   })
 
   const missingRequired = cols.filter(c => c.required && !taken.has(c.name)).map(c => c.name)
-  return { mapping, unknown, missingRequired }
+  return { mapping, unknown, ignored, missingRequired }
 }
 
 // ── Records ─────────────────────────────────────────────────────────────────
