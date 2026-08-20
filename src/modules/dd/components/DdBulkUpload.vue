@@ -50,6 +50,7 @@
     </section>
 
     <!-- ── Preview ────────────────────────────────────────────────────── -->
+
     <section v-else-if="step === 1" class="ddbulk__pane">
       <LiBanner
         v-if="headerInfo.missingRequired.length"
@@ -63,24 +64,23 @@
         title="Some columns were ignored"
         :message="`${headerInfo.unknown.join(', ')} — not a column of ${meta.label}, or a repeat of one already read.`"
       />
-      <!-- The writer keys BU rows on their row id, which a spreadsheet cannot
-           carry, so it can only ever insert them. Say so here rather than let
-           the person discover it as a wall of duplicate-key errors. -->
-      <LiBanner
-        v-if="tableId === 'bu_accounts' && counts.update"
-        variant="warning"
-        title="Existing BU rows cannot be overwritten by upload"
-        :message="`${counts.update} row(s) match a BU name and source of fund that already exist. The importer will try to add them and they will be reported as duplicates — edit those two rows by hand instead.`"
-      />
-
+      <!-- The counts double as the filter. Two controls that both narrow the
+           same table would only invite them to disagree. -->
       <div class="ddbulk__summary">
-        <span class="ddbulk__stat">{{ checked.length }} rows</span>
-        <span class="ddbulk__stat ddbulk__stat--new">{{ counts.new }} new</span>
-        <span class="ddbulk__stat ddbulk__stat--update">{{ counts.update }} update</span>
-        <span class="ddbulk__stat ddbulk__stat--error" :class="{ 'is-muted': !counts.error }">
-          {{ counts.error }} error
-        </span>
-        <LiCheckbox v-model="errorsOnly" label="Show only errors" :disabled="!counts.error" />
+        <button
+          v-for="f in FILTERS" :key="f.value" type="button"
+          class="ddbulk__stat" :class="[`ddbulk__stat--${f.value || 'all'}`, { 'is-on': statusFilter === f.value }]"
+          :disabled="f.value && !counts[f.value]"
+          :aria-pressed="statusFilter === f.value"
+          @click="statusFilter = f.value"
+        >
+          {{ f.value ? counts[f.value] : checked.length }} {{ f.label }}
+        </button>
+        <LiTextField v-model="rowSearch" placeholder="Search any value…" class="ddbulk__search" />
+        <button
+          v-if="statusFilter || rowSearch"
+          type="button" class="ddbulk__reset" @click="statusFilter = ''; rowSearch = ''"
+        >Reset</button>
       </div>
 
       <div class="ddbulk__grid">
@@ -92,10 +92,19 @@
             <span v-if="!value.length" class="ddbulk__muted">—</span>
             <span v-else class="ddbulk__problems">{{ value.join('; ') }}</span>
           </template>
+          <template #cell-__view="{ row }">
+            <button class="ddbulk__view" type="button" title="Show this row" @click="openDetail(row.__line)">
+              <span class="material-symbols-outlined">open_in_full</span>
+            </button>
+          </template>
         </LiTable>
       </div>
-      <p v-if="visibleRows.length < filteredRows.length" class="ddbulk__more">
-        Showing {{ visibleRows.length }} of {{ filteredRows.length }} rows. All of them are imported.
+      <p v-if="!filteredRows.length" class="ddbulk__more">
+        No row matches this filter.
+      </p>
+      <p v-else-if="visibleRows.length < filteredRows.length" class="ddbulk__more">
+        Showing {{ visibleRows.length }} of {{ filteredRows.length }} matching rows.
+        Every valid row is imported, shown here or not.
       </p>
 
       <LiCheckbox
@@ -146,6 +155,45 @@
         </ul>
       </template>
     </section>
+
+    <!-- Nested inside the upload modal on purpose: the person is mid-review and
+         should come back to the same filter and scroll position, which a route
+         change or a replaced modal body would both throw away. -->
+    <LiModal v-model="detailOpen" :title="detailRow ? `Line ${detailRow.line}` : ''" size="md">
+      <div v-if="detailRow" class="ddbulk__detail">
+        <div class="ddbulk__detail-head">
+          <LiBadge
+            :label="STATUS_LABEL[detailRow.status]"
+            :variant="STATUS_VARIANT[detailRow.status]"
+            size="sm" is-pill
+          />
+          <code class="ddbulk__detail-key">{{ detailRow.key || '—' }}</code>
+        </div>
+
+        <ul v-if="detailRow.problems.length" class="ddbulk__detail-problems">
+          <li v-for="(p, i) in detailRow.problems" :key="i">{{ p }}</li>
+        </ul>
+
+        <dl class="ddbulk__detail-fields">
+          <template v-for="f in detailFields" :key="f.name">
+            <dt :class="{ 'is-missing': !f.present }">
+              {{ f.label }}
+              <code>{{ f.name }}</code>
+              <span v-if="!f.present" class="ddbulk__detail-note">not in file</span>
+            </dt>
+            <dd :class="{ 'is-empty': f.value === '' || f.value == null }">
+              <template v-if="f.value === '' || f.value == null">
+                {{ f.required ? 'required, but empty' : '—' }}
+              </template>
+              <template v-else>{{ f.value }}</template>
+            </dd>
+          </template>
+        </dl>
+      </div>
+      <template #footer>
+        <LiButton variant="ghost" @click="detailLine = null">Close</LiButton>
+      </template>
+    </LiModal>
 
     <template #footer>
       <template v-if="step === 0">
@@ -236,7 +284,16 @@ const parsed = ref({ headers: [], rows: [] })
 const records = ref([])
 const existingKeys = ref(new Set())
 
-const errorsOnly = ref(false)
+// '' is "everything"; the rest match a row's verdict.
+const FILTERS = [
+  { value: '', label: 'rows' },
+  { value: 'new', label: 'new' },
+  { value: 'update', label: 'update' },
+  { value: 'error', label: 'error' },
+]
+const statusFilter = ref('')
+const rowSearch = ref('')
+const detailLine = ref(null)
 const skipInvalid = ref(false)
 
 const importing = ref(false)
@@ -370,7 +427,9 @@ async function toPreview() {
     parsed.value = grid
     records.value = toRecords(props.tableId, grid.headers, grid.rows)
     existingKeys.value = await loadExistingKeys()
-    errorsOnly.value = false
+    statusFilter.value = ''
+    rowSearch.value = ''
+    detailLine.value = null
     skipInvalid.value = false
     step.value = 1
   } catch (e) {
@@ -414,9 +473,55 @@ const counts = computed(() => ({
   error: checked.value.filter(r => r.status === 'error').length,
 }))
 
-const filteredRows = computed(() =>
-  errorsOnly.value ? checked.value.filter(r => r.status === 'error') : checked.value,
+/**
+ * Status and free text, both applied here so the table, the "showing N of M"
+ * line and the empty state can never describe different sets.
+ *
+ * The search covers the parsed values and the problem text, not just the key: a
+ * reader looking for what went wrong is as likely to search "Alfamart" or
+ * "already exists" as a merchant id.
+ */
+const filteredRows = computed(() => {
+  const term = rowSearch.value.trim().toLowerCase()
+  return checked.value.filter((r) => {
+    if (statusFilter.value && r.status !== statusFilter.value) return false
+    if (!term) return true
+    if (String(r.line).includes(term)) return true
+    if (r.problems.some(p => p.toLowerCase().includes(term))) return true
+    return Object.values(r.rec).some(v => String(v ?? '').toLowerCase().includes(term))
+  })
+})
+
+/** The row behind the open detail panel, found by line so the lookup survives
+ *  the filter changing underneath it. */
+const detailRow = computed(() =>
+  detailLine.value == null ? null : checked.value.find(r => r.line === detailLine.value) ?? null,
 )
+
+/**
+ * Every editable column, not only the ones the file carried — the reason a row
+ * is wrong is often a column that is missing, and a detail view that hides the
+ * absent ones cannot show that.
+ */
+const detailFields = computed(() => {
+  const r = detailRow.value
+  if (!r) return []
+  return editable.value.map(c => ({
+    name: c.name,
+    label: c.label,
+    value: r.rec[c.name],
+    present: headerInfo.value.mapping.includes(c.name),
+    required: !!c.required,
+  }))
+})
+
+function openDetail(line) { detailLine.value = line }
+
+// LiModal wants a writable boolean; the source of truth is which line is open.
+const detailOpen = computed({
+  get: () => detailLine.value != null,
+  set: (v) => { if (!v) detailLine.value = null },
+})
 
 // Only the columns the file actually carries — showing seventeen empty promo
 // columns because one was pasted helps nobody.
@@ -431,6 +536,7 @@ const previewColumns = computed(() => [
   { key: LINE_KEY, label: 'Line' },
   ...dataColumns.value,
   { key: PROBLEMS_KEY, label: 'Problems' },
+  { key: '__view', label: '' },
 ])
 
 /**
@@ -441,7 +547,7 @@ const previewColumns = computed(() => [
  */
 const visibleRows = computed(() =>
   filteredRows.value.slice(0, PREVIEW_LIMIT).map((r) => {
-    const out = { [VERDICT_KEY]: r.status, [LINE_KEY]: r.line, [PROBLEMS_KEY]: r.problems }
+    const out = { [VERDICT_KEY]: r.status, [LINE_KEY]: r.line, [PROBLEMS_KEY]: r.problems, __view: '' }
     dataColumns.value.forEach(({ key }) => {
       const v = r.rec[key]
       out[key] = (v === '' || v == null) ? '—' : v
@@ -541,7 +647,9 @@ function reset() {
   parsed.value = { headers: [], rows: [] }
   records.value = []
   existingKeys.value = new Set()
-  errorsOnly.value = false
+  statusFilter.value = ''
+  rowSearch.value = ''
+  detailLine.value = null
   skipInvalid.value = false
   progressDone.value = 0
   progressTotal.value = 0
@@ -606,7 +714,56 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
   border-radius: var(--radius-sm, 12px); padding: 10px 14px;
 }
 
-.ddbulk__summary { display: flex; align-items: center; gap: var(--space-m, 12px); flex-wrap: wrap; }
+.ddbulk__summary { display: flex; align-items: center; gap: var(--space-sm, 8px); flex-wrap: wrap; }
+.ddbulk__search { flex: 1; min-width: 180px; }
+.ddbulk__reset {
+  border: 1px solid rgba(0,0,0,0.1); background: transparent; cursor: pointer;
+  border-radius: var(--radius-pill, 999px); padding: 6px 14px;
+  font-family: var(--font-body, 'Inter', sans-serif); font-size: 12px; font-weight: 600;
+  color: var(--color-gray-700, #666);
+}
+.ddbulk__reset:hover { background: rgba(0,0,0,0.04); }
+
+/* The counts are the filter, so they have to read as pressable. */
+.ddbulk__stat[aria-pressed] { cursor: pointer; transition: box-shadow 160ms, opacity 160ms; }
+.ddbulk__stat[aria-pressed]:disabled { opacity: 0.4; cursor: not-allowed; }
+.ddbulk__stat[aria-pressed]:not(:disabled):hover { box-shadow: 0 0 0 2px rgba(0,0,0,0.06); }
+.ddbulk__stat.is-on { box-shadow: 0 0 0 2px currentColor; }
+
+.ddbulk__view {
+  border: none; background: transparent; cursor: pointer; padding: 2px 4px;
+  color: var(--color-gray-400, #aaa); display: inline-flex;
+}
+.ddbulk__view:hover { color: #6366F1; }
+.ddbulk__view .material-symbols-outlined { font-size: 17px; }
+
+.ddbulk__detail { display: flex; flex-direction: column; gap: var(--space-m, 12px); }
+.ddbulk__detail-head { display: flex; align-items: center; gap: 8px; }
+.ddbulk__detail-key {
+  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  background: rgba(0,0,0,0.04); border-radius: 5px; padding: 2px 7px;
+}
+.ddbulk__detail-problems {
+  margin: 0; padding: 10px 14px 10px 28px; border-radius: var(--radius-sm, 12px);
+  background: rgba(200, 62, 59, 0.08); color: var(--color-red-400, #C83E3B);
+  font-size: 13px; line-height: 1.6;
+}
+.ddbulk__detail-fields {
+  display: grid; grid-template-columns: minmax(140px, 40%) 1fr;
+  gap: 1px; margin: 0; background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-sm, 12px); overflow: hidden;
+}
+.ddbulk__detail-fields dt,
+.ddbulk__detail-fields dd { margin: 0; padding: 8px 12px; background: #fff; font-size: 13px; }
+.ddbulk__detail-fields dt { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; color: var(--color-gray-700, #555); }
+.ddbulk__detail-fields dt code {
+  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11px;
+  color: var(--color-gray-400, #aaa);
+}
+.ddbulk__detail-fields dt.is-missing { background: rgba(0,0,0,0.02); }
+.ddbulk__detail-note { font-size: 10px; letter-spacing: 0.3px; color: var(--color-gray-400, #aaa); }
+.ddbulk__detail-fields dd { word-break: break-word; }
+.ddbulk__detail-fields dd.is-empty { color: var(--color-gray-400, #aaa); }
 .ddbulk__stat {
   font-size: 12px; font-weight: 700; padding: 3px 10px;
   border-radius: var(--radius-pill, 999px); background: rgba(0, 0, 0, 0.05);
