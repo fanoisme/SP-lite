@@ -775,3 +775,35 @@ where ma.module_id = 'dd'
     where y.role = ma.role and y.module_id = 'dd' and y.feature_id = f.feature_id
   );
 
+
+-- ── 13. Revoke TRUNCATE from anon and authenticated ─────────────────────────
+-- Runs last, so it covers every table created above it.
+--
+-- Supabase's default privileges on `public` hand new tables more than this file
+-- grants explicitly, TRUNCATE among them. That matters more than it looks:
+-- TRUNCATE bypasses RLS entirely *and* bypasses FOR EACH ROW triggers, so no
+-- policy and no audit trigger can see or stop it. One statement would empty
+-- `roles` or `module_access` — wiping access control — or `dd_audit_log`,
+-- defeating its append-only guarantee.
+--
+-- Nothing in this application truncates anything, so there is no legitimate
+-- caller to break. Not reachable through PostgREST today (no HTTP verb maps to
+-- TRUNCATE), but `anon` is the role whose key ships in the public client
+-- bundle, so this is defence in depth.
+--
+-- A loop over the catalog rather than a list of names, so adding a table above
+-- does not require remembering to add a revoke here.
+
+do $$
+declare
+  t record;
+begin
+  for t in
+    select c.relname
+    from pg_class c
+    join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'public' and c.relkind = 'r'
+  loop
+    execute format('revoke truncate on public.%I from anon, authenticated', t.relname);
+  end loop;
+end $$;
