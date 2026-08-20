@@ -64,23 +64,33 @@
         title="Some columns were ignored"
         :message="`${headerInfo.unknown.join(', ')} — not a column of ${meta.label}, or a repeat of one already read.`"
       />
-      <!-- The counts double as the filter. Two controls that both narrow the
-           same table would only invite them to disagree. -->
-      <div class="ddbulk__summary">
-        <button
-          v-for="f in FILTERS" :key="f.value" type="button"
-          class="ddbulk__stat" :class="[`ddbulk__stat--${f.value || 'all'}`, { 'is-on': statusFilter === f.value }]"
-          :disabled="f.value && !counts[f.value]"
-          :aria-pressed="statusFilter === f.value"
-          @click="statusFilter = f.value"
-        >
-          {{ f.value ? counts[f.value] : checked.length }} {{ f.label }}
-        </button>
-        <LiTextField v-model="rowSearch" placeholder="Search any value…" class="ddbulk__search" />
-        <button
-          v-if="statusFilter || rowSearch"
-          type="button" class="ddbulk__reset" @click="statusFilter = ''; rowSearch = ''"
-        >Reset</button>
+      <!-- Toolbar: what the file contains, and the two ways to narrow it.
+           The counts are the filter rather than a caption beside one, so there
+           is never a second control able to disagree about what is on screen. -->
+      <div class="ddbulk__toolbar">
+        <div class="ddbulk__tabs" role="group" aria-label="Filter rows">
+          <button
+            v-for="f in FILTERS" :key="f.value" type="button"
+            class="ddbulk__tab" :class="[`is-${f.value || 'all'}`, { 'is-on': statusFilter === f.value }]"
+            :disabled="!!f.value && !counts[f.value]"
+            :aria-pressed="statusFilter === f.value"
+            @click="statusFilter = f.value"
+          >
+            <span class="ddbulk__tab-n">{{ f.value ? counts[f.value] : checked.length }}</span>
+            <span class="ddbulk__tab-l">{{ f.label }}</span>
+          </button>
+        </div>
+
+        <div class="ddbulk__tools">
+          <div class="ddbulk__find">
+            <span class="material-symbols-outlined">search</span>
+            <input v-model="rowSearch" type="search" placeholder="Find a value, a line, a problem…" >
+          </div>
+          <button
+            v-if="statusFilter || rowSearch" type="button"
+            class="ddbulk__linkbtn" @click="statusFilter = ''; rowSearch = ''"
+          >Clear</button>
+        </div>
       </div>
 
       <div class="ddbulk__grid">
@@ -90,22 +100,30 @@
           </template>
           <template #cell-__problems="{ value }">
             <span v-if="!value.length" class="ddbulk__muted">—</span>
-            <span v-else class="ddbulk__problems">{{ value.join('; ') }}</span>
+            <span v-else class="ddbulk__problems" :title="value.join('; ')">{{ value.join('; ') }}</span>
           </template>
           <template #cell-__view="{ row }">
-            <button class="ddbulk__view" type="button" title="Show this row" @click="openDetail(row.__line)">
-              <span class="material-symbols-outlined">open_in_full</span>
+            <button class="ddbulk__view" type="button" title="Inspect this row" @click="openDetail(row.__line)">
+              <span class="material-symbols-outlined">chevron_right</span>
             </button>
           </template>
         </LiTable>
+
+        <p v-if="!filteredRows.length" class="ddbulk__none">
+          <span class="material-symbols-outlined">filter_alt_off</span>
+          Nothing matches. <button type="button" class="ddbulk__linkbtn" @click="statusFilter = ''; rowSearch = ''">Clear the filter</button>
+        </p>
+        <p v-else-if="visibleRows.length < filteredRows.length" class="ddbulk__more">
+          Showing the first {{ visibleRows.length }} of {{ filteredRows.length }}. Every importable row is written, listed here or not.
+        </p>
       </div>
-      <p v-if="!filteredRows.length" class="ddbulk__more">
-        No row matches this filter.
-      </p>
-      <p v-else-if="visibleRows.length < filteredRows.length" class="ddbulk__more">
-        Showing {{ visibleRows.length }} of {{ filteredRows.length }} matching rows.
-        Every valid row is imported, shown here or not.
-      </p>
+
+      <LiCheckbox
+        v-if="existingCount"
+        v-model="allowUpdate"
+        label="Update rows that already exist"
+        :description="`${existingCount} row(s) match a record already in ${meta.label}. Off, they are refused; on, the file overwrites them.`"
+      />
 
       <LiCheckbox
         v-if="counts.error"
@@ -292,6 +310,7 @@ const FILTERS = [
   { value: 'error', label: 'error' },
 ]
 const statusFilter = ref('')
+const allowUpdate = ref(false)
 const rowSearch = ref('')
 const detailLine = ref(null)
 const skipInvalid = ref(false)
@@ -430,6 +449,7 @@ async function toPreview() {
     statusFilter.value = ''
     rowSearch.value = ''
     detailLine.value = null
+    allowUpdate.value = false
     skipInvalid.value = false
     step.value = 1
   } catch (e) {
@@ -462,10 +482,22 @@ const checked = computed(() => {
       else seen.set(k, line)
     }
 
-    const status = problems.length ? 'error' : (existingKeys.value.has(k) ? 'update' : 'new')
-    return { line, key: keyLabel(rec), status, problems, rec }
+    // An already-registered key is a problem, not a silent overwrite: a file
+    // drop should not be able to rewrite a record someone else created. Ticking
+    // `allowUpdate` turns the same rows into deliberate updates.
+    const exists = !isKeyBlank(rec) && existingKeys.value.has(k)
+    if (exists && !allowUpdate.value) {
+      problems.push(`"${keyLabel(rec)}" is already registered`)
+    }
+
+    const status = problems.length ? 'error' : (exists ? 'update' : 'new')
+    return { line, key: keyLabel(rec), status, problems, rec, exists }
   })
 })
+
+/** Rows whose key is already registered, whatever the current verdict — the
+ *  opt-in has to stay visible after ticking it, or it could never be unticked. */
+const existingCount = computed(() => checked.value.filter(r => r.exists).length)
 
 const counts = computed(() => ({
   new: checked.value.filter(r => r.status === 'new').length,
@@ -582,6 +614,7 @@ async function runImport() {
     const res = await props.bulkUpsert(
       importable.value.map(r => r.rec),
       (done, total) => { progressDone.value = done; progressTotal.value = total },
+      { allowUpdate: allowUpdate.value },
     )
     result.value = res ?? { inserted: 0, updated: 0, skipped: 0, errors: [] }
     step.value = 2
@@ -650,6 +683,7 @@ function reset() {
   statusFilter.value = ''
   rowSearch.value = ''
   detailLine.value = null
+  allowUpdate.value = false
   skipInvalid.value = false
   progressDone.value = 0
   progressTotal.value = 0
@@ -714,21 +748,15 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
   border-radius: var(--radius-sm, 12px); padding: 10px 14px;
 }
 
-.ddbulk__summary { display: flex; align-items: center; gap: var(--space-sm, 8px); flex-wrap: wrap; }
-.ddbulk__search { flex: 1; min-width: 180px; }
-.ddbulk__reset {
-  border: 1px solid rgba(0,0,0,0.1); background: transparent; cursor: pointer;
-  border-radius: var(--radius-pill, 999px); padding: 6px 14px;
-  font-family: var(--font-body, 'Inter', sans-serif); font-size: 12px; font-weight: 600;
-  color: var(--color-gray-700, #666);
-}
+
+
+
 .ddbulk__reset:hover { background: rgba(0,0,0,0.04); }
 
-/* The counts are the filter, so they have to read as pressable. */
-.ddbulk__stat[aria-pressed] { cursor: pointer; transition: box-shadow 160ms, opacity 160ms; }
-.ddbulk__stat[aria-pressed]:disabled { opacity: 0.4; cursor: not-allowed; }
-.ddbulk__stat[aria-pressed]:not(:disabled):hover { box-shadow: 0 0 0 2px rgba(0,0,0,0.06); }
-.ddbulk__stat.is-on { box-shadow: 0 0 0 2px currentColor; }
+
+
+
+
 
 .ddbulk__view {
   border: none; background: transparent; cursor: pointer; padding: 2px 4px;
@@ -764,15 +792,11 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
 .ddbulk__detail-note { font-size: 10px; letter-spacing: 0.3px; color: var(--color-gray-400, #aaa); }
 .ddbulk__detail-fields dd { word-break: break-word; }
 .ddbulk__detail-fields dd.is-empty { color: var(--color-gray-400, #aaa); }
-.ddbulk__stat {
-  font-size: 12px; font-weight: 700; padding: 3px 10px;
-  border-radius: var(--radius-pill, 999px); background: rgba(0, 0, 0, 0.05);
-  color: var(--color-gray-700, #666);
-}
-.ddbulk__stat--new { background: var(--color-success-container, #E6F4EA); color: var(--color-on-success-container, #137333); }
-.ddbulk__stat--update { background: var(--color-info-container, #E6E6FF); color: var(--color-on-info-container, #0047B2); }
-.ddbulk__stat--error { background: var(--color-error-container, #FDECEE); color: var(--color-on-error-container, #A33129); }
-.ddbulk__stat.is-muted { background: rgba(0, 0, 0, 0.05); color: var(--color-gray-500, #8e8ea0); }
+
+
+
+
+
 
 /* The preview is the one table in the app that is genuinely wide — every
    pasted column plus a problems column — so it scrolls in both directions
@@ -817,4 +841,74 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
 @media (max-width: 640px) {
   .ddbulk__tiles { grid-template-columns: 1fr; }
 }
+/* ── Preview toolbar ─────────────────────────────────────────────────────── */
+.ddbulk__toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--space-m, 12px); flex-wrap: wrap;
+}
+
+/* Segmented control: one row of verdicts, the live one lifted out of the
+   track. Reads as a set of mutually exclusive choices, which it is. */
+.ddbulk__tabs {
+  display: inline-flex; padding: 3px; gap: 2px;
+  background: rgba(0, 0, 0, 0.04); border-radius: var(--radius-pill, 999px);
+}
+.ddbulk__tab {
+  display: inline-flex; align-items: baseline; gap: 5px;
+  border: none; background: transparent; cursor: pointer;
+  padding: 6px 14px; border-radius: var(--radius-pill, 999px);
+  font-family: var(--font-body, 'Inter', sans-serif);
+  color: var(--color-gray-700, #555); transition: background 160ms, color 160ms, box-shadow 160ms;
+}
+.ddbulk__tab-n { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ddbulk__tab-l { font-size: 12px; }
+.ddbulk__tab:disabled { opacity: 0.35; cursor: not-allowed; }
+.ddbulk__tab:not(:disabled):hover { background: rgba(0, 0, 0, 0.05); }
+.ddbulk__tab.is-on {
+  background: #fff; color: var(--color-on-surface, #1a1a2e);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.10);
+}
+/* Colour only carries the verdict on the active tab; colouring all four at
+   rest would make the strip read as four warnings. */
+.ddbulk__tab.is-on.is-new .ddbulk__tab-n { color: #0F8A5F; }
+.ddbulk__tab.is-on.is-update .ddbulk__tab-n { color: #B26B00; }
+.ddbulk__tab.is-on.is-error .ddbulk__tab-n { color: var(--color-red-400, #C83E3B); }
+
+.ddbulk__tools { display: inline-flex; align-items: center; gap: 8px; }
+.ddbulk__find {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; min-width: 240px;
+  border: 1px solid rgba(0, 0, 0, 0.1); border-radius: var(--radius-pill, 999px);
+  background: #fff; transition: border-color 160ms, box-shadow 160ms;
+}
+.ddbulk__find:focus-within { border-color: #6366F1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12); }
+.ddbulk__find .material-symbols-outlined { font-size: 17px; color: var(--color-gray-400, #aaa); }
+.ddbulk__find input {
+  border: none; outline: none; background: transparent; width: 100%;
+  font-family: var(--font-body, 'Inter', sans-serif); font-size: 13px;
+  color: var(--color-on-surface, #1a1a2e);
+}
+.ddbulk__find input::-webkit-search-cancel-button { cursor: pointer; }
+
+.ddbulk__linkbtn {
+  border: none; background: transparent; cursor: pointer; padding: 4px 2px;
+  font-family: var(--font-body, 'Inter', sans-serif); font-size: 12px; font-weight: 600;
+  color: #6366F1;
+}
+.ddbulk__linkbtn:hover { text-decoration: underline; }
+
+.ddbulk__none {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 28px 16px; margin: 0; font-size: 13px;
+  color: var(--color-gray-500, #8e8ea0);
+}
+.ddbulk__none .material-symbols-outlined { font-size: 19px; }
+
+.ddbulk__view {
+  border: none; background: transparent; cursor: pointer; padding: 2px;
+  color: var(--color-gray-400, #aaa); display: inline-flex; border-radius: 50%;
+  transition: background 160ms, color 160ms;
+}
+.ddbulk__view:hover { background: rgba(99, 102, 241, 0.1); color: #6366F1; }
+.ddbulk__view .material-symbols-outlined { font-size: 18px; }
 </style>

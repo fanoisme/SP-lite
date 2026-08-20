@@ -170,13 +170,21 @@ export function useDdTable(tableId, options = {}) {
 
   // ── Writes ───────────────────────────────────────────────────────────────
 
-  /** Form values -> a row Postgres will accept, dropping auto columns. */
-  function toRow(values, { isNew }) {
+  /**
+   * Form values -> a row Postgres will accept, dropping auto columns.
+   *
+   * `keepKey` exists because the two write shapes disagree about the primary
+   * key. An UPDATE carries it in the WHERE clause, so repeating it in the SET
+   * is at best redundant; an upsert has no WHERE and the key has to be in the
+   * payload or the row arrives with it null. Dropping it unconditionally is how
+   * a bulk upload of existing merchants produced "null value in column
+   * merchant_id violates not-null constraint" for rows that plainly had one.
+   */
+  function toRow(values, { isNew, keepKey = false }) {
     const out = {}
     editableColumns(tableId).forEach(({ name }) => {
       if (!(name in values)) return
-      // The primary key of an existing row is never rewritten by an edit.
-      if (!isNew && name === pk) return
+      if (!isNew && !keepKey && name === pk) return
       out[name] = coerce(tableId, name, values[name])
     })
     out.updated_by = actor.value
@@ -274,14 +282,23 @@ export function useDdTable(tableId, options = {}) {
    * @param {object[]} incoming column-keyed rows
    * @param {(done:number,ofTotal:number)=>void} [onProgress]
    */
-  async function bulkUpsert(incoming, onProgress) {
+  /**
+   * @param {object[]} incoming column-keyed rows
+   * @param {(done:number,ofTotal:number)=>void} [onProgress]
+   * @param {{ allowUpdate?: boolean }} [opts] when false (the default) a row
+   *   whose key already exists is refused rather than overwritten. Bulk upload
+   *   is how records are *added*; quietly rewriting a merchant someone else
+   *   registered is not something a file drop should be able to do by accident.
+   */
+  async function bulkUpsert(incoming, onProgress, opts = {}) {
+    const allowUpdate = opts.allowUpdate === true
     const keyCols = meta.keyColumns
     const results = { inserted: 0, updated: 0, skipped: 0, errors: [] }
 
     // The caller's index is carried alongside every row for the whole run, so
     // an error raised in the third insert batch can still name the line of the
     // file it came from. Recovering it afterwards from the key is guesswork.
-    const valid = []
+    let valid = []
     incoming.forEach((row, i) => {
       const line = i + 1
       const problems = validateRow(tableId, row)
@@ -313,6 +330,19 @@ export function useDdTable(tableId, options = {}) {
       if (!data || data.length < PAGE) break
     }
 
+    if (!allowUpdate) {
+      const refused = valid.filter(({ row }) => taken.has(keyOf(row)))
+      refused.forEach(({ row, line }) => {
+        results.skipped++
+        results.errors.push({
+          line, key: keyOf(row),
+          problems: [`"${keyOf(row)}" is already registered — edit it on the screen, or tick "update rows that already exist"`],
+        })
+      })
+      valid = valid.filter(({ row }) => !taken.has(keyOf(row)))
+      if (!valid.length) return results
+    }
+
     let done = 0
     const tick = () => onProgress?.(++done, valid.length)
 
@@ -324,7 +354,7 @@ export function useDdTable(tableId, options = {}) {
     const conflict = keyCols.join(',')
     for (let i = 0; i < valid.length; i += BULK_BATCH) {
       const slice = valid.slice(i, i + BULK_BATCH)
-      const payload = slice.map(({ row }) => toRow(row, { isNew: !taken.has(keyOf(row)) }))
+      const payload = slice.map(({ row }) => toRow(row, { isNew: !taken.has(keyOf(row)), keepKey: true }))
       const { error: e } = await supabase
         .from(localTable)
         .upsert(payload, { onConflict: conflict })
@@ -336,7 +366,7 @@ export function useDdTable(tableId, options = {}) {
         for (const { row, line } of slice) {
           const { error: rowErr } = await supabase
             .from(localTable)
-            .upsert([toRow(row, { isNew: !taken.has(keyOf(row)) })], { onConflict: conflict })
+            .upsert([toRow(row, { isNew: !taken.has(keyOf(row)), keepKey: true })], { onConflict: conflict })
           if (rowErr) results.errors.push({ line, key: keyOf(row), problems: [explain(rowErr, row)] })
           else if (taken.has(keyOf(row))) results.updated++
           else results.inserted++
