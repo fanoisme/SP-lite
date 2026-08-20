@@ -60,14 +60,51 @@ export function formatDate(v) {
   return `${d} ${months[mi] ?? m} ${y}`
 }
 
-/** `timestamptz` columns, in the reader's local zone — these are event times,
- *  so the local reading is the correct one. */
+export const TZ = 'Asia/Jakarta'
+
+/**
+ * "now" as a naive WIB wall-clock string, `YYYY-MM-DD HH:mm:ss`.
+ *
+ * The DD tables store created_at/updated_at as `timestamp` without a zone,
+ * meaning WIB. `new Date().toISOString()` would write UTC wall-clock into them
+ * and land every new row seven hours in the past — the same fault the import
+ * hit before 20260821_dd_timestamps_are_wib.sql. Built from formatted parts
+ * rather than by adding an offset so it stays correct without assuming the
+ * browser's own timezone.
+ */
+export function nowWib() {
+  const p = Object.fromEntries(
+    new Intl.DateTimeFormat('en-CA', {
+      timeZone: TZ, hour12: false,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+    }).formatToParts(new Date()).map(x => [x.type, x.value]),
+  )
+  // Intl renders midnight as hour 24 in some engines.
+  const hour = p.hour === '24' ? '00' : p.hour
+  return `${p.year}-${p.month}-${p.day} ${hour}:${p.minute}:${p.second}`
+}
+
+/**
+ * Row timestamps. These columns are naive WIB, so the value is already the
+ * reading we want — parsing it through Date would reinterpret it in the
+ * browser's zone and shift it for anyone outside Jakarta. Reformat the parts
+ * instead, and only fall back to Date for a value that still carries a zone
+ * (dd_audit_log.ts and dd_email_log.ts are still timestamptz on purpose).
+ */
 export function formatTimestamp(v) {
   if (!v) return EM_DASH
-  const d = new Date(v)
-  if (Number.isNaN(+d)) return String(v)
+  const s = String(v)
+  const naive = s.match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/)
+  if (naive && !/[Zz]|[+-]\d{2}:?\d{2}$/.test(s)) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const [, y, m, d, hh, mm] = naive
+    return `${d} ${months[Number(m) - 1] ?? m} ${y} ${hh}:${mm}`
+  }
+  const d = new Date(s)
+  if (Number.isNaN(+d)) return s
   return d.toLocaleString('en-GB', {
-    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit',
+    day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: TZ,
   })
 }
 

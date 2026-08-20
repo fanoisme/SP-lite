@@ -51,7 +51,7 @@
       v-if="loading || rows.length"
       :data="rows"
       :columns="columns"
-      row-key="id"
+      row-key="merchant_id"
       :loading="loading"
       @sort="onSort"
     >
@@ -243,7 +243,7 @@ async function confirmDelete() {
   if (!target) return
   // A promo still referencing this merchant raises 23503; the composable turns
   // that into a sentence and toasts it, so nothing is re-explained here.
-  const res = await deleteRow(target.id)
+  const res = await deleteRow(target.merchant_id)
   if (res.ok) {
     showDelete.value = false
     deleteRowRef.value = null

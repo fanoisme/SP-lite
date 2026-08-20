@@ -38,7 +38,7 @@
 // The first real Send now settles it.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts";
+import { sendMail as smtpSend, SmtpError } from "./smtp.ts";
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 // Shared with the browser preview on purpose — one renderer, so what someone
@@ -331,6 +331,9 @@ function describeSmtpFailure(e: unknown): SendError {
       false,
     );
   }
+  // Anything from ./smtp.ts arrives as an SmtpError and is handled by the
+  // caller, which names the step it died on. This function now only sees
+  // failures from outside the conversation itself.
   if (/auth|credential|535|534|password/i.test(raw)) {
     return new SendError(`The mail server rejected the credentials: ${raw}`, true);
   }
@@ -350,50 +353,41 @@ async function sendMail(
       false,
     );
   }
-  const user = Deno.env.get("DD_SMTP_USER");
-  const pass = Deno.env.get("DD_SMTP_PASS");
-  const fromName = Deno.env.get("DD_SMTP_FROM_NAME") || "DD MPM";
 
-  const client = new SMTPClient({
-    connection: {
+  try {
+    const transcript = await smtpSend({
       hostname: host,
       port,
-      // Implicit TLS (465) when asked for; otherwise plain connect, which
-      // denomailer upgrades with STARTTLS if the server advertises it.
-      tls: Deno.env.get("DD_SMTP_TLS") === "true",
-      auth: user ? { username: user, password: pass || "" } : undefined,
-    },
-  });
-
-  let timer: number | undefined;
-  try {
-    await Promise.race([
-      client.send({
-        from: `${fromName} <${from}>`,
-        to: opts.to,
-        cc: opts.cc.length ? opts.cc : undefined,
-        subject: opts.subject,
-        html: opts.html,
-      }),
-      new Promise((_, reject) => {
-        timer = setTimeout(
-          () => reject(new SendError(
-            `Could not reach the mail server: no response from ${host}:${port} within ` +
-              `${SMTP_TIMEOUT_MS / 1000}s. An internal-only host is not routable from ` +
-              "Supabase's Edge runtime, which is the connectivity that has not been confirmed yet.",
-            false,
-          )),
-          SMTP_TIMEOUT_MS,
-        );
-      }),
-    ]);
+      username: Deno.env.get("DD_SMTP_USER") || undefined,
+      password: Deno.env.get("DD_SMTP_PASS") || undefined,
+      // Implicit TLS is port 465. This host only opens 587, so the normal path
+      // is a plaintext connect upgraded with STARTTLS before AUTH — which is
+      // mandatory here, not opportunistic, since no AUTH mechanism is
+      // advertised until the session is encrypted.
+      implicitTls: Deno.env.get("DD_SMTP_TLS") === "true",
+      // The transcript redacts the AUTH exchange either way; this only decides
+      // whether it also goes to the function log.
+      debug: Deno.env.get("DD_SMTP_DEBUG") === "true",
+      timeoutMs: SMTP_TIMEOUT_MS,
+    }, {
+      from,
+      fromName: Deno.env.get("DD_SMTP_FROM_NAME") || "DD MPM",
+      to: opts.to,
+      cc: opts.cc,
+      subject: opts.subject,
+      html: opts.html,
+    });
+    if (Deno.env.get("DD_SMTP_DEBUG") === "true") {
+      console.log(`[smtp] delivered in ${transcript.length} exchanges`);
+    }
   } catch (e) {
+    // SmtpError already names the step it died on, which is the whole point of
+    // the hand-rolled client — pass that through rather than flattening it.
+    if (e instanceof SmtpError) {
+      const retryable = /^(mail-from|rcpt-to|data|end-of-data|body)$/.test(e.step);
+      throw new SendError(`SMTP failed at "${e.step}": ${e.message}`, retryable);
+    }
     throw e instanceof SendError ? e : describeSmtpFailure(e);
-  } finally {
-    clearTimeout(timer);
-    // close() throws on a connection that was never opened; the send result is
-    // already decided by this point, so it must not overwrite it.
-    try { await client.close(); } catch { /* nothing to close */ }
   }
 }
 

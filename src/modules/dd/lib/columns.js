@@ -27,15 +27,17 @@
 
 import { DD_TABLES } from './schema.js'
 
-// Sentinels. These are SP-lite's, not DD's: the live qrdd_* rows were written
-// with these values and changing them would silently reinterpret existing data.
-// DD used '99999999.00' for the same idea against a different schema.
-export const UNLIMITED_AMOUNT = 50000000000.0
+// Sentinels. A discount cap needs one because the downstream column is NOT
+// NULL, so "no cap" has to be spelled as a number — unlike max_txn_amount and
+// budget_amount, which are nullable and use a real NULL.
+export const UNLIMITED_AMOUNT = 99999999999.0
 export const NO_MINIMUM = 1.0
 
-// A stored value at or above this reads back as "Unlimited". A band rather than
-// an equality test because the sentinel has been written at slightly different
-// magnitudes over the table's life.
+// A band, not an equality test: the sentinel was 50000000000 before
+// 20260820_dd_promo_money_scale_and_sentinel.sql and an export or a downstream
+// copy taken before that may still carry the old value. Reading both as
+// "Unlimited" costs nothing — no genuine amount in the data comes within two
+// orders of magnitude, the largest being a 1,000,000 minimum transaction.
 export const UNLIMITED_THRESHOLD = 49999999999
 
 export const isUnlimited = (v) => v != null && Number(v) >= UNLIMITED_THRESHOLD
@@ -69,7 +71,7 @@ export const DD_COLUMNS = {
   ],
 
   merchants: [
-    { name: 'id', label: 'ID', type: 'uuid', auto: true },
+    // The primary key, not a surrogate. A whitelist row *is* its merchant id.
     { name: 'merchant_id', label: 'Merchant ID', type: 'text', required: true, textCol: true },
     { name: 'merchant_name', label: 'Merchant Name', type: 'text', required: true },
     {
@@ -101,12 +103,16 @@ export const DD_COLUMNS = {
     },
     { name: 'start_date', label: 'Start Date', type: 'date', required: true },
     { name: 'end_date', label: 'End Date', type: 'date', required: true },
+    // A channel with no type is not eligible, and its value and cap are then
+    // genuinely absent rather than zero — 0 is a real discount, and neither a
+    // reader nor the SQL exporter could tell the two apart. All three columns
+    // are nullable together so the trio can only be wholly set or wholly unset.
     { name: 'prm_discount_type', label: 'PRIME Discount Type', type: 'enum', options: DISCOUNT_TYPES, nullable: true },
-    { name: 'prm_discount_value', label: 'PRIME Discount Value', type: 'number', decimals: 2 },
-    { name: 'prm_max_discount', label: 'PRIME Max Discount', type: 'number', decimals: 2 },
+    { name: 'prm_discount_value', label: 'PRIME Discount Value', type: 'number', decimals: 2, nullable: true },
+    { name: 'prm_max_discount', label: 'PRIME Max Discount', type: 'number', decimals: 2, nullable: true },
     { name: 'pl_discount_type', label: 'PAYLATER Discount Type', type: 'enum', options: DISCOUNT_TYPES, nullable: true },
-    { name: 'pl_discount_value', label: 'PAYLATER Discount Value', type: 'number', decimals: 2 },
-    { name: 'pl_max_discount', label: 'PAYLATER Max Discount', type: 'number', decimals: 2 },
+    { name: 'pl_discount_value', label: 'PAYLATER Discount Value', type: 'number', decimals: 2, nullable: true },
+    { name: 'pl_max_discount', label: 'PAYLATER Max Discount', type: 'number', decimals: 2, nullable: true },
     { name: 'min_txn_amount', label: 'Min Txn Amount', type: 'number', required: true, decimals: 2 },
     { name: 'max_txn_amount', label: 'Max Txn Amount', type: 'number', nullable: true, decimals: 2 },
     { name: 'budget_amount', label: 'Budget Amount', type: 'number', nullable: true, decimals: 2 },
@@ -122,9 +128,13 @@ export const DD_COLUMNS = {
 // Primary key of the *local* table, which is not the downstream key. Updates
 // and deletes issued by the app address a row by this; exported SQL addresses
 // it by DD_TABLES[id].keyColumns instead, because downstream has no surrogate.
+// Only bu_accounts still carries a surrogate: a business unit is `name` AND
+// `sof` downstream, which PostgREST cannot address as a single key, so the uuid
+// earns its place there. The other two are keyed on the column that identifies
+// the record everywhere else in the module.
 export const PRIMARY_KEY = {
   bu_accounts: 'id',
-  merchants: 'id',
+  merchants: 'merchant_id',
   promos: 'promo_id',
 }
 

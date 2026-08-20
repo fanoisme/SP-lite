@@ -147,7 +147,7 @@ async function submit() {
   if (problems.value.length) return
 
   const res = isEdit.value
-    ? await updateRow(props.row.id, values)
+    ? await updateRow(props.row.merchant_id, values)
     : await createRow(values)
 
   if (!res.ok) {

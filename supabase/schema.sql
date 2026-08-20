@@ -420,8 +420,8 @@ create table if not exists public.qrdd_bu_accounts (
   account2     text not null,
   acctname2    text not null,
   percentage2  numeric(5,4) not null check (percentage2 > 0 and percentage2 < 1),
-  created_at   timestamptz not null default now(),
-  updated_at   timestamptz not null default now(),
+  created_at   timestamp   not null default (now() at time zone 'Asia/Jakarta'),
+  updated_at   timestamp   not null default (now() at time zone 'Asia/Jakarta'),
   constraint qrdd_bu_accounts_pct_sum check (percentage1 + percentage2 = 1.0000)
 );
 
@@ -432,19 +432,24 @@ grant select, insert, update, delete on public.qrdd_bu_accounts to authenticated
 create policy "qrdd_bu_accounts_all" on public.qrdd_bu_accounts
   for all to authenticated using (true) with check (true);
 
+-- merchant_id is the primary key: a whitelist row *is* its merchant id. The
+-- table originally carried a surrogate uuid alongside it, which nothing used —
+-- the promo foreign key, the SQL exporter's keyColumns, the bulk-upload dedupe
+-- and the audit record key all address a merchant by merchant_id. Section 17
+-- removes the uuid from a database created before this.
 create table if not exists public.qrdd_merchant_whitelist (
-  id             uuid primary key default gen_random_uuid(),
-  merchant_id    text not null unique,
+  merchant_id    text primary key,
   merchant_name  text not null,
   bu_name        text not null references public.qrdd_bu_accounts (name) on delete restrict,
   status         text not null default 'ACTIVE' check (status in ('ACTIVE', 'INACTIVE')),
   created_by     text not null,
-  created_at     timestamptz not null default now(),
+  created_at     timestamp not null default (now() at time zone 'Asia/Jakarta'),
   updated_by     text not null,
-  updated_at     timestamptz not null default now()
+  updated_at     timestamp not null default (now() at time zone 'Asia/Jakarta')
 );
 
-create unique index if not exists idx_qrdd_mw_merchant_id on public.qrdd_merchant_whitelist (merchant_id);
+-- No separate index on merchant_id: the primary key already provides one, and
+-- a second would be write cost for nothing.
 create index if not exists idx_qrdd_mw_bu_name on public.qrdd_merchant_whitelist (bu_name);
 
 alter table public.qrdd_merchant_whitelist enable row level security;
@@ -471,9 +476,9 @@ create table if not exists public.qrdd_promo_rules (
   priority          integer not null default 0,
   status            text not null default 'ACTIVE' check (status in ('ACTIVE', 'INACTIVE')),
   created_by        text not null,
-  created_at        timestamptz not null default now(),
+  created_at        timestamp   not null default (now() at time zone 'Asia/Jakarta'),
   updated_by        text not null,
-  updated_at        timestamptz not null default now()
+  updated_at        timestamp   not null default (now() at time zone 'Asia/Jakarta')
 );
 
 create index if not exists idx_qrdd_pr_merchant_id on public.qrdd_promo_rules (merchant_id);
@@ -846,3 +851,90 @@ grant select on public.user_access    to service_role;
 
 -- profiles is deliberately NOT granted: the function reads it with the caller's
 -- own client so RLS still applies.
+
+-- ── 16. A promo's discount channel may be genuinely absent ──────────────────
+-- qrdd_promo_rules was created with the prm_/pl_ value and max columns NOT
+-- NULL, so "this channel is not eligible" had nowhere to live. 2,514 of the
+-- 2,546 promos in the DD extract are Paylater-only: writing 0 for Prime would
+-- be a real discount value, indistinguishable from a channel nobody configured.
+-- Mirrors supabase/migrations/20260820_dd_promo_nullable_channels.sql.
+alter table public.qrdd_promo_rules alter column prm_discount_value drop not null;
+alter table public.qrdd_promo_rules alter column prm_max_discount   drop not null;
+alter table public.qrdd_promo_rules alter column pl_discount_value  drop not null;
+alter table public.qrdd_promo_rules alter column pl_max_discount    drop not null;
+alter table public.qrdd_promo_rules alter column created_by drop not null;
+alter table public.qrdd_promo_rules alter column updated_by drop not null;
+
+-- ── 17. merchant_id becomes the whitelist's primary key ─────────────────────
+-- For a database created before section 11 was rewritten: drop the unused
+-- surrogate uuid and promote merchant_id. Guarded so a from-scratch run, where
+-- the column never existed, passes straight through.
+-- Mirrors supabase/migrations/20260820_dd_merchant_pk_is_merchant_id.sql.
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'qrdd_merchant_whitelist' and column_name = 'id'
+  ) then
+    alter table public.qrdd_promo_rules       drop constraint if exists qrdd_promo_rules_merchant_id_fkey;
+    alter table public.qrdd_merchant_whitelist drop constraint if exists qrdd_merchant_whitelist_pkey;
+    alter table public.qrdd_merchant_whitelist drop column id;
+    alter table public.qrdd_merchant_whitelist drop constraint if exists qrdd_merchant_whitelist_merchant_id_key;
+    alter table public.qrdd_merchant_whitelist add constraint qrdd_merchant_whitelist_pkey primary key (merchant_id);
+    alter table public.qrdd_promo_rules
+      add constraint qrdd_promo_rules_merchant_id_fkey
+      foreign key (merchant_id) references public.qrdd_merchant_whitelist (merchant_id)
+      on delete set null;
+  end if;
+end $$;
+
+drop index if exists public.idx_qrdd_mw_merchant_id;
+
+-- ── 18. A promo's discount TYPE may also be absent ──────────────────────────
+-- Section 16 dropped NOT NULL from the four channel amount columns but left the
+-- two type columns NOT NULL, which defeated the point: "not eligible" is
+-- expressed by the type being absent and the amounts follow from it. Both
+-- columns already carried a CHECK reading "… is null or … in (…)" — a
+-- constraint permitting a value the column could not hold, so the NOT NULL was
+-- never deliberate.
+-- Mirrors supabase/migrations/20260820_dd_promo_nullable_channel_types.sql.
+alter table public.qrdd_promo_rules alter column prm_discount_type drop not null;
+alter table public.qrdd_promo_rules alter column pl_discount_type  drop not null;
+
+-- ── 19. DD row timestamps are naive WIB ─────────────────────────────────────
+-- For a database created before section 11 was rewritten. DD kept these as
+-- spreadsheet wall-clock values in Asia/Jakarta with no zone attached; storing
+-- them as timestamptz added a zone the data never had, and with the session in
+-- UTC it read '11:39:53' (WIB) as 11:39:53 UTC — seven hours off, with the
+-- digits still looking right. `at time zone 'UTC'` reads each value back at the
+-- zone it was misinterpreted in, recovering the source reading exactly.
+-- Mirrors supabase/migrations/20260821_dd_timestamps_are_wib.sql.
+do $$
+begin
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'qrdd_merchant_whitelist'
+      and column_name = 'created_at' and data_type = 'timestamp with time zone'
+  ) then
+    alter table public.qrdd_bu_accounts
+      alter column created_at type timestamp using created_at at time zone 'UTC',
+      alter column updated_at type timestamp using updated_at at time zone 'UTC';
+    alter table public.qrdd_merchant_whitelist
+      alter column created_at type timestamp using created_at at time zone 'UTC',
+      alter column updated_at type timestamp using updated_at at time zone 'UTC';
+    alter table public.qrdd_promo_rules
+      alter column created_at type timestamp using created_at at time zone 'UTC',
+      alter column updated_at type timestamp using updated_at at time zone 'UTC';
+  end if;
+end $$;
+
+-- A bare now() would write UTC wall-clock into a column that means WIB.
+alter table public.qrdd_bu_accounts
+  alter column created_at set default (now() at time zone 'Asia/Jakarta'),
+  alter column updated_at set default (now() at time zone 'Asia/Jakarta');
+alter table public.qrdd_merchant_whitelist
+  alter column created_at set default (now() at time zone 'Asia/Jakarta'),
+  alter column updated_at set default (now() at time zone 'Asia/Jakarta');
+alter table public.qrdd_promo_rules
+  alter column created_at set default (now() at time zone 'Asia/Jakarta'),
+  alter column updated_at set default (now() at time zone 'Asia/Jakarta');

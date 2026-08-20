@@ -5,6 +5,7 @@ import { useToast } from '@lib/composables/useToast.js'
 import { DD_TABLES } from '../lib/schema.js'
 import { columns, primaryKey, searchableColumns, coerce, editableColumns } from '../lib/columns.js'
 import { validateRow } from '../lib/validate.js'
+import { nowWib } from '../lib/format.js'
 
 const SEARCH_DEBOUNCE_MS = 250
 const DEFAULT_PAGE_SIZE = 25
@@ -179,7 +180,10 @@ export function useDdTable(tableId, options = {}) {
       out[name] = coerce(tableId, name, values[name])
     })
     out.updated_by = actor.value
-    out.updated_at = new Date().toISOString()
+    // These columns are `timestamp` without a zone and mean WIB, so an ISO
+    // string in UTC would land every edit seven hours in the past. See
+    // 20260821_dd_timestamps_are_wib.sql.
+    out.updated_at = nowWib()
     if (isNew) out.created_by = actor.value
     return out
   }
