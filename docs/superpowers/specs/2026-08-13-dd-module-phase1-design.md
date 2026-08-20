@@ -144,8 +144,10 @@ This is the part of DD most easily lost in translation, so it is stated
 explicitly. DD does not have one flat permission list. It has **two independent
 axes**, and a table is reachable through either:
 
-- **Menu scopes** — `dashboard`, `business-units`, `merchants`, `promos`,
-  `export`, `audit`, `sql`, `admin`. These gate the guided screens.
+- **Menu scopes** — `bu-accounts`, `merchants`, `promos`, `export`, `audit`,
+  `sql`, `tables`, `email`. These gate the guided screens. `dashboard` is not a
+  menu scope — `dashboard.read` does not exist as a feature id; the dashboard
+  follows module access instead (see `canDashboard()` in §5b).
 - **Database scopes** — `ihybrid_order`, `ihybrid_discount`. These gate the raw
   table browser and which tables the SQL editor mounts.
 
@@ -187,11 +189,11 @@ gets a **nested route tree** under `/dd`, mirroring the DD repo's router 1:1.
   meta: { module: 'dd', label: 'DD MPM', icon: 'inventory' },
   component: () => import('../modules/dd/views/DdLayout.vue'),
   children: [
-    { path: '',                name: 'dd',                meta: { ddMenu: 'dashboard' },      component: () => import('../modules/dd/views/DdDashboard.vue') },
+    { path: '',                name: 'dd',                                                    component: () => import('../modules/dd/views/DdDashboard.vue') },
     { path: 'business-units',  name: 'dd-business-units', meta: { ddMenu: 'bu-accounts' },    component: () => import('../modules/dd/views/DdBuAccounts.vue') },
     { path: 'merchants',       name: 'dd-merchants',      meta: { ddMenu: 'merchants' },      component: () => import('../modules/dd/views/DdMerchants.vue') },
     { path: 'promos',          name: 'dd-promos',         meta: { ddMenu: 'promos' },         component: () => import('../modules/dd/views/DdPromos.vue') },
-    { path: 'table/:name',     name: 'dd-table',          meta: { ddDatabaseParam: 'name' },  component: () => import('../modules/dd/views/DdTableExplorer.vue') },
+    { path: 'table/:name',     name: 'dd-table',          meta: { ddTableParam: 'name' },     component: () => import('../modules/dd/views/DdTableExplorer.vue') },
     { path: 'export',          name: 'dd-export',         meta: { ddMenu: 'export' },         component: () => import('../modules/dd/views/DdExport.vue') },
     { path: 'audit',           name: 'dd-audit',          meta: { ddMenu: 'audit' },          component: () => import('../modules/dd/views/DdAudit.vue') },
     { path: 'sql',             name: 'dd-sql',            meta: { ddMenu: 'sql' },            component: () => import('../modules/dd/views/DdSqlEditor.vue') },
@@ -205,9 +207,11 @@ working with no change to `App.vue` or `router/index.js`'s helper.
 
 `meta.module` on the parent means SP-lite's existing `beforeEach` gate covers
 every child. A second, DD-specific guard clause handles the per-screen axes:
-`meta.ddMenu` gates on `canMenu(...)`, and `meta.ddDatabaseParam` gates a raw
+`meta.ddMenu` gates on `canMenu(...)`, and `meta.ddTableParam` gates a raw
 table on the database that owns it — matching DD's guard, which special-cases
-`to.name === 'table'` for exactly this reason.
+`to.name === 'table'` for exactly this reason. The index child carries no
+`ddMenu` gate: `dashboard.read` does not exist, so gating on it would refuse
+everyone; the dashboard instead follows module access via `canDashboard()`.
 
 Phase 1 builds `DdLayout.vue` and `DdAudit.vue` for real; the other six children
 render a shared placeholder naming the phase they arrive in, so the navigation is
@@ -233,7 +237,7 @@ export const DD_TABLES = {
     keyColumns: ['name', 'sof'],
     timestamps: { created_at: 'created_datetime', updated_at: 'last_modified' },
     textColumns: [],
-    readGate: 'bu-accounts.read',
+    menu: 'bu-accounts',
   },
   merchants: {
     id: 'merchants',
@@ -244,7 +248,7 @@ export const DD_TABLES = {
     keyColumns: ['merchant_id'],
     timestamps: { created_at: 'created_time', updated_at: 'updated_time' },
     textColumns: ['merchant_id'],
-    readGate: 'merchants.read',
+    menu: 'merchants',
   },
   promos: {
     id: 'promos',
@@ -255,7 +259,7 @@ export const DD_TABLES = {
     keyColumns: ['promo_id'],
     timestamps: { created_at: 'created_time', updated_at: 'updated_time' },
     textColumns: ['merchant_id'],
-    readGate: 'promos.read',
+    menu: 'promos',
   },
 }
 
@@ -701,17 +705,20 @@ export function useDdAccess() {
 
   const can = (action, scope) => canFeature('dd', `${scope}.${action}`)
 
-  // Menu axis.
+  // Menu axis. Scope-first, action defaulting to 'read'.
   const canMenu = (menu, action = 'read') => can(action, menu)
 
-  // Database axis, granted independently of any menu.
-  const canDatabase = (action, db) => can(action, `db.${db}`)
+  // Database axis, granted independently of any menu. Scope-first, action
+  // defaulting to 'read'.
+  const canDatabase = (db, action = 'read') => can(action, `db.${db}`)
 
-  // DD's rule, verbatim: a table is reachable through its menu OR its database.
-  const canTable = (action, tableId) => {
-    const t = DD_TABLES[tableId]
+  // DD's rule, verbatim: a table is reachable through its menu OR its
+  // database. Also scope-first; idOrName accepts either the internal table id
+  // or the downstream table name.
+  const canTable = (idOrName, action = 'read') => {
+    const t = DD_TABLES[idOrName] ?? byTargetTable(idOrName)
     if (!t) return false
-    return can(action, tableId) || canDatabase(action, t.targetDb)
+    return can(action, t.menu) || canDatabase(t.targetDb, action)
   }
 
   // No create/update/delete on any scope at all.
@@ -724,8 +731,8 @@ export function useDdAccess() {
 
 `canTable` uses the *menu* action name for the guided screens — `bu-accounts`,
 `merchants`, `promos` are both the `DD_TABLES` keys and the menu scope names, so
-`can('update', 'merchants')` and `canDatabase('update', 'ihybrid_discount')` are
-the two halves of DD's `canWriteSheet`. Keeping those names identical is why
+`canMenu('merchants', 'update')` and `canDatabase('ihybrid_discount', 'update')`
+are the two halves of DD's `canWriteSheet`. Keeping those names identical is why
 §2's table ids are what they are.
 
 `isReadOnly` exists because DD uses it to switch whole screens into a read-only

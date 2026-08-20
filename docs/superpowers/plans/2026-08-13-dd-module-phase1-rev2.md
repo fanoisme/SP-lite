@@ -1913,13 +1913,17 @@ Pick a non-Admin role you can safely modify (e.g. create a scratch role in `/adm
 select feature_id from public.feature_access where module_id='dd' and role='<ROLE>' order by 1;
 ```
 
-Grant it the `dd` module plus **only** these, and nothing else:
+Grant it the `dd` module plus **only** this, and nothing else:
 
 ```sql
 insert into public.feature_access (role, module_id, feature_id)
-values ('<ROLE>','dd','dashboard.read'), ('<ROLE>','dd','db.ihybrid_order.read')
+values ('<ROLE>','dd','db.ihybrid_order.read')
 on conflict do nothing;
 ```
+
+No `dashboard.read` grant is needed or possible — that feature id does not
+exist. The dashboard follows module access (`canDashboard()` in
+`useDdAccess.js`), so holding the `dd` module alone is enough to land on it.
 
 Sign in as a user holding that role (or temporarily set your own profile's role — recording the original so you can restore it). On `/dd`, confirm with `read_page`:
 
