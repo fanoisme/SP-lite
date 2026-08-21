@@ -13,7 +13,8 @@
     "preview": "vite preview",
     "icons:sync": "node scripts/sync-icon-assets.mjs",
     "test:icons": "node --test tests/icon-assets.test.mjs",
-    "check:icons": "node scripts/check-icon-migration.mjs"
+    "check:icons": "node scripts/check-icon-migration.mjs",
+    "test:logo": "node --test tests/logo-assets.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
