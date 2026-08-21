@@ -227,6 +227,7 @@ import { useToast } from '@lib/composables/useToast.js'
 import { DD_TABLES, TABLE_IDS } from '../lib/schema.js'
 import { columns as columnsOf, primaryKey, coerce } from '../lib/columns.js'
 import { downloadCsv } from '../lib/csv.js'
+import { nowWib } from '../lib/format.js'
 import { useDdAccess } from '../composables/useDdAccess.js'
 import { parse, execute, formatSql, splitStatements, isWrite } from '../lib/sql-engine.js'
 
@@ -513,7 +514,11 @@ async function applyPending() {
   }
 
   applying.value = true
-  const now = new Date().toISOString()
+  // nowWib(), not toISOString(): these columns are naive WIB, so a UTC string
+  // lands every write seven hours in the past — the fault
+  // 20260821_dd_timestamps_are_wib.sql exists to stop, which this path was
+  // still reintroducing on its own.
+  const now = nowWib()
   const failures = []
   let done = 0
 
@@ -522,8 +527,14 @@ async function applyPending() {
       // One request for the batch: an INSERT addresses no existing row, so
       // there is nothing per-row to key on and the audit trigger fires per row
       // regardless.
+      // created_at is stamped here rather than left to the column default so it
+      // is the same string as updated_at, byte for byte. The full export reads
+      // a difference between the two as "this row has been edited" — see
+      // rowAction() in useDdExport.js — and the default would read the server
+      // clock while updated_at read this browser's.
       const rows = res.changes.map(c => ({
         created_by: actor.value,
+        created_at: now,
         ...normalise(tableId, c.after),
         updated_by: actor.value,
         updated_at: now,

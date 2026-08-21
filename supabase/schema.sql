@@ -420,8 +420,12 @@ create table if not exists public.qrdd_bu_accounts (
   account2     text not null,
   acctname2    text not null,
   percentage2  numeric(5,4) not null check (percentage2 > 0 and percentage2 < 1),
-  created_at   timestamp   not null default (now() at time zone 'Asia/Jakarta'),
-  updated_at   timestamp   not null default (now() at time zone 'Asia/Jakarta'),
+  -- timestamp(0), not bare timestamp: microseconds have no reader here and the
+  -- Table Explorer shows these columns as stored. See
+  -- 20260821_dd_timestamps_second_precision.sql for why the default truncates
+  -- rather than letting the cast round.
+  created_at   timestamp(0) not null default date_trunc('second', now() at time zone 'Asia/Jakarta'),
+  updated_at   timestamp(0) not null default date_trunc('second', now() at time zone 'Asia/Jakarta'),
   constraint qrdd_bu_accounts_pct_sum check (percentage1 + percentage2 = 1.0000)
 );
 
@@ -443,9 +447,9 @@ create table if not exists public.qrdd_merchant_whitelist (
   bu_name        text not null references public.qrdd_bu_accounts (name) on delete restrict,
   status         text not null default 'ACTIVE' check (status in ('ACTIVE', 'INACTIVE')),
   created_by     text not null,
-  created_at     timestamp not null default (now() at time zone 'Asia/Jakarta'),
+  created_at     timestamp(0) not null default date_trunc('second', now() at time zone 'Asia/Jakarta'),
   updated_by     text not null,
-  updated_at     timestamp not null default (now() at time zone 'Asia/Jakarta')
+  updated_at     timestamp(0) not null default date_trunc('second', now() at time zone 'Asia/Jakarta')
 );
 
 -- No separate index on merchant_id: the primary key already provides one, and
@@ -476,9 +480,9 @@ create table if not exists public.qrdd_promo_rules (
   priority          integer not null default 0,
   status            text not null default 'ACTIVE' check (status in ('ACTIVE', 'INACTIVE')),
   created_by        text not null,
-  created_at        timestamp   not null default (now() at time zone 'Asia/Jakarta'),
+  created_at        timestamp(0) not null default date_trunc('second', now() at time zone 'Asia/Jakarta'),
   updated_by        text not null,
-  updated_at        timestamp   not null default (now() at time zone 'Asia/Jakarta')
+  updated_at        timestamp(0) not null default date_trunc('second', now() at time zone 'Asia/Jakarta')
 );
 
 create index if not exists idx_qrdd_pr_merchant_id on public.qrdd_promo_rules (merchant_id);

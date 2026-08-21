@@ -177,7 +177,7 @@ import DdBulkUpload from '../components/DdBulkUpload.vue'
 import { useDdTable } from '../composables/useDdTable.js'
 import { useDdAccess } from '../composables/useDdAccess.js'
 import { SOF_VALUES, editableColumns } from '../lib/columns.js'
-import { formatPercentage, formatRelative, formatTimestamp, EM_DASH } from '../lib/format.js'
+import { formatPercentage, formatRelative, formatTimestamp, formatStoredTimestamp, EM_DASH } from '../lib/format.js'
 
 const {
   rows, loading, saving, error, total, currentPage, totalPages,
@@ -268,9 +268,11 @@ const exportSpec = [
   ...editableColumns('bu_accounts').map(c => ({
     key: c.name,
     label: c.label,
-    textFormula: c.name === 'account1' || c.name === 'account2',
+    text: c.name === 'account1' || c.name === 'account2',
   })),
-  { key: 'updated_at', label: 'Updated At', format: formatTimestamp },
+  // The stored shape, not the screen's "21 Aug 2026 09:14": an export is read
+  // next to the database and has to say the same thing it does.
+  { key: 'updated_at', label: 'Updated At', format: formatStoredTimestamp },
   { key: 'updated_by', label: 'Updated By' },
 ]
 

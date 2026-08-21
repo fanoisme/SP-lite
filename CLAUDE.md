@@ -101,6 +101,17 @@ All tables use Row Level Security. Key constraint: **only Admin can write to RBA
 
 `supabase/schema.sql` is the full idempotent schema (safe to re-run). `supabase/migrations/` contains incremental changes as dated files.
 
+The three `qrdd_*` tables keep `created_at`/`updated_at` as **`timestamp(0)`,
+naive WIB** — no zone, no fraction. Two rules follow and both bite silently.
+Anything writing one uses `nowWib()` from `lib/format.js`, never
+`toISOString()`, or the row lands seven hours early. Anything rendering one for
+a file uses `formatStoredTimestamp()`, not `formatTimestamp()` (that one is for
+guided screens), so the export reads the same as the database. Export column
+specs carry `text: true` for columns Excel would reinterpret — timestamps,
+scaled numbers and all-digit ids; `lib/csv.js` emits `="…"` for those and
+`@lib/export-xlsx.js` emits a plain string, because a .xlsx renders the formula
+form literally.
+
 `dd_audit_log` is **append-only**: `authenticated` holds `select` and nothing
 else, TRUNCATE is explicitly revoked from `anon` and `authenticated` (it would
 otherwise bypass both RLS and row triggers), and the only writer is the

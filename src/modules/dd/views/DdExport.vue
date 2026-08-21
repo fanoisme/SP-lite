@@ -96,8 +96,9 @@
         <header class="ddexp__panel-head">
           <h2 class="ddexp__panel-title">Full</h2>
           <p class="ddexp__panel-lead">
-            Every row of the tables you tick, as INSERTs. For seeding a fresh
-            instance, not for a routine update.
+            Every row of the tables you tick: INSERT for a row nobody has
+            edited since it was created, UPDATE for one that has been. For
+            seeding or resyncing an instance, not for a routine change.
           </p>
         </header>
 
@@ -322,7 +323,7 @@ function xlsxColumns(tableId) {
     return {
       key: p.local,
       label: p.target,
-      textFormula: isTextColumn(tableId, p.local),
+      text: isTextColumn(tableId, p.local),
       format: (v) => {
         if (v == null) return ''
         if (type === 'timestamp') return toSqlTimestamp(v)

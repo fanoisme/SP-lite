@@ -1,26 +1,32 @@
 import * as XLSX from 'xlsx'
 
-// Wrap an all-digit id as ="…" so Excel stores it as text.
+// A value Excel must store as text rather than as a number.
 //
-// Two distinct failure modes, both silent: a value past 15 digits loses its
-// tail to float precision, and a value with a leading zero loses the zero at
-// any length. The length threshold alone caught only the first, so a merchant
-// id like 0812 came back as 812 and no longer matched downstream.
-function textFormula(v) {
-  if (v == null) return ''
-  const s = String(v)
-  if (/^\d{10,}$/.test(s) || /^0\d+$/.test(s)) return `="${s}"`
-  return s
+// Two silent failure modes for an all-digit id: a value past 15 digits loses
+// its tail to float precision, and a value with a leading zero loses the zero
+// at any length. Both are fixed by handing SheetJS a string — json_to_sheet
+// types a string as `t:'s'` and Excel does not re-read a text cell as a number.
+//
+// This deliberately does NOT wrap the value as `="…"`. That form is a CSV
+// trick: Excel parses a CSV field, so a leading `=` becomes a formula there,
+// but SheetJS writes `="0812"` into a .xlsx as the literal nine-character
+// string and Excel then displays it verbatim, quotes and all. Every .xlsx this
+// module produced showed `="0812"` in the Merchant ID column for that reason.
+// Mark such a column with `text: true` and pass the plain value.
+function asText(v) {
+  return v == null ? '' : String(v)
+}
+
+function cellValue(row, col) {
+  const raw = row[col.key]
+  const v = col.format ? col.format(raw, row) : raw
+  return col.text ? asText(v) : (v != null ? v : '')
 }
 
 export function exportToXlsx(rows, columns, filename) {
-  const data = rows.map(row => {
+  const data = rows.map((row) => {
     const obj = {}
-    for (const col of columns) {
-      const raw = row[col.key]
-      const v = col.format ? col.format(raw, row) : raw
-      obj[col.label] = col.textFormula ? textFormula(v) : (v != null ? v : '')
-    }
+    for (const col of columns) obj[col.label] = cellValue(row, col)
     return obj
   })
   const ws = XLSX.utils.json_to_sheet(data)
@@ -33,13 +39,9 @@ export function exportToXlsx(rows, columns, filename) {
 export function exportMultiSheetXlsx(sheets, filename) {
   const wb = XLSX.utils.book_new()
   for (const sh of sheets) {
-    const data = sh.rows.map(row => {
+    const data = sh.rows.map((row) => {
       const obj = {}
-      for (const col of sh.columns) {
-        const raw = row[col.key]
-        const v = col.format ? col.format(raw, row) : raw
-        obj[col.label] = col.textFormula ? textFormula(v) : (v != null ? v : '')
-      }
+      for (const col of sh.columns) obj[col.label] = cellValue(row, col)
       return obj
     })
     const ws = XLSX.utils.json_to_sheet(data)

@@ -140,7 +140,7 @@ import { supabase } from '@/lib/supabase.js'
 import { exportToXlsx } from '@lib/export-xlsx.js'
 import { useToast } from '@lib/composables/useToast.js'
 import { STATUS_VALUES } from '../lib/columns.js'
-import { formatRelative, formatTimestamp, EM_DASH } from '../lib/format.js'
+import { formatRelative, formatTimestamp, formatStoredTimestamp, EM_DASH } from '../lib/format.js'
 import { useDdTable } from '../composables/useDdTable.js'
 import { useDdAccess } from '../composables/useDdAccess.js'
 import DdMerchantForm from '../components/DdMerchantForm.vue'
@@ -254,21 +254,20 @@ const EXPORT_COLUMNS = [
   {
     key: 'merchant_id',
     label: 'Merchant ID',
-    textFormula: true,
-    // export-xlsx's own textFormula guard only fires at ten digits or more, and
-    // a whitelist ID can be shorter than that and still lead with a zero. This
-    // wraps every all-digit ID instead; the shared helper then sees a string
-    // that is no longer bare digits and leaves it alone, so there is no
-    // double-wrap.
-    format: v => (v == null || v === '' ? '' : (/^\d+$/.test(String(v)) ? `="${v}"` : String(v))),
+    // A whitelist ID can be short and still lead with a zero, so it is text
+    // regardless of length. The `="…"` wrapper this used to add was a CSV
+    // trick that a .xlsx renders literally — see @/lib/export-xlsx.js.
+    text: true,
   },
   { key: 'merchant_name', label: 'Merchant Name' },
   { key: 'bu_name', label: 'BU Name' },
   { key: 'status', label: 'Status' },
   { key: 'created_by', label: 'Created By' },
-  { key: 'created_at', label: 'Created At', format: v => (v ? formatTimestamp(v) : '') },
+  // The stored shape, not the screen's "21 Aug 2026 09:14": an export is read
+  // next to the database and has to say the same thing it does.
+  { key: 'created_at', label: 'Created At', format: formatStoredTimestamp },
   { key: 'updated_by', label: 'Updated By' },
-  { key: 'updated_at', label: 'Updated At', format: v => (v ? formatTimestamp(v) : '') },
+  { key: 'updated_at', label: 'Updated At', format: formatStoredTimestamp },
 ]
 
 /** Exports every row matching the current filters, not the visible page — the

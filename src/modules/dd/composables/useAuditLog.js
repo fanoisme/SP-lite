@@ -2,6 +2,7 @@ import { ref, computed, watch } from 'vue'
 import { supabase } from '@/lib/supabase.js'
 import { downloadCsv } from '../lib/csv.js'
 import { tableLabel } from '../lib/schema.js'
+import { formatStoredTimestamp } from '../lib/format.js'
 
 const SEARCH_DEBOUNCE_MS = 250
 
@@ -107,7 +108,11 @@ export function useAuditLog() {
   // is deliberately not dumped — narrow it with the filters first.
   function exportCsv() {
     downloadCsv(rows.value, [
-      { key: 'ts', label: 'When', format: v => (v ? new Date(v).toISOString() : '') },
+      // dd_audit_log.ts is timestamptz, deliberately — but the file is read
+      // beside the WIB columns of the data exports, so it renders in WIB too,
+      // in the same shape and as text. Excel would otherwise re-read it as a
+      // date and reprint it in the reader's locale.
+      { key: 'ts', label: 'When', format: formatStoredTimestamp, text: true },
       { key: 'actor', label: 'Who' },
       { key: 'action', label: 'Action' },
       { key: 'target_db', label: 'Database' },

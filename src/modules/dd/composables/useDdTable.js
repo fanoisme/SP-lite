@@ -196,7 +196,17 @@ export function useDdTable(tableId, options = {}) {
     // string in UTC would land every edit seven hours in the past. See
     // 20260821_dd_timestamps_are_wib.sql.
     out.updated_at = nowWib()
-    if (isNew) out.created_by = actor.value
+    if (isNew) {
+      out.created_by = actor.value
+      // The same string, not a second call and not the column default. Leaving
+      // created_at to the default reads it off the *server* clock while
+      // updated_at came off this browser's, so a brand-new row could land with
+      // the two a second or more apart — and the full export in useDdExport
+      // reads "created_at <> updated_at" as "this row has been edited", so it
+      // would issue an UPDATE for a row downstream has never seen. That
+      // silently affects zero rows, which is the worst way for it to fail.
+      out.created_at = out.updated_at
+    }
     return out
   }
 

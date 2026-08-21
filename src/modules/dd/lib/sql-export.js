@@ -50,6 +50,7 @@ import {
   DD_TABLES, EXPORT_ORDER, CACHE_RESET_TABLE, CACHE_RESET_COLUMN,
 } from './schema.js'
 import { exportColumns, isTextColumn, column } from './columns.js'
+import { formatStoredTimestamp } from './format.js'
 
 // Columns that exist only in Supabase. exportColumns() already drops all three
 // (they are `auto`), and this second filter means un-marking one of them in
@@ -126,14 +127,23 @@ export function toSqlDate(v) {
   return String(v).slice(0, 10)
 }
 
-/** A `timestamptz` column as MySQL DATETIME, in UTC. Exported so the XLSX sheets
- *  can render the same instant the SQL does, rather than a locale's idea of it. */
+/**
+ * A `timestamp` column as a MySQL DATETIME literal: naive WIB, second
+ * precision, the same string the database holds.
+ *
+ * This used to convert to UTC, which was right while the columns were
+ * timestamptz and wrong from the moment 20260821_dd_timestamps_are_wib.sql made
+ * them naive WIB. `new Date('2026-08-21T09:14:23')` reads that text in the
+ * browser's own zone and utcStamp then moved it again, so an export run from
+ * Jakarta wrote every downstream row seven hours early — and the digits looked
+ * plausible, which is what made it survive. The downstream columns are naive
+ * DATETIME in WIB, so there is nothing to convert; a value that still carries a
+ * zone is read into WIB rather than passed through as UTC.
+ *
+ * Exported so the XLSX sheets render the same string the SQL does.
+ */
 export function toSqlTimestamp(v) {
-  if (v instanceof Date) return utcStamp(v)
-  const d = new Date(String(v))
-  if (!Number.isNaN(+d)) return utcStamp(d)
-  // Unparseable: reshape what we were given rather than invent a date.
-  return String(v).replace('T', ' ').slice(0, 19)
+  return formatStoredTimestamp(v)
 }
 
 /**
@@ -429,7 +439,7 @@ export function buildScript(changes, options = {}) {
     out.push(`--   ${meta.targetDb}.${meta.targetTable} — ${statements.length}`)
   }
   out.push('--')
-  out.push('-- Datetime literals are UTC.')
+  out.push('-- Datetime literals are naive WIB, second precision, exactly as stored.')
   out.push('-- The local surrogate `id` is never exported; downstream assigns its own.')
   out.push('-- UPDATE and DELETE match on the downstream key, not on that id.')
   out.push(`-- Each database block ends with one ${CACHE_RESET_TABLE} cache reset, emitted`)

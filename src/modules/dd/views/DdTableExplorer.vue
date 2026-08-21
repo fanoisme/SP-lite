@@ -489,7 +489,16 @@ async function exportCsv() {
     // export. Headers are the downstream names, so the file lines up with the
     // schema the reader is reasoning about.
     const all = await active.value.fetchAll()
-    const spec = visibleColumns.value.map(c => ({ key: c.name, label: downstreamName(c.name) }))
+    // Every value here is already the text Postgres printed — rawSelectList()
+    // casts on purpose — so the file needs no formatting, only protecting.
+    // Left bare, Excel re-reads a timestamp as a date and reprints it in the
+    // reader's locale, trims 10.00 to 10, and drops the leading zero off an id:
+    // three ways for a CSV of this screen to disagree with the screen itself.
+    const spec = visibleColumns.value.map(c => ({
+      key: c.name,
+      label: downstreamName(c.name),
+      text: !!c.textCol || ['timestamp', 'date', 'number'].includes(c.type),
+    }))
     const stamp = new Date().toISOString().slice(0, 10)
     downloadCsv(all, spec, `${meta.value.targetTable}-${stamp}`)
   } catch (e) {

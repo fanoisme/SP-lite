@@ -198,7 +198,7 @@ import { DD_TABLES } from '../lib/schema.js'
 import { STATUS_VALUES, isUnlimited } from '../lib/columns.js'
 import {
   formatDate, formatAmount, formatMinAmount, formatDiscount, formatRelative,
-  daysUntil, isExpired,
+  formatStoredTimestamp, daysUntil, isExpired,
 } from '../lib/format.js'
 import { useDdTable } from '../composables/useDdTable.js'
 import { useDdAccess } from '../composables/useDdAccess.js'
@@ -415,7 +415,7 @@ watch(stale, (v) => { if (v) staleDismissed.value = false })
 const exportColumns = [
   { key: 'promo_id', label: 'Promo ID' },
   { key: 'promo_name', label: 'Promo Name' },
-  { key: 'merchant_id', label: 'Merchant ID', textFormula: true, format: v => v || 'All Merchants' },
+  { key: 'merchant_id', label: 'Merchant ID', text: true, format: v => v || 'All Merchants' },
   { key: 'bu_name', label: 'BU Name' },
   { key: 'start_date', label: 'Start Date' },
   { key: 'end_date', label: 'End Date' },
@@ -432,7 +432,10 @@ const exportColumns = [
   { key: 'status', label: 'Status' },
   { key: 'created_by', label: 'Created By' },
   { key: 'updated_by', label: 'Updated By' },
-  { key: 'updated_at', label: 'Updated At', format: v => v ? new Date(v).toISOString().slice(0, 10) : '' },
+  // The stored shape. The date-only slice this replaces threw the time away and
+  // reached it through toISOString(), which moved a naive WIB value into UTC
+  // first — so a row edited before 07:00 exported under the previous day.
+  { key: 'updated_at', label: 'Updated At', format: formatStoredTimestamp },
 ]
 
 const exporting = ref(false)
