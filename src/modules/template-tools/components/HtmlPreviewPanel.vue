@@ -5,11 +5,11 @@
       <div class="html-preview__left">
         <div class="html-preview__section-header">
           <div class="html-preview__section-title">
-            <span class="material-symbols-outlined">code</span>
+            <LiIcon name="code" />
             HTML Source
           </div>
           <label class="html-preview__upload-btn">
-            <span class="material-symbols-outlined">upload_file</span>
+            <LiIcon name="upload_file" />
             Upload
             <input
               type="file"
@@ -31,7 +31,7 @@
         <!-- Auto-fix badge -->
         <Transition name="badge-pop">
           <div v-if="fixesApplied.length > 0" class="html-preview__fix-badge">
-            <span class="material-symbols-outlined">auto_fix_high</span>
+            <LiIcon name="auto_fix_high" />
             <span>Auto-fixed <strong>{{ fixesApplied.length }}</strong> issue{{ fixesApplied.length > 1 ? 's' : '' }}</span>
           </div>
         </Transition>
@@ -47,7 +47,7 @@
       <div class="html-preview__right">
         <div class="html-preview__section-header">
           <div class="html-preview__section-title">
-            <span class="material-symbols-outlined">preview</span>
+            <LiIcon name="preview" />
             Live Preview
           </div>
           <div class="html-preview__header-actions">
@@ -61,11 +61,12 @@
               <button
                 v-if="wysiwygEnabled"
                 class="html-preview__wysiwyg-toggle"
-                :class="{ 'html-preview__wysiwyg-toggle--active': wysiwygEnabled && previewHtml }"
+                :class="{ 'html-preview__wysiwyg-toggle--active': wysiwygMode }"
+                :aria-pressed="wysiwygMode"
                 @click="toggleWysiwyg"
                 :title="wysiwygMode ? 'Disable inline editing' : 'Enable inline editing'"
               >
-                <span class="material-symbols-outlined">{{ wysiwygMode ? 'edit_off' : 'edit' }}</span>
+                <LiIcon :name="wysiwygMode ? 'edit_off' : 'edit'" />
                 {{ wysiwygMode ? 'Editing' : 'Edit' }}
               </button>
             </Transition>
@@ -76,7 +77,7 @@
           <!-- Hint for WYSIWYG mode -->
           <Transition name="badge-pop">
             <div v-if="wysiwygMode && previewHtml && !selectedElement" class="html-preview__hint">
-              <span class="material-symbols-outlined">info</span>
+              <LiIcon name="info" />
               Click any text to edit content &amp; style
             </div>
           </Transition>
@@ -93,7 +94,7 @@
             />
             <div v-else key="empty" class="html-preview__empty">
               <div class="html-preview__empty-icon">
-                <span class="material-symbols-outlined">preview</span>
+                <LiIcon name="preview" />
               </div>
               <p class="html-preview__empty-title">No Preview</p>
               <p class="html-preview__empty-sub">Enter HTML code on the left to see a live preview</p>
@@ -172,30 +173,36 @@
                 <button
                   class="html-preview__tb-btn"
                   :class="{ 'html-preview__tb-btn--active': styleConfig.fontWeight === 'bold' }"
+                  :aria-pressed="styleConfig.fontWeight === 'bold'"
+                  aria-label="Bold"
                   @click="toggleBold"
                   title="Bold"
                 >
-                  <span class="material-symbols-outlined">format_bold</span>
+                  <LiIcon name="format_bold" />
                 </button>
 
                 <!-- Italic -->
                 <button
                   class="html-preview__tb-btn"
                   :class="{ 'html-preview__tb-btn--active': styleConfig.fontStyle === 'italic' }"
+                  :aria-pressed="styleConfig.fontStyle === 'italic'"
+                  aria-label="Italic"
                   @click="toggleItalic"
                   title="Italic"
                 >
-                  <span class="material-symbols-outlined">format_italic</span>
+                  <LiIcon name="format_italic" />
                 </button>
 
                 <!-- Underline -->
                 <button
                   class="html-preview__tb-btn"
                   :class="{ 'html-preview__tb-btn--active': styleConfig.textDecoration === 'underline' }"
+                  :aria-pressed="styleConfig.textDecoration === 'underline'"
+                  aria-label="Underline"
                   @click="toggleUnderline"
                   title="Underline"
                 >
-                  <span class="material-symbols-outlined">format_underlined</span>
+                  <LiIcon name="format_underlined" />
                 </button>
 
                 <div class="html-preview__tb-divider"></div>
@@ -204,45 +211,53 @@
                 <button
                   class="html-preview__tb-btn"
                   :class="{ 'html-preview__tb-btn--active': styleConfig.textAlign === 'left' }"
+                  :aria-pressed="styleConfig.textAlign === 'left'"
+                  aria-label="Align left"
                   @click="setAlign('left')"
                   title="Align Left"
                 >
-                  <span class="material-symbols-outlined">format_align_left</span>
+                  <LiIcon name="format_align_left" />
                 </button>
                 <button
                   class="html-preview__tb-btn"
                   :class="{ 'html-preview__tb-btn--active': styleConfig.textAlign === 'center' }"
+                  :aria-pressed="styleConfig.textAlign === 'center'"
+                  aria-label="Align center"
                   @click="setAlign('center')"
                   title="Align Center"
                 >
-                  <span class="material-symbols-outlined">format_align_center</span>
+                  <LiIcon name="format_align_center" />
                 </button>
                 <button
                   class="html-preview__tb-btn"
                   :class="{ 'html-preview__tb-btn--active': styleConfig.textAlign === 'right' }"
+                  :aria-pressed="styleConfig.textAlign === 'right'"
+                  aria-label="Align right"
                   @click="setAlign('right')"
                   title="Align Right"
                 >
-                  <span class="material-symbols-outlined">format_align_right</span>
+                  <LiIcon name="format_align_right" />
                 </button>
                 <button
                   class="html-preview__tb-btn"
                   :class="{ 'html-preview__tb-btn--active': styleConfig.textAlign === 'justify' }"
+                  :aria-pressed="styleConfig.textAlign === 'justify'"
+                  aria-label="Justify text"
                   @click="setAlign('justify')"
                   title="Justify"
                 >
-                  <span class="material-symbols-outlined">format_align_justify</span>
+                  <LiIcon name="format_align_justify" />
                 </button>
 
                 <div class="html-preview__tb-divider"></div>
 
                 <!-- Done -->
-                <button class="html-preview__tb-btn html-preview__tb-btn--save" @click="doneEdit" title="Done">
-                  <span class="material-symbols-outlined">check</span>
+                <button class="html-preview__tb-btn html-preview__tb-btn--save" @click="doneEdit" aria-label="Finish editing" title="Done">
+                  <LiIcon name="check" />
                 </button>
                 <!-- Revert -->
-                <button class="html-preview__tb-btn html-preview__tb-btn--cancel" @click="revertCurrent" title="Revert">
-                  <span class="material-symbols-outlined">close</span>
+                <button class="html-preview__tb-btn html-preview__tb-btn--cancel" @click="revertCurrent" aria-label="Revert this element" title="Revert">
+                  <LiIcon name="close" />
                 </button>
               </div>
             </div>
@@ -710,7 +725,7 @@ onBeforeUnmount(() => {
   color: var(--color-on-surface, #1a1a2e);
 }
 
-.html-preview__section-title .material-symbols-outlined {
+.html-preview__section-title .li-icon {
   font-size: 20px;
   color: var(--cta-primary-bg, #FFBC25);
 }
@@ -737,7 +752,7 @@ onBeforeUnmount(() => {
   transition: all 0.25s ease;
 }
 
-.html-preview__upload-btn .material-symbols-outlined {
+.html-preview__upload-btn .li-icon {
   font-size: 16px;
 }
 
@@ -782,7 +797,7 @@ onBeforeUnmount(() => {
   color: #8b6914;
 }
 
-.html-preview__fix-badge .material-symbols-outlined {
+.html-preview__fix-badge .li-icon {
   font-size: 18px;
   color: var(--cta-primary-bg, #FFBC25);
 }
@@ -830,7 +845,7 @@ onBeforeUnmount(() => {
   transition: all 0.25s ease;
 }
 
-.html-preview__wysiwyg-toggle .material-symbols-outlined {
+.html-preview__wysiwyg-toggle .li-icon {
   font-size: 16px;
 }
 
@@ -866,7 +881,7 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
-.html-preview__hint .material-symbols-outlined {
+.html-preview__hint .li-icon {
   font-size: 16px;
   color: var(--cta-primary-bg, #FFBC25);
 }
@@ -911,7 +926,7 @@ onBeforeUnmount(() => {
   border-radius: 18px;
 }
 
-.html-preview__empty-icon .material-symbols-outlined {
+.html-preview__empty-icon .li-icon {
   font-size: 32px;
   color: #ccc;
 }
@@ -1050,7 +1065,7 @@ onBeforeUnmount(() => {
   padding: 0;
 }
 
-.html-preview__tb-btn .material-symbols-outlined {
+.html-preview__tb-btn .li-icon {
   font-size: 18px;
 }
 

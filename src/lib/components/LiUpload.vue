@@ -20,9 +20,7 @@
       />
       
       <div class="li-upload-icon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M7 16L12 11M12 11L17 16M12 11V21M3 8C3 6.67392 3.52678 5.40215 4.46447 4.46447C5.40215 3.52678 6.67392 3 8 3C9.53987 3 10.9708 3.75446 11.83 5.03C12.193 4.65481 12.637 4.36449 13.1311 4.18128C13.6253 3.99806 14.1578 3.92652 14.6918 3.97194C15.2257 4.01736 15.7486 4.17865 16.2255 4.44439C16.7023 4.71013 17.1223 5.07409 17.4578 5.51137C17.7933 5.94866 18.0366 6.44893 18.1721 6.97816C18.3075 7.50739 18.3318 8.05322 18.2435 8.5786C18.1551 9.10398 17.9562 9.59648 17.66 10.022C18.8929 10.2319 20.0076 10.8718 20.7854 11.8159C21.5631 12.76 21.9472 13.9398 21.8617 15.1154C21.7761 16.2911 21.228 17.3734 20.3297 18.1406C19.4313 18.9077 18.2514 19.2995 17.03 19.23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <LiIcon name="cloud_upload" size="lg" />
       </div>
       <div class="li-upload-text">
         <span class="li-upload-highlight">Click to upload</span> or drag and drop
@@ -32,15 +30,10 @@
     
     <div v-if="files.length > 0" class="li-upload-file-list">
       <div v-for="(file, index) in files" :key="index" class="li-upload-file-item">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="li-file-icon">
-          <path d="M13 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V16C4 16.5304 4.21071 17.0391 4.58579 17.4142C4.96086 17.7893 5.46957 18 6 18H14C14.5304 18 15.0391 17.7893 15.4142 17.4142C15.7893 17.0391 16 16.5304 16 16V5L13 2Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M13 2V5H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <LiIcon name="description" size="md" class="li-file-icon" />
         <span class="li-file-name">{{ file.name }}</span>
-        <button class="li-file-remove" @click.stop="removeFile(index)">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+        <button class="li-file-remove" :aria-label="`Remove ${file.name}`" @click.stop="removeFile(index)">
+          <LiIcon name="close" size="sm" />
         </button>
       </div>
     </div>

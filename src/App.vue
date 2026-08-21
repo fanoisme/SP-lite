@@ -21,8 +21,8 @@
     <aside class="sp-sidebar" :class="{ 'sp-sidebar--open': sidebarOpen }">
       <div class="sp-sidebar__header">
         <LiLogo size="sm" :animate="true" :show-subtitle="true" />
-        <button class="sp-sidebar__close" @click="sidebarOpen = false">
-          <span class="material-symbols-outlined">close</span>
+        <button class="sp-sidebar__close" aria-label="Close navigation menu" @click="sidebarOpen = false">
+          <LiIcon name="close" />
         </button>
       </div>
 
@@ -37,7 +37,7 @@
           @click="sidebarOpen = false"
         >
           <span class="sp-sidebar__item-indicator"></span>
-          <span class="material-symbols-outlined sp-sidebar__item-icon">{{ mod.icon }}</span>
+          <LiIcon :name="mod.icon" class="sp-sidebar__item-icon" />
           <span class="sp-sidebar__item-label">{{ mod.label }}</span>
         </router-link>
 
@@ -50,7 +50,7 @@
             @click="sidebarOpen = false"
           >
             <span class="sp-sidebar__item-indicator"></span>
-            <span class="material-symbols-outlined sp-sidebar__item-icon">admin_panel_settings</span>
+            <LiIcon name="admin_panel_settings" class="sp-sidebar__item-icon" />
             <span class="sp-sidebar__item-label">Admin</span>
           </router-link>
         </template>
@@ -63,11 +63,11 @@
           :class="{ 'sp-sidebar__user--active': isActive('/profile') }"
           @click="sidebarOpen = false"
         >
-          <span class="material-symbols-outlined">account_circle</span>
+          <LiIcon name="account_circle" />
           <span class="sp-sidebar__user-name">{{ profile?.username || session?.user?.email }}</span>
         </router-link>
         <button class="sp-sidebar__source sp-sidebar__logout" @click="handleLogout">
-          <span class="material-symbols-outlined">logout</span>
+          <LiIcon name="logout" />
           <span>Sign out</span>
         </button>
       </div>
@@ -77,8 +77,8 @@
     <main class="sp-main">
       <!-- Mobile header -->
       <div class="sp-mobile-header">
-        <button class="sp-hamburger" @click="sidebarOpen = true">
-          <span class="material-symbols-outlined">menu</span>
+        <button class="sp-hamburger" aria-label="Open navigation menu" @click="sidebarOpen = true">
+          <LiIcon name="menu" />
         </button>
         <span class="sp-mobile-title">{{ currentModule?.label || 'SP-lite' }}</span>
       </div>
@@ -351,7 +351,7 @@ watch(() => route.path, () => {
   background: rgba(0, 0, 0, 0.03);
 }
 
-.sp-sidebar__user .material-symbols-outlined {
+.sp-sidebar__user .li-icon {
   font-size: 20px;
   color: var(--cta-primary-bg, #FFBC25);
 }
@@ -389,7 +389,7 @@ watch(() => route.path, () => {
   color: var(--color-gray-900, #1a1a2e);
 }
 
-.sp-sidebar__source .material-symbols-outlined {
+.sp-sidebar__source .li-icon {
   font-size: 16px;
 }
 
@@ -468,7 +468,7 @@ watch(() => route.path, () => {
   }
 
   .sp-hamburger:hover { background: rgba(0, 0, 0, 0.04); }
-  .sp-hamburger .material-symbols-outlined { font-size: 24px; }
+  .sp-hamburger .li-icon { font-size: 24px; }
 
   .sp-mobile-title {
     font-size: 16px;

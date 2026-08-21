@@ -25,110 +25,7 @@
         <span v-for="i in 8" :key="i" class="li-logo__particle" :style="particleStyle(i)"></span>
       </div>
 
-      <svg
-        class="li-logo__svg"
-        viewBox="0 0 64 64"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#F9C700" />
-            <stop offset="40%" stop-color="#FFAF03" />
-            <stop offset="100%" stop-color="#FF6B00" />
-          </linearGradient>
-          <linearGradient id="logoGradHover" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#FFD54F" />
-            <stop offset="40%" stop-color="#FFB300" />
-            <stop offset="100%" stop-color="#FF8F00" />
-          </linearGradient>
-          <linearGradient id="shimmerGrad" x1="-100%" y1="0%" x2="200%" y2="0%">
-            <stop offset="0%" stop-color="rgba(255,255,255,0)" />
-            <stop offset="35%" stop-color="rgba(255,255,255,0)" />
-            <stop offset="50%" stop-color="rgba(255,255,255,0.7)" />
-            <stop offset="65%" stop-color="rgba(255,255,255,0)" />
-            <stop offset="100%" stop-color="rgba(255,255,255,0)" />
-            <animate attributeName="x1" values="-150%;250%" dur="2.5s" repeatCount="indefinite" />
-            <animate attributeName="x2" values="-50%;350%" dur="2.5s" repeatCount="indefinite" />
-          </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="1.5" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-          <filter id="glowStrong">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-          <!-- Noise texture -->
-          <filter id="noise">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-            <feColorMatrix type="saturate" values="0" />
-            <feBlend in="SourceGraphic" mode="multiply" result="noise" />
-            <feComponentTransfer>
-              <feFuncA type="linear" slope="0.08" />
-            </feComponentTransfer>
-            <feBlend in="SourceGraphic" in2="noise" mode="normal" />
-          </filter>
-        </defs>
-
-        <!-- Background rounded rect with noise -->
-        <rect
-          x="2" y="2" width="60" height="60" rx="14"
-          fill="url(#logoGrad)"
-          class="li-logo__bg"
-        />
-
-        <!-- Inner highlight (top edge light) -->
-        <rect
-          x="3" y="3" width="58" height="28" rx="12"
-          fill="white"
-          opacity="0.15"
-          class="li-logo__highlight"
-        />
-
-        <!-- Shimmer sweep on bg -->
-        <rect
-          x="2" y="2" width="60" height="60" rx="14"
-          fill="url(#shimmerGrad)"
-          class="li-logo__shimmer"
-        />
-
-        <!-- S letter - stroke drawing -->
-        <path
-          ref="sPath"
-          class="li-logo__letter"
-          d="M40 18C40 18 37 14 30 14C23 14 19 18 19 23C19 28 23 30 30 33C37 36 41 38 41 43C41 48 37 52 30 52C23 52 20 48 20 48"
-          stroke="white"
-          stroke-width="5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          filter="url(#glow)"
-        />
-
-        <!-- S letter shadow (subtle depth) -->
-        <path
-          class="li-logo__letter-shadow"
-          d="M40 18C40 18 37 14 30 14C23 14 19 18 19 23C19 28 23 30 30 33C37 36 41 38 41 43C41 48 37 52 30 52C23 52 20 48 20 48"
-          stroke="rgba(0,0,0,0.15)"
-          stroke-width="6"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-
-        <!-- Sparkle dots with varied sizes -->
-        <circle class="li-logo__sparkle li-logo__sparkle--1" cx="46" cy="10" r="1.8" fill="white" opacity="0" />
-        <circle class="li-logo__sparkle li-logo__sparkle--2" cx="54" cy="22" r="1.2" fill="white" opacity="0" />
-        <circle class="li-logo__sparkle li-logo__sparkle--3" cx="10" cy="52" r="1.5" fill="white" opacity="0" />
-        <circle class="li-logo__sparkle li-logo__sparkle--4" cx="8" cy="16" r="1" fill="white" opacity="0" />
-        <circle class="li-logo__sparkle li-logo__sparkle--5" cx="52" cy="48" r="1.3" fill="white" opacity="0" />
-      </svg>
+      <img class="li-logo__svg" :src="logoMark" alt="" aria-hidden="true" />
     </div>
 
     <!-- Text -->
@@ -141,6 +38,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import logoMark from '../../assets/brand/sp-lite-mark.svg'
 
 const props = defineProps({
   size: {
@@ -221,63 +119,6 @@ function particleStyle(i) {
   z-index: 2;
   border-radius: 14px;
   filter: drop-shadow(0 4px 12px rgba(255, 140, 0, 0.3));
-}
-
-/* ── Background ── */
-.li-logo__bg {
-  opacity: 1;
-}
-
-.li-logo__highlight {
-  opacity: 0.15;
-}
-
-/* ── Shimmer sweep ── */
-.li-logo__shimmer {
-  opacity: 0;
-}
-
-.li-logo--animate .li-logo__shimmer {
-  opacity: 1;
-}
-
-/* ── S Letter stroke animation ── */
-.li-logo__letter {
-  stroke-dasharray: 150;
-  stroke-dashoffset: 150;
-  animation: logo-draw 1.4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-  animation-delay: 0.4s;
-}
-
-.li-logo:not(.li-logo--animate) .li-logo__letter {
-  stroke-dashoffset: 0;
-  animation: none;
-}
-
-.li-logo__letter-shadow {
-  stroke-dasharray: 150;
-  stroke-dashoffset: 150;
-  animation: logo-draw 1.4s cubic-bezier(0.65, 0, 0.35, 1) forwards;
-  animation-delay: 0.35s;
-}
-
-.li-logo:not(.li-logo--animate) .li-logo__letter-shadow {
-  stroke-dashoffset: 0;
-  animation: none;
-}
-
-@keyframes logo-draw {
-  0% {
-    stroke-dashoffset: 150;
-    opacity: 0;
-  }
-  8% {
-    opacity: 1;
-  }
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 1;
-  }
 }
 
 /* ── Aura (outer glow) ── */
@@ -418,71 +259,6 @@ function particleStyle(i) {
   }
 }
 
-/* ── Sparkle dots ── */
-.li-logo--animate .li-logo__sparkle--1 {
-  animation: logo-sparkle 2.2s ease-in-out infinite;
-  animation-delay: 1.6s;
-}
-
-.li-logo--animate .li-logo__sparkle--2 {
-  animation: logo-sparkle 2.2s ease-in-out infinite;
-  animation-delay: 2.1s;
-}
-
-.li-logo--animate .li-logo__sparkle--3 {
-  animation: logo-sparkle 2.2s ease-in-out infinite;
-  animation-delay: 2.6s;
-}
-
-.li-logo--animate .li-logo__sparkle--4 {
-  animation: logo-sparkle 2.2s ease-in-out infinite;
-  animation-delay: 1.3s;
-}
-
-.li-logo--animate .li-logo__sparkle--5 {
-  animation: logo-sparkle 2.2s ease-in-out infinite;
-  animation-delay: 2.9s;
-}
-
-@keyframes logo-sparkle {
-  0%, 100% {
-    opacity: 0;
-    transform: scale(0) rotate(0deg);
-  }
-  30% {
-    opacity: 1;
-    transform: scale(1.2) rotate(90deg);
-  }
-  70% {
-    opacity: 0.8;
-    transform: scale(1) rotate(180deg);
-  }
-}
-
-/* ── Background breathing ── */
-.li-logo--animate .li-logo__bg {
-  animation: logo-bg-breathe 4s ease-in-out infinite;
-}
-
-@keyframes logo-bg-breathe {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.88;
-  }
-}
-
-/* ── Highlight pulse ── */
-.li-logo--animate .li-logo__highlight {
-  animation: logo-highlight-pulse 4s ease-in-out infinite;
-}
-
-@keyframes logo-highlight-pulse {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 0.25; }
-}
-
 /* ── Mark entrance ── */
 .li-logo--animate .li-logo__mark {
   animation: logo-mark-enter 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -569,25 +345,14 @@ function particleStyle(i) {
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
-  .li-logo__letter,
-  .li-logo__letter-shadow,
   .li-logo__glow,
   .li-logo__aura,
   .li-logo__orbit,
   .li-logo__particle,
-  .li-logo__sparkle,
-  .li-logo__bg,
-  .li-logo__highlight,
-  .li-logo__shimmer,
   .li-logo__mark,
   .li-logo__text {
     animation: none !important;
     transition: none !important;
-  }
-
-  .li-logo__letter,
-  .li-logo__letter-shadow {
-    stroke-dashoffset: 0;
   }
 
   .li-logo__orbit { opacity: 1; }

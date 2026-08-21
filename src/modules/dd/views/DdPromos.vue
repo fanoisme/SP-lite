@@ -8,15 +8,15 @@
       <div class="ddpromo__actions">
         <p class="ddpromo__count">{{ total }} {{ total === 1 ? 'rule' : 'rules' }}</p>
         <button class="ddpromo__ghost" type="button" :disabled="exporting" @click="exportXlsx">
-          <span class="material-symbols-outlined">file_save</span>
+          <LiIcon name="file_save" />
           Export XLSX
         </button>
         <button v-if="canCreate" class="ddpromo__ghost" type="button" @click="showBulk = true">
-          <span class="material-symbols-outlined">upload</span>
+          <LiIcon name="upload" />
           Bulk Upload
         </button>
         <button v-if="canCreate" class="ddpromo__add" type="button" @click="openCreate">
-          <span class="material-symbols-outlined">add</span>
+          <LiIcon name="add" />
           Add Promo
         </button>
       </div>
@@ -25,7 +25,7 @@
     <!-- Someone else wrote to qrdd_promo_rules while this page was open. The
          page is not reloaded from under the reader — they may be mid-edit. -->
     <div v-if="stale && !staleDismissed" class="ddpromo__stale">
-      <span class="material-symbols-outlined">sync_problem</span>
+      <LiIcon name="sync_problem" />
       <span class="ddpromo__stale-text">
         {{ staleCount }} {{ staleCount === 1 ? 'change' : 'changes' }}
         <template v-if="staleBy"> by {{ staleBy }}</template>
@@ -33,7 +33,7 @@
       </span>
       <button class="ddpromo__stale-btn" type="button" @click="refresh">Reload</button>
       <button class="ddpromo__stale-x" type="button" aria-label="Dismiss" @click="staleDismissed = true">
-        <span class="material-symbols-outlined">close</span>
+        <LiIcon name="close" />
       </button>
     </div>
 
@@ -124,20 +124,21 @@
 
       <template #cell-actions="{ row }">
         <div class="ddpromo__row-actions">
-          <button v-if="canUpdate" class="ddpromo__icon" type="button" title="Edit" @click="openEdit(row)">
-            <span class="material-symbols-outlined">edit</span>
+          <button v-if="canUpdate" class="ddpromo__icon" type="button" :aria-label="`Edit promo ${row.promo_id}`" title="Edit" @click="openEdit(row)">
+            <LiIcon name="edit" />
           </button>
-          <button v-if="canCreate" class="ddpromo__icon" type="button" title="Duplicate" @click="openDuplicate(row)">
-            <span class="material-symbols-outlined">content_copy</span>
+          <button v-if="canCreate" class="ddpromo__icon" type="button" :aria-label="`Duplicate promo ${row.promo_id}`" title="Duplicate" @click="openDuplicate(row)">
+            <LiIcon name="content_copy" />
           </button>
           <button
             v-if="canDelete"
             class="ddpromo__icon ddpromo__icon--danger"
             type="button"
+            :aria-label="`Delete promo ${row.promo_id}`"
             title="Delete"
             @click="askDelete(row)"
           >
-            <span class="material-symbols-outlined">delete</span>
+            <LiIcon name="delete" />
           </button>
         </div>
       </template>
@@ -531,8 +532,8 @@ onMounted(() => {
   color: var(--cta-primary-text, #1E1E1E);
 }
 .ddpromo__add:hover { transform: translateY(-1px); }
-.ddpromo__ghost .material-symbols-outlined,
-.ddpromo__add .material-symbols-outlined { font-size: 17px; }
+.ddpromo__ghost .li-icon,
+.ddpromo__add .li-icon { font-size: 17px; }
 
 .ddpromo__stale {
   display: flex; align-items: center; gap: 10px;
@@ -542,7 +543,7 @@ onMounted(() => {
   font-size: 13px; color: var(--color-gray-800, #4D4D4D);
 }
 .ddpromo__stale-text { flex: 1; }
-.ddpromo__stale .material-symbols-outlined { font-size: 19px; color: var(--color-yellow-500, #F4A600); }
+.ddpromo__stale .li-icon { font-size: 19px; color: var(--color-yellow-500, #F4A600); }
 .ddpromo__stale-btn {
   padding: 5px 14px; border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: var(--radius-pill, 999px); background: var(--color-gray-0, #fff);
@@ -555,7 +556,7 @@ onMounted(() => {
   display: inline-flex; border: none; background: none; padding: 2px;
   color: var(--color-gray-600, #808080); cursor: pointer;
 }
-.ddpromo__stale-x .material-symbols-outlined { font-size: 17px; color: inherit; }
+.ddpromo__stale-x .li-icon { font-size: 17px; color: inherit; }
 
 .ddpromo__code {
   font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
@@ -577,7 +578,7 @@ onMounted(() => {
 }
 .ddpromo__icon:hover { color: var(--cta-primary-bg, #FFBC25); background: rgba(255, 188, 37, 0.12); }
 .ddpromo__icon--danger:hover { color: var(--color-red-400, #C83E3B); background: rgba(200, 62, 59, 0.08); }
-.ddpromo__icon .material-symbols-outlined { font-size: 18px; }
+.ddpromo__icon .li-icon { font-size: 18px; }
 
 .ddpromo__confirm { margin: 0; font-size: 14px; line-height: 1.55; }
 </style>

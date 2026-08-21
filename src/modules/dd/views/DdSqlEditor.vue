@@ -8,7 +8,7 @@
       <div class="ddsql__actions">
         <p class="ddsql__count">{{ connectionLabel }}</p>
         <button class="ddsql__reload" type="button" :disabled="mounting" @click="mountAll">
-          <span class="material-symbols-outlined">restart_alt</span>
+          <LiIcon name="restart_alt" />
           Reload
         </button>
       </div>
@@ -37,9 +37,7 @@
 
           <div v-for="t in mountedList" :key="t.name" class="ddsql__table">
             <button class="ddsql__table-head" type="button" @click="toggle(t.name)">
-              <span class="material-symbols-outlined ddsql__chev" :class="{ 'is-open': opened.has(t.name) }">
-                chevron_right
-              </span>
+              <LiIcon name="chevron_right" class="ddsql__chev" :class="{ 'is-open': opened.has(t.name) }" />
               <span class="ddsql__table-name" :title="`${t.db}.${t.name}`">{{ t.name }}</span>
               <span class="ddsql__table-rows">{{ t.rows.length }}</span>
             </button>
@@ -59,7 +57,7 @@
           </div>
 
           <p v-if="deniedTables.length" class="ddsql__denied">
-            <span class="material-symbols-outlined">lock</span>
+            <LiIcon name="lock" />
             {{ deniedTables.join(', ') }} {{ deniedTables.length > 1 ? 'are' : 'is' }} not in your access,
             so {{ deniedTables.length > 1 ? 'they are' : 'it is' }} not mounted and cannot be queried here.
           </p>
@@ -76,8 +74,8 @@
           <p v-if="!snippets.length" class="ddsql__hint">Nothing saved yet.</p>
           <div v-for="s in snippets" :key="s.id" class="ddsql__item">
             <button class="ddsql__item-main" type="button" :title="s.sql" @click="sql = s.sql">{{ s.name }}</button>
-            <button class="ddsql__item-del" type="button" title="Delete snippet" @click="deleteSnippet(s.id)">
-              <span class="material-symbols-outlined">close</span>
+            <button class="ddsql__item-del" type="button" :aria-label="`Delete snippet ${s.name}`" title="Delete snippet" @click="deleteSnippet(s.id)">
+              <LiIcon name="close" />
             </button>
           </div>
         </section>
@@ -94,8 +92,8 @@
               <span class="ddsql__item-sql">{{ h.sql.replace(/\s+/g, ' ') }}</span>
               <span class="ddsql__item-ms">{{ h.ms }} ms</span>
             </button>
-            <button class="ddsql__item-del" type="button" title="Remove from history" @click="deleteHistory(h.id)">
-              <span class="material-symbols-outlined">close</span>
+            <button class="ddsql__item-del" type="button" aria-label="Remove query from history" title="Remove from history" @click="deleteHistory(h.id)">
+              <LiIcon name="close" />
             </button>
           </div>
         </section>
@@ -688,7 +686,7 @@ onMounted(() => { if (canRead.value) mountAll() })
 }
 .ddsql__reload:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
 .ddsql__reload:disabled { opacity: 0.45; cursor: not-allowed; }
-.ddsql__reload .material-symbols-outlined { font-size: 17px; }
+.ddsql__reload .li-icon { font-size: 17px; }
 
 .ddsql__grid { display: grid; grid-template-columns: 250px 1fr; gap: var(--space-md, 16px); align-items: start; }
 @media (max-width: 1000px) {
@@ -744,7 +742,7 @@ onMounted(() => { if (canRead.value) mountAll() })
   border-radius: var(--radius-xs, 8px); background: rgba(0, 0, 0, 0.04);
   font-size: 11px; line-height: 1.5; color: var(--color-gray-500, #8e8ea0);
 }
-.ddsql__denied .material-symbols-outlined { font-size: 15px; flex: none; }
+.ddsql__denied .li-icon { font-size: 15px; flex: none; }
 
 .ddsql__save { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
 .ddsql__save > :first-child { flex: 1; min-width: 0; }
@@ -778,7 +776,7 @@ onMounted(() => { if (canRead.value) mountAll() })
 }
 .ddsql__item:hover .ddsql__item-del { opacity: 1; }
 .ddsql__item-del:hover { background: rgba(0, 0, 0, 0.06); color: var(--color-red-400, #C83E3B); }
-.ddsql__item-del .material-symbols-outlined { font-size: 15px; }
+.ddsql__item-del .li-icon { font-size: 15px; }
 
 .ddsql__dot { flex: none; width: 6px; height: 6px; border-radius: 50%; }
 .ddsql__dot.is-ok { background: var(--color-green-500, #059669); }

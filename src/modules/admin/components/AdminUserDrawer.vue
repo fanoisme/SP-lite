@@ -60,7 +60,7 @@
         </div>
       </section>
       <p v-else class="aud__note">
-        <span class="material-symbols-outlined">info</span>
+        <LiIcon name="info" />
         Admin role always has full access — overrides do not apply.
       </p>
     </div>
@@ -310,7 +310,7 @@ function tryClose() {
   color: var(--color-on-surface-variant, #666);
 }
 
-.aud__note .material-symbols-outlined {
+.aud__note .li-icon {
   font-size: 18px;
   color: var(--color-on-surface-muted, #999);
 }

@@ -5,7 +5,7 @@
       <div class="tpl-tools__header-content">
         <div class="tpl-tools__title-group">
           <div class="tpl-tools__icon-badge">
-            <span class="material-symbols-outlined">auto_awesome</span>
+            <LiIcon name="auto_awesome" />
           </div>
           <div>
             <h1 class="tpl-tools__title">Template Tools</h1>
@@ -23,9 +23,10 @@
           :key="tab.id"
           class="tpl-tools__tab"
           :class="{ 'tpl-tools__tab--active': activeTab === index }"
+          :aria-pressed="activeTab === index"
           @click="switchTab(index)"
         >
-          <span class="material-symbols-outlined tpl-tools__tab-icon">{{ tab.icon }}</span>
+          <LiIcon :name="tab.icon" class="tpl-tools__tab-icon" />
           <span class="tpl-tools__tab-label">{{ tab.label }}</span>
           <span class="tpl-tools__tab-desc">{{ tab.desc }}</span>
         </button>
@@ -148,7 +149,7 @@ onMounted(() => {
   box-shadow: 0 4px 16px rgba(255, 188, 37, 0.3);
 }
 
-.tpl-tools__icon-badge .material-symbols-outlined {
+.tpl-tools__icon-badge .li-icon {
   font-size: 26px;
   color: #fff;
 }

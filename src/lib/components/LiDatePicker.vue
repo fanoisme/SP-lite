@@ -4,12 +4,7 @@
     
     <div class="li-datepicker-input-wrapper" @click="toggleCalendar" ref="wrapperRef">
       <div class="li-datepicker-icon">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15.8333 3.33333H4.16667C3.24619 3.33333 2.5 4.07953 2.5 5V16.6667C2.5 17.5871 3.24619 18.3333 4.16667 18.3333H15.8333C16.7538 18.3333 17.5 17.5871 17.5 16.6667V5C17.5 4.07953 16.7538 3.33333 15.8333 3.33333Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M13.3333 1.66667V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M6.66667 1.66667V5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M2.5 8.33333H17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <LiIcon name="calendar_month" size="md" />
       </div>
       <input 
         type="text" 
@@ -27,16 +22,12 @@
     <Transition name="calendar-fade">
       <div v-if="isOpen" class="li-calendar-popover" ref="calendarRef">
         <div class="li-calendar-header">
-          <button class="li-calendar-nav" @click="prevMonth">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          <button class="li-calendar-nav" aria-label="Previous month" @click="prevMonth">
+            <LiIcon name="chevron_left" size="sm" />
           </button>
           <div class="li-calendar-title">{{ monthName }} {{ currentYear }}</div>
-          <button class="li-calendar-nav" @click="nextMonth">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          <button class="li-calendar-nav" aria-label="Next month" @click="nextMonth">
+            <LiIcon name="chevron_right" size="sm" />
           </button>
         </div>
         

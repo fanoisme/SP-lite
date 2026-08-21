@@ -50,8 +50,8 @@
         <h4 class="detail__section-title">Raw QR Value</h4>
         <div class="detail__raw-wrap">
           <code class="detail__raw">{{ detail.qr_value }}</code>
-          <button class="detail__copy-btn" @click="copyRaw" :title="copied ? 'Copied!' : 'Copy'">
-            <span class="material-symbols-outlined">{{ copied ? 'check' : 'content_copy' }}</span>
+          <button class="detail__copy-btn" @click="copyRaw" :aria-label="copied ? 'QR value copied' : 'Copy QR value'" :title="copied ? 'Copied!' : 'Copy'">
+            <LiIcon :name="copied ? 'check' : 'content_copy'" />
           </button>
         </div>
       </div>
@@ -83,7 +83,7 @@
 
     <template #footer>
       <button class="detail__action-btn" @click="$emit('load-to-generator', detail)">
-        <span class="material-symbols-outlined">edit</span>
+        <LiIcon name="edit" />
         Load to Generator
       </button>
     </template>
@@ -312,7 +312,7 @@ function formatDate(dateStr) {
   background: rgba(0, 0, 0, 0.05);
 }
 
-.detail__copy-btn .material-symbols-outlined {
+.detail__copy-btn .li-icon {
   font-size: 16px;
 }
 
@@ -404,7 +404,7 @@ function formatDate(dateStr) {
   transform: translateY(-1px);
 }
 
-.detail__action-btn .material-symbols-outlined {
+.detail__action-btn .li-icon {
   font-size: 16px;
 }
 

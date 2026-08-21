@@ -21,8 +21,8 @@
           ones the guided screens enforce.
         </template>
       </p>
-      <button class="ddrf__toggle" type="button" @click="toggleJson">
-        <span class="material-symbols-outlined">{{ jsonMode ? 'view_list' : 'data_object' }}</span>
+      <button class="ddrf__toggle" type="button" :aria-pressed="jsonMode" @click="toggleJson">
+        <LiIcon :name="jsonMode ? 'view_list' : 'data_object'" />
         {{ jsonMode ? 'Fields' : 'Raw JSON' }}
       </button>
     </div>
@@ -293,7 +293,7 @@ async function submit() {
   cursor: pointer; transition: all 200ms; white-space: nowrap;
 }
 .ddrf__toggle:hover { background: rgba(0, 0, 0, 0.04); }
-.ddrf__toggle .material-symbols-outlined { font-size: 16px; }
+.ddrf__toggle .li-icon { font-size: 16px; }
 
 .ddrf__problems {
   margin: 0 0 var(--space-md, 16px); padding: 10px 14px 10px 30px;

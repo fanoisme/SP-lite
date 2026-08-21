@@ -23,17 +23,17 @@
           :to="m.path"
           class="dash__card"
         >
-          <span class="material-symbols-outlined dash__card-icon">{{ m.icon }}</span>
+          <LiIcon :name="m.icon" class="dash__card-icon" />
           <span class="dash__card-label">{{ m.label }}</span>
           <span class="dash__card-desc">{{ m.desc }}</span>
           <span class="dash__card-cta">
             Buka
-            <span class="material-symbols-outlined">arrow_forward</span>
+            <LiIcon name="arrow_forward" />
           </span>
         </router-link>
       </div>
       <div v-else class="dash__empty">
-        <span class="material-symbols-outlined">lock</span>
+        <LiIcon name="lock" />
         <p>Role lo belum dikasih akses tools. Hubungi admin.</p>
       </div>
     </section>
@@ -241,12 +241,12 @@ onMounted(() => {
   color: var(--cta-primary-bg, #FFBC25);
 }
 
-.dash__card-cta .material-symbols-outlined {
+.dash__card-cta .li-icon {
   font-size: 16px;
   transition: transform var(--dur-short, 200ms) var(--ease-out);
 }
 
-.dash__card:hover .dash__card-cta .material-symbols-outlined {
+.dash__card:hover .dash__card-cta .li-icon {
   transform: translateX(3px);
 }
 
@@ -263,7 +263,7 @@ onMounted(() => {
   border-radius: var(--radius-md, 16px);
 }
 
-.dash__empty .material-symbols-outlined {
+.dash__empty .li-icon {
   font-size: 32px;
   color: var(--color-gray-300, #ccc);
 }

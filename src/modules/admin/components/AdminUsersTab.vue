@@ -9,13 +9,13 @@
         class="adm-users__search"
       />
       <button class="adm-users__add-btn" @click="$emit('add-user')">
-        <span class="material-symbols-outlined">person_add</span>
+        <LiIcon name="person_add" />
         Add User
       </button>
     </div>
 
     <p class="adm-users__hint">
-      <span class="material-symbols-outlined">info</span>
+      <LiIcon name="info" />
       Users can also self-register — those accounts stay pending until you activate them.
     </p>
 
@@ -67,25 +67,29 @@
               class="adm-users__status-btn"
               :class="row.is_active ? 'is-active' : 'is-pending'"
               :disabled="row.id === currentUserId"
+              :aria-label="row.is_active ? `Deactivate ${row.email}` : `Activate ${row.email}`"
+              :aria-pressed="row.is_active"
               :title="row.is_active ? 'Deactivate account' : 'Activate account'"
               @click="$emit('update-active', row.id, !row.is_active)"
             >
-              <span class="material-symbols-outlined">{{ row.is_active ? 'check_circle' : 'hourglass_empty' }}</span>
+              <LiIcon :name="row.is_active ? 'check_circle' : 'hourglass_empty'" />
             </button>
             <button
               class="adm-users__manage-btn"
+              :aria-label="`Manage access for ${row.email}`"
               @click="$emit('open-user', row)"
               title="Manage access"
             >
-              <span class="material-symbols-outlined">tune</span>
+              <LiIcon name="tune" />
             </button>
             <button
               class="adm-users__delete-btn"
               :disabled="row.id === currentUserId"
+              :aria-label="`Delete ${row.email}`"
               @click="$emit('delete-user', row)"
               title="Delete user"
             >
-              <span class="material-symbols-outlined">delete</span>
+              <LiIcon name="delete" />
             </button>
           </div>
         </template>
@@ -206,7 +210,7 @@ function formatDate(dateStr) {
   transform: translateY(-2px);
 }
 
-.adm-users__add-btn .material-symbols-outlined {
+.adm-users__add-btn .li-icon {
   font-size: 18px;
 }
 
@@ -219,7 +223,7 @@ function formatDate(dateStr) {
   color: var(--color-on-surface-muted, #999);
 }
 
-.adm-users__hint .material-symbols-outlined {
+.adm-users__hint .li-icon {
   font-size: 16px;
 }
 
@@ -278,7 +282,7 @@ function formatDate(dateStr) {
   justify-content: center;
 }
 
-.adm-users__status-btn .material-symbols-outlined {
+.adm-users__status-btn .li-icon {
   font-size: 18px;
 }
 
@@ -317,7 +321,7 @@ function formatDate(dateStr) {
   background: rgba(255, 188, 37, 0.12);
 }
 
-.adm-users__manage-btn .material-symbols-outlined {
+.adm-users__manage-btn .li-icon {
   font-size: 18px;
 }
 
@@ -361,7 +365,7 @@ function formatDate(dateStr) {
   cursor: not-allowed;
 }
 
-.adm-users__delete-btn .material-symbols-outlined {
+.adm-users__delete-btn .li-icon {
   font-size: 18px;
 }
 

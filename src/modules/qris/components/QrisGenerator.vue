@@ -5,17 +5,19 @@
       <button
         class="gen__type-btn"
         :class="{ 'gen__type-btn--active': qrType === 'emvco' }"
+        :aria-pressed="qrType === 'emvco'"
         @click="qrType = 'emvco'"
       >
-        <span class="material-symbols-outlined">qr_code_2</span>
+        <LiIcon name="qr_code_2" />
         EMVCo QRIS
       </button>
       <button
         class="gen__type-btn"
         :class="{ 'gen__type-btn--active': qrType === 'proprietary' }"
+        :aria-pressed="qrType === 'proprietary'"
         @click="qrType = 'proprietary'"
       >
-        <span class="material-symbols-outlined">barcode</span>
+        <LiIcon name="barcode" />
         Proprietary
       </button>
     </div>
@@ -25,17 +27,19 @@
       <button
         class="gen__mode-btn"
         :class="{ 'gen__mode-btn--active': mode === 'form' }"
+        :aria-pressed="mode === 'form'"
         @click="mode = 'form'"
       >
-        <span class="material-symbols-outlined">edit_note</span>
+        <LiIcon name="edit_note" />
         Form Input
       </button>
       <button
         class="gen__mode-btn"
         :class="{ 'gen__mode-btn--active': mode === 'paste' }"
+        :aria-pressed="mode === 'paste'"
         @click="mode = 'paste'"
       >
-        <span class="material-symbols-outlined">content_paste</span>
+        <LiIcon name="content_paste" />
         Paste Value
       </button>
     </div>
@@ -69,7 +73,7 @@
       <!-- Advanced Fields -->
       <details class="gen__advanced">
         <summary class="gen__advanced-toggle">
-          <span class="material-symbols-outlined">tune</span>
+          <LiIcon name="tune" />
           Advanced Options
           <span class="gen__advanced-hint">optional — defaults will be used if not edited</span>
         </summary>
@@ -112,7 +116,7 @@
       <button class="gen__submit" @click="handleGenerate" :disabled="generating || !form.merchantName || !form.merchantCity">
         <span v-if="generating" class="gen__submit-spinner"></span>
         <span v-else>
-          <span class="material-symbols-outlined">qr_code_2</span>
+          <LiIcon name="qr_code_2" />
           Generate EMVCo QRIS
         </span>
       </button>
@@ -161,7 +165,7 @@
         <button class="gen__submit" @click="handleGenerateProprietary" :disabled="generating || !proprietaryForm.merchantName || !proprietaryForm.merchantId || !proprietaryForm.provider">
           <span v-if="generating" class="gen__submit-spinner"></span>
           <span v-else>
-            <span class="material-symbols-outlined">barcode</span>
+            <LiIcon name="barcode" />
             Generate Proprietary QR
           </span>
         </button>
@@ -173,7 +177,7 @@
       <div class="gen__paste-header">
         <label class="gen__label">Paste QR Code Value</label>
         <button class="gen__clipboard-btn" @click="pasteFromClipboard" title="Paste from clipboard">
-          <span class="material-symbols-outlined">content_paste</span>
+          <LiIcon name="content_paste" />
           Clipboard
         </button>
       </div>
@@ -189,7 +193,7 @@
       <button class="gen__submit" @click="handleParse" :disabled="parsing || !pasteValue.trim()">
         <span v-if="parsing" class="gen__submit-spinner"></span>
         <span v-else>
-          <span class="material-symbols-outlined">search</span>
+          <LiIcon name="search" />
           Parse QRIS
         </span>
       </button>
@@ -197,7 +201,7 @@
 
     <!-- Error -->
     <div v-if="error" class="gen__error">
-      <span class="material-symbols-outlined">error</span>
+      <LiIcon name="error" />
       {{ error }}
     </div>
   </div>
@@ -340,7 +344,7 @@ async function pasteFromClipboard() {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
-.gen__type-btn .material-symbols-outlined {
+.gen__type-btn .li-icon {
   font-size: 18px;
 }
 
@@ -381,7 +385,7 @@ async function pasteFromClipboard() {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
 
-.gen__mode-btn .material-symbols-outlined {
+.gen__mode-btn .li-icon {
   font-size: 16px;
 }
 
@@ -483,7 +487,7 @@ async function pasteFromClipboard() {
   color: var(--color-gray-800, #444);
 }
 
-.gen__clipboard-btn .material-symbols-outlined {
+.gen__clipboard-btn .li-icon {
   font-size: 14px;
 }
 
@@ -549,7 +553,7 @@ async function pasteFromClipboard() {
   display: none;
 }
 
-.gen__advanced-toggle .material-symbols-outlined {
+.gen__advanced-toggle .li-icon {
   font-size: 18px;
   color: var(--color-gray-400, #B3B3B3);
 }
@@ -592,7 +596,7 @@ async function pasteFromClipboard() {
   cursor: not-allowed;
 }
 
-.gen__submit .material-symbols-outlined {
+.gen__submit .li-icon {
   font-size: 18px;
 }
 
@@ -622,7 +626,7 @@ async function pasteFromClipboard() {
   font-weight: 500;
 }
 
-.gen__error .material-symbols-outlined {
+.gen__error .li-icon {
   font-size: 18px;
   flex-shrink: 0;
 }

@@ -2,7 +2,7 @@
   <nav class="ddnav">
     <header class="ddnav__brand">
       <div class="ddnav__mark">
-        <span class="material-symbols-outlined">inventory</span>
+        <LiIcon name="inventory" />
       </div>
       <div class="ddnav__id">
         <span class="ddnav__name">DD MPM</span>
@@ -17,8 +17,8 @@
              route, so an inclusive match would keep Dashboard highlighted on
              every DD screen. -->
         <RouterLink :to="{ name: 'dd' }" custom v-slot="{ isExactActive, navigate }">
-          <button class="ddnav__item" :class="{ 'ddnav__item--active': isExactActive }" @click="navigate">
-            <span class="material-symbols-outlined">dashboard</span>
+          <button class="ddnav__item" :class="{ 'ddnav__item--active': isExactActive }" :aria-current="isExactActive ? 'page' : undefined" @click="navigate">
+            <LiIcon name="dashboard" />
             <span class="ddnav__text">Dashboard</span>
           </button>
         </RouterLink>
@@ -30,8 +30,8 @@
           v-for="item in visibleManage" :key="item.name"
           :to="{ name: item.name }" custom v-slot="{ isActive, navigate }"
         >
-          <button class="ddnav__item" :class="{ 'ddnav__item--active': isActive }" @click="navigate">
-            <span class="material-symbols-outlined">{{ item.icon }}</span>
+          <button class="ddnav__item" :class="{ 'ddnav__item--active': isActive }" :aria-current="isActive ? 'page' : undefined" @click="navigate">
+            <LiIcon :name="item.icon" />
             <span class="ddnav__text">{{ item.label }}</span>
           </button>
         </RouterLink>
@@ -44,12 +44,12 @@
             class="ddnav__icobtn" :class="{ 'ddnav__icobtn--spin': reloading }"
             aria-label="Reload row counts" @click="reload"
           >
-            <span class="material-symbols-outlined">refresh</span>
+            <LiIcon name="refresh" />
           </button>
         </div>
         <div v-for="db in visibleDatabases" :key="db" class="ddnav__dbgroup">
           <p class="ddnav__dbname">
-            <span class="material-symbols-outlined">dns</span>
+            <LiIcon name="dns" />
             {{ db }}
           </p>
           <RouterLink
@@ -59,9 +59,11 @@
           >
             <button
               class="ddnav__item ddnav__item--nested"
-              :class="{ 'ddnav__item--active': isActive }" @click="navigate"
+              :class="{ 'ddnav__item--active': isActive }"
+              :aria-current="isActive ? 'page' : undefined"
+              @click="navigate"
             >
-              <span class="material-symbols-outlined">table_rows</span>
+              <LiIcon name="table_rows" />
               <span class="ddnav__text ddnav__text--mono">{{ t.targetTable }}</span>
               <span v-if="counts[t.id] != null" class="ddnav__count">{{ counts[t.id] }}</span>
             </button>
@@ -75,8 +77,8 @@
           v-for="item in visibleTools" :key="item.name"
           :to="{ name: item.name }" custom v-slot="{ isActive, navigate }"
         >
-          <button class="ddnav__item" :class="{ 'ddnav__item--active': isActive }" @click="navigate">
-            <span class="material-symbols-outlined">{{ item.icon }}</span>
+          <button class="ddnav__item" :class="{ 'ddnav__item--active': isActive }" :aria-current="isActive ? 'page' : undefined" @click="navigate">
+            <LiIcon :name="item.icon" />
             <span class="ddnav__text">{{ item.label }}</span>
           </button>
         </RouterLink>
@@ -88,8 +90,8 @@
           v-for="item in visibleAdmin" :key="item.name"
           :to="{ name: item.name }" custom v-slot="{ isActive, navigate }"
         >
-          <button class="ddnav__item" :class="{ 'ddnav__item--active': isActive }" @click="navigate">
-            <span class="material-symbols-outlined">{{ item.icon }}</span>
+          <button class="ddnav__item" :class="{ 'ddnav__item--active': isActive }" :aria-current="isActive ? 'page' : undefined" @click="navigate">
+            <LiIcon :name="item.icon" />
             <span class="ddnav__text">{{ item.label }}</span>
           </button>
         </RouterLink>
@@ -183,7 +185,7 @@ onMounted(() => {
   background: linear-gradient(135deg, #6366F1, #8B5CF6);
   border-radius: var(--radius-sm, 10px);
 }
-.ddnav__mark .material-symbols-outlined { font-size: 19px; color: #fff; }
+.ddnav__mark .li-icon { font-size: 19px; color: #fff; }
 .ddnav__id { display: flex; flex-direction: column; min-width: 0; }
 .ddnav__name { font-size: 14px; font-weight: 800; letter-spacing: -0.2px; }
 .ddnav__sub { font-size: 11px; color: var(--color-gray-400, #aaa); }
@@ -200,9 +202,9 @@ onMounted(() => {
   border: none; background: transparent; cursor: pointer; padding: 2px 6px;
   color: var(--color-gray-400, #aaa); display: flex; align-items: center;
 }
-.ddnav__icobtn .material-symbols-outlined { font-size: 16px; }
+.ddnav__icobtn .li-icon { font-size: 16px; }
 .ddnav__icobtn:hover { color: var(--color-gray-700, #555); }
-.ddnav__icobtn--spin .material-symbols-outlined { animation: ddspin 600ms linear infinite; }
+.ddnav__icobtn--spin .li-icon { animation: ddspin 600ms linear infinite; }
 @keyframes ddspin { to { transform: rotate(360deg); } }
 
 .ddnav__item {
@@ -212,10 +214,10 @@ onMounted(() => {
   font-family: var(--font-body, 'Inter', sans-serif); text-align: left;
   color: var(--color-gray-700, #555); transition: background 160ms, color 160ms;
 }
-.ddnav__item .material-symbols-outlined { font-size: 18px; flex-shrink: 0; }
+.ddnav__item .li-icon { font-size: 18px; flex-shrink: 0; }
 .ddnav__item:hover { background: rgba(0, 0, 0, 0.04); }
 .ddnav__item--active { background: #fff; color: var(--color-on-surface, #1a1a2e); font-weight: 600; }
-.ddnav__item--active .material-symbols-outlined { color: #6366F1; }
+.ddnav__item--active .li-icon { color: #6366F1; }
 .ddnav__item--nested { padding-left: 16px; }
 
 .ddnav__text {
@@ -236,7 +238,7 @@ onMounted(() => {
   font-size: 11px; color: var(--color-gray-500, #8e8ea0);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.ddnav__dbname .material-symbols-outlined { font-size: 14px; }
+.ddnav__dbname .li-icon { font-size: 14px; }
 
 .ddnav__foot {
   display: flex; align-items: center; gap: 6px;

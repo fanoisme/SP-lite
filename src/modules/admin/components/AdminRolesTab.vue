@@ -3,7 +3,7 @@
     <div class="adm-roles__toolbar">
       <h3 class="adm-roles__heading">Manage Roles</h3>
       <button class="adm-roles__add-btn" @click="$emit('add-role')">
-        <span class="material-symbols-outlined">add</span>
+        <LiIcon name="add" />
         Add Role
       </button>
     </div>
@@ -29,7 +29,7 @@
       >
         <div class="adm-roles__card-head">
           <div class="adm-roles__card-name">
-            <span class="material-symbols-outlined adm-roles__card-icon">shield_person</span>
+            <LiIcon name="shield_person" class="adm-roles__card-icon" />
             <span>{{ role.name }}</span>
           </div>
           <LiChip v-if="role.is_system" variant="warning" size="sm" iconLeft="lock">
@@ -45,24 +45,26 @@
           <button
             class="adm-roles__action-btn"
             :disabled="role.is_system"
+            :aria-label="`Rename role ${role.name}`"
             :title="role.is_system ? 'Cannot rename system role' : 'Rename role'"
             @click="$emit('rename-role', role)"
           >
-            <span class="material-symbols-outlined">edit</span>
+            <LiIcon name="edit" />
           </button>
           <button
             class="adm-roles__action-btn adm-roles__action-btn--danger"
             :disabled="role.is_system || (role.user_count > 0)"
+            :aria-label="`Delete role ${role.name}`"
             :title="deleteTooltip(role)"
             @click="$emit('delete-role', role)"
           >
-            <span class="material-symbols-outlined">delete</span>
+            <LiIcon name="delete" />
           </button>
         </div>
 
         <span class="adm-roles__card-cta">
           Configure access
-          <span class="material-symbols-outlined">chevron_right</span>
+          <LiIcon name="chevron_right" />
         </span>
       </div>
     </div>
@@ -125,7 +127,7 @@ function deleteTooltip(role) {
   transform: translateY(-2px);
 }
 
-.adm-roles__add-btn .material-symbols-outlined {
+.adm-roles__add-btn .li-icon {
   font-size: 18px;
 }
 
@@ -238,7 +240,7 @@ function deleteTooltip(role) {
   cursor: not-allowed;
 }
 
-.adm-roles__action-btn .material-symbols-outlined {
+.adm-roles__action-btn .li-icon {
   font-size: 18px;
 }
 
@@ -252,7 +254,7 @@ function deleteTooltip(role) {
   color: var(--color-on-surface-muted, #999);
 }
 
-.adm-roles__card-cta .material-symbols-outlined {
+.adm-roles__card-cta .li-icon {
   font-size: 16px;
   transition: transform var(--dur-short, 200ms) var(--ease-out);
 }
@@ -261,7 +263,7 @@ function deleteTooltip(role) {
   color: var(--color-on-surface-variant, #666);
 }
 
-.adm-roles__card:hover .adm-roles__card-cta .material-symbols-outlined {
+.adm-roles__card:hover .adm-roles__card-cta .li-icon {
   transform: translateX(2px);
 }
 </style>

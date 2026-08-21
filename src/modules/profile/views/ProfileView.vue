@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="profile__header">
       <div class="profile__header-badge">
-        <span class="material-symbols-outlined">person</span>
+        <LiIcon name="person" />
       </div>
       <div class="profile__header-text">
         <h1 class="profile__title">Profile</h1>
@@ -14,19 +14,19 @@
     <!-- Messages -->
     <Transition name="profile-msg">
       <div v-if="errorMsg" class="profile__msg profile__msg--error">
-        <span class="material-symbols-outlined">error</span>
+        <LiIcon name="error" />
         <span class="profile__msg-text">{{ errorMsg }}</span>
-        <button class="profile__msg-close" @click="errorMsg = ''">
-          <span class="material-symbols-outlined">close</span>
+        <button class="profile__msg-close" aria-label="Dismiss error message" @click="errorMsg = ''">
+          <LiIcon name="close" />
         </button>
       </div>
     </Transition>
     <Transition name="profile-msg">
       <div v-if="successMsg" class="profile__msg profile__msg--success">
-        <span class="material-symbols-outlined">check_circle</span>
+        <LiIcon name="check_circle" />
         <span class="profile__msg-text">{{ successMsg }}</span>
-        <button class="profile__msg-close" @click="successMsg = ''">
-          <span class="material-symbols-outlined">close</span>
+        <button class="profile__msg-close" aria-label="Dismiss success message" @click="successMsg = ''">
+          <LiIcon name="close" />
         </button>
       </div>
     </Transition>
@@ -36,7 +36,7 @@
       <div class="profile__card" style="--card-delay: 0">
         <div class="profile__card-header">
           <div class="profile__card-icon">
-            <span class="material-symbols-outlined">person</span>
+            <LiIcon name="person" />
           </div>
           <h2 class="profile__card-title">Informasi Akun</h2>
         </div>
@@ -57,7 +57,7 @@
           <div class="profile__field">
             <label class="profile__label">Username</label>
             <div class="profile__input-wrap profile__input-wrap--has-action" :class="{ 'profile__input-wrap--error': usernameError }">
-              <span class="material-symbols-outlined profile__input-icon">badge</span>
+              <LiIcon name="badge" class="profile__input-icon" />
               <input
                 v-model="username"
                 type="text"
@@ -69,11 +69,12 @@
               <button
                 class="profile__input-action"
                 :disabled="savingUsername || username === (profile?.username || '')"
+                aria-label="Save username"
                 @click="onSaveUsername"
                 title="Simpan username"
               >
                 <span v-if="savingUsername" class="profile__spinner profile__spinner--sm"></span>
-                <span v-else class="material-symbols-outlined">check</span>
+                <LiIcon v-else name="check" />
               </button>
             </div>
             <span v-if="usernameError" class="profile__field-error">{{ usernameError }}</span>
@@ -81,14 +82,14 @@
           <div class="profile__field">
             <label class="profile__label">Email</label>
             <div class="profile__input-wrap profile__input-wrap--disabled">
-              <span class="material-symbols-outlined profile__input-icon">mail</span>
+              <LiIcon name="mail" class="profile__input-icon" />
               <input :value="session?.user?.email" type="text" class="profile__input" disabled />
             </div>
           </div>
           <div class="profile__field">
             <label class="profile__label">Nama Lengkap</label>
             <div class="profile__input-wrap">
-              <span class="material-symbols-outlined profile__input-icon">edit</span>
+              <LiIcon name="edit" class="profile__input-icon" />
               <input v-model="fullName" type="text" class="profile__input" placeholder="Nama kamu" />
             </div>
           </div>
@@ -97,7 +98,7 @@
         <button class="profile__btn profile__btn--primary" :disabled="savingName" @click="onSaveName">
           <span v-if="savingName" class="profile__spinner"></span>
           <template v-else>
-            <span class="material-symbols-outlined">save</span>
+            <LiIcon name="save" />
             Save Changes
           </template>
         </button>
@@ -107,7 +108,7 @@
       <div class="profile__card" style="--card-delay: 1">
         <div class="profile__card-header">
           <div class="profile__card-icon profile__card-icon--secondary">
-            <span class="material-symbols-outlined">lock</span>
+            <LiIcon name="lock" />
           </div>
           <h2 class="profile__card-title">Ganti Password</h2>
         </div>
@@ -116,21 +117,21 @@
           <div class="profile__field">
             <label class="profile__label">Password Saat Ini</label>
             <div class="profile__input-wrap">
-              <span class="material-symbols-outlined profile__input-icon">lock</span>
+              <LiIcon name="lock" class="profile__input-icon" />
               <input v-model="currentPassword" type="password" class="profile__input" placeholder="Password saat ini" autocomplete="current-password" />
             </div>
           </div>
           <div class="profile__field">
             <label class="profile__label">Password Baru</label>
             <div class="profile__input-wrap">
-              <span class="material-symbols-outlined profile__input-icon">key</span>
+              <LiIcon name="key" class="profile__input-icon" />
               <input v-model="newPassword" type="password" class="profile__input" placeholder="Minimal 6 karakter" autocomplete="new-password" />
             </div>
           </div>
           <div class="profile__field">
             <label class="profile__label">Konfirmasi Password Baru</label>
             <div class="profile__input-wrap">
-              <span class="material-symbols-outlined profile__input-icon">key</span>
+              <LiIcon name="key" class="profile__input-icon" />
               <input v-model="confirmPassword" type="password" class="profile__input" placeholder="Ulangi password baru" autocomplete="new-password" />
             </div>
           </div>
@@ -139,7 +140,7 @@
         <button class="profile__btn profile__btn--secondary" :disabled="changingPassword" @click="onChangePassword">
           <span v-if="changingPassword" class="profile__spinner"></span>
           <template v-else>
-            <span class="material-symbols-outlined">key</span>
+            <LiIcon name="key" />
             Ganti Password
           </template>
         </button>
@@ -286,7 +287,7 @@ async function onChangePassword() {
   box-shadow: var(--shadow-sm);
 }
 
-.profile__header-badge .material-symbols-outlined {
+.profile__header-badge .li-icon {
   font-size: 24px;
   color: var(--cta-primary-text, #1E1E1E);
 }
@@ -337,7 +338,7 @@ async function onChangePassword() {
   border: 1px solid rgba(23, 163, 230, 0.12);
 }
 
-.profile__msg .material-symbols-outlined {
+.profile__msg .li-icon {
   font-size: 18px;
   flex-shrink: 0;
 }
@@ -363,7 +364,7 @@ async function onChangePassword() {
   background: rgba(0, 0, 0, 0.05);
 }
 
-.profile__msg-close .material-symbols-outlined {
+.profile__msg-close .li-icon {
   font-size: 16px;
 }
 
@@ -417,7 +418,7 @@ async function onChangePassword() {
   flex-shrink: 0;
 }
 
-.profile__card-icon .material-symbols-outlined {
+.profile__card-icon .li-icon {
   font-size: 20px;
   color: var(--color-on-warning-container, #FF3000);
 }
@@ -426,7 +427,7 @@ async function onChangePassword() {
   background: var(--color-info-container, #E6E6FF);
 }
 
-.profile__card-icon--secondary .material-symbols-outlined {
+.profile__card-icon--secondary .li-icon {
   color: var(--color-on-info-container, #0047B2);
 }
 
@@ -617,7 +618,7 @@ async function onChangePassword() {
   box-shadow: none !important;
 }
 
-.profile__btn .material-symbols-outlined {
+.profile__btn .li-icon {
   font-size: 18px;
 }
 
@@ -683,7 +684,7 @@ async function onChangePassword() {
   cursor: not-allowed;
 }
 
-.profile__input-action .material-symbols-outlined {
+.profile__input-action .li-icon {
   font-size: 16px;
 }
 
@@ -708,7 +709,7 @@ async function onChangePassword() {
     height: 40px;
   }
 
-  .profile__header-badge .material-symbols-outlined {
+  .profile__header-badge .li-icon {
     font-size: 20px;
   }
 }

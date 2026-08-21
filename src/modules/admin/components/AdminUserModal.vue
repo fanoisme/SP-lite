@@ -35,11 +35,11 @@
       />
 
       <div v-if="error" class="adm-umodal__error">
-        <span class="material-symbols-outlined">error</span>
+        <LiIcon name="error" />
         {{ error }}
       </div>
       <p class="adm-umodal__note">
-        <span class="material-symbols-outlined">info</span>
+        <LiIcon name="info" />
         Admin-created accounts are active immediately.
       </p>
     </div>
@@ -129,7 +129,7 @@ async function onSubmit() {
   border-radius: var(--radius-sm, 12px);
 }
 
-.adm-umodal__error .material-symbols-outlined {
+.adm-umodal__error .li-icon {
   font-size: 16px;
 }
 
@@ -142,7 +142,7 @@ async function onSubmit() {
   color: var(--color-on-surface-muted, #999);
 }
 
-.adm-umodal__note .material-symbols-outlined {
+.adm-umodal__note .li-icon {
   font-size: 16px;
 }
 

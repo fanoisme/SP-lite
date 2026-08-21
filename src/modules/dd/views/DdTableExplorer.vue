@@ -5,10 +5,10 @@
         <div class="ddexpl__id">
           <h1 class="ddexpl__title">{{ meta.targetTable }}</h1>
           <p class="ddexpl__sub">
-            <span class="material-symbols-outlined">dns</span>
+            <LiIcon name="dns" />
             {{ meta.targetDb }}
             <RouterLink v-if="manageRoute" class="ddexpl__manage" :to="{ name: manageRoute }">
-              <span class="material-symbols-outlined">tune</span>
+              <LiIcon name="tune" />
               Guided screen
             </RouterLink>
           </p>
@@ -25,7 +25,7 @@
           <LiDropdown align="right">
             <template #trigger>
               <span class="ddexpl__btn">
-                <span class="material-symbols-outlined">view_column</span>
+                <LiIcon name="view_column" />
                 Columns
               </span>
             </template>
@@ -50,12 +50,12 @@
           </LiDropdown>
 
           <button class="ddexpl__btn" type="button" :disabled="!total || exporting" @click="exportCsv">
-            <span class="material-symbols-outlined">file_save</span>
+            <LiIcon name="file_save" />
             {{ exporting ? 'Exporting…' : 'Export CSV' }}
           </button>
 
           <button v-if="canCreate" class="ddexpl__btn ddexpl__btn--primary" type="button" @click="openCreate">
-            <span class="material-symbols-outlined">add</span>
+            <LiIcon name="add" />
             Insert row
           </button>
         </div>
@@ -65,7 +65,7 @@
            screen are not wrong, they are old — so this offers a reload rather
            than forcing one under the reader. -->
       <div v-if="showStale" class="ddexpl__stale">
-        <span class="material-symbols-outlined">sync_problem</span>
+        <LiIcon name="sync_problem" />
         <p class="ddexpl__stale-text">
           {{ staleCount }} {{ staleCount === 1 ? 'change' : 'changes' }}
           <template v-if="staleBy">by {{ staleBy }}</template>
@@ -73,7 +73,7 @@
         </p>
         <button class="ddexpl__stale-action" type="button" @click="refresh">Refresh</button>
         <button class="ddexpl__stale-close" type="button" aria-label="Dismiss" @click="staleDismissed = true">
-          <span class="material-symbols-outlined">close</span>
+          <LiIcon name="close" />
         </button>
       </div>
 
@@ -86,7 +86,7 @@
           :class="{ 'ddexpl__btn--on': showFilters }"
           @click="showFilters = !showFilters"
         >
-          <span class="material-symbols-outlined">filter_alt</span>
+          <LiIcon name="filter_alt" />
           Filters
           <span v-if="activeFilters" class="ddexpl__pill">{{ activeFilters }}</span>
         </button>
@@ -133,19 +133,19 @@
 
         <template #cell-__actions="{ row }">
           <div class="ddexpl__row-actions">
-            <button v-if="canUpdate" class="ddexpl__icon-btn" type="button" title="Edit" @click="openEdit(row)">
-              <span class="material-symbols-outlined">edit</span>
+            <button v-if="canUpdate" class="ddexpl__icon-btn" type="button" :aria-label="`Edit row ${row[pk]}`" title="Edit" @click="openEdit(row)">
+              <LiIcon name="edit" />
             </button>
-            <button v-if="canCreate" class="ddexpl__icon-btn" type="button" title="Duplicate" @click="openDuplicate(row)">
-              <span class="material-symbols-outlined">content_copy</span>
+            <button v-if="canCreate" class="ddexpl__icon-btn" type="button" :aria-label="`Duplicate row ${row[pk]}`" title="Duplicate" @click="openDuplicate(row)">
+              <LiIcon name="content_copy" />
             </button>
             <button
               v-if="canDelete"
               class="ddexpl__icon-btn ddexpl__icon-btn--danger"
-              type="button" title="Delete"
+              type="button" :aria-label="`Delete row ${row[pk]}`" title="Delete"
               @click="pendingDelete = row"
             >
-              <span class="material-symbols-outlined">delete</span>
+              <LiIcon name="delete" />
             </button>
           </div>
         </template>
@@ -537,7 +537,7 @@ onMounted(() => activate(meta.value?.id ?? null))
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 12px; color: var(--color-gray-500, #8e8ea0); margin: 4px 0 0;
 }
-.ddexpl__sub .material-symbols-outlined { font-size: 15px; }
+.ddexpl__sub .li-icon { font-size: 15px; }
 .ddexpl__manage {
   display: inline-flex; align-items: center; gap: 4px; margin-left: 6px;
   font-family: var(--font-body, 'Inter', sans-serif);
@@ -545,7 +545,7 @@ onMounted(() => activate(meta.value?.id ?? null))
   color: #6366F1; border-bottom: 1px solid transparent; transition: border-color 160ms;
 }
 .ddexpl__manage:hover { border-bottom-color: currentColor; }
-.ddexpl__manage .material-symbols-outlined { font-size: 15px; }
+.ddexpl__manage .li-icon { font-size: 15px; }
 
 .ddexpl__actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .ddexpl__count {
@@ -564,7 +564,7 @@ onMounted(() => activate(meta.value?.id ?? null))
 }
 .ddexpl__btn:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
 .ddexpl__btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.ddexpl__btn .material-symbols-outlined { font-size: 17px; }
+.ddexpl__btn .li-icon { font-size: 17px; }
 .ddexpl__btn--primary {
   background: var(--cta-primary-bg, #FFBC25);
   color: var(--cta-primary-text, #1E1E1E);
@@ -640,7 +640,7 @@ onMounted(() => activate(meta.value?.id ?? null))
   background: rgba(255, 188, 37, 0.12);
   border: 1px solid rgba(255, 188, 37, 0.35);
 }
-.ddexpl__stale .material-symbols-outlined { font-size: 19px; color: var(--color-yellow-500, #F4A600); }
+.ddexpl__stale .li-icon { font-size: 19px; color: var(--color-yellow-500, #F4A600); }
 .ddexpl__stale-text { margin: 0; flex: 1; font-size: 13px; color: var(--color-gray-800, #4D4D4D); }
 .ddexpl__stale-action {
   padding: 6px 14px; border: none; border-radius: var(--radius-pill, 999px);
@@ -653,7 +653,7 @@ onMounted(() => activate(meta.value?.id ?? null))
   background: none; border: none; cursor: pointer; padding: 2px;
   display: inline-flex; color: var(--color-gray-500, #8e8ea0);
 }
-.ddexpl__stale-close .material-symbols-outlined { font-size: 16px; color: inherit; }
+.ddexpl__stale-close .li-icon { font-size: 16px; color: inherit; }
 
 /* Every cell is monospaced: aligned digits are how a person spots the row whose
    percentage has one decimal too many. */
@@ -678,7 +678,7 @@ onMounted(() => activate(meta.value?.id ?? null))
 }
 .ddexpl__icon-btn:hover { color: var(--cta-primary-bg, #FFBC25); background: rgba(255, 188, 37, 0.12); }
 .ddexpl__icon-btn--danger:hover { color: var(--color-red-400, #C83E3B); background: rgba(200, 62, 59, 0.08); }
-.ddexpl__icon-btn .material-symbols-outlined { font-size: 18px; }
+.ddexpl__icon-btn .li-icon { font-size: 18px; }
 
 .ddexpl__confirm { margin: 0 0 8px; font-size: 14px; color: var(--color-gray-900, #333); }
 .ddexpl__confirm code {

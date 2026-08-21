@@ -17,11 +17,11 @@
     <div class="ftl-panel__section">
       <div class="ftl-panel__section-header">
         <div class="ftl-panel__section-title">
-          <span class="material-symbols-outlined">code</span>
+          <LiIcon name="code" />
           HTML Source
         </div>
         <label class="ftl-panel__upload-btn">
-          <span class="material-symbols-outlined">upload_file</span>
+          <LiIcon name="upload_file" />
           Upload
           <input
             type="file"
@@ -43,7 +43,7 @@
       <!-- Auto-fix badge -->
       <Transition name="badge-pop">
         <div v-if="fixesApplied.length > 0" class="ftl-panel__fix-badge">
-          <span class="material-symbols-outlined">auto_fix_high</span>
+          <LiIcon name="auto_fix_high" />
           <span>Auto-fixed <strong>{{ fixesApplied.length }}</strong> issue{{ fixesApplied.length > 1 ? 's' : '' }}</span>
         </div>
       </Transition>
@@ -53,7 +53,7 @@
         @click="handleConvert"
         :disabled="!inputHtml.trim()"
       >
-        <span class="material-symbols-outlined">transform</span>
+        <LiIcon name="transform" />
         Convert to FTL
         <span class="ftl-panel__btn-shine"></span>
       </button>
@@ -64,32 +64,35 @@
       <div v-if="ftlOutput" class="ftl-panel__section ftl-panel__output-section">
         <div class="ftl-panel__section-header">
           <div class="ftl-panel__section-title">
-            <span class="material-symbols-outlined">description</span>
+            <LiIcon name="description" />
             FTL Template
           </div>
           <div class="ftl-panel__toggle-group">
             <button
               class="ftl-panel__toggle"
               :class="{ 'ftl-panel__toggle--active': viewMode === 'code' }"
+              :aria-pressed="viewMode === 'code'"
               @click="viewMode = 'code'"
             >
-              <span class="material-symbols-outlined">code</span>
+              <LiIcon name="code" />
               Code
             </button>
             <button
               class="ftl-panel__toggle"
               :class="{ 'ftl-panel__toggle--active': viewMode === 'preview' }"
+              :aria-pressed="viewMode === 'preview'"
               @click="viewMode = 'preview'"
             >
-              <span class="material-symbols-outlined">preview</span>
+              <LiIcon name="preview" />
               Preview
             </button>
             <button
               class="ftl-panel__toggle"
               :class="{ 'ftl-panel__toggle--active': viewMode === 'pdf' }"
+              :aria-pressed="viewMode === 'pdf'"
               @click="renderPdf"
             >
-              <span class="material-symbols-outlined">picture_as_pdf</span>
+              <LiIcon name="picture_as_pdf" />
               PDF
             </button>
           </div>
@@ -299,7 +302,7 @@ async function renderPdf() {
   color: var(--color-on-surface, #1a1a2e);
 }
 
-.ftl-panel__section-title .material-symbols-outlined {
+.ftl-panel__section-title .li-icon {
   font-size: 20px;
   color: var(--cta-primary-bg, #FFBC25);
 }
@@ -320,7 +323,7 @@ async function renderPdf() {
   transition: all 0.25s ease;
 }
 
-.ftl-panel__upload-btn .material-symbols-outlined {
+.ftl-panel__upload-btn .li-icon {
   font-size: 16px;
 }
 
@@ -345,7 +348,7 @@ async function renderPdf() {
   color: #8b6914;
 }
 
-.ftl-panel__fix-badge .material-symbols-outlined {
+.ftl-panel__fix-badge .li-icon {
   font-size: 18px;
   color: var(--cta-primary-bg, #FFBC25);
 }
@@ -372,7 +375,7 @@ async function renderPdf() {
   box-shadow: 0 4px 16px rgba(255, 188, 37, 0.3);
 }
 
-.ftl-panel__convert-btn .material-symbols-outlined {
+.ftl-panel__convert-btn .li-icon {
   font-size: 20px;
 }
 
@@ -429,7 +432,7 @@ async function renderPdf() {
   transition: all 0.25s ease;
 }
 
-.ftl-panel__toggle .material-symbols-outlined { font-size: 16px; }
+.ftl-panel__toggle .li-icon { font-size: 16px; }
 
 .ftl-panel__toggle--active {
   background: white;

@@ -15,7 +15,7 @@
         @drop.prevent="onDrop"
         @click="$refs.input.click()"
       >
-        <span class="material-symbols-outlined vf__upload-icon">video_file</span>
+        <LiIcon name="video_file" class="vf__upload-icon" />
         <span class="vf__upload-text">{{ fileName || 'Drop video here or click to browse' }}</span>
         <span class="vf__upload-hint">MP4, WebM, MOV — max 500MB</span>
         <input ref="input" type="file" accept="video/*" hidden @change="onFile" />
@@ -34,11 +34,11 @@
       <!-- Actions -->
       <div class="vf__actions" v-if="fileName && !processing">
         <button v-if="frames.length === 0" class="vf__btn vf__btn--primary" @click="run">
-          <span class="material-symbols-outlined">play_arrow</span>
+          <LiIcon name="play_arrow" />
           Extract Frames
         </button>
         <button v-if="frames.length > 0" class="vf__btn" @click="run">
-          <span class="material-symbols-outlined">refresh</span>
+          <LiIcon name="refresh" />
           Re-extract
         </button>
       </div>
@@ -51,13 +51,13 @@
 
       <!-- Error -->
       <div class="vf__error" v-if="error">
-        <span class="material-symbols-outlined">error</span>
+        <LiIcon name="error" />
         <span>{{ error }}</span>
       </div>
 
       <!-- Status message -->
       <div class="vf__status" v-if="progress && !processing && !error">
-        <span class="material-symbols-outlined">check_circle</span>
+        <LiIcon name="check_circle" />
         <span>{{ progress }}</span>
       </div>
 
@@ -73,11 +73,11 @@
           </div>
           <div class="vf__toolbar-actions">
             <button class="vf__btn vf__btn--sm" @click="toggleAll">
-              <span class="material-symbols-outlined">{{ allSelected ? 'deselect' : 'select_all' }}</span>
+              <LiIcon :name="allSelected ? 'deselect' : 'select_all'" />
               {{ allSelected ? 'Deselect All' : 'Select All' }}
             </button>
             <button class="vf__btn vf__btn--sm vf__btn--primary" @click="download(false)">
-              <span class="material-symbols-outlined">download</span>
+              <LiIcon name="download" />
               All ({{ totalCount }})
             </button>
             <button
@@ -85,7 +85,7 @@
               :disabled="selectedCount === 0"
               @click="download(true)"
             >
-              <span class="material-symbols-outlined">download_done</span>
+              <LiIcon name="download_done" />
               Selected ({{ selectedCount }})
             </button>
           </div>
@@ -101,22 +101,22 @@
             @click="toggleSelect(i)"
           >
             <div class="vf__card-check">
-              <span class="material-symbols-outlined">{{ frame.selected ? 'check_box' : 'check_box_outline_blank' }}</span>
+              <LiIcon :name="frame.selected ? 'check_box' : 'check_box_outline_blank'" />
             </div>
             <img :src="frame._url" class="vf__thumb" loading="lazy" />
             <div class="vf__card-meta">
               <span class="vf__card-label">Frame {{ i + 1 }}</span>
               <div class="vf__card-details">
                 <span class="vf__card-detail">
-                  <span class="material-symbols-outlined">schedule</span>
+                  <LiIcon name="schedule" />
                   {{ formatTime(frame.time) }}
                 </span>
                 <span class="vf__card-detail">
-                  <span class="material-symbols-outlined">aspect_ratio</span>
+                  <LiIcon name="aspect_ratio" />
                   {{ frame.width }}×{{ frame.height }}
                 </span>
                 <span class="vf__card-detail">
-                  <span class="material-symbols-outlined">hard_drive_2</span>
+                  <LiIcon name="hard_drive_2" />
                   {{ formatSize(frame.size) }}
                 </span>
               </div>
@@ -267,7 +267,7 @@ async function download(selectedOnly) {
   font-size: var(--text-xs, 11px);
 }
 
-.vf__btn .material-symbols-outlined { font-size: 18px; }
+.vf__btn .li-icon { font-size: 18px; }
 
 /* ── Progress ── */
 .vf__progress {
@@ -295,13 +295,13 @@ async function download(selectedOnly) {
   background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-md, 12px);
   font-size: var(--text-sm, 13px); color: var(--color-red-400, #C83E3B);
 }
-.vf__error .material-symbols-outlined { font-size: 18px; }
+.vf__error .li-icon { font-size: 18px; }
 
 .vf__status {
   display: flex; align-items: center; gap: var(--space-sm, 8px);
   font-size: var(--text-sm, 13px); color: var(--color-green-600, #10B981);
 }
-.vf__status .material-symbols-outlined { font-size: 18px; }
+.vf__status .li-icon { font-size: 18px; }
 
 /* ── Toolbar ── */
 .vf__toolbar {
@@ -368,7 +368,7 @@ async function download(selectedOnly) {
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
 }
 
-.vf__card-check .material-symbols-outlined { font-size: 22px; }
+.vf__card-check .li-icon { font-size: 22px; }
 
 .vf__thumb {
   width: 100%;
@@ -404,7 +404,7 @@ async function download(selectedOnly) {
   color: var(--color-gray-500, #808080);
 }
 
-.vf__card-detail .material-symbols-outlined {
+.vf__card-detail .li-icon {
   font-size: 12px;
 }
 

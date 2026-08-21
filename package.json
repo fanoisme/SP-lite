@@ -10,7 +10,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "icons:sync": "node scripts/sync-icon-assets.mjs",
+    "test:icons": "node --test tests/icon-assets.test.mjs",
+    "check:icons": "node scripts/check-icon-migration.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
@@ -24,6 +27,8 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@material-design-icons/svg": "^0.14.15",
+    "@material-symbols/svg-400": "^0.46.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "vite": "^6.0.5"
   }

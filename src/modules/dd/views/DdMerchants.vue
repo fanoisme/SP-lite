@@ -8,15 +8,15 @@
       <div class="ddmer__actions">
         <p class="ddmer__count">{{ total }} {{ total === 1 ? 'merchant' : 'merchants' }}</p>
         <button class="ddmer__btn" type="button" :disabled="exporting || !total" @click="exportXlsx">
-          <span class="material-symbols-outlined">file_save</span>
+          <LiIcon name="file_save" />
           {{ exporting ? 'Exporting…' : 'Export XLSX' }}
         </button>
         <button v-if="canCreate" class="ddmer__btn" type="button" @click="showBulk = true">
-          <span class="material-symbols-outlined">upload</span>
+          <LiIcon name="upload" />
           Bulk Upload
         </button>
         <button v-if="canCreate" class="ddmer__btn ddmer__btn--primary" type="button" @click="openForm(null)">
-          <span class="material-symbols-outlined">add</span>
+          <LiIcon name="add" />
           Add Merchant
         </button>
       </div>
@@ -26,7 +26,7 @@
          offers the reload rather than performing it: a silent re-sort under a
          reader mid-scan is worse than a stale row. -->
     <div v-if="stale && !bannerDismissed" class="ddmer__stale">
-      <span class="material-symbols-outlined">sync_problem</span>
+      <LiIcon name="sync_problem" />
       <span class="ddmer__stale-text">
         {{ staleCount }} {{ staleCount === 1 ? 'change' : 'changes' }}
         <template v-if="staleBy">by {{ staleBy }}</template>
@@ -34,7 +34,7 @@
       </span>
       <button class="ddmer__stale-action" type="button" @click="refresh">Refresh</button>
       <button class="ddmer__stale-close" type="button" aria-label="Dismiss" @click="bannerDismissed = true">
-        <span class="material-symbols-outlined">close</span>
+        <LiIcon name="close" />
       </button>
     </div>
 
@@ -79,11 +79,11 @@
       </template>
       <template #cell-actions="{ row }">
         <div class="ddmer__row-actions">
-          <button v-if="canUpdate" class="ddmer__icon-btn" type="button" title="Edit" @click="openForm(row)">
-            <span class="material-symbols-outlined">edit</span>
+          <button v-if="canUpdate" class="ddmer__icon-btn" type="button" :aria-label="`Edit merchant ${row.merchant_id}`" title="Edit" @click="openForm(row)">
+            <LiIcon name="edit" />
           </button>
-          <button v-if="canDelete" class="ddmer__icon-btn ddmer__icon-btn--danger" type="button" title="Delete" @click="askDelete(row)">
-            <span class="material-symbols-outlined">delete</span>
+          <button v-if="canDelete" class="ddmer__icon-btn ddmer__icon-btn--danger" type="button" :aria-label="`Delete merchant ${row.merchant_id}`" title="Delete" @click="askDelete(row)">
+            <LiIcon name="delete" />
           </button>
         </div>
       </template>
@@ -326,7 +326,7 @@ onMounted(() => {
 }
 .ddmer__btn:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
 .ddmer__btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.ddmer__btn .material-symbols-outlined { font-size: 17px; }
+.ddmer__btn .li-icon { font-size: 17px; }
 .ddmer__btn--primary {
   background: var(--cta-primary-bg, #FFBC25);
   color: var(--cta-primary-text, #1E1E1E);
@@ -361,7 +361,7 @@ onMounted(() => {
   border: 1px solid rgba(255, 188, 37, 0.5);
   font-size: 13px; color: var(--color-gray-800, #4D4D4D);
 }
-.ddmer__stale .material-symbols-outlined { font-size: 18px; }
+.ddmer__stale .li-icon { font-size: 18px; }
 .ddmer__stale-text { flex: 1; }
 .ddmer__stale-action {
   border: none; background: transparent; padding: 4px 8px;
@@ -395,7 +395,7 @@ onMounted(() => {
 }
 .ddmer__icon-btn:hover { color: var(--cta-primary-bg, #FFBC25); background: rgba(255, 188, 37, 0.12); }
 .ddmer__icon-btn--danger:hover { color: var(--color-red-400, #C83E3B); background: rgba(200, 62, 59, 0.08); }
-.ddmer__icon-btn .material-symbols-outlined { font-size: 18px; }
+.ddmer__icon-btn .li-icon { font-size: 18px; }
 
 .ddmer__confirm { margin: 0 0 8px; font-size: 14px; }
 .ddmer__confirm-note { margin: 0; font-size: 12.5px; color: var(--color-gray-500, #8e8ea0); }

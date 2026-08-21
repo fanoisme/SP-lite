@@ -23,18 +23,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Noise overlay on body — disabled for performance */
-/* body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,...");
-  pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: overlay;
-  opacity: 0.5;
-} */
-
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -84,11 +72,6 @@ body {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(-8px);
-}
-
-/* Material Symbols helper */
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
 /* Number input spinner removal */

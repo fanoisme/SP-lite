@@ -2,7 +2,7 @@
   <Transition name="vars-pop">
     <div class="var-form" v-if="variables.length > 0">
       <div class="var-form__header">
-        <span class="material-symbols-outlined var-form__icon">data_object</span>
+        <LiIcon name="data_object" class="var-form__icon" />
         <span class="var-form__title">Variables Detected</span>
         <span class="var-form__count">{{ variables.length }}</span>
       </div>

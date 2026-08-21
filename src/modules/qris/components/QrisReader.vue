@@ -9,7 +9,7 @@
       @drop.prevent="handleDrop"
       tabindex="0"
     >
-      <span class="material-symbols-outlined reader__dropzone-icon">qr_code_scanner</span>
+      <LiIcon name="qr_code_scanner" class="reader__dropzone-icon" />
       <p class="reader__dropzone-text">
         Drop QR image here, paste from clipboard (Ctrl+V), or
         <label class="reader__browse">
@@ -38,7 +38,7 @@
 
     <!-- Error -->
     <div v-if="error" class="reader__error">
-      <span class="material-symbols-outlined">error</span>
+      <LiIcon name="error" />
       {{ error }}
     </div>
 
@@ -281,7 +281,7 @@ function decodeImageFile(file) {
   font-weight: 500;
 }
 
-.reader__error .material-symbols-outlined {
+.reader__error .li-icon {
   font-size: 18px;
   flex-shrink: 0;
 }

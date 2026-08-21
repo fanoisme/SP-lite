@@ -3,13 +3,13 @@
     <!-- Toolbar -->
     <div v-if="history.length > 0 || !loading" class="hist__toolbar">
       <button class="hist__btn hist__btn--clear" @click="showClearConfirm = true">
-        <span class="material-symbols-outlined">delete_sweep</span>
+        <LiIcon name="delete_sweep" />
         Clear History
       </button>
 
       <div class="hist__export-wrap" ref="exportWrap">
         <button class="hist__btn hist__btn--export" @click.stop="toggleExportMenu">
-          <span class="material-symbols-outlined">download</span>
+          <LiIcon name="download" />
           Export
         </button>
         <div v-if="exportOpen" class="hist__export-menu">
@@ -37,7 +37,7 @@
     </div>
 
     <div v-else-if="history.length === 0" class="hist__empty">
-      <span class="material-symbols-outlined">history</span>
+      <LiIcon name="history" />
       <p>No history yet. Generate or parse a QRIS to see it here.</p>
     </div>
 
@@ -65,8 +65,8 @@
             </span>
           </span>
         </div>
-        <button class="hist__delete" @click.stop="$emit('delete', entry.id)" title="Delete">
-          <span class="material-symbols-outlined">delete</span>
+        <button class="hist__delete" aria-label="Delete history entry" @click.stop="$emit('delete', entry.id)" title="Delete">
+          <LiIcon name="delete" />
         </button>
       </div>
     </div>
@@ -194,7 +194,7 @@ function expiryClass(dateStr) {
   font-size: 13px;
 }
 
-.hist__empty .material-symbols-outlined {
+.hist__empty .li-icon {
   font-size: 32px;
 }
 
@@ -304,7 +304,7 @@ function expiryClass(dateStr) {
   background: rgba(200, 62, 59, 0.06);
 }
 
-.hist__delete .material-symbols-outlined {
+.hist__delete .li-icon {
   font-size: 16px;
 }
 
@@ -379,7 +379,7 @@ function expiryClass(dateStr) {
   background: transparent;
 }
 
-.hist__btn .material-symbols-outlined {
+.hist__btn .li-icon {
   font-size: 16px;
 }
 

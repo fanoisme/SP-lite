@@ -24,7 +24,7 @@
           point at it — delete this merchant and add it again under the new ID if it really has to change.
         </p>
         <p v-else-if="leadingZeroNote" class="ddmerf__warn">
-          <span class="material-symbols-outlined">info</span>
+          <LiIcon name="info" />
           {{ leadingZeroNote }}
         </p>
       </div>
@@ -177,7 +177,7 @@ async function submit() {
   font-size: 12px; line-height: 1.45;
   color: var(--color-gray-800, #4D4D4D);
 }
-.ddmerf__warn .material-symbols-outlined { font-size: 16px; flex-shrink: 0; }
+.ddmerf__warn .li-icon { font-size: 16px; flex-shrink: 0; }
 
 .ddmerf__problems {
   margin: 0; padding: 10px 14px 10px 30px;

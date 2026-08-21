@@ -1,6 +1,6 @@
 <template>
   <div class="ddph">
-    <span class="material-symbols-outlined ddph__icon">{{ icon }}</span>
+    <LiIcon :name="icon" class="ddph__icon" />
     <h2 class="ddph__title">{{ title }}</h2>
     <p class="ddph__body">Not built yet — arriving in {{ phase }}.</p>
     <p v-if="note" class="ddph__note">{{ note }}</p>

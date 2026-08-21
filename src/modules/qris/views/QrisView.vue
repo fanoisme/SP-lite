@@ -5,7 +5,7 @@
       <div class="qris__header-content">
         <div class="qris__title-group">
           <div class="qris__icon-badge">
-            <span class="material-symbols-outlined">qr_code_2</span>
+            <LiIcon name="qr_code_2" />
           </div>
           <div>
             <h1 class="qris__title">QRIS Tools</h1>
@@ -23,9 +23,10 @@
           :key="tab.id"
           class="qris__tab"
           :class="{ 'qris__tab--active': activeTabIndex === index }"
+          :aria-pressed="activeTabIndex === index"
           @click="switchTab(index)"
         >
-          <span class="material-symbols-outlined qris__tab-icon">{{ tab.icon }}</span>
+          <LiIcon :name="tab.icon" class="qris__tab-icon" />
           <span class="qris__tab-label">{{ tab.label }}</span>
           <span class="qris__tab-desc">{{ tab.desc }}</span>
         </button>
@@ -46,14 +47,14 @@
           <div v-if="activeTab === 'generator' && canFeature('qris','generator')" class="qris__split">
             <div class="qris__left">
               <div class="qris__section-header">
-                <span class="material-symbols-outlined qris__section-icon">tune</span>
+                <LiIcon name="tune" class="qris__section-icon" />
                 <span class="qris__section-label">Configuration</span>
               </div>
               <QrisGenerator @generated="onResult" />
             </div>
             <div class="qris__right">
               <div class="qris__section-header">
-                <span class="material-symbols-outlined qris__section-icon">visibility</span>
+                <LiIcon name="visibility" class="qris__section-icon" />
                 <span class="qris__section-label">Output</span>
               </div>
               <div v-if="result" class="qris__result">
@@ -76,7 +77,7 @@
               </div>
               <div v-else class="qris__placeholder">
                 <div class="qris__placeholder-icon">
-                  <span class="material-symbols-outlined">qr_code_2</span>
+                  <LiIcon name="qr_code_2" />
                 </div>
                 <p class="qris__placeholder-title">No QR Generated</p>
                 <p class="qris__placeholder-desc">Configure parameters and generate a QRIS code to see the result here</p>
@@ -88,14 +89,14 @@
           <div v-if="activeTab === 'reader' && canFeature('qris','reader')" class="qris__split">
             <div class="qris__left">
               <div class="qris__section-header">
-                <span class="material-symbols-outlined qris__section-icon">upload_file</span>
+                <LiIcon name="upload_file" class="qris__section-icon" />
                 <span class="qris__section-label">Input</span>
               </div>
               <QrisReader @parsed="onResult" />
             </div>
             <div class="qris__right">
               <div class="qris__section-header">
-                <span class="material-symbols-outlined qris__section-icon">visibility</span>
+                <LiIcon name="visibility" class="qris__section-icon" />
                 <span class="qris__section-label">Analysis</span>
               </div>
               <div v-if="result" class="qris__result">
@@ -118,7 +119,7 @@
               </div>
               <div v-else class="qris__placeholder">
                 <div class="qris__placeholder-icon">
-                  <span class="material-symbols-outlined">qr_code_scanner</span>
+                  <LiIcon name="qr_code_scanner" />
                 </div>
                 <p class="qris__placeholder-title">No QR Scanned</p>
                 <p class="qris__placeholder-desc">Upload or paste a QR code image to analyze its contents</p>
@@ -315,7 +316,7 @@ onUnmounted(() => {
   transform: scale(1.08) rotate(-3deg);
 }
 
-.qris__icon-badge .material-symbols-outlined {
+.qris__icon-badge .li-icon {
   font-size: 26px;
   color: var(--color-gray-0, #fff);
 }
@@ -583,7 +584,7 @@ onUnmounted(() => {
   100% { transform: translateY(-6px); }
 }
 
-.qris__placeholder-icon .material-symbols-outlined {
+.qris__placeholder-icon .li-icon {
   font-size: 36px;
   color: var(--color-gray-400, #b3b3b3);
 }
@@ -668,7 +669,7 @@ onUnmounted(() => {
     border-radius: var(--radius-xs, 8px);
   }
 
-  .qris__icon-badge .material-symbols-outlined {
+  .qris__icon-badge .li-icon {
     font-size: 22px;
   }
 
@@ -716,7 +717,7 @@ onUnmounted(() => {
     height: 56px;
   }
 
-  .qris__placeholder-icon .material-symbols-outlined {
+  .qris__placeholder-icon .li-icon {
     font-size: 28px;
   }
 }

@@ -12,11 +12,12 @@
           @change="onToggle($event.target.checked)"
         />
         <span>{{ enabled ? 'Enabled for everyone' : 'Disabled for everyone' }}</span>
-        <span
+        <LiIcon
           v-if="mod.id === 'admin'"
-          class="material-symbols-outlined amd__lock"
+          name="lock"
+          class="amd__lock"
           title="Cannot be disabled"
-        >lock</span>
+        />
       </label>
       <p v-if="mod.id === 'admin'" class="amd__hint">The admin module cannot be disabled (anti-lockout).</p>
     </section>

@@ -18,13 +18,14 @@
         @click="$emit('open-module', m)"
       >
         <header class="adm-modules__card-head">
-          <span class="material-symbols-outlined adm-modules__card-icon">{{ m.icon }}</span>
+          <LiIcon :name="m.icon" class="adm-modules__card-icon" />
           <span class="adm-modules__card-name">{{ m.label }}</span>
-          <span
+          <LiIcon
             v-if="m.id === 'admin'"
-            class="material-symbols-outlined adm-modules__lock"
+            name="lock"
+            class="adm-modules__lock"
             title="Cannot be disabled"
-          >lock</span>
+          />
         </header>
 
         <p class="adm-modules__card-desc">{{ m.desc }}</p>
@@ -46,7 +47,7 @@
 
         <span class="adm-modules__card-cta">
           Configure
-          <span class="material-symbols-outlined">chevron_right</span>
+          <LiIcon name="chevron_right" />
         </span>
       </div>
     </div>
@@ -210,7 +211,7 @@ defineEmits(['open-module', 'toggle-enabled'])
   color: var(--color-on-surface-muted, #999);
 }
 
-.adm-modules__card-cta .material-symbols-outlined {
+.adm-modules__card-cta .li-icon {
   font-size: 16px;
   transition: transform var(--dur-short, 200ms) var(--ease-out);
 }
@@ -219,7 +220,7 @@ defineEmits(['open-module', 'toggle-enabled'])
   color: var(--color-on-surface-variant, #666);
 }
 
-.adm-modules__card:hover .adm-modules__card-cta .material-symbols-outlined {
+.adm-modules__card:hover .adm-modules__card-cta .li-icon {
   transform: translateX(2px);
 }
 </style>

@@ -8,7 +8,7 @@
       <div class="ddaudit__actions">
         <p class="ddaudit__count">{{ total }} {{ total === 1 ? 'entry' : 'entries' }}</p>
         <button class="ddaudit__export" type="button" :disabled="!rows.length" @click="exportCsv">
-          <span class="material-symbols-outlined">file_save</span>
+          <LiIcon name="file_save" />
           Export page
         </button>
       </div>
@@ -165,7 +165,7 @@ onMounted(() => { load(); loadActors() })
 }
 .ddaudit__export:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
 .ddaudit__export:disabled { opacity: 0.45; cursor: not-allowed; }
-.ddaudit__export .material-symbols-outlined { font-size: 17px; }
+.ddaudit__export .li-icon { font-size: 17px; }
 
 .ddaudit__col {
   font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;

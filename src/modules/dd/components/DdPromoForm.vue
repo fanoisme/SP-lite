@@ -40,7 +40,7 @@
             :title="form.promo_name.trim() ? 'Generate from the promo name' : 'Enter a promo name first'"
             @click="generate"
           >
-            <span class="material-symbols-outlined">autorenew</span>
+            <LiIcon name="autorenew" />
             Generate
           </button>
         </div>
@@ -497,7 +497,7 @@ async function submit() {
 }
 .ddpromoform__generate:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
 .ddpromoform__generate:disabled { opacity: 0.45; cursor: not-allowed; }
-.ddpromoform__generate .material-symbols-outlined { font-size: 16px; }
+.ddpromoform__generate .li-icon { font-size: 16px; }
 
 .ddpromoform__channel {
   display: flex; flex-direction: column; gap: var(--space-sm, 12px);

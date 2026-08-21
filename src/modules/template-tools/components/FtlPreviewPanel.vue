@@ -1,22 +1,24 @@
 <template>
-  <div class="ftl-preview">
+  <div class="ftl-preview" :style="{ '--select-arrow': `url(${expandMoreIcon})` }">
     <!-- Glass header: tab bar + one contextual primary action -->
     <header class="ftl-preview__header">
       <div class="ftl-preview__tabs">
         <button
           class="ftl-preview__tab"
           :class="{ 'ftl-preview__tab--active': tab === 'editor' }"
+          :aria-pressed="tab === 'editor'"
           @click="tab = 'editor'"
         >
-          <span class="material-symbols-outlined">edit_note</span>
+          <LiIcon name="edit_note" />
           Editor
         </button>
         <button
           class="ftl-preview__tab"
           :class="{ 'ftl-preview__tab--active': tab === 'pdf' }"
+          :aria-pressed="tab === 'pdf'"
           @click="tab = 'pdf'"
         >
-          <span class="material-symbols-outlined">picture_as_pdf</span>
+          <LiIcon name="picture_as_pdf" />
           PDF
         </button>
       </div>
@@ -30,7 +32,7 @@
           :disabled="!inputFtl.trim() || processing"
         >
           <div v-if="processing" class="ftl-preview__btn-spinner"></div>
-          <span v-else class="material-symbols-outlined">play_arrow</span>
+          <LiIcon v-else name="play_arrow" />
           {{ processing ? 'Updating…' : 'Update Preview' }}
           <span class="ftl-preview__btn-shine"></span>
         </button>
@@ -42,16 +44,17 @@
             @click="renderFlyingSaucerPdf"
             :disabled="!inputFtl.trim() || pdf.rendering.value"
           >
-            <span class="material-symbols-outlined">{{ pdf.rendering.value ? 'hourglass_top' : 'flare' }}</span>
+            <LiIcon :name="pdf.rendering.value ? 'hourglass_top' : 'flare'" />
             {{ pdf.rendering.value ? 'Rendering…' : 'Render Flying Saucer PDF' }}
           </button>
           <button
             v-if="pdf.pdfUrl.value"
             class="ftl-preview__icon-btn"
             @click="downloadPdf"
+            aria-label="Download PDF"
             title="Download PDF"
           >
-            <span class="material-symbols-outlined">download</span>
+            <LiIcon name="download" />
           </button>
         </template>
       </div>
@@ -63,11 +66,11 @@
       <section class="ftl-preview__panel ftl-preview__panel--code">
         <div class="ftl-preview__panel-head">
           <div class="ftl-preview__panel-title">
-            <span class="material-symbols-outlined">code</span>
+            <LiIcon name="code" />
             FTL Template
           </div>
           <label class="ftl-preview__upload-btn">
-            <span class="material-symbols-outlined">upload_file</span>
+            <LiIcon name="upload_file" />
             Upload
             <input
               type="file"
@@ -88,7 +91,7 @@
 
         <Transition name="badge-pop">
           <div v-if="fixesApplied.length > 0" class="ftl-preview__fix-badge">
-            <span class="material-symbols-outlined">auto_fix_high</span>
+            <LiIcon name="auto_fix_high" />
             <span>Auto-fixed <strong>{{ fixesApplied.length }}</strong> issue{{ fixesApplied.length > 1 ? 's' : '' }}</span>
           </div>
         </Transition>
@@ -97,7 +100,7 @@
         <details class="ftl-preview__vars" :open="variables.length > 0">
           <summary class="ftl-preview__vars-head">
             <span class="ftl-preview__vars-label">
-              <span class="material-symbols-outlined">tune</span>
+              <LiIcon name="tune" />
               Variables
             </span>
             <span v-if="variables.length" class="ftl-preview__vars-count">{{ variables.length }}</span>
@@ -113,7 +116,7 @@
         <Transition name="slide-up">
           <div v-if="errors.length > 0" class="ftl-preview__errors">
             <div v-for="(err, i) in errors" :key="i" class="ftl-preview__error">
-              <span class="material-symbols-outlined">error</span>
+              <LiIcon name="error" />
               {{ err }}
             </div>
           </div>
@@ -126,15 +129,15 @@
       <div class="ftl-preview__modal-overlay" v-show="showPreviewModal" @click.self="closePreviewModal">
         <div class="ftl-preview__modal">
           <div class="ftl-preview__modal-head">
-            <div class="ftl-preview__panel-title"><span class="material-symbols-outlined">picture_as_pdf</span> Live Preview</div>
-            <button class="ftl-preview__modal-close" @click="closePreviewModal" title="Close">
-              <span class="material-symbols-outlined">close</span>
+            <div class="ftl-preview__panel-title"><LiIcon name="picture_as_pdf" /> Live Preview</div>
+            <button class="ftl-preview__modal-close" @click="closePreviewModal" aria-label="Close preview" title="Close">
+              <LiIcon name="close" />
             </button>
           </div>
           <section class="ftl-preview__panel ftl-preview__panel--preview">
         <Transition name="badge-pop">
           <div v-if="previewHtml && !selectedElement && pendingCount === 0" class="ftl-preview__hint">
-            <span class="material-symbols-outlined">info</span>
+            <LiIcon name="info" />
             Click any text to edit content &amp; style
           </div>
         </Transition>
@@ -142,16 +145,16 @@
         <Transition name="badge-pop">
           <div v-if="pendingCount > 0" class="ftl-preview__pending-bar">
             <div class="ftl-preview__pending-info">
-              <span class="material-symbols-outlined">edit_note</span>
+              <LiIcon name="edit_note" />
               <strong>{{ pendingCount }}</strong> element{{ pendingCount > 1 ? 's' : '' }} edited
             </div>
             <div class="ftl-preview__pending-actions">
               <button class="ftl-preview__pending-btn ftl-preview__pending-btn--discard" @click="discardAll">
-                <span class="material-symbols-outlined">close</span>
+                <LiIcon name="close" />
                 Discard
               </button>
               <button class="ftl-preview__pending-btn ftl-preview__pending-btn--apply" @click="applyAll">
-                <span class="material-symbols-outlined">check</span>
+                <LiIcon name="check" />
                 Apply All
               </button>
             </div>
@@ -173,7 +176,7 @@
             </div>
             <div v-else key="empty" class="ftl-preview__empty">
               <div class="ftl-preview__empty-icon">
-                <span class="material-symbols-outlined">edit_note</span>
+                <LiIcon name="edit_note" />
               </div>
               <p class="ftl-preview__empty-title">No Preview Yet</p>
               <p class="ftl-preview__empty-sub">Enter FTL and click "Update Preview"</p>
@@ -251,30 +254,36 @@
                 <button
                   class="ftl-preview__tb-btn"
                   :class="{ 'ftl-preview__tb-btn--active': styleConfig.fontWeight === 'bold' }"
+                  :aria-pressed="styleConfig.fontWeight === 'bold'"
+                  aria-label="Bold"
                   @click="toggleBold"
                   title="Bold"
                 >
-                  <span class="material-symbols-outlined">format_bold</span>
+                  <LiIcon name="format_bold" />
                 </button>
 
                 <!-- Italic -->
                 <button
                   class="ftl-preview__tb-btn"
                   :class="{ 'ftl-preview__tb-btn--active': styleConfig.fontStyle === 'italic' }"
+                  :aria-pressed="styleConfig.fontStyle === 'italic'"
+                  aria-label="Italic"
                   @click="toggleItalic"
                   title="Italic"
                 >
-                  <span class="material-symbols-outlined">format_italic</span>
+                  <LiIcon name="format_italic" />
                 </button>
 
                 <!-- Underline -->
                 <button
                   class="ftl-preview__tb-btn"
                   :class="{ 'ftl-preview__tb-btn--active': styleConfig.textDecoration === 'underline' }"
+                  :aria-pressed="styleConfig.textDecoration === 'underline'"
+                  aria-label="Underline"
                   @click="toggleUnderline"
                   title="Underline"
                 >
-                  <span class="material-symbols-outlined">format_underlined</span>
+                  <LiIcon name="format_underlined" />
                 </button>
 
                 <div class="ftl-preview__tb-divider"></div>
@@ -283,45 +292,53 @@
                 <button
                   class="ftl-preview__tb-btn"
                   :class="{ 'ftl-preview__tb-btn--active': styleConfig.textAlign === 'left' }"
+                  :aria-pressed="styleConfig.textAlign === 'left'"
+                  aria-label="Align left"
                   @click="setAlign('left')"
                   title="Align Left"
                 >
-                  <span class="material-symbols-outlined">format_align_left</span>
+                  <LiIcon name="format_align_left" />
                 </button>
                 <button
                   class="ftl-preview__tb-btn"
                   :class="{ 'ftl-preview__tb-btn--active': styleConfig.textAlign === 'center' }"
+                  :aria-pressed="styleConfig.textAlign === 'center'"
+                  aria-label="Align center"
                   @click="setAlign('center')"
                   title="Align Center"
                 >
-                  <span class="material-symbols-outlined">format_align_center</span>
+                  <LiIcon name="format_align_center" />
                 </button>
                 <button
                   class="ftl-preview__tb-btn"
                   :class="{ 'ftl-preview__tb-btn--active': styleConfig.textAlign === 'right' }"
+                  :aria-pressed="styleConfig.textAlign === 'right'"
+                  aria-label="Align right"
                   @click="setAlign('right')"
                   title="Align Right"
                 >
-                  <span class="material-symbols-outlined">format_align_right</span>
+                  <LiIcon name="format_align_right" />
                 </button>
                 <button
                   class="ftl-preview__tb-btn"
                   :class="{ 'ftl-preview__tb-btn--active': styleConfig.textAlign === 'justify' }"
+                  :aria-pressed="styleConfig.textAlign === 'justify'"
+                  aria-label="Justify text"
                   @click="setAlign('justify')"
                   title="Justify"
                 >
-                  <span class="material-symbols-outlined">format_align_justify</span>
+                  <LiIcon name="format_align_justify" />
                 </button>
 
                 <div class="ftl-preview__tb-divider"></div>
 
                 <!-- Done (deselect, keep changes pending) -->
-                <button class="ftl-preview__tb-btn ftl-preview__tb-btn--save" @click="doneEdit" title="Done (changes pending)">
-                  <span class="material-symbols-outlined">check</span>
+                <button class="ftl-preview__tb-btn ftl-preview__tb-btn--save" @click="doneEdit" aria-label="Finish editing" title="Done (changes pending)">
+                  <LiIcon name="check" />
                 </button>
                 <!-- Revert this element -->
-                <button class="ftl-preview__tb-btn ftl-preview__tb-btn--cancel" @click="revertCurrent" title="Revert this element">
-                  <span class="material-symbols-outlined">close</span>
+                <button class="ftl-preview__tb-btn ftl-preview__tb-btn--cancel" @click="revertCurrent" aria-label="Revert this element" title="Revert this element">
+                  <LiIcon name="close" />
                 </button>
               </div>
             </div>
@@ -336,7 +353,7 @@
     <div v-if="tab === 'pdf'" class="ftl-preview__pdf">
       <Transition name="badge-pop">
         <div v-if="!pdf.javaAvailable.value" class="ftl-preview__java-warn">
-          <span class="material-symbols-outlined">warning</span>
+          <LiIcon name="warning" />
           <span>Java not detected. Install a JRE (e.g. <a href="https://adoptium.net/temurin/releases/?version=8" target="_blank" rel="noopener">Temurin 8</a>) to enable true Flying Saucer PDF. The preview below is <strong>approximate</strong> — not Flying Saucer (CSS 2.1 not enforced).</span>
         </div>
       </Transition>
@@ -352,7 +369,7 @@
           ></iframe>
           <div v-else key="empty" class="ftl-preview__empty">
             <div class="ftl-preview__empty-icon">
-              <span class="material-symbols-outlined">picture_as_pdf</span>
+              <LiIcon name="picture_as_pdf" />
             </div>
             <p class="ftl-preview__empty-title">No PDF Yet</p>
             <p class="ftl-preview__empty-sub">Click "Render Flying Saucer PDF" to generate</p>
@@ -365,6 +382,7 @@
 
 <script setup>
 import { ref, reactive, watch, nextTick, onMounted, onBeforeUnmount } from 'vue'
+import { iconUrl } from '@/lib/icons.js'
 import { useFtlFixer } from '../composables/useFtlFixer'
 import { useVariableDetector } from '../composables/useVariableDetector'
 import { useFtlProcessor } from '../composables/useFtlProcessor'
@@ -372,6 +390,8 @@ import { useToast } from '@lib/composables/useToast'
 import { useFtlPdfRenderer } from '../composables/useFtlPdfRenderer'
 import CodeEditor from './CodeEditor.vue'
 import VariableForm from './VariableForm.vue'
+
+const expandMoreIcon = iconUrl('expand_more')
 
 const toast = useToast()
 const { fix } = useFtlFixer()
@@ -937,7 +957,7 @@ ${bodyHtml}
   transition: all var(--dur-micro, 120ms) var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
-.ftl-preview__tab .material-symbols-outlined { font-size: 18px; }
+.ftl-preview__tab .li-icon { font-size: 18px; }
 
 .ftl-preview__tab:hover:not(.ftl-preview__tab--active) {
   color: var(--color-on-surface, #1a1a2e);
@@ -950,7 +970,7 @@ ${bodyHtml}
   box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.08));
 }
 
-.ftl-preview__tab--active .material-symbols-outlined {
+.ftl-preview__tab--active .li-icon {
   color: var(--cta-primary-bg, #FFBC25);
 }
 
@@ -980,7 +1000,7 @@ ${bodyHtml}
   transition: all var(--dur-micro, 120ms) var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
-.ftl-preview__cta .material-symbols-outlined { font-size: 18px; }
+.ftl-preview__cta .li-icon { font-size: 18px; }
 
 .ftl-preview__cta:hover:not(:disabled) {
   transform: translateY(-1px);
@@ -1026,7 +1046,7 @@ ${bodyHtml}
   color: var(--color-on-surface, #1a1a2e);
   background: rgba(255, 188, 37, 0.08);
 }
-.ftl-preview__icon-btn .material-symbols-outlined { font-size: 20px; }
+.ftl-preview__icon-btn .li-icon { font-size: 20px; }
 
 /* ── Editor tab: code panel (preview opens in a popup) ── */
 .ftl-preview__editor {
@@ -1103,7 +1123,7 @@ ${bodyHtml}
   background: rgba(0, 0, 0, 0.1);
   color: var(--color-on-surface, #1a1a2e);
 }
-.ftl-preview__modal-close .material-symbols-outlined { font-size: 20px; }
+.ftl-preview__modal-close .li-icon { font-size: 20px; }
 
 .ftl-preview__panel-head {
   display: flex;
@@ -1119,7 +1139,7 @@ ${bodyHtml}
   font-weight: 700;
   color: var(--color-on-surface, #1a1a2e);
 }
-.ftl-preview__panel-title .material-symbols-outlined {
+.ftl-preview__panel-title .li-icon {
   font-size: 20px;
   color: var(--cta-primary-bg, #FFBC25);
 }
@@ -1139,7 +1159,7 @@ ${bodyHtml}
   font-family: inherit;
   transition: all 0.25s ease;
 }
-.ftl-preview__upload-btn .material-symbols-outlined { font-size: 16px; }
+.ftl-preview__upload-btn .li-icon { font-size: 16px; }
 .ftl-preview__upload-btn:hover {
   border-color: var(--cta-primary-bg, #FFBC25);
   color: var(--color-on-surface, #1a1a2e);
@@ -1169,7 +1189,7 @@ ${bodyHtml}
   font-size: 13px;
   color: #8b6914;
 }
-.ftl-preview__fix-badge .material-symbols-outlined { font-size: 18px; color: var(--cta-primary-bg, #FFBC25); }
+.ftl-preview__fix-badge .li-icon { font-size: 18px; color: var(--cta-primary-bg, #FFBC25); }
 
 /* Collapsible Variables */
 .ftl-preview__vars {
@@ -1192,7 +1212,7 @@ ${bodyHtml}
 }
 .ftl-preview__vars-head::-webkit-details-marker { display: none; }
 .ftl-preview__vars-label { display: inline-flex; align-items: center; gap: 8px; }
-.ftl-preview__vars-label .material-symbols-outlined { font-size: 18px; color: var(--cta-primary-bg, #FFBC25); }
+.ftl-preview__vars-label .li-icon { font-size: 18px; color: var(--cta-primary-bg, #FFBC25); }
 .ftl-preview__vars-count {
   display: inline-flex;
   align-items: center;
@@ -1220,7 +1240,7 @@ ${bodyHtml}
   font-size: 13px;
   color: var(--color-error, #C83E3B);
 }
-.ftl-preview__error .material-symbols-outlined { font-size: 16px; }
+.ftl-preview__error .li-icon { font-size: 16px; }
 
 .ftl-preview__hint {
   display: flex;
@@ -1233,7 +1253,7 @@ ${bodyHtml}
   font-size: 12px;
   color: #8b6914;
 }
-.ftl-preview__hint .material-symbols-outlined { font-size: 16px; color: var(--cta-primary-bg, #FFBC25); }
+.ftl-preview__hint .li-icon { font-size: 16px; color: var(--cta-primary-bg, #FFBC25); }
 
 /* ── Pending Changes Bar (preserved) ── */
 .ftl-preview__pending-bar {
@@ -1247,7 +1267,7 @@ ${bodyHtml}
   border-radius: 10px;
 }
 .ftl-preview__pending-info { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #065f46; }
-.ftl-preview__pending-info .material-symbols-outlined { font-size: 18px; color: var(--color-success, #10B981); }
+.ftl-preview__pending-info .li-icon { font-size: 18px; color: var(--color-success, #10B981); }
 .ftl-preview__pending-actions { display: flex; gap: 6px; }
 .ftl-preview__pending-btn {
   display: inline-flex;
@@ -1262,7 +1282,7 @@ ${bodyHtml}
   font-family: inherit;
   transition: all 0.2s ease;
 }
-.ftl-preview__pending-btn .material-symbols-outlined { font-size: 15px; }
+.ftl-preview__pending-btn .li-icon { font-size: 15px; }
 .ftl-preview__pending-btn--discard { background: rgba(0, 0, 0, 0.06); color: #666; }
 .ftl-preview__pending-btn--discard:hover { background: rgba(0, 0, 0, 0.1); }
 .ftl-preview__pending-btn--apply {
@@ -1321,7 +1341,7 @@ ${bodyHtml}
   background: rgba(0, 0, 0, 0.03);
   border-radius: 20px;
 }
-.ftl-preview__empty-icon .material-symbols-outlined { font-size: 36px; color: #ccc; }
+.ftl-preview__empty-icon .li-icon { font-size: 36px; color: #ccc; }
 .ftl-preview__empty-title { font-size: 16px; font-weight: 700; color: #999; margin: 0; }
 .ftl-preview__empty-sub { font-size: 13px; color: #bbb; margin: 0; }
 
@@ -1347,7 +1367,7 @@ ${bodyHtml}
   background: rgba(255, 255, 255, 0.06);
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: var(--select-arrow);
   background-repeat: no-repeat;
   background-position: right 6px center;
   min-width: 90px;
@@ -1398,7 +1418,7 @@ ${bodyHtml}
   transition: all 0.15s ease;
   flex-shrink: 0;
 }
-.ftl-preview__tb-btn .material-symbols-outlined { font-size: 17px; }
+.ftl-preview__tb-btn .li-icon { font-size: 17px; }
 .ftl-preview__tb-btn:hover { color: #e0e0e0; background: rgba(255, 255, 255, 0.08); }
 .ftl-preview__tb-btn--active { color: var(--cta-primary-bg, #FFBC25); background: rgba(255, 188, 37, 0.12); }
 .ftl-preview__tb-btn--active:hover { background: rgba(255, 188, 37, 0.18); }
@@ -1454,7 +1474,7 @@ ${bodyHtml}
   color: #c45e00;
   line-height: 1.5;
 }
-.ftl-preview__java-warn .material-symbols-outlined { font-size: 18px; color: #FF6B00; flex-shrink: 0; margin-top: 1px; }
+.ftl-preview__java-warn .li-icon { font-size: 18px; color: #FF6B00; flex-shrink: 0; margin-top: 1px; }
 .ftl-preview__java-warn a { color: #c45e00; text-decoration: underline; }
 
 /* ── Transitions (preserved) ── */

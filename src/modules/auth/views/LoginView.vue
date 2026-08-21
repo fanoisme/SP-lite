@@ -19,9 +19,7 @@
       <!-- Error / info banner -->
       <Transition name="login-error-slide">
         <div v-if="bannerMsg" class="login-error" :class="{ 'login-error--info': bannerType === 'info' }" role="alert">
-          <span class="material-symbols-outlined login-error__icon" aria-hidden="true">
-            {{ bannerType === 'info' ? 'info' : 'error' }}
-          </span>
+          <LiIcon :name="bannerType === 'info' ? 'info' : 'error'" class="login-error__icon" aria-hidden="true" />
           <span class="login-error__text">{{ bannerMsg }}</span>
         </div>
       </Transition>
@@ -30,7 +28,7 @@
         <div class="login-field" v-if="mode === 'signin'">
           <label class="login-field__label" for="identifier">Username atau Email</label>
           <div class="login-field__input-group" :class="{ 'is-focused': focus.identifier }">
-            <span class="material-symbols-outlined login-field__icon" aria-hidden="true">person</span>
+            <LiIcon name="person" class="login-field__icon" aria-hidden="true" />
             <input
               id="identifier"
               v-model="identifier"
@@ -48,7 +46,7 @@
           <div class="login-field">
             <label class="login-field__label" for="signup-fullname">Full Name</label>
             <div class="login-field__input-group" :class="{ 'is-focused': focus.signupFullName }">
-              <span class="material-symbols-outlined login-field__icon" aria-hidden="true">badge</span>
+              <LiIcon name="badge" class="login-field__icon" aria-hidden="true" />
               <input
                 id="signup-fullname"
                 v-model="signupFullName"
@@ -64,7 +62,7 @@
           <div class="login-field">
             <label class="login-field__label" for="signup-email">Email</label>
             <div class="login-field__input-group" :class="{ 'is-focused': focus.signupEmail }">
-              <span class="material-symbols-outlined login-field__icon" aria-hidden="true">mail</span>
+              <LiIcon name="mail" class="login-field__icon" aria-hidden="true" />
               <input
                 id="signup-email"
                 v-model="signupEmail"
@@ -80,7 +78,7 @@
           <div class="login-field">
             <label class="login-field__label" for="signup-username">Username</label>
             <div class="login-field__input-group" :class="{ 'is-focused': focus.signupUsername }">
-              <span class="material-symbols-outlined login-field__icon" aria-hidden="true">alternate_email</span>
+              <LiIcon name="alternate_email" class="login-field__icon" aria-hidden="true" />
               <input
                 id="signup-username"
                 v-model="signupUsername"
@@ -98,7 +96,7 @@
         <div class="login-field">
           <label class="login-field__label" for="password">Password</label>
           <div class="login-field__input-group" :class="{ 'is-focused': focus.password }">
-            <span class="material-symbols-outlined login-field__icon" aria-hidden="true">lock</span>
+            <LiIcon name="lock" class="login-field__icon" aria-hidden="true" />
             <input
               id="password"
               v-model="password"
@@ -114,8 +112,9 @@
               class="login-field__toggle"
               @click="showPassword = !showPassword"
               :aria-label="showPassword ? 'Hide password' : 'Show password'"
+              :aria-pressed="showPassword"
             >
-              <span class="material-symbols-outlined">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+              <LiIcon :name="showPassword ? 'visibility_off' : 'visibility'" />
             </button>
           </div>
         </div>
@@ -136,7 +135,7 @@
       </button>
 
       <router-link to="/" class="login-back">
-        <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        <LiIcon name="arrow_back" aria-hidden="true" />
         Back to home
       </router-link>
     </div>
@@ -448,7 +447,7 @@ async function onPasswordSubmit() {
   background: rgba(0, 0, 0, 0.04);
 }
 
-.login-field__toggle .material-symbols-outlined {
+.login-field__toggle .li-icon {
   font-size: 20px;
 }
 
@@ -607,7 +606,7 @@ async function onPasswordSubmit() {
   transform: translateX(-2px);
 }
 
-.login-back .material-symbols-outlined {
+.login-back .li-icon {
   font-size: 16px;
 }
 

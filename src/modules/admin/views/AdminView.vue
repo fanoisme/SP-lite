@@ -5,7 +5,7 @@
       <div class="admin__header-content">
         <div class="admin__title-group">
           <div class="admin__icon-badge">
-            <span class="material-symbols-outlined">admin_panel_settings</span>
+            <LiIcon name="admin_panel_settings" />
           </div>
           <div>
             <h1 class="admin__title">Admin Panel</h1>
@@ -14,15 +14,15 @@
         </div>
         <div class="admin__stats">
           <span class="admin__stat-chip">
-            <span class="material-symbols-outlined">group</span>
+            <LiIcon name="group" />
             {{ stats.users }} users
           </span>
           <span class="admin__stat-chip">
-            <span class="material-symbols-outlined">shield_person</span>
+            <LiIcon name="shield_person" />
             {{ stats.roles }} roles
           </span>
           <span class="admin__stat-chip">
-            <span class="material-symbols-outlined">apps</span>
+            <LiIcon name="apps" />
             {{ stats.modulesEnabled }}/{{ stats.modulesTotal }} modules
           </span>
         </div>
@@ -37,9 +37,10 @@
           :key="tab.id"
           class="admin__tab"
           :class="{ 'admin__tab--active': activeTab === index }"
+          :aria-pressed="activeTab === index"
           @click="switchTab(index)"
         >
-          <span class="material-symbols-outlined admin__tab-icon">{{ tab.icon }}</span>
+          <LiIcon :name="tab.icon" class="admin__tab-icon" />
           <span class="admin__tab-label">{{ tab.label }}</span>
         </button>
         <div class="admin__tab-indicator" :style="indicatorStyle" />
@@ -147,7 +148,7 @@
         <div class="admin__delete-actions">
           <button class="admin__cancel-btn" @click="deleteTarget = null">Cancel</button>
           <button class="admin__danger-btn" @click="confirmDelete">
-            <span class="material-symbols-outlined">delete</span>
+            <LiIcon name="delete" />
             Delete
           </button>
         </div>
@@ -392,7 +393,7 @@ onUnmounted(() => {
   flex-shrink: 0;
 }
 
-.admin__icon-badge .material-symbols-outlined {
+.admin__icon-badge .li-icon {
   font-size: 24px;
   color: var(--color-gray-0, #fff);
 }
@@ -434,7 +435,7 @@ onUnmounted(() => {
   -webkit-backdrop-filter: blur(8px);
 }
 
-.admin__stat-chip .material-symbols-outlined {
+.admin__stat-chip .li-icon {
   font-size: 14px;
   color: var(--cta-primary-bg, #FFBC25);
 }
@@ -516,7 +517,7 @@ onUnmounted(() => {
   transform: translateY(-1px);
 }
 
-.admin__danger-btn .material-symbols-outlined {
+.admin__danger-btn .li-icon {
   font-size: 16px;
 }
 
@@ -541,7 +542,7 @@ onUnmounted(() => {
     height: 40px;
   }
 
-  .admin__icon-badge .material-symbols-outlined {
+  .admin__icon-badge .li-icon {
     font-size: 20px;
   }
 }

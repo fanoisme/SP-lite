@@ -15,15 +15,9 @@
             <div class="li-table-th-content">
               {{ col.label }}
               <span v-if="col.sortable" class="li-table-sort-icon">
-                <svg v-if="sortKey !== col.key" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 10L8 14L12 10M4 6L8 2L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <svg v-else-if="sortOrder === 'asc'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 6L8 2L12 6M8 14V2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <svg v-else width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 10L8 14L12 10M8 2V14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                <LiIcon v-if="sortKey !== col.key" name="unfold_more" size="sm" />
+                <LiIcon v-else-if="sortOrder === 'asc'" name="arrow_upward" size="sm" />
+                <LiIcon v-else name="arrow_downward" size="sm" />
               </span>
             </div>
           </th>

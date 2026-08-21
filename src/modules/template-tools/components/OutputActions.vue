@@ -5,7 +5,7 @@
       @click="handleCopy"
       :disabled="!content"
     >
-      <span class="material-symbols-outlined">{{ copied ? 'check' : 'content_copy' }}</span>
+      <LiIcon :name="copied ? 'check' : 'content_copy'" />
       {{ copied ? 'Copied!' : 'Copy' }}
     </button>
     <button
@@ -13,7 +13,7 @@
       @click="handleDownload"
       :disabled="!content"
     >
-      <span class="material-symbols-outlined">download</span>
+      <LiIcon name="download" />
       Download {{ fileExtension }}
     </button>
   </div>
@@ -79,7 +79,7 @@ function handleDownload() {
   font-family: inherit;
 }
 
-.output-actions__btn .material-symbols-outlined {
+.output-actions__btn .li-icon {
   font-size: 18px;
 }
 

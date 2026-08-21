@@ -8,15 +8,15 @@
       <div class="ddbu__actions">
         <p class="ddbu__count">{{ total }} {{ total === 1 ? 'business unit' : 'business units' }}</p>
         <button class="ddbu__btn" type="button" :disabled="!total || exporting" @click="exportXlsx">
-          <span class="material-symbols-outlined">file_save</span>
+          <LiIcon name="file_save" />
           {{ exporting ? 'Exporting…' : 'Export XLSX' }}
         </button>
         <button v-if="canCreate" class="ddbu__btn" type="button" @click="showBulk = true">
-          <span class="material-symbols-outlined">upload</span>
+          <LiIcon name="upload" />
           Bulk Upload
         </button>
         <button v-if="canCreate" class="ddbu__btn ddbu__btn--primary" type="button" @click="openForm(null)">
-          <span class="material-symbols-outlined">add</span>
+          <LiIcon name="add" />
           Add
         </button>
       </div>
@@ -26,7 +26,7 @@
          screen are not wrong, they are old — so this offers a reload rather than
          forcing one and losing whatever the reader was in the middle of. -->
     <div v-if="showStale" class="ddbu__stale">
-      <span class="material-symbols-outlined">sync_problem</span>
+      <LiIcon name="sync_problem" />
       <p class="ddbu__stale-text">
         {{ staleCount }} {{ staleCount === 1 ? 'change' : 'changes' }}
         <template v-if="staleBy">by {{ staleBy }}</template>
@@ -34,7 +34,7 @@
       </p>
       <button class="ddbu__stale-action" type="button" @click="refresh">Refresh</button>
       <button class="ddbu__stale-close" type="button" aria-label="Dismiss" @click="staleDismissed = true">
-        <span class="material-symbols-outlined">close</span>
+        <LiIcon name="close" />
       </button>
     </div>
 
@@ -98,17 +98,18 @@
 
       <template #cell-actions="{ row }">
         <div class="ddbu__row-actions">
-          <button v-if="canUpdate" class="ddbu__icon-btn" type="button" title="Edit" @click="openForm(row)">
-            <span class="material-symbols-outlined">edit</span>
+          <button v-if="canUpdate" class="ddbu__icon-btn" type="button" :aria-label="`Edit ${row.name}`" title="Edit" @click="openForm(row)">
+            <LiIcon name="edit" />
           </button>
           <button
             v-if="canDelete"
             class="ddbu__icon-btn ddbu__icon-btn--danger"
             type="button"
+            :aria-label="`Delete ${row.name}`"
             title="Delete"
             @click="pendingDelete = row"
           >
-            <span class="material-symbols-outlined">delete</span>
+            <LiIcon name="delete" />
           </button>
         </div>
       </template>
@@ -325,7 +326,7 @@ onMounted(() => {
 }
 .ddbu__btn:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
 .ddbu__btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.ddbu__btn .material-symbols-outlined { font-size: 17px; }
+.ddbu__btn .li-icon { font-size: 17px; }
 .ddbu__btn--primary {
   background: var(--cta-primary-bg, #FFBC25);
   color: var(--cta-primary-text, #1E1E1E);
@@ -356,7 +357,7 @@ onMounted(() => {
   background: rgba(255, 188, 37, 0.12);
   border: 1px solid rgba(255, 188, 37, 0.35);
 }
-.ddbu__stale .material-symbols-outlined { font-size: 19px; color: var(--color-yellow-500, #F4A600); }
+.ddbu__stale .li-icon { font-size: 19px; color: var(--color-yellow-500, #F4A600); }
 .ddbu__stale-text { margin: 0; flex: 1; font-size: 13px; color: var(--color-gray-800, #4D4D4D); }
 .ddbu__stale-action {
   padding: 6px 14px; border: none; border-radius: var(--radius-pill, 999px);
@@ -369,7 +370,7 @@ onMounted(() => {
   background: none; border: none; cursor: pointer; padding: 2px;
   display: inline-flex; color: var(--color-gray-500, #8e8ea0);
 }
-.ddbu__stale-close .material-symbols-outlined { font-size: 16px; color: inherit; }
+.ddbu__stale-close .li-icon { font-size: 16px; color: inherit; }
 
 .ddbu__name { font-weight: 600; font-size: 13px; }
 .ddbu__acct { display: flex; flex-direction: column; max-width: 240px; }
@@ -411,7 +412,7 @@ onMounted(() => {
 }
 .ddbu__icon-btn:hover { color: var(--cta-primary-bg, #FFBC25); background: rgba(255, 188, 37, 0.12); }
 .ddbu__icon-btn--danger:hover { color: var(--color-red-400, #C83E3B); background: rgba(200, 62, 59, 0.08); }
-.ddbu__icon-btn .material-symbols-outlined { font-size: 18px; }
+.ddbu__icon-btn .li-icon { font-size: 18px; }
 
 .ddbu__confirm { margin: 0 0 8px; font-size: 14px; color: var(--color-gray-900, #333); }
 .ddbu__confirm-note { margin: 0; font-size: 12.5px; color: var(--color-gray-500, #8e8ea0); }

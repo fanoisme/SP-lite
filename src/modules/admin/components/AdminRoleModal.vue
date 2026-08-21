@@ -13,7 +13,7 @@
         iconLeft="shield_person"
       />
       <div v-if="error" class="adm-rmodal__error">
-        <span class="material-symbols-outlined">error</span>
+        <LiIcon name="error" />
         {{ error }}
       </div>
     </div>
@@ -74,7 +74,7 @@ async function onSubmit() {
   border-radius: var(--radius-sm, 12px);
 }
 
-.adm-rmodal__error .material-symbols-outlined {
+.adm-rmodal__error .li-icon {
   font-size: 16px;
 }
 

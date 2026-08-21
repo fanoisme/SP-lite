@@ -18,7 +18,7 @@
               :disabled="isModuleLocked(m.id)"
               @change="onToggleModule(m.id, $event.target.checked)"
             />
-            <span class="material-symbols-outlined ard__mod-icon">{{ m.icon }}</span>
+            <LiIcon :name="m.icon" class="ard__mod-icon" />
             <span class="ard__mod-label">{{ m.label }}</span>
           </label>
           <span class="ard__mod-desc">{{ m.desc }}</span>
@@ -35,7 +35,7 @@
             <span class="ard__feat-desc">{{ f.desc }}</span>
           </label>
           <p v-if="featuresGranted(role.name, m.id) === null" class="ard__hint">
-            <span class="material-symbols-outlined">info</span>
+            <LiIcon name="info" />
             No explicit feature set — role gets all features of {{ m.label }} (default).
           </p>
         </div>
@@ -236,7 +236,7 @@ async function onToggleFeature(mId, fId, on) {
   font-style: italic;
 }
 
-.ard__hint .material-symbols-outlined {
+.ard__hint .li-icon {
   font-size: 14px;
 }
 

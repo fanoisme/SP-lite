@@ -1,9 +1,9 @@
 <template>
-  <div class="style-editor">
+  <div class="style-editor" :style="{ '--select-arrow': `url(${expandMoreIcon})` }">
     <!-- Font Family -->
     <div class="style-editor__field">
       <label class="style-editor__label">
-        <span class="material-symbols-outlined">font_download</span>
+        <LiIcon name="font_download" />
         Font Family
       </label>
       <select v-model="localStyles.fontFamily" class="style-editor__select">
@@ -16,7 +16,7 @@
     <!-- Font Size -->
     <div class="style-editor__field">
       <label class="style-editor__label">
-        <span class="material-symbols-outlined">format_size</span>
+        <LiIcon name="format_size" />
         Font Size
       </label>
       <div class="style-editor__size-row">
@@ -34,7 +34,7 @@
     <!-- Font Color -->
     <div class="style-editor__field">
       <label class="style-editor__label">
-        <span class="material-symbols-outlined">palette</span>
+        <LiIcon name="palette" />
         Font Color
       </label>
       <div class="style-editor__color-row">
@@ -55,23 +55,27 @@
     <!-- Style: Bold & Italic -->
     <div class="style-editor__field">
       <label class="style-editor__label">
-        <span class="material-symbols-outlined">format_bold</span>
+        <LiIcon name="format_bold" />
         Style
       </label>
       <div class="style-editor__toggle-group">
         <button
           class="style-editor__toggle"
           :class="{ 'style-editor__toggle--active': localStyles.fontWeight === 'bold' }"
+          :aria-pressed="localStyles.fontWeight === 'bold'"
+          aria-label="Bold"
           @click="localStyles.fontWeight = localStyles.fontWeight === 'bold' ? 'normal' : 'bold'"
         >
-          <span class="material-symbols-outlined">format_bold</span>
+          <LiIcon name="format_bold" />
         </button>
         <button
           class="style-editor__toggle"
           :class="{ 'style-editor__toggle--active': localStyles.fontStyle === 'italic' }"
+          :aria-pressed="localStyles.fontStyle === 'italic'"
+          aria-label="Italic"
           @click="localStyles.fontStyle = localStyles.fontStyle === 'italic' ? 'normal' : 'italic'"
         >
-          <span class="material-symbols-outlined">format_italic</span>
+          <LiIcon name="format_italic" />
         </button>
       </div>
     </div>
@@ -79,7 +83,7 @@
     <!-- Text Align -->
     <div class="style-editor__field">
       <label class="style-editor__label">
-        <span class="material-symbols-outlined">format_align_left</span>
+        <LiIcon name="format_align_left" />
         Alignment
       </label>
       <div class="style-editor__toggle-group">
@@ -88,9 +92,11 @@
           :key="align.value"
           class="style-editor__toggle"
           :class="{ 'style-editor__toggle--active': localStyles.textAlign === align.value }"
+          :aria-label="`Align ${align.label.toLowerCase()}`"
+          :aria-pressed="localStyles.textAlign === align.value"
           @click="localStyles.textAlign = align.value"
         >
-          <span class="material-symbols-outlined">{{ align.icon }}</span>
+          <LiIcon :name="align.icon" />
         </button>
       </div>
     </div>
@@ -107,6 +113,9 @@
 
 <script setup>
 import { reactive, computed, watch } from 'vue'
+import { iconUrl } from '@/lib/icons.js'
+
+const expandMoreIcon = iconUrl('expand_more')
 
 const props = defineProps({
   styles: { type: Object, required: true },
@@ -176,7 +185,7 @@ const previewStyle = computed(() => ({
   letter-spacing: 0.5px;
 }
 
-.style-editor__label .material-symbols-outlined {
+.style-editor__label .li-icon {
   font-size: 16px;
   color: var(--cta-primary-bg, #FFBC25);
 }
@@ -193,7 +202,7 @@ const previewStyle = computed(() => ({
   cursor: pointer;
   transition: border-color 0.2s ease;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: var(--select-arrow);
   background-repeat: no-repeat;
   background-position: right 12px center;
 }
@@ -290,7 +299,7 @@ const previewStyle = computed(() => ({
   transition: all 0.2s ease;
 }
 
-.style-editor__toggle .material-symbols-outlined {
+.style-editor__toggle .li-icon {
   font-size: 18px;
 }
 

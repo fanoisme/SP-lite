@@ -12,14 +12,14 @@
       <LiLogo size="sm" :animate="true" :show-subtitle="false" />
       <router-link to="/login" class="landing__login-btn">
         <span class="landing__login-btn-text">Sign In</span>
-        <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+        <LiIcon name="arrow_forward" aria-hidden="true" />
       </router-link>
     </header>
 
     <!-- Hero -->
     <section class="landing__hero">
       <div class="landing__hero-badge">
-        <span class="material-symbols-outlined" aria-hidden="true">bolt</span>
+        <LiIcon name="bolt" aria-hidden="true" />
         <span>Public · Free · No server required</span>
       </div>
 
@@ -37,7 +37,7 @@
       <div class="landing__hero-actions">
         <router-link to="/login" class="landing__cta-primary">
           <span>Get Started</span>
-          <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+          <LiIcon name="arrow_forward" aria-hidden="true" />
         </router-link>
         <a href="#features" class="landing__cta-secondary">
           Learn More
@@ -56,11 +56,11 @@
           :style="{ '--reveal-delay': `${index * 100}ms` }"
         >
           <div class="landing__feature-icon" :class="`landing__feature-icon--${feature.color}`">
-            <span class="material-symbols-outlined" aria-hidden="true">{{ feature.icon }}</span>
+            <LiIcon :name="feature.icon" aria-hidden="true" />
           </div>
           <h3 class="landing__feature-title">{{ feature.title }}</h3>
           <p class="landing__feature-desc">{{ feature.desc }}</p>
-          <span class="landing__feature-arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+          <LiIcon name="arrow_forward" class="landing__feature-arrow" />
         </div>
       </div>
     </section>
@@ -228,12 +228,12 @@ onUnmounted(() => {
   transform: scale(0.97);
 }
 
-.landing__login-btn .material-symbols-outlined {
+.landing__login-btn .li-icon {
   font-size: 16px;
   transition: transform 300ms var(--ease-smooth);
 }
 
-.landing__login-btn:hover .material-symbols-outlined {
+.landing__login-btn:hover .li-icon {
   transform: translateX(3px);
 }
 
@@ -262,7 +262,7 @@ onUnmounted(() => {
   animation: landing-fade-in 800ms var(--ease-smooth) 100ms both;
 }
 
-.landing__hero-badge .material-symbols-outlined {
+.landing__hero-badge .li-icon {
   font-size: 16px;
   color: var(--color-warning, #FF6B00);
 }
@@ -373,12 +373,12 @@ onUnmounted(() => {
   transition-duration: 120ms;
 }
 
-.landing__cta-primary .material-symbols-outlined {
+.landing__cta-primary .li-icon {
   font-size: 18px;
   transition: transform 300ms var(--ease-smooth);
 }
 
-.landing__cta-primary:hover .material-symbols-outlined {
+.landing__cta-primary:hover .li-icon {
   transform: translateX(4px);
 }
 
@@ -490,7 +490,7 @@ onUnmounted(() => {
   opacity: 0.2;
 }
 
-.landing__feature-icon .material-symbols-outlined {
+.landing__feature-icon .li-icon {
   font-size: 20px;
   position: relative;
   z-index: 1;

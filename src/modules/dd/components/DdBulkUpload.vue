@@ -97,7 +97,7 @@
 
         <div class="ddbulk__tools">
           <div class="ddbulk__find">
-            <span class="material-symbols-outlined">search</span>
+            <LiIcon name="search" />
             <input v-model="rowSearch" type="search" placeholder="Find a value, a line, a problem…" >
           </div>
           <button
@@ -108,13 +108,13 @@
       </div>
 
       <p v-if="headerInfo.ignored.length" class="ddbulk__ignored">
-        <span class="material-symbols-outlined">info</span>
+        <LiIcon name="info" />
         Not imported: {{ headerInfo.ignored.join(', ') }} — the app keeps its own
         record id and stamps who wrote a row and when.
       </p>
 
       <p v-if="dateAssumed.length" class="ddbulk__ignored">
-        <span class="material-symbols-outlined">event</span>
+        <LiIcon name="event" />
         Read {{ dateAssumed.join(', ') }} — converted to YYYY-MM-DD.
       </p>
 
@@ -128,14 +128,14 @@
             <span v-else class="ddbulk__problems" :title="value.join('; ')">{{ value.join('; ') }}</span>
           </template>
           <template #cell-__view="{ row }">
-            <button class="ddbulk__view" type="button" title="Inspect this row" @click="openDetail(row.__line)">
-              <span class="material-symbols-outlined">chevron_right</span>
+            <button class="ddbulk__view" type="button" :aria-label="`Inspect row ${row.__line}`" title="Inspect this row" @click="openDetail(row.__line)">
+              <LiIcon name="chevron_right" />
             </button>
           </template>
         </LiTable>
 
         <p v-if="!filteredRows.length" class="ddbulk__none">
-          <span class="material-symbols-outlined">filter_alt_off</span>
+          <LiIcon name="filter_alt_off" />
           Nothing matches. <button type="button" class="ddbulk__linkbtn" @click="statusFilter = ''; rowSearch = ''">Clear the filter</button>
         </p>
         <p v-else-if="visibleRows.length < filteredRows.length" class="ddbulk__more">
@@ -820,7 +820,7 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
   color: var(--color-gray-400, #aaa); display: inline-flex;
 }
 .ddbulk__view:hover { color: #6366F1; }
-.ddbulk__view .material-symbols-outlined { font-size: 17px; }
+.ddbulk__view .li-icon { font-size: 17px; }
 
 .ddbulk__detail { display: flex; flex-direction: column; gap: var(--space-m, 12px); }
 .ddbulk__detail-head { display: flex; align-items: center; gap: 8px; }
@@ -902,7 +902,7 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
   display: flex; align-items: center; gap: 6px; margin: 0;
   font-size: 12px; color: var(--color-gray-500, #8e8ea0);
 }
-.ddbulk__ignored .material-symbols-outlined { font-size: 15px; }
+.ddbulk__ignored .li-icon { font-size: 15px; }
 
 /* ── Preview toolbar ─────────────────────────────────────────────────────── */
 .ddbulk__toolbar {
@@ -945,7 +945,7 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
   background: #fff; transition: border-color 160ms, box-shadow 160ms;
 }
 .ddbulk__find:focus-within { border-color: #6366F1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12); }
-.ddbulk__find .material-symbols-outlined { font-size: 17px; color: var(--color-gray-400, #aaa); }
+.ddbulk__find .li-icon { font-size: 17px; color: var(--color-gray-400, #aaa); }
 .ddbulk__find input {
   border: none; outline: none; background: transparent; width: 100%;
   font-family: var(--font-body, 'Inter', sans-serif); font-size: 13px;
@@ -965,7 +965,7 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
   padding: 28px 16px; margin: 0; font-size: 13px;
   color: var(--color-gray-500, #8e8ea0);
 }
-.ddbulk__none .material-symbols-outlined { font-size: 19px; }
+.ddbulk__none .li-icon { font-size: 19px; }
 
 .ddbulk__view {
   border: none; background: transparent; cursor: pointer; padding: 2px;
@@ -973,5 +973,5 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
   transition: background 160ms, color 160ms;
 }
 .ddbulk__view:hover { background: rgba(99, 102, 241, 0.1); color: #6366F1; }
-.ddbulk__view .material-symbols-outlined { font-size: 18px; }
+.ddbulk__view .li-icon { font-size: 18px; }
 </style>

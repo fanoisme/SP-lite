@@ -9,7 +9,7 @@
         class="ddash__refresh" :class="{ 'ddash__refresh--busy': loading }"
         type="button" :disabled="loading" @click="load"
       >
-        <span class="material-symbols-outlined">refresh</span>
+        <LiIcon name="refresh" />
         {{ loading ? 'Refreshing…' : 'Refresh' }}
       </button>
     </header>
@@ -29,7 +29,7 @@
           v-for="c in counts" :key="c.id"
           :is="linkTag(c.to)" v-bind="linkProps(c.to)" class="ddash__kpi"
         >
-          <span class="material-symbols-outlined ddash__kpiico">{{ c.icon }}</span>
+          <LiIcon :name="c.icon" class="ddash__kpiico" />
           <span class="ddash__kpivalue">
             <template v-if="c.count != null">{{ formatNumber(c.count) }}</template>
             <span v-else class="ddash__muted">{{ EM_DASH }}</span>
@@ -52,7 +52,7 @@
       <article v-if="show.expiring" class="ddash__card ddash__card--wide">
         <header class="ddash__cardhead">
           <div class="ddash__cardid">
-            <span class="material-symbols-outlined ddash__cardico">hourglass_bottom</span>
+            <LiIcon name="hourglass_bottom" class="ddash__cardico" />
             <div>
               <h2 class="ddash__cardtitle">Expiring soon</h2>
               <p class="ddash__cardsub">Promos ending in the next {{ EXPIRY_WINDOW_DAYS }} days</p>
@@ -102,7 +102,7 @@
       <article v-if="show.attention" class="ddash__card">
         <header class="ddash__cardhead">
           <div class="ddash__cardid">
-            <span class="material-symbols-outlined ddash__cardico">report</span>
+            <LiIcon name="report" class="ddash__cardico" />
             <div>
               <h2 class="ddash__cardtitle">Needs attention</h2>
               <p class="ddash__cardsub">Rows that are wrong, not merely aging</p>
@@ -145,7 +145,7 @@
       <article v-if="show.starting" class="ddash__card">
         <header class="ddash__cardhead">
           <div class="ddash__cardid">
-            <span class="material-symbols-outlined ddash__cardico">schedule</span>
+            <LiIcon name="schedule" class="ddash__cardico" />
             <div>
               <h2 class="ddash__cardtitle">Starting soon</h2>
               <p class="ddash__cardsub">Promos going live in the next {{ STARTING_WINDOW_DAYS }} days</p>
@@ -191,7 +191,7 @@
       <article v-if="show.coverage" class="ddash__card">
         <header class="ddash__cardhead">
           <div class="ddash__cardid">
-            <span class="material-symbols-outlined ddash__cardico">account_tree</span>
+            <LiIcon name="account_tree" class="ddash__cardico" />
             <div>
               <h2 class="ddash__cardtitle">BU coverage</h2>
               <p class="ddash__cardsub">What points at each business unit — emptiest first</p>
@@ -231,7 +231,7 @@
       <article v-if="show.recent" class="ddash__card">
         <header class="ddash__cardhead">
           <div class="ddash__cardid">
-            <span class="material-symbols-outlined ddash__cardico">history</span>
+            <LiIcon name="history" class="ddash__cardico" />
             <div>
               <h2 class="ddash__cardtitle">Recent changes</h2>
               <p class="ddash__cardsub">The last {{ RECENT_LIMIT }} entries you can see</p>
@@ -347,8 +347,8 @@ onMounted(load)
 }
 .ddash__refresh:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
 .ddash__refresh:disabled { opacity: 0.6; cursor: progress; }
-.ddash__refresh .material-symbols-outlined { font-size: 17px; }
-.ddash__refresh--busy .material-symbols-outlined { animation: ddash-spin 700ms linear infinite; }
+.ddash__refresh .li-icon { font-size: 17px; }
+.ddash__refresh--busy .li-icon { animation: ddash-spin 700ms linear infinite; }
 @keyframes ddash-spin { to { transform: rotate(360deg); } }
 
 /* ── Headline counts ───────────────────────────────────────────────────── */

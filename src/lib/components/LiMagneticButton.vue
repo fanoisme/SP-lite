@@ -23,7 +23,7 @@
     </span>
     <span v-if="$slots.icon || icon" class="li-magnetic-btn__icon-wrap" :style="iconStyle">
       <slot name="icon">
-        <span class="material-symbols-outlined">{{ icon }}</span>
+        <LiIcon :name="icon" size="sm" />
       </slot>
     </span>
   </component>
@@ -173,7 +173,7 @@ function onMouseLeave() {
   flex-shrink: 0;
 }
 
-.li-magnetic-btn__icon-wrap .material-symbols-outlined {
+.li-magnetic-btn__icon-wrap .li-icon {
   font-size: 16px;
 }
 

@@ -33,7 +33,7 @@
            either does not amend a row down there — it addresses a different one
            and leaves the original behind. -->
       <p v-if="rekeyed" class="ddbuf__warn ddbuf__full">
-        <span class="material-symbols-outlined">warning</span>
+        <LiIcon name="warning" />
         You changed {{ rekeyed }}. Downstream this becomes a different record — the
         row under the old key will still be there until someone removes it.
       </p>
@@ -67,7 +67,7 @@
       <!-- The one BU rule no database constraint enforces, so it is enforced
            here in the only way that works: visibly, while they type. -->
       <div class="ddbuf__total ddbuf__full" :class="{ 'ddbuf__total--ok': splitOk }">
-        <span class="material-symbols-outlined">{{ splitOk ? 'check_circle' : 'error' }}</span>
+        <LiIcon :name="splitOk ? 'check_circle' : 'error'" />
         <span class="ddbuf__total-text">
           Split total <strong>{{ totalText }}</strong>
           <template v-if="!splitOk"> — must be exactly 1.0000</template>
@@ -279,7 +279,7 @@ async function submit() {
   border: 1px solid rgba(255, 188, 37, 0.35);
   font-size: 12.5px; color: var(--color-gray-800, #4D4D4D);
 }
-.ddbuf__warn .material-symbols-outlined { font-size: 18px; color: var(--color-yellow-500, #F4A600); }
+.ddbuf__warn .li-icon { font-size: 18px; color: var(--color-yellow-500, #F4A600); }
 
 .ddbuf__total {
   display: flex; align-items: center; gap: 8px;
@@ -294,7 +294,7 @@ async function submit() {
   border-color: rgba(16, 185, 129, 0.3);
   color: var(--color-green-400, #10B981);
 }
-.ddbuf__total .material-symbols-outlined { font-size: 18px; }
+.ddbuf__total .li-icon { font-size: 18px; }
 .ddbuf__total-text { flex: 1; font-variant-numeric: tabular-nums; }
 .ddbuf__balance {
   padding: 5px 12px; border: 1px solid currentColor;

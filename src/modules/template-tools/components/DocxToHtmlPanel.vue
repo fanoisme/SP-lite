@@ -26,7 +26,7 @@
         <div v-if="converting" class="docx-panel__converting">
           <div class="docx-panel__loader">
             <div class="docx-panel__loader-ring"></div>
-            <span class="material-symbols-outlined docx-panel__loader-icon">description</span>
+            <LiIcon name="description" class="docx-panel__loader-icon" />
           </div>
           <p class="docx-panel__converting-text">Converting your document...</p>
           <div class="docx-panel__progress-bar">
@@ -36,7 +36,7 @@
 
         <div v-else class="docx-panel__drop-content">
           <div class="docx-panel__drop-icon-wrap" :class="{ 'docx-panel__drop-icon-wrap--bounce': isDragging }">
-            <span class="material-symbols-outlined">{{ isDragging ? 'file_download' : 'upload_file' }}</span>
+            <LiIcon :name="isDragging ? 'file_download' : 'upload_file'" />
           </div>
           <p class="docx-panel__drop-title">
             {{ isDragging ? 'Drop your file here' : 'Upload Word Document' }}
@@ -56,28 +56,30 @@
             <button
               class="docx-panel__toggle"
               :class="{ 'docx-panel__toggle--active': viewMode === 'code' }"
+              :aria-pressed="viewMode === 'code'"
               @click="viewMode = 'code'"
             >
-              <span class="material-symbols-outlined">code</span>
+              <LiIcon name="code" />
               Code
             </button>
             <button
               class="docx-panel__toggle"
               :class="{ 'docx-panel__toggle--active': viewMode === 'preview' }"
+              :aria-pressed="viewMode === 'preview'"
               @click="viewMode = 'preview'"
             >
-              <span class="material-symbols-outlined">preview</span>
+              <LiIcon name="preview" />
               Preview
             </button>
           </div>
 
           <div class="docx-panel__toolbar-right">
             <div class="docx-panel__file-info">
-              <span class="material-symbols-outlined">description</span>
+              <LiIcon name="description" />
               {{ fileName }}
             </div>
             <button class="docx-panel__new-btn" @click="reset">
-              <span class="material-symbols-outlined">add</span>
+              <LiIcon name="add" />
               New
             </button>
           </div>
@@ -113,9 +115,7 @@
             :class="`docx-panel__msg--${msg.type || 'info'}`"
             :style="{ animationDelay: `${i * 60}ms` }"
           >
-            <span class="material-symbols-outlined">
-              {{ msg.type === 'warning' ? 'warning' : msg.type === 'error' ? 'error' : 'check_circle' }}
-            </span>
+            <LiIcon :name="msg.type === 'warning' ? 'warning' : msg.type === 'error' ? 'error' : 'check_circle'" />
             {{ msg.message }}
           </div>
         </div>
@@ -270,7 +270,7 @@ function reset() {
   transform: scale(1.15) translateY(-4px);
 }
 
-.docx-panel__drop-icon-wrap .material-symbols-outlined {
+.docx-panel__drop-icon-wrap .li-icon {
   font-size: 32px;
   color: #fff;
 }
@@ -423,7 +423,7 @@ function reset() {
   transition: all 0.25s var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1));
 }
 
-.docx-panel__toggle .material-symbols-outlined {
+.docx-panel__toggle .li-icon {
   font-size: 17px;
 }
 
@@ -455,7 +455,7 @@ function reset() {
   border-radius: 8px;
 }
 
-.docx-panel__file-info .material-symbols-outlined {
+.docx-panel__file-info .li-icon {
   font-size: 16px;
   color: var(--cta-primary-bg, #FFBC25);
 }
@@ -476,7 +476,7 @@ function reset() {
   transition: all 0.25s ease;
 }
 
-.docx-panel__new-btn .material-symbols-outlined {
+.docx-panel__new-btn .li-icon {
   font-size: 16px;
 }
 
@@ -552,7 +552,7 @@ function reset() {
   to { opacity: 1; transform: translateX(0); }
 }
 
-.docx-panel__msg .material-symbols-outlined {
+.docx-panel__msg .li-icon {
   font-size: 16px;
 }
 
