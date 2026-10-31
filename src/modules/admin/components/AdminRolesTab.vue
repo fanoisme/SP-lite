@@ -3,7 +3,7 @@
     <div class="adm-roles__toolbar">
       <h3 class="adm-roles__heading">Manage Roles</h3>
       <button class="adm-roles__add-btn" @click="$emit('add-role')">
-        <LiIcon name="add" />
+        <LiIcon name="plus" />
         Add Role
       </button>
     </div>
@@ -29,7 +29,7 @@
       >
         <div class="adm-roles__card-head">
           <div class="adm-roles__card-name">
-            <LiIcon name="shield_person" class="adm-roles__card-icon" />
+            <LiIcon name="shield-user" class="adm-roles__card-icon" />
             <span>{{ role.name }}</span>
           </div>
           <LiChip v-if="role.is_system" variant="warning" size="sm" iconLeft="lock">
@@ -49,7 +49,7 @@
             :title="role.is_system ? 'Cannot rename system role' : 'Rename role'"
             @click="$emit('rename-role', role)"
           >
-            <LiIcon name="edit" />
+            <LiIcon name="pencil" />
           </button>
           <button
             class="adm-roles__action-btn adm-roles__action-btn--danger"
@@ -58,13 +58,13 @@
             :title="deleteTooltip(role)"
             @click="$emit('delete-role', role)"
           >
-            <LiIcon name="delete" />
+            <LiIcon name="trash-2" />
           </button>
         </div>
 
         <span class="adm-roles__card-cta">
           Configure access
-          <LiIcon name="chevron_right" />
+          <LiIcon name="chevron-right" />
         </span>
       </div>
     </div>

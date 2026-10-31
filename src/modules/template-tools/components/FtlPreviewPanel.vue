@@ -9,7 +9,7 @@
           :aria-pressed="tab === 'editor'"
           @click="tab = 'editor'"
         >
-          <LiIcon name="edit_note" />
+          <LiIcon name="notebook-pen" />
           Editor
         </button>
         <button
@@ -18,7 +18,7 @@
           :aria-pressed="tab === 'pdf'"
           @click="tab = 'pdf'"
         >
-          <LiIcon name="picture_as_pdf" />
+          <LiIcon name="file-type" />
           PDF
         </button>
       </div>
@@ -32,7 +32,7 @@
           :disabled="!inputFtl.trim() || processing"
         >
           <div v-if="processing" class="ftl-preview__btn-spinner"></div>
-          <LiIcon v-else name="play_arrow" />
+          <LiIcon v-else name="play" />
           {{ processing ? 'Updating…' : 'Update Preview' }}
           <span class="ftl-preview__btn-shine"></span>
         </button>
@@ -44,7 +44,7 @@
             @click="renderFlyingSaucerPdf"
             :disabled="!inputFtl.trim() || pdf.rendering.value"
           >
-            <LiIcon :name="pdf.rendering.value ? 'hourglass_top' : 'flare'" />
+            <LiIcon :name="pdf.rendering.value ? 'hourglass_top' : 'sparkle'" />
             {{ pdf.rendering.value ? 'Rendering…' : 'Render Flying Saucer PDF' }}
           </button>
           <button
@@ -70,7 +70,7 @@
             FTL Template
           </div>
           <label class="ftl-preview__upload-btn">
-            <LiIcon name="upload_file" />
+            <LiIcon name="file-up" />
             Upload
             <input
               type="file"
@@ -91,7 +91,7 @@
 
         <Transition name="badge-pop">
           <div v-if="fixesApplied.length > 0" class="ftl-preview__fix-badge">
-            <LiIcon name="auto_fix_high" />
+            <LiIcon name="wand-sparkles" />
             <span>Auto-fixed <strong>{{ fixesApplied.length }}</strong> issue{{ fixesApplied.length > 1 ? 's' : '' }}</span>
           </div>
         </Transition>
@@ -100,7 +100,7 @@
         <details class="ftl-preview__vars" :open="variables.length > 0">
           <summary class="ftl-preview__vars-head">
             <span class="ftl-preview__vars-label">
-              <LiIcon name="tune" />
+              <LiIcon name="sliders-horizontal" />
               Variables
             </span>
             <span v-if="variables.length" class="ftl-preview__vars-count">{{ variables.length }}</span>
@@ -116,7 +116,7 @@
         <Transition name="slide-up">
           <div v-if="errors.length > 0" class="ftl-preview__errors">
             <div v-for="(err, i) in errors" :key="i" class="ftl-preview__error">
-              <LiIcon name="error" />
+              <LiIcon name="circle-x" />
               {{ err }}
             </div>
           </div>
@@ -129,9 +129,9 @@
       <div class="ftl-preview__modal-overlay" v-show="showPreviewModal" @click.self="closePreviewModal">
         <div class="ftl-preview__modal">
           <div class="ftl-preview__modal-head">
-            <div class="ftl-preview__panel-title"><LiIcon name="picture_as_pdf" /> Live Preview</div>
+            <div class="ftl-preview__panel-title"><LiIcon name="file-type" /> Live Preview</div>
             <button class="ftl-preview__modal-close" @click="closePreviewModal" aria-label="Close preview" title="Close">
-              <LiIcon name="close" />
+              <LiIcon name="x" />
             </button>
           </div>
           <section class="ftl-preview__panel ftl-preview__panel--preview">
@@ -145,12 +145,12 @@
         <Transition name="badge-pop">
           <div v-if="pendingCount > 0" class="ftl-preview__pending-bar">
             <div class="ftl-preview__pending-info">
-              <LiIcon name="edit_note" />
+              <LiIcon name="notebook-pen" />
               <strong>{{ pendingCount }}</strong> element{{ pendingCount > 1 ? 's' : '' }} edited
             </div>
             <div class="ftl-preview__pending-actions">
               <button class="ftl-preview__pending-btn ftl-preview__pending-btn--discard" @click="discardAll">
-                <LiIcon name="close" />
+                <LiIcon name="x" />
                 Discard
               </button>
               <button class="ftl-preview__pending-btn ftl-preview__pending-btn--apply" @click="applyAll">
@@ -176,7 +176,7 @@
             </div>
             <div v-else key="empty" class="ftl-preview__empty">
               <div class="ftl-preview__empty-icon">
-                <LiIcon name="edit_note" />
+                <LiIcon name="notebook-pen" />
               </div>
               <p class="ftl-preview__empty-title">No Preview Yet</p>
               <p class="ftl-preview__empty-sub">Enter FTL and click "Update Preview"</p>
@@ -259,7 +259,7 @@
                   @click="toggleBold"
                   title="Bold"
                 >
-                  <LiIcon name="format_bold" />
+                  <LiIcon name="bold" />
                 </button>
 
                 <!-- Italic -->
@@ -271,7 +271,7 @@
                   @click="toggleItalic"
                   title="Italic"
                 >
-                  <LiIcon name="format_italic" />
+                  <LiIcon name="italic" />
                 </button>
 
                 <!-- Underline -->
@@ -283,7 +283,7 @@
                   @click="toggleUnderline"
                   title="Underline"
                 >
-                  <LiIcon name="format_underlined" />
+                  <LiIcon name="underline" />
                 </button>
 
                 <div class="ftl-preview__tb-divider"></div>
@@ -297,7 +297,7 @@
                   @click="setAlign('left')"
                   title="Align Left"
                 >
-                  <LiIcon name="format_align_left" />
+                  <LiIcon name="align-left" />
                 </button>
                 <button
                   class="ftl-preview__tb-btn"
@@ -307,7 +307,7 @@
                   @click="setAlign('center')"
                   title="Align Center"
                 >
-                  <LiIcon name="format_align_center" />
+                  <LiIcon name="align-center" />
                 </button>
                 <button
                   class="ftl-preview__tb-btn"
@@ -317,7 +317,7 @@
                   @click="setAlign('right')"
                   title="Align Right"
                 >
-                  <LiIcon name="format_align_right" />
+                  <LiIcon name="align-right" />
                 </button>
                 <button
                   class="ftl-preview__tb-btn"
@@ -327,7 +327,7 @@
                   @click="setAlign('justify')"
                   title="Justify"
                 >
-                  <LiIcon name="format_align_justify" />
+                  <LiIcon name="align-justify" />
                 </button>
 
                 <div class="ftl-preview__tb-divider"></div>
@@ -338,7 +338,7 @@
                 </button>
                 <!-- Revert this element -->
                 <button class="ftl-preview__tb-btn ftl-preview__tb-btn--cancel" @click="revertCurrent" aria-label="Revert this element" title="Revert this element">
-                  <LiIcon name="close" />
+                  <LiIcon name="x" />
                 </button>
               </div>
             </div>
@@ -353,7 +353,7 @@
     <div v-if="tab === 'pdf'" class="ftl-preview__pdf">
       <Transition name="badge-pop">
         <div v-if="!pdf.javaAvailable.value" class="ftl-preview__java-warn">
-          <LiIcon name="warning" />
+          <LiIcon name="triangle-alert" />
           <span>Java not detected. Install a JRE (e.g. <a href="https://adoptium.net/temurin/releases/?version=8" target="_blank" rel="noopener">Temurin 8</a>) to enable true Flying Saucer PDF. The preview below is <strong>approximate</strong> — not Flying Saucer (CSS 2.1 not enforced).</span>
         </div>
       </Transition>
@@ -369,7 +369,7 @@
           ></iframe>
           <div v-else key="empty" class="ftl-preview__empty">
             <div class="ftl-preview__empty-icon">
-              <LiIcon name="picture_as_pdf" />
+              <LiIcon name="file-type" />
             </div>
             <p class="ftl-preview__empty-title">No PDF Yet</p>
             <p class="ftl-preview__empty-sub">Click "Render Flying Saucer PDF" to generate</p>

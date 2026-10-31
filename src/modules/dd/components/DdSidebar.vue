@@ -2,7 +2,7 @@
   <nav class="ddnav">
     <header class="ddnav__brand">
       <div class="ddnav__mark">
-        <LiIcon name="inventory" />
+        <LiIcon name="boxes" />
       </div>
       <div class="ddnav__id">
         <span class="ddnav__name">DD MPM</span>
@@ -18,7 +18,7 @@
              every DD screen. -->
         <RouterLink :to="{ name: 'dd' }" custom v-slot="{ isExactActive, navigate }">
           <button class="ddnav__item" :class="{ 'ddnav__item--active': isExactActive }" :aria-current="isExactActive ? 'page' : undefined" @click="navigate">
-            <LiIcon name="dashboard" />
+            <LiIcon name="layout-dashboard" />
             <span class="ddnav__text">Dashboard</span>
           </button>
         </RouterLink>
@@ -44,12 +44,12 @@
             class="ddnav__icobtn" :class="{ 'ddnav__icobtn--spin': reloading }"
             aria-label="Reload row counts" @click="reload"
           >
-            <LiIcon name="refresh" />
+            <LiIcon name="rotate-cw" />
           </button>
         </div>
         <div v-for="db in visibleDatabases" :key="db" class="ddnav__dbgroup">
           <p class="ddnav__dbname">
-            <LiIcon name="dns" />
+            <LiIcon name="server" />
             {{ db }}
           </p>
           <RouterLink
@@ -63,7 +63,7 @@
               :aria-current="isActive ? 'page' : undefined"
               @click="navigate"
             >
-              <LiIcon name="table_rows" />
+              <LiIcon name="rows-3" />
               <span class="ddnav__text ddnav__text--mono">{{ t.targetTable }}</span>
               <span v-if="counts[t.id] != null" class="ddnav__count">{{ counts[t.id] }}</span>
             </button>
@@ -122,13 +122,13 @@ const reloading = ref(false)
 
 // Group order matches the DD app's sidebar.
 const manageNav = [
-  { name: 'dd-business-units', label: 'Business Units', icon: 'account_balance', menu: 'bu-accounts' },
-  { name: 'dd-merchants',      label: 'Merchants',      icon: 'storefront',      menu: 'merchants' },
-  { name: 'dd-promos',         label: 'Promos',         icon: 'sell',            menu: 'promos' },
+  { name: 'dd-business-units', label: 'Business Units', icon: 'landmark', menu: 'bu-accounts' },
+  { name: 'dd-merchants',      label: 'Merchants',      icon: 'store',      menu: 'merchants' },
+  { name: 'dd-promos',         label: 'Promos',         icon: 'tag',            menu: 'promos' },
 ]
 
 const toolsNav = [
-  { name: 'dd-export', label: 'Export',     icon: 'ios_share', menu: 'export' },
+  { name: 'dd-export', label: 'Export',     icon: 'share', menu: 'export' },
   { name: 'dd-audit',  label: 'Audit Log',  icon: 'history',   menu: 'audit' },
   { name: 'dd-sql',    label: 'SQL Editor', icon: 'terminal',  menu: 'sql' },
 ]

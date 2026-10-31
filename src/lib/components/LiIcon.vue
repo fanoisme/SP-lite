@@ -15,18 +15,18 @@ import { iconUrl } from '../icons.js'
 
 const props = defineProps({
   name: { type: String, required: true },
+  // Allo compact UI default: 16px (APP.md §3 — Lucide, 16px, stroke 2).
   size: {
     type: String,
-    default: 'md',
+    default: 'sm',
     validator: value => ['xxs', 'sm', 'md', 'lg', 'xl'].includes(value),
   },
-  filled: { type: Boolean, default: false },
   color: { type: String, default: 'inherit' },
   decorative: { type: Boolean, default: true },
   label: { type: String, default: '' },
 })
 
-const url = computed(() => iconUrl(props.name, props.filled))
+const url = computed(() => iconUrl(props.name))
 const iconStyle = computed(() => {
   const style = {
     '--li-icon-url': url.value ? `url("${url.value}")` : 'none',

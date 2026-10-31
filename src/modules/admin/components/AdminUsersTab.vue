@@ -9,7 +9,7 @@
         class="adm-users__search"
       />
       <button class="adm-users__add-btn" @click="$emit('add-user')">
-        <LiIcon name="person_add" />
+        <LiIcon name="user-plus" />
         Add User
       </button>
     </div>
@@ -72,7 +72,7 @@
               :title="row.is_active ? 'Deactivate account' : 'Activate account'"
               @click="$emit('update-active', row.id, !row.is_active)"
             >
-              <LiIcon :name="row.is_active ? 'check_circle' : 'hourglass_empty'" />
+              <LiIcon :name="row.is_active ? 'circle-check' : 'hourglass_empty'" />
             </button>
             <button
               class="adm-users__manage-btn"
@@ -80,7 +80,7 @@
               @click="$emit('open-user', row)"
               title="Manage access"
             >
-              <LiIcon name="tune" />
+              <LiIcon name="sliders-horizontal" />
             </button>
             <button
               class="adm-users__delete-btn"
@@ -89,7 +89,7 @@
               @click="$emit('delete-user', row)"
               title="Delete user"
             >
-              <LiIcon name="delete" />
+              <LiIcon name="trash-2" />
             </button>
           </div>
         </template>

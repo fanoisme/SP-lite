@@ -5,7 +5,7 @@
       <div class="tpl-tools__header-content">
         <div class="tpl-tools__title-group">
           <div class="tpl-tools__icon-badge">
-            <LiIcon name="auto_awesome" />
+            <LiIcon name="sparkles" />
           </div>
           <div>
             <h1 class="tpl-tools__title">Template Tools</h1>
@@ -64,10 +64,10 @@ const { canFeature } = useAccess()
 
 const tabs = computed(() =>
   [
-    { id: 'docx-html', feature: 'docx-to-html', label: 'DOCX → HTML', desc: 'Convert Word documents', icon: 'upload_file', component: DocxToHtmlPanel },
-    { id: 'html-ftl', feature: 'html-to-ftl', label: 'HTML → FTL', desc: 'Generate FreeMarker templates', icon: 'transform', component: HtmlToFtlPanel },
-    { id: 'html-preview', feature: 'html-preview', label: 'HTML Preview', desc: 'Preview with variables', icon: 'preview', component: HtmlPreviewPanel },
-    { id: 'ftl-preview', feature: 'ftl-preview', label: 'FTL Preview', desc: 'PDF-style preview', icon: 'picture_as_pdf', component: FtlPreviewPanel },
+    { id: 'docx-html', feature: 'docx-to-html', label: 'DOCX → HTML', desc: 'Convert Word documents', icon: 'file-up', component: DocxToHtmlPanel },
+    { id: 'html-ftl', feature: 'html-to-ftl', label: 'HTML → FTL', desc: 'Generate FreeMarker templates', icon: 'scaling', component: HtmlToFtlPanel },
+    { id: 'html-preview', feature: 'html-preview', label: 'HTML Preview', desc: 'Preview with variables', icon: 'eye', component: HtmlPreviewPanel },
+    { id: 'ftl-preview', feature: 'ftl-preview', label: 'FTL Preview', desc: 'PDF-style preview', icon: 'file-type', component: FtlPreviewPanel },
   ].filter(t => canFeature('template-tools', t.feature))
 )
 

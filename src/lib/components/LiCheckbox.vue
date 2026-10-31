@@ -20,7 +20,7 @@
           'is-round': round 
         }"
       >
-        <LiIcon v-if="indeterminate" name="remove" size="xxs" />
+        <LiIcon v-if="indeterminate" name="minus" size="xxs" />
         <LiIcon v-else-if="modelValue" name="check" size="xxs" />
       </div>
     </div>

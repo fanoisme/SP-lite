@@ -4,7 +4,7 @@
       <li v-for="(item, i) in items" :key="i" class="li-breadcrumb__item">
         <LiIcon
           v-if="separator === 'chevron' && i > 0"
-          name="chevron_right"
+          name="chevron-right"
           size="xxs"
           class="li-breadcrumb__sep"
         />

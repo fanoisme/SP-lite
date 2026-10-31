@@ -22,7 +22,7 @@
       </select>
       
       <span class="li-select-icon li-select-icon-right">
-        <LiIcon name="expand_more" size="sm" />
+        <LiIcon name="chevron-down" size="sm" />
       </span>
     </div>
 

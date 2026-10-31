@@ -5,7 +5,7 @@
       <div class="admin__header-content">
         <div class="admin__title-group">
           <div class="admin__icon-badge">
-            <LiIcon name="admin_panel_settings" />
+            <LiIcon name="shield" />
           </div>
           <div>
             <h1 class="admin__title">Admin Panel</h1>
@@ -14,15 +14,15 @@
         </div>
         <div class="admin__stats">
           <span class="admin__stat-chip">
-            <LiIcon name="group" />
+            <LiIcon name="users" />
             {{ stats.users }} users
           </span>
           <span class="admin__stat-chip">
-            <LiIcon name="shield_person" />
+            <LiIcon name="shield-user" />
             {{ stats.roles }} roles
           </span>
           <span class="admin__stat-chip">
-            <LiIcon name="apps" />
+            <LiIcon name="layout-grid" />
             {{ stats.modulesEnabled }}/{{ stats.modulesTotal }} modules
           </span>
         </div>
@@ -148,7 +148,7 @@
         <div class="admin__delete-actions">
           <button class="admin__cancel-btn" @click="deleteTarget = null">Cancel</button>
           <button class="admin__danger-btn" @click="confirmDelete">
-            <LiIcon name="delete" />
+            <LiIcon name="trash-2" />
             Delete
           </button>
         </div>
@@ -194,9 +194,9 @@ const {
 // Tab state
 const activeTab = ref(0)
 const tabDefs = [
-  { id: 'users', label: 'Users', desc: 'Manage users', icon: 'group' },
-  { id: 'roles', label: 'Roles', desc: 'Role management', icon: 'shield_person' },
-  { id: 'modules', label: 'Modules', desc: 'Module access', icon: 'apps' },
+  { id: 'users', label: 'Users', desc: 'Manage users', icon: 'users' },
+  { id: 'roles', label: 'Roles', desc: 'Role management', icon: 'shield-user' },
+  { id: 'modules', label: 'Modules', desc: 'Module access', icon: 'layout-grid' },
 ]
 
 // Pill tab indicator

@@ -9,7 +9,7 @@
             HTML Source
           </div>
           <label class="html-preview__upload-btn">
-            <LiIcon name="upload_file" />
+            <LiIcon name="file-up" />
             Upload
             <input
               type="file"
@@ -31,7 +31,7 @@
         <!-- Auto-fix badge -->
         <Transition name="badge-pop">
           <div v-if="fixesApplied.length > 0" class="html-preview__fix-badge">
-            <LiIcon name="auto_fix_high" />
+            <LiIcon name="wand-sparkles" />
             <span>Auto-fixed <strong>{{ fixesApplied.length }}</strong> issue{{ fixesApplied.length > 1 ? 's' : '' }}</span>
           </div>
         </Transition>
@@ -47,7 +47,7 @@
       <div class="html-preview__right">
         <div class="html-preview__section-header">
           <div class="html-preview__section-title">
-            <LiIcon name="preview" />
+            <LiIcon name="eye" />
             Live Preview
           </div>
           <div class="html-preview__header-actions">
@@ -66,7 +66,7 @@
                 @click="toggleWysiwyg"
                 :title="wysiwygMode ? 'Disable inline editing' : 'Enable inline editing'"
               >
-                <LiIcon :name="wysiwygMode ? 'edit_off' : 'edit'" />
+                <LiIcon :name="wysiwygMode ? 'edit_off' : 'pencil'" />
                 {{ wysiwygMode ? 'Editing' : 'Edit' }}
               </button>
             </Transition>
@@ -94,7 +94,7 @@
             />
             <div v-else key="empty" class="html-preview__empty">
               <div class="html-preview__empty-icon">
-                <LiIcon name="preview" />
+                <LiIcon name="eye" />
               </div>
               <p class="html-preview__empty-title">No Preview</p>
               <p class="html-preview__empty-sub">Enter HTML code on the left to see a live preview</p>
@@ -178,7 +178,7 @@
                   @click="toggleBold"
                   title="Bold"
                 >
-                  <LiIcon name="format_bold" />
+                  <LiIcon name="bold" />
                 </button>
 
                 <!-- Italic -->
@@ -190,7 +190,7 @@
                   @click="toggleItalic"
                   title="Italic"
                 >
-                  <LiIcon name="format_italic" />
+                  <LiIcon name="italic" />
                 </button>
 
                 <!-- Underline -->
@@ -202,7 +202,7 @@
                   @click="toggleUnderline"
                   title="Underline"
                 >
-                  <LiIcon name="format_underlined" />
+                  <LiIcon name="underline" />
                 </button>
 
                 <div class="html-preview__tb-divider"></div>
@@ -216,7 +216,7 @@
                   @click="setAlign('left')"
                   title="Align Left"
                 >
-                  <LiIcon name="format_align_left" />
+                  <LiIcon name="align-left" />
                 </button>
                 <button
                   class="html-preview__tb-btn"
@@ -226,7 +226,7 @@
                   @click="setAlign('center')"
                   title="Align Center"
                 >
-                  <LiIcon name="format_align_center" />
+                  <LiIcon name="align-center" />
                 </button>
                 <button
                   class="html-preview__tb-btn"
@@ -236,7 +236,7 @@
                   @click="setAlign('right')"
                   title="Align Right"
                 >
-                  <LiIcon name="format_align_right" />
+                  <LiIcon name="align-right" />
                 </button>
                 <button
                   class="html-preview__tb-btn"
@@ -246,7 +246,7 @@
                   @click="setAlign('justify')"
                   title="Justify"
                 >
-                  <LiIcon name="format_align_justify" />
+                  <LiIcon name="align-justify" />
                 </button>
 
                 <div class="html-preview__tb-divider"></div>
@@ -257,7 +257,7 @@
                 </button>
                 <!-- Revert -->
                 <button class="html-preview__tb-btn html-preview__tb-btn--cancel" @click="revertCurrent" aria-label="Revert this element" title="Revert">
-                  <LiIcon name="close" />
+                  <LiIcon name="x" />
                 </button>
               </div>
             </div>

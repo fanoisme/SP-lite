@@ -47,7 +47,7 @@
 
         <span class="adm-modules__card-cta">
           Configure
-          <LiIcon name="chevron_right" />
+          <LiIcon name="chevron-right" />
         </span>
       </div>
     </div>

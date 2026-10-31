@@ -9,7 +9,7 @@
   >
     <LiIcon v-if="iconLeft" :name="iconLeft" size="xxs" />
     <span class="li-chip__label"><slot /></span>
-    <LiIcon v-if="removable" name="close" size="xxs" class="li-chip__remove" @click.stop="$emit('remove')" />
+    <LiIcon v-if="removable" name="x" size="xxs" class="li-chip__remove" @click.stop="$emit('remove')" />
     <LiIcon v-else-if="iconRight" :name="iconRight" size="xxs" />
   </span>
 </template>

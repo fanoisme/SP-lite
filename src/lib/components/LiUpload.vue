@@ -20,7 +20,7 @@
       />
       
       <div class="li-upload-icon">
-        <LiIcon name="cloud_upload" size="lg" />
+        <LiIcon name="cloud-upload" size="lg" />
       </div>
       <div class="li-upload-text">
         <span class="li-upload-highlight">Click to upload</span> or drag and drop
@@ -30,10 +30,10 @@
     
     <div v-if="files.length > 0" class="li-upload-file-list">
       <div v-for="(file, index) in files" :key="index" class="li-upload-file-item">
-        <LiIcon name="description" size="md" class="li-file-icon" />
+        <LiIcon name="file-text" size="md" class="li-file-icon" />
         <span class="li-file-name">{{ file.name }}</span>
         <button class="li-file-remove" :aria-label="`Remove ${file.name}`" @click.stop="removeFile(index)">
-          <LiIcon name="close" size="sm" />
+          <LiIcon name="x" size="sm" />
         </button>
       </div>
     </div>

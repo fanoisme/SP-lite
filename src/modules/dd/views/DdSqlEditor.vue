@@ -8,7 +8,7 @@
       <div class="ddsql__actions">
         <p class="ddsql__count">{{ connectionLabel }}</p>
         <button class="ddsql__reload" type="button" :disabled="mounting" @click="mountAll">
-          <LiIcon name="restart_alt" />
+          <LiIcon name="rotate-ccw" />
           Reload
         </button>
       </div>
@@ -37,7 +37,7 @@
 
           <div v-for="t in mountedList" :key="t.name" class="ddsql__table">
             <button class="ddsql__table-head" type="button" @click="toggle(t.name)">
-              <LiIcon name="chevron_right" class="ddsql__chev" :class="{ 'is-open': opened.has(t.name) }" />
+              <LiIcon name="chevron-right" class="ddsql__chev" :class="{ 'is-open': opened.has(t.name) }" />
               <span class="ddsql__table-name" :title="`${t.db}.${t.name}`">{{ t.name }}</span>
               <span class="ddsql__table-rows">{{ t.rows.length }}</span>
             </button>
@@ -75,7 +75,7 @@
           <div v-for="s in snippets" :key="s.id" class="ddsql__item">
             <button class="ddsql__item-main" type="button" :title="s.sql" @click="sql = s.sql">{{ s.name }}</button>
             <button class="ddsql__item-del" type="button" :aria-label="`Delete snippet ${s.name}`" title="Delete snippet" @click="deleteSnippet(s.id)">
-              <LiIcon name="close" />
+              <LiIcon name="x" />
             </button>
           </div>
         </section>
@@ -93,7 +93,7 @@
               <span class="ddsql__item-ms">{{ h.ms }} ms</span>
             </button>
             <button class="ddsql__item-del" type="button" aria-label="Remove query from history" title="Remove from history" @click="deleteHistory(h.id)">
-              <LiIcon name="close" />
+              <LiIcon name="x" />
             </button>
           </div>
         </section>

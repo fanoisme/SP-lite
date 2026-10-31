@@ -17,7 +17,7 @@
                 <h3 class="li-bottomsheet-title">{{ title }}</h3>
               </slot>
               <button v-if="closable" class="li-bottomsheet-close" @click="close" aria-label="Close">
-                <LiIcon name="close" size="lg" />
+                <LiIcon name="x" size="lg" />
               </button>
             </div>
             

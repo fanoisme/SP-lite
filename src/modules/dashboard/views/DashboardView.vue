@@ -28,7 +28,7 @@
           <span class="dash__card-desc">{{ m.desc }}</span>
           <span class="dash__card-cta">
             Buka
-            <LiIcon name="arrow_forward" />
+            <LiIcon name="arrow-right" />
           </span>
         </router-link>
       </div>

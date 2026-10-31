@@ -13,7 +13,7 @@
         iconLeft="shield_person"
       />
       <div v-if="error" class="adm-rmodal__error">
-        <LiIcon name="error" />
+        <LiIcon name="circle-x" />
         {{ error }}
       </div>
     </div>

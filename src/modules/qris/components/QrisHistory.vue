@@ -3,7 +3,7 @@
     <!-- Toolbar -->
     <div v-if="history.length > 0 || !loading" class="hist__toolbar">
       <button class="hist__btn hist__btn--clear" @click="showClearConfirm = true">
-        <LiIcon name="delete_sweep" />
+        <LiIcon name="eraser" />
         Clear History
       </button>
 
@@ -66,7 +66,7 @@
           </span>
         </div>
         <button class="hist__delete" aria-label="Delete history entry" @click.stop="$emit('delete', entry.id)" title="Delete">
-          <LiIcon name="delete" />
+          <LiIcon name="trash-2" />
         </button>
       </div>
     </div>

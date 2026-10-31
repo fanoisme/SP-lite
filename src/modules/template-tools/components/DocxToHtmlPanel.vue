@@ -26,7 +26,7 @@
         <div v-if="converting" class="docx-panel__converting">
           <div class="docx-panel__loader">
             <div class="docx-panel__loader-ring"></div>
-            <LiIcon name="description" class="docx-panel__loader-icon" />
+            <LiIcon name="file-text" class="docx-panel__loader-icon" />
           </div>
           <p class="docx-panel__converting-text">Converting your document...</p>
           <div class="docx-panel__progress-bar">
@@ -36,7 +36,7 @@
 
         <div v-else class="docx-panel__drop-content">
           <div class="docx-panel__drop-icon-wrap" :class="{ 'docx-panel__drop-icon-wrap--bounce': isDragging }">
-            <LiIcon :name="isDragging ? 'file_download' : 'upload_file'" />
+            <LiIcon :name="isDragging ? 'file_download' : 'file-up'" />
           </div>
           <p class="docx-panel__drop-title">
             {{ isDragging ? 'Drop your file here' : 'Upload Word Document' }}
@@ -68,18 +68,18 @@
               :aria-pressed="viewMode === 'preview'"
               @click="viewMode = 'preview'"
             >
-              <LiIcon name="preview" />
+              <LiIcon name="eye" />
               Preview
             </button>
           </div>
 
           <div class="docx-panel__toolbar-right">
             <div class="docx-panel__file-info">
-              <LiIcon name="description" />
+              <LiIcon name="file-text" />
               {{ fileName }}
             </div>
             <button class="docx-panel__new-btn" @click="reset">
-              <LiIcon name="add" />
+              <LiIcon name="plus" />
               New
             </button>
           </div>
@@ -115,7 +115,7 @@
             :class="`docx-panel__msg--${msg.type || 'info'}`"
             :style="{ animationDelay: `${i * 60}ms` }"
           >
-            <LiIcon :name="msg.type === 'warning' ? 'warning' : msg.type === 'error' ? 'error' : 'check_circle'" />
+            <LiIcon :name="msg.type === 'triangle-alert' ? 'triangle-alert' : msg.type === 'circle-x' ? 'circle-x' : 'circle-check'" />
             {{ msg.message }}
           </div>
         </div>

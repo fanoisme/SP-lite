@@ -13,7 +13,7 @@
               <h2 class="li-modal-title">{{ title }}</h2>
             </slot>
             <button v-if="closable" class="li-modal-close" @click="close" aria-label="Close">
-              <LiIcon name="close" size="lg" />
+              <LiIcon name="x" size="lg" />
             </button>
           </div>
           

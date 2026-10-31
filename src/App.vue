@@ -22,7 +22,7 @@
       <div class="sp-sidebar__header">
         <LiLogo size="sm" :animate="true" :show-subtitle="true" />
         <button class="sp-sidebar__close" aria-label="Close navigation menu" @click="sidebarOpen = false">
-          <LiIcon name="close" />
+          <LiIcon name="x" />
         </button>
       </div>
 
@@ -50,7 +50,7 @@
             @click="sidebarOpen = false"
           >
             <span class="sp-sidebar__item-indicator"></span>
-            <LiIcon name="admin_panel_settings" class="sp-sidebar__item-icon" />
+            <LiIcon name="shield" class="sp-sidebar__item-icon" />
             <span class="sp-sidebar__item-label">Admin</span>
           </router-link>
         </template>
@@ -63,11 +63,11 @@
           :class="{ 'sp-sidebar__user--active': isActive('/profile') }"
           @click="sidebarOpen = false"
         >
-          <LiIcon name="account_circle" />
+          <LiIcon name="circle-user" />
           <span class="sp-sidebar__user-name">{{ profile?.username || session?.user?.email }}</span>
         </router-link>
         <button class="sp-sidebar__source sp-sidebar__logout" @click="handleLogout">
-          <LiIcon name="logout" />
+          <LiIcon name="log-out" />
           <span>Sign out</span>
         </button>
       </div>

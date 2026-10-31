@@ -22,7 +22,7 @@
         </template>
       </p>
       <button class="ddrf__toggle" type="button" :aria-pressed="jsonMode" @click="toggleJson">
-        <LiIcon :name="jsonMode ? 'view_list' : 'data_object'" />
+        <LiIcon :name="jsonMode ? 'view_list' : 'braces'" />
         {{ jsonMode ? 'Fields' : 'Raw JSON' }}
       </button>
     </div>

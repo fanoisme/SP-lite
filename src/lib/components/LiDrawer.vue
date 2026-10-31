@@ -20,7 +20,7 @@
           <h2 v-if="title" class="li-drawer__title">{{ title }}</h2>
           <slot name="header" />
           <button class="li-drawer__close" :aria-label="closeLabel || 'Close'" @click="close()">
-            <LiIcon name="close" size="md" />
+            <LiIcon name="x" size="md" />
           </button>
         </div>
 

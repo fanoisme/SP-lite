@@ -25,7 +25,7 @@
       <div class="tag-viewer__raw-header">
         <span class="tag-viewer__raw-label">QR Code Value</span>
         <button class="tag-viewer__copy" @click="copyRaw" :aria-label="copied ? 'QR value copied' : 'Copy QR value'" title="Copy">
-          <LiIcon :name="copied ? 'check' : 'content_copy'" />
+          <LiIcon :name="copied ? 'check' : 'copy'" />
         </button>
       </div>
       <textarea class="tag-viewer__raw-value" readonly :value="qrValue" rows="3"></textarea>
@@ -33,7 +33,7 @@
 
     <!-- CRC Status -->
     <div v-if="crcValid !== undefined" class="tag-viewer__crc" :class="crcValid ? 'tag-viewer__crc--ok' : 'tag-viewer__crc--fail'">
-      <LiIcon :name="crcValid ? 'check_circle' : 'error'" />
+      <LiIcon :name="crcValid ? 'circle-check' : 'circle-x'" />
       <span>CRC {{ crcValid ? 'Valid' : 'Invalid' }}</span>
       <span v-if="!crcValid" class="tag-viewer__crc-detail">
         (expected: {{ crcComputed }}, got: {{ crcProvided }})

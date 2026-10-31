@@ -4,7 +4,7 @@
     
     <div class="li-datepicker-input-wrapper" @click="toggleCalendar" ref="wrapperRef">
       <div class="li-datepicker-icon">
-        <LiIcon name="calendar_month" size="md" />
+        <LiIcon name="calendar" size="md" />
       </div>
       <input 
         type="text" 
@@ -23,11 +23,11 @@
       <div v-if="isOpen" class="li-calendar-popover" ref="calendarRef">
         <div class="li-calendar-header">
           <button class="li-calendar-nav" aria-label="Previous month" @click="prevMonth">
-            <LiIcon name="chevron_left" size="sm" />
+            <LiIcon name="chevron-left" size="sm" />
           </button>
           <div class="li-calendar-title">{{ monthName }} {{ currentYear }}</div>
           <button class="li-calendar-nav" aria-label="Next month" @click="nextMonth">
-            <LiIcon name="chevron_right" size="sm" />
+            <LiIcon name="chevron-right" size="sm" />
           </button>
         </div>
         

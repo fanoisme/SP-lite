@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "SP-lite — public, static, backend-free QRIS Tools, Template Tools, and Video Frames, derived from SO-Platform.",
+  "description": "SP-lite â€” public, static, backend-free QRIS Tools, Template Tools, and Video Frames, derived from SO-Platform.",
   "engines": {
     "node": ">=20.0.0"
   },
@@ -28,9 +28,8 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@material-design-icons/svg": "^0.14.15",
-    "@material-symbols/svg-400": "^0.46.0",
     "@vitejs/plugin-vue": "^5.2.1",
+    "lucide-static": "^1.66.0",
     "vite": "^6.0.5"
   }
 }

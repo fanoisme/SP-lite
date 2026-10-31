@@ -114,7 +114,7 @@
       </p>
 
       <p v-if="dateAssumed.length" class="ddbulk__ignored">
-        <LiIcon name="event" />
+        <LiIcon name="calendar" />
         Read {{ dateAssumed.join(', ') }} — converted to YYYY-MM-DD.
       </p>
 
@@ -129,13 +129,13 @@
           </template>
           <template #cell-__view="{ row }">
             <button class="ddbulk__view" type="button" :aria-label="`Inspect row ${row.__line}`" title="Inspect this row" @click="openDetail(row.__line)">
-              <LiIcon name="chevron_right" />
+              <LiIcon name="chevron-right" />
             </button>
           </template>
         </LiTable>
 
         <p v-if="!filteredRows.length" class="ddbulk__none">
-          <LiIcon name="filter_alt_off" />
+          <LiIcon name="filter-x" />
           Nothing matches. <button type="button" class="ddbulk__linkbtn" @click="statusFilter = ''; rowSearch = ''">Clear the filter</button>
         </p>
         <p v-else-if="visibleRows.length < filteredRows.length" class="ddbulk__more">

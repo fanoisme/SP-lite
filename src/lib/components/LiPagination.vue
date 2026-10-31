@@ -7,7 +7,7 @@
       :aria-label="prevLabel || 'Previous page'"
       @click="goTo(currentPage - 1)"
     >
-      <LiIcon name="chevron_left" size="sm" />
+      <LiIcon name="chevron-left" size="sm" />
       <span v-if="showLabels" class="li-pagination__nav-label">{{ prevLabel || 'Prev' }}</span>
     </button>
 
@@ -35,7 +35,7 @@
       @click="goTo(currentPage + 1)"
     >
       <span v-if="showLabels" class="li-pagination__nav-label">{{ nextLabel || 'Next' }}</span>
-      <LiIcon name="chevron_right" size="sm" />
+      <LiIcon name="chevron-right" size="sm" />
     </button>
   </nav>
 </template>

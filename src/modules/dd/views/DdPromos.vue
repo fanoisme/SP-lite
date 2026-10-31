@@ -8,7 +8,7 @@
       <div class="ddpromo__actions">
         <p class="ddpromo__count">{{ total }} {{ total === 1 ? 'rule' : 'rules' }}</p>
         <button class="ddpromo__ghost" type="button" :disabled="exporting" @click="exportXlsx">
-          <LiIcon name="file_save" />
+          <LiIcon name="save" />
           Export XLSX
         </button>
         <button v-if="canCreate" class="ddpromo__ghost" type="button" @click="showBulk = true">
@@ -16,7 +16,7 @@
           Bulk Upload
         </button>
         <button v-if="canCreate" class="ddpromo__add" type="button" @click="openCreate">
-          <LiIcon name="add" />
+          <LiIcon name="plus" />
           Add Promo
         </button>
       </div>
@@ -25,7 +25,7 @@
     <!-- Someone else wrote to qrdd_promo_rules while this page was open. The
          page is not reloaded from under the reader — they may be mid-edit. -->
     <div v-if="stale && !staleDismissed" class="ddpromo__stale">
-      <LiIcon name="sync_problem" />
+      <LiIcon name="refresh-cw-off" />
       <span class="ddpromo__stale-text">
         {{ staleCount }} {{ staleCount === 1 ? 'change' : 'changes' }}
         <template v-if="staleBy"> by {{ staleBy }}</template>
@@ -33,7 +33,7 @@
       </span>
       <button class="ddpromo__stale-btn" type="button" @click="refresh">Reload</button>
       <button class="ddpromo__stale-x" type="button" aria-label="Dismiss" @click="staleDismissed = true">
-        <LiIcon name="close" />
+        <LiIcon name="x" />
       </button>
     </div>
 
@@ -125,10 +125,10 @@
       <template #cell-actions="{ row }">
         <div class="ddpromo__row-actions">
           <button v-if="canUpdate" class="ddpromo__icon" type="button" :aria-label="`Edit promo ${row.promo_id}`" title="Edit" @click="openEdit(row)">
-            <LiIcon name="edit" />
+            <LiIcon name="pencil" />
           </button>
           <button v-if="canCreate" class="ddpromo__icon" type="button" :aria-label="`Duplicate promo ${row.promo_id}`" title="Duplicate" @click="openDuplicate(row)">
-            <LiIcon name="content_copy" />
+            <LiIcon name="copy" />
           </button>
           <button
             v-if="canDelete"
@@ -138,7 +138,7 @@
             title="Delete"
             @click="askDelete(row)"
           >
-            <LiIcon name="delete" />
+            <LiIcon name="trash-2" />
           </button>
         </div>
       </template>

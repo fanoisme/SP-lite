@@ -4,7 +4,7 @@
     
     <div class="li-timepicker-input-wrapper" @click="toggleDropdown" ref="wrapperRef">
       <div class="li-timepicker-icon">
-        <LiIcon name="schedule" size="md" />
+        <LiIcon name="clock" size="md" />
       </div>
       <input 
         type="text" 

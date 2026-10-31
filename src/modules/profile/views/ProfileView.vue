@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="profile__header">
       <div class="profile__header-badge">
-        <LiIcon name="person" />
+        <LiIcon name="user" />
       </div>
       <div class="profile__header-text">
         <h1 class="profile__title">Profile</h1>
@@ -14,19 +14,19 @@
     <!-- Messages -->
     <Transition name="profile-msg">
       <div v-if="errorMsg" class="profile__msg profile__msg--error">
-        <LiIcon name="error" />
+        <LiIcon name="circle-x" />
         <span class="profile__msg-text">{{ errorMsg }}</span>
         <button class="profile__msg-close" aria-label="Dismiss error message" @click="errorMsg = ''">
-          <LiIcon name="close" />
+          <LiIcon name="x" />
         </button>
       </div>
     </Transition>
     <Transition name="profile-msg">
       <div v-if="successMsg" class="profile__msg profile__msg--success">
-        <LiIcon name="check_circle" />
+        <LiIcon name="circle-check" />
         <span class="profile__msg-text">{{ successMsg }}</span>
         <button class="profile__msg-close" aria-label="Dismiss success message" @click="successMsg = ''">
-          <LiIcon name="close" />
+          <LiIcon name="x" />
         </button>
       </div>
     </Transition>
@@ -36,7 +36,7 @@
       <div class="profile__card" style="--card-delay: 0">
         <div class="profile__card-header">
           <div class="profile__card-icon">
-            <LiIcon name="person" />
+            <LiIcon name="user" />
           </div>
           <h2 class="profile__card-title">Informasi Akun</h2>
         </div>
@@ -89,7 +89,7 @@
           <div class="profile__field">
             <label class="profile__label">Nama Lengkap</label>
             <div class="profile__input-wrap">
-              <LiIcon name="edit" class="profile__input-icon" />
+              <LiIcon name="pencil" class="profile__input-icon" />
               <input v-model="fullName" type="text" class="profile__input" placeholder="Nama kamu" />
             </div>
           </div>

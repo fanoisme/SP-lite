@@ -9,16 +9,16 @@
           :class="`li-toast-${toast.type}`"
         >
           <div class="li-toast-icon">
-            <LiIcon v-if="toast.type === 'success'" name="check_circle" size="md" />
-            <LiIcon v-else-if="toast.type === 'error'" name="error" size="md" />
-            <LiIcon v-else-if="toast.type === 'warning'" name="warning" size="md" />
+            <LiIcon v-if="toast.type === 'success'" name="circle-check" size="md" />
+            <LiIcon v-else-if="toast.type === 'error'" name="circle-x" size="md" />
+            <LiIcon v-else-if="toast.type === 'warning'" name="triangle-alert" size="md" />
             <LiIcon v-else name="info" size="md" />
           </div>
           <div class="li-toast-message">
             {{ toast.message }}
           </div>
           <button class="li-toast-close" @click="removeToast(toast.id)" aria-label="Close">
-            <LiIcon name="close" size="sm" />
+            <LiIcon name="x" size="sm" />
           </button>
         </div>
       </TransitionGroup>

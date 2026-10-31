@@ -19,7 +19,7 @@
       <!-- Error / info banner -->
       <Transition name="login-error-slide">
         <div v-if="bannerMsg" class="login-error" :class="{ 'login-error--info': bannerType === 'info' }" role="alert">
-          <LiIcon :name="bannerType === 'info' ? 'info' : 'error'" class="login-error__icon" aria-hidden="true" />
+          <LiIcon :name="bannerType === 'info' ? 'info' : 'circle-x'" class="login-error__icon" aria-hidden="true" />
           <span class="login-error__text">{{ bannerMsg }}</span>
         </div>
       </Transition>
@@ -28,7 +28,7 @@
         <div class="login-field" v-if="mode === 'signin'">
           <label class="login-field__label" for="identifier">Username atau Email</label>
           <div class="login-field__input-group" :class="{ 'is-focused': focus.identifier }">
-            <LiIcon name="person" class="login-field__icon" aria-hidden="true" />
+            <LiIcon name="user" class="login-field__icon" aria-hidden="true" />
             <input
               id="identifier"
               v-model="identifier"
@@ -78,7 +78,7 @@
           <div class="login-field">
             <label class="login-field__label" for="signup-username">Username</label>
             <div class="login-field__input-group" :class="{ 'is-focused': focus.signupUsername }">
-              <LiIcon name="alternate_email" class="login-field__icon" aria-hidden="true" />
+              <LiIcon name="at-sign" class="login-field__icon" aria-hidden="true" />
               <input
                 id="signup-username"
                 v-model="signupUsername"
@@ -114,7 +114,7 @@
               :aria-label="showPassword ? 'Hide password' : 'Show password'"
               :aria-pressed="showPassword"
             >
-              <LiIcon :name="showPassword ? 'visibility_off' : 'visibility'" />
+              <LiIcon :name="showPassword ? 'visibility_off' : 'eye'" />
             </button>
           </div>
         </div>
@@ -135,7 +135,7 @@
       </button>
 
       <router-link to="/" class="login-back">
-        <LiIcon name="arrow_back" aria-hidden="true" />
+        <LiIcon name="arrow-left" aria-hidden="true" />
         Back to home
       </router-link>
     </div>

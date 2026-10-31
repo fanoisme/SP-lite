@@ -51,7 +51,7 @@
         <div class="detail__raw-wrap">
           <code class="detail__raw">{{ detail.qr_value }}</code>
           <button class="detail__copy-btn" @click="copyRaw" :aria-label="copied ? 'QR value copied' : 'Copy QR value'" :title="copied ? 'Copied!' : 'Copy'">
-            <LiIcon :name="copied ? 'check' : 'content_copy'" />
+            <LiIcon :name="copied ? 'check' : 'copy'" />
           </button>
         </div>
       </div>
@@ -83,7 +83,7 @@
 
     <template #footer>
       <button class="detail__action-btn" @click="$emit('load-to-generator', detail)">
-        <LiIcon name="edit" />
+        <LiIcon name="pencil" />
         Load to Generator
       </button>
     </template>

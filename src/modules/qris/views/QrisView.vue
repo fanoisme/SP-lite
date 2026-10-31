@@ -5,7 +5,7 @@
       <div class="qris__header-content">
         <div class="qris__title-group">
           <div class="qris__icon-badge">
-            <LiIcon name="qr_code_2" />
+            <LiIcon name="qr-code" />
           </div>
           <div>
             <h1 class="qris__title">QRIS Tools</h1>
@@ -47,14 +47,14 @@
           <div v-if="activeTab === 'generator' && canFeature('qris','generator')" class="qris__split">
             <div class="qris__left">
               <div class="qris__section-header">
-                <LiIcon name="tune" class="qris__section-icon" />
+                <LiIcon name="sliders-horizontal" class="qris__section-icon" />
                 <span class="qris__section-label">Configuration</span>
               </div>
               <QrisGenerator @generated="onResult" />
             </div>
             <div class="qris__right">
               <div class="qris__section-header">
-                <LiIcon name="visibility" class="qris__section-icon" />
+                <LiIcon name="eye" class="qris__section-icon" />
                 <span class="qris__section-label">Output</span>
               </div>
               <div v-if="result" class="qris__result">
@@ -77,7 +77,7 @@
               </div>
               <div v-else class="qris__placeholder">
                 <div class="qris__placeholder-icon">
-                  <LiIcon name="qr_code_2" />
+                  <LiIcon name="qr-code" />
                 </div>
                 <p class="qris__placeholder-title">No QR Generated</p>
                 <p class="qris__placeholder-desc">Configure parameters and generate a QRIS code to see the result here</p>
@@ -89,14 +89,14 @@
           <div v-if="activeTab === 'reader' && canFeature('qris','reader')" class="qris__split">
             <div class="qris__left">
               <div class="qris__section-header">
-                <LiIcon name="upload_file" class="qris__section-icon" />
+                <LiIcon name="file-up" class="qris__section-icon" />
                 <span class="qris__section-label">Input</span>
               </div>
               <QrisReader @parsed="onResult" />
             </div>
             <div class="qris__right">
               <div class="qris__section-header">
-                <LiIcon name="visibility" class="qris__section-icon" />
+                <LiIcon name="eye" class="qris__section-icon" />
                 <span class="qris__section-label">Analysis</span>
               </div>
               <div v-if="result" class="qris__result">
@@ -119,7 +119,7 @@
               </div>
               <div v-else class="qris__placeholder">
                 <div class="qris__placeholder-icon">
-                  <LiIcon name="qr_code_scanner" />
+                  <LiIcon name="scan-line" />
                 </div>
                 <p class="qris__placeholder-title">No QR Scanned</p>
                 <p class="qris__placeholder-desc">Upload or paste a QR code image to analyze its contents</p>
@@ -172,8 +172,8 @@ const { result, history, historyLoading, currentPage, totalPages, loadHistory, d
 
 const tabs = computed(() =>
   [
-    { id: 'generator', label: 'Generator', desc: 'Create QRIS codes', icon: 'qr_code_2' },
-    { id: 'reader', label: 'Reader', desc: 'Analyze existing codes', icon: 'qr_code_scanner' },
+    { id: 'generator', label: 'Generator', desc: 'Create QRIS codes', icon: 'qr-code' },
+    { id: 'reader', label: 'Reader', desc: 'Analyze existing codes', icon: 'scan-line' },
     { id: 'history', label: 'History', desc: 'Past generations', icon: 'history' },
   ].filter(t => canFeature('qris', t.id))
 )

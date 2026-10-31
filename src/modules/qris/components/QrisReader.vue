@@ -9,7 +9,7 @@
       @drop.prevent="handleDrop"
       tabindex="0"
     >
-      <LiIcon name="qr_code_scanner" class="reader__dropzone-icon" />
+      <LiIcon name="scan-line" class="reader__dropzone-icon" />
       <p class="reader__dropzone-text">
         Drop QR image here, paste from clipboard (Ctrl+V), or
         <label class="reader__browse">
@@ -38,7 +38,7 @@
 
     <!-- Error -->
     <div v-if="error" class="reader__error">
-      <LiIcon name="error" />
+      <LiIcon name="circle-x" />
       {{ error }}
     </div>
 

@@ -19,7 +19,7 @@
         <slot name="badge" />
       </span>
       <LiIcon
-        name="expand_more"
+        name="chevron-down"
         size="sm"
         class="li-accordion-item__chevron"
       />

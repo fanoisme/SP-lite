@@ -33,7 +33,7 @@
            either does not amend a row down there — it addresses a different one
            and leaves the original behind. -->
       <p v-if="rekeyed" class="ddbuf__warn ddbuf__full">
-        <LiIcon name="warning" />
+        <LiIcon name="triangle-alert" />
         You changed {{ rekeyed }}. Downstream this becomes a different record — the
         row under the old key will still be there until someone removes it.
       </p>
@@ -67,7 +67,7 @@
       <!-- The one BU rule no database constraint enforces, so it is enforced
            here in the only way that works: visibly, while they type. -->
       <div class="ddbuf__total ddbuf__full" :class="{ 'ddbuf__total--ok': splitOk }">
-        <LiIcon :name="splitOk ? 'check_circle' : 'error'" />
+        <LiIcon :name="splitOk ? 'circle-check' : 'circle-x'" />
         <span class="ddbuf__total-text">
           Split total <strong>{{ totalText }}</strong>
           <template v-if="!splitOk"> — must be exactly 1.0000</template>

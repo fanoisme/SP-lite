@@ -39,7 +39,7 @@
       <!-- Chevron / clear -->
       <span class="li-combobox__icon li-combobox__icon--right">
         <LiIcon
-          :name="isOpen ? 'expand_less' : 'expand_more'"
+          :name="isOpen ? 'expand_less' : 'chevron-down'"
           size="md"
           color="var(--color-gray-600, #666666)"
         />

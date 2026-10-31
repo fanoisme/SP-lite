@@ -8,7 +8,7 @@
       <div class="ddmer__actions">
         <p class="ddmer__count">{{ total }} {{ total === 1 ? 'merchant' : 'merchants' }}</p>
         <button class="ddmer__btn" type="button" :disabled="exporting || !total" @click="exportXlsx">
-          <LiIcon name="file_save" />
+          <LiIcon name="save" />
           {{ exporting ? 'Exporting…' : 'Export XLSX' }}
         </button>
         <button v-if="canCreate" class="ddmer__btn" type="button" @click="showBulk = true">
@@ -16,7 +16,7 @@
           Bulk Upload
         </button>
         <button v-if="canCreate" class="ddmer__btn ddmer__btn--primary" type="button" @click="openForm(null)">
-          <LiIcon name="add" />
+          <LiIcon name="plus" />
           Add Merchant
         </button>
       </div>
@@ -26,7 +26,7 @@
          offers the reload rather than performing it: a silent re-sort under a
          reader mid-scan is worse than a stale row. -->
     <div v-if="stale && !bannerDismissed" class="ddmer__stale">
-      <LiIcon name="sync_problem" />
+      <LiIcon name="refresh-cw-off" />
       <span class="ddmer__stale-text">
         {{ staleCount }} {{ staleCount === 1 ? 'change' : 'changes' }}
         <template v-if="staleBy">by {{ staleBy }}</template>
@@ -34,7 +34,7 @@
       </span>
       <button class="ddmer__stale-action" type="button" @click="refresh">Refresh</button>
       <button class="ddmer__stale-close" type="button" aria-label="Dismiss" @click="bannerDismissed = true">
-        <LiIcon name="close" />
+        <LiIcon name="x" />
       </button>
     </div>
 
@@ -80,10 +80,10 @@
       <template #cell-actions="{ row }">
         <div class="ddmer__row-actions">
           <button v-if="canUpdate" class="ddmer__icon-btn" type="button" :aria-label="`Edit merchant ${row.merchant_id}`" title="Edit" @click="openForm(row)">
-            <LiIcon name="edit" />
+            <LiIcon name="pencil" />
           </button>
           <button v-if="canDelete" class="ddmer__icon-btn ddmer__icon-btn--danger" type="button" :aria-label="`Delete merchant ${row.merchant_id}`" title="Delete" @click="askDelete(row)">
-            <LiIcon name="delete" />
+            <LiIcon name="trash-2" />
           </button>
         </div>
       </template>

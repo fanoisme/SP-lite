@@ -8,7 +8,7 @@
         :aria-pressed="qrType === 'emvco'"
         @click="qrType = 'emvco'"
       >
-        <LiIcon name="qr_code_2" />
+        <LiIcon name="qr-code" />
         EMVCo QRIS
       </button>
       <button
@@ -30,7 +30,7 @@
         :aria-pressed="mode === 'form'"
         @click="mode = 'form'"
       >
-        <LiIcon name="edit_note" />
+        <LiIcon name="notebook-pen" />
         Form Input
       </button>
       <button
@@ -39,7 +39,7 @@
         :aria-pressed="mode === 'paste'"
         @click="mode = 'paste'"
       >
-        <LiIcon name="content_paste" />
+        <LiIcon name="clipboard" />
         Paste Value
       </button>
     </div>
@@ -73,7 +73,7 @@
       <!-- Advanced Fields -->
       <details class="gen__advanced">
         <summary class="gen__advanced-toggle">
-          <LiIcon name="tune" />
+          <LiIcon name="sliders-horizontal" />
           Advanced Options
           <span class="gen__advanced-hint">optional — defaults will be used if not edited</span>
         </summary>
@@ -116,7 +116,7 @@
       <button class="gen__submit" @click="handleGenerate" :disabled="generating || !form.merchantName || !form.merchantCity">
         <span v-if="generating" class="gen__submit-spinner"></span>
         <span v-else>
-          <LiIcon name="qr_code_2" />
+          <LiIcon name="qr-code" />
           Generate EMVCo QRIS
         </span>
       </button>
@@ -177,7 +177,7 @@
       <div class="gen__paste-header">
         <label class="gen__label">Paste QR Code Value</label>
         <button class="gen__clipboard-btn" @click="pasteFromClipboard" title="Paste from clipboard">
-          <LiIcon name="content_paste" />
+          <LiIcon name="clipboard" />
           Clipboard
         </button>
       </div>
@@ -201,7 +201,7 @@
 
     <!-- Error -->
     <div v-if="error" class="gen__error">
-      <LiIcon name="error" />
+      <LiIcon name="circle-x" />
       {{ error }}
     </div>
   </div>

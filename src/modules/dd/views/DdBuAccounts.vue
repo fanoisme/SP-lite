@@ -8,7 +8,7 @@
       <div class="ddbu__actions">
         <p class="ddbu__count">{{ total }} {{ total === 1 ? 'business unit' : 'business units' }}</p>
         <button class="ddbu__btn" type="button" :disabled="!total || exporting" @click="exportXlsx">
-          <LiIcon name="file_save" />
+          <LiIcon name="save" />
           {{ exporting ? 'Exporting…' : 'Export XLSX' }}
         </button>
         <button v-if="canCreate" class="ddbu__btn" type="button" @click="showBulk = true">
@@ -16,7 +16,7 @@
           Bulk Upload
         </button>
         <button v-if="canCreate" class="ddbu__btn ddbu__btn--primary" type="button" @click="openForm(null)">
-          <LiIcon name="add" />
+          <LiIcon name="plus" />
           Add
         </button>
       </div>
@@ -26,7 +26,7 @@
          screen are not wrong, they are old — so this offers a reload rather than
          forcing one and losing whatever the reader was in the middle of. -->
     <div v-if="showStale" class="ddbu__stale">
-      <LiIcon name="sync_problem" />
+      <LiIcon name="refresh-cw-off" />
       <p class="ddbu__stale-text">
         {{ staleCount }} {{ staleCount === 1 ? 'change' : 'changes' }}
         <template v-if="staleBy">by {{ staleBy }}</template>
@@ -34,7 +34,7 @@
       </p>
       <button class="ddbu__stale-action" type="button" @click="refresh">Refresh</button>
       <button class="ddbu__stale-close" type="button" aria-label="Dismiss" @click="staleDismissed = true">
-        <LiIcon name="close" />
+        <LiIcon name="x" />
       </button>
     </div>
 
@@ -99,7 +99,7 @@
       <template #cell-actions="{ row }">
         <div class="ddbu__row-actions">
           <button v-if="canUpdate" class="ddbu__icon-btn" type="button" :aria-label="`Edit ${row.name}`" title="Edit" @click="openForm(row)">
-            <LiIcon name="edit" />
+            <LiIcon name="pencil" />
           </button>
           <button
             v-if="canDelete"
@@ -109,7 +109,7 @@
             title="Delete"
             @click="pendingDelete = row"
           >
-            <LiIcon name="delete" />
+            <LiIcon name="trash-2" />
           </button>
         </div>
       </template>

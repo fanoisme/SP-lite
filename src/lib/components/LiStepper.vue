@@ -26,11 +26,11 @@
           :disabled="step.disabled"
           @click="$emit('step-click', i)"
         >
-          <LiIcon v-if="i < currentStep" name="check" size="xxs" filled />
+          <LiIcon v-if="i < currentStep" name="check" size="xxs" />
           <span v-else class="li-stepper__number">{{ i + 1 }}</span>
         </button>
         <div v-else class="li-stepper__indicator li-stepper__indicator--static">
-          <LiIcon v-if="i < currentStep" name="check" size="xxs" filled />
+          <LiIcon v-if="i < currentStep" name="check" size="xxs" />
           <span v-else class="li-stepper__number">{{ i + 1 }}</span>
         </div>
 

@@ -3,9 +3,9 @@
     <div v-if="isVisible" class="li-banner" :class="[`li-banner-${variant}`]">
       <div class="li-banner-icon">
         <slot name="icon">
-          <LiIcon v-if="variant === 'success'" name="check_circle" size="md" />
-          <LiIcon v-else-if="variant === 'error'" name="error" size="md" />
-          <LiIcon v-else-if="variant === 'warning'" name="warning" size="md" />
+          <LiIcon v-if="variant === 'success'" name="circle-check" size="md" />
+          <LiIcon v-else-if="variant === 'error'" name="circle-x" size="md" />
+          <LiIcon v-else-if="variant === 'warning'" name="triangle-alert" size="md" />
           <LiIcon v-else name="info" size="md" />
         </slot>
       </div>
@@ -22,7 +22,7 @@
       </div>
       
       <button v-if="dismissible" class="li-banner-close" @click="dismiss" aria-label="Dismiss banner">
-        <LiIcon name="close" size="sm" />
+        <LiIcon name="x" size="sm" />
       </button>
     </div>
   </Transition>

@@ -21,7 +21,7 @@
           HTML Source
         </div>
         <label class="ftl-panel__upload-btn">
-          <LiIcon name="upload_file" />
+          <LiIcon name="file-up" />
           Upload
           <input
             type="file"
@@ -43,7 +43,7 @@
       <!-- Auto-fix badge -->
       <Transition name="badge-pop">
         <div v-if="fixesApplied.length > 0" class="ftl-panel__fix-badge">
-          <LiIcon name="auto_fix_high" />
+          <LiIcon name="wand-sparkles" />
           <span>Auto-fixed <strong>{{ fixesApplied.length }}</strong> issue{{ fixesApplied.length > 1 ? 's' : '' }}</span>
         </div>
       </Transition>
@@ -53,7 +53,7 @@
         @click="handleConvert"
         :disabled="!inputHtml.trim()"
       >
-        <LiIcon name="transform" />
+        <LiIcon name="scaling" />
         Convert to FTL
         <span class="ftl-panel__btn-shine"></span>
       </button>
@@ -64,7 +64,7 @@
       <div v-if="ftlOutput" class="ftl-panel__section ftl-panel__output-section">
         <div class="ftl-panel__section-header">
           <div class="ftl-panel__section-title">
-            <LiIcon name="description" />
+            <LiIcon name="file-text" />
             FTL Template
           </div>
           <div class="ftl-panel__toggle-group">
@@ -83,7 +83,7 @@
               :aria-pressed="viewMode === 'preview'"
               @click="viewMode = 'preview'"
             >
-              <LiIcon name="preview" />
+              <LiIcon name="eye" />
               Preview
             </button>
             <button
@@ -92,7 +92,7 @@
               :aria-pressed="viewMode === 'pdf'"
               @click="renderPdf"
             >
-              <LiIcon name="picture_as_pdf" />
+              <LiIcon name="file-type" />
               PDF
             </button>
           </div>

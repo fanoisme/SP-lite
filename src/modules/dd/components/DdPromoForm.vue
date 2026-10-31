@@ -40,7 +40,7 @@
             :title="form.promo_name.trim() ? 'Generate from the promo name' : 'Enter a promo name first'"
             @click="generate"
           >
-            <LiIcon name="autorenew" />
+            <LiIcon name="refresh-cw" />
             Generate
           </button>
         </div>

@@ -15,7 +15,7 @@
         @drop.prevent="onDrop"
         @click="$refs.input.click()"
       >
-        <LiIcon name="video_file" class="vf__upload-icon" />
+        <LiIcon name="file-video" class="vf__upload-icon" />
         <span class="vf__upload-text">{{ fileName || 'Drop video here or click to browse' }}</span>
         <span class="vf__upload-hint">MP4, WebM, MOV — max 500MB</span>
         <input ref="input" type="file" accept="video/*" hidden @change="onFile" />
@@ -34,11 +34,11 @@
       <!-- Actions -->
       <div class="vf__actions" v-if="fileName && !processing">
         <button v-if="frames.length === 0" class="vf__btn vf__btn--primary" @click="run">
-          <LiIcon name="play_arrow" />
+          <LiIcon name="play" />
           Extract Frames
         </button>
         <button v-if="frames.length > 0" class="vf__btn" @click="run">
-          <LiIcon name="refresh" />
+          <LiIcon name="rotate-cw" />
           Re-extract
         </button>
       </div>
@@ -51,13 +51,13 @@
 
       <!-- Error -->
       <div class="vf__error" v-if="error">
-        <LiIcon name="error" />
+        <LiIcon name="circle-x" />
         <span>{{ error }}</span>
       </div>
 
       <!-- Status message -->
       <div class="vf__status" v-if="progress && !processing && !error">
-        <LiIcon name="check_circle" />
+        <LiIcon name="circle-check" />
         <span>{{ progress }}</span>
       </div>
 
@@ -73,7 +73,7 @@
           </div>
           <div class="vf__toolbar-actions">
             <button class="vf__btn vf__btn--sm" @click="toggleAll">
-              <LiIcon :name="allSelected ? 'deselect' : 'select_all'" />
+              <LiIcon :name="allSelected ? 'square-x' : 'select_all'" />
               {{ allSelected ? 'Deselect All' : 'Select All' }}
             </button>
             <button class="vf__btn vf__btn--sm vf__btn--primary" @click="download(false)">
@@ -85,7 +85,7 @@
               :disabled="selectedCount === 0"
               @click="download(true)"
             >
-              <LiIcon name="download_done" />
+              <LiIcon name="file-check" />
               Selected ({{ selectedCount }})
             </button>
           </div>
@@ -108,15 +108,15 @@
               <span class="vf__card-label">Frame {{ i + 1 }}</span>
               <div class="vf__card-details">
                 <span class="vf__card-detail">
-                  <LiIcon name="schedule" />
+                  <LiIcon name="clock" />
                   {{ formatTime(frame.time) }}
                 </span>
                 <span class="vf__card-detail">
-                  <LiIcon name="aspect_ratio" />
+                  <LiIcon name="frame" />
                   {{ frame.width }}×{{ frame.height }}
                 </span>
                 <span class="vf__card-detail">
-                  <LiIcon name="hard_drive_2" />
+                  <LiIcon name="hard-drive" />
                   {{ formatSize(frame.size) }}
                 </span>
               </div>

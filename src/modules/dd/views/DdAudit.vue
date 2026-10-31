@@ -8,7 +8,7 @@
       <div class="ddaudit__actions">
         <p class="ddaudit__count">{{ total }} {{ total === 1 ? 'entry' : 'entries' }}</p>
         <button class="ddaudit__export" type="button" :disabled="!rows.length" @click="exportCsv">
-          <LiIcon name="file_save" />
+          <LiIcon name="save" />
           Export page
         </button>
       </div>

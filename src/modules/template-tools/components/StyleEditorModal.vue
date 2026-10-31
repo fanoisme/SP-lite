@@ -3,7 +3,7 @@
     <!-- Font Family -->
     <div class="style-editor__field">
       <label class="style-editor__label">
-        <LiIcon name="font_download" />
+        <LiIcon name="type" />
         Font Family
       </label>
       <select v-model="localStyles.fontFamily" class="style-editor__select">
@@ -16,7 +16,7 @@
     <!-- Font Size -->
     <div class="style-editor__field">
       <label class="style-editor__label">
-        <LiIcon name="format_size" />
+        <LiIcon name="a-large-small" />
         Font Size
       </label>
       <div class="style-editor__size-row">
@@ -55,7 +55,7 @@
     <!-- Style: Bold & Italic -->
     <div class="style-editor__field">
       <label class="style-editor__label">
-        <LiIcon name="format_bold" />
+        <LiIcon name="bold" />
         Style
       </label>
       <div class="style-editor__toggle-group">
@@ -66,7 +66,7 @@
           aria-label="Bold"
           @click="localStyles.fontWeight = localStyles.fontWeight === 'bold' ? 'normal' : 'bold'"
         >
-          <LiIcon name="format_bold" />
+          <LiIcon name="bold" />
         </button>
         <button
           class="style-editor__toggle"
@@ -75,7 +75,7 @@
           aria-label="Italic"
           @click="localStyles.fontStyle = localStyles.fontStyle === 'italic' ? 'normal' : 'italic'"
         >
-          <LiIcon name="format_italic" />
+          <LiIcon name="italic" />
         </button>
       </div>
     </div>
@@ -83,7 +83,7 @@
     <!-- Text Align -->
     <div class="style-editor__field">
       <label class="style-editor__label">
-        <LiIcon name="format_align_left" />
+        <LiIcon name="align-left" />
         Alignment
       </label>
       <div class="style-editor__toggle-group">
@@ -134,10 +134,10 @@ const fontFamilies = [
 ]
 
 const alignments = [
-  { label: 'Left', value: 'left', icon: 'format_align_left' },
-  { label: 'Center', value: 'center', icon: 'format_align_center' },
-  { label: 'Right', value: 'right', icon: 'format_align_right' },
-  { label: 'Justify', value: 'justify', icon: 'format_align_justify' },
+  { label: 'Left', value: 'left', icon: 'align-left' },
+  { label: 'Center', value: 'center', icon: 'align-center' },
+  { label: 'Right', value: 'right', icon: 'align-right' },
+  { label: 'Justify', value: 'justify', icon: 'align-justify' },
 ]
 
 const localStyles = reactive({ ...props.styles })

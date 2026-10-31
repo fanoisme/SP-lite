@@ -12,14 +12,14 @@
       <LiLogo size="sm" :animate="true" :show-subtitle="false" />
       <router-link to="/login" class="landing__login-btn">
         <span class="landing__login-btn-text">Sign In</span>
-        <LiIcon name="arrow_forward" aria-hidden="true" />
+        <LiIcon name="arrow-right" aria-hidden="true" />
       </router-link>
     </header>
 
     <!-- Hero -->
     <section class="landing__hero">
       <div class="landing__hero-badge">
-        <LiIcon name="bolt" aria-hidden="true" />
+        <LiIcon name="zap" aria-hidden="true" />
         <span>Public · Free · No server required</span>
       </div>
 
@@ -37,7 +37,7 @@
       <div class="landing__hero-actions">
         <router-link to="/login" class="landing__cta-primary">
           <span>Get Started</span>
-          <LiIcon name="arrow_forward" aria-hidden="true" />
+          <LiIcon name="arrow-right" aria-hidden="true" />
         </router-link>
         <a href="#features" class="landing__cta-secondary">
           Learn More
@@ -60,7 +60,7 @@
           </div>
           <h3 class="landing__feature-title">{{ feature.title }}</h3>
           <p class="landing__feature-desc">{{ feature.desc }}</p>
-          <LiIcon name="arrow_forward" class="landing__feature-arrow" />
+          <LiIcon name="arrow-right" class="landing__feature-arrow" />
         </div>
       </div>
     </section>
@@ -73,25 +73,25 @@ import LiLogo from '../../../lib/components/LiLogo.vue'
 
 const features = [
   {
-    icon: 'qr_code_2',
+    icon: 'qr-code',
     color: 'green',
     title: 'QRIS Tools',
     desc: 'Generate and parse EMVCo QRIS codes, client-side. Validate CRC and inspect tags.',
   },
   {
-    icon: 'auto_awesome',
+    icon: 'sparkles',
     color: 'yellow',
     title: 'Template Tools',
     desc: 'Convert and preview DOCX to HTML/FTL templates, right in the browser.',
   },
   {
-    icon: 'videocam',
+    icon: 'video',
     color: 'blue',
     title: 'Video Frames',
     desc: 'Extract distinct frames from a video. Smart filtering skips similar frames.',
   },
   {
-    icon: 'admin_panel_settings',
+    icon: 'shield',
     color: 'yellow',
     title: 'Admin Panel',
     desc: 'Manage user roles and access from one place, backed by Supabase.',

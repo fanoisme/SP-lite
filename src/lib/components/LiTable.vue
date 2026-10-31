@@ -15,9 +15,9 @@
             <div class="li-table-th-content">
               {{ col.label }}
               <span v-if="col.sortable" class="li-table-sort-icon">
-                <LiIcon v-if="sortKey !== col.key" name="unfold_more" size="sm" />
-                <LiIcon v-else-if="sortOrder === 'asc'" name="arrow_upward" size="sm" />
-                <LiIcon v-else name="arrow_downward" size="sm" />
+                <LiIcon v-if="sortKey !== col.key" name="unfold-vertical" size="sm" />
+                <LiIcon v-else-if="sortOrder === 'asc'" name="arrow-up" size="sm" />
+                <LiIcon v-else name="arrow-down" size="sm" />
               </span>
             </div>
           </th>

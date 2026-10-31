@@ -22,30 +22,30 @@ const routes = [
   {
     path: '/dashboard',
     name: 'dashboard',
-    meta: { module: 'dashboard', label: 'Dashboard', icon: 'dashboard' },
+    meta: { module: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
     component: () => import('../modules/dashboard/views/DashboardView.vue'),
   },
   {
     path: '/qris',
     name: 'qris',
-    meta: { module: 'qris', label: 'QRIS Tools', icon: 'qr_code_2' },
+    meta: { module: 'qris', label: 'QRIS Tools', icon: 'qr-code' },
     component: () => import('../modules/qris/views/QrisView.vue'),
   },
   {
     path: '/template-tools',
     name: 'template-tools',
-    meta: { module: 'template-tools', label: 'Template Tools', icon: 'auto_awesome' },
+    meta: { module: 'template-tools', label: 'Template Tools', icon: 'sparkles' },
     component: () => import('../modules/template-tools/views/TemplateToolsView.vue'),
   },
   {
     path: '/video-frames',
     name: 'video-frames',
-    meta: { module: 'video-frames', label: 'Video Frames', icon: 'movie' },
+    meta: { module: 'video-frames', label: 'Video Frames', icon: 'clapperboard' },
     component: () => import('../modules/video-frames/views/VideoFramesView.vue'),
   },
   {
     path: '/dd',
-    meta: { module: 'dd', label: 'DD MPM', icon: 'inventory' },
+    meta: { module: 'dd', label: 'DD MPM', icon: 'boxes' },
     component: () => import('../modules/dd/views/DdLayout.vue'),
     children: [
       // `name: 'dd'` must stay on the index child: SP-lite's sidebar and
@@ -67,13 +67,13 @@ const routes = [
   {
     path: '/admin',
     name: 'admin',
-    meta: { module: 'admin', requiresAdmin: true, label: 'Admin', icon: 'admin_panel_settings' },
+    meta: { module: 'admin', requiresAdmin: true, label: 'Admin', icon: 'shield' },
     component: () => import('../modules/admin/views/AdminView.vue'),
   },
   {
     path: '/profile',
     name: 'profile',
-    meta: { label: 'Profile', icon: 'account_circle' },
+    meta: { label: 'Profile', icon: 'circle-user' },
     component: () => import('../modules/profile/views/ProfileView.vue'),
   },
 ]

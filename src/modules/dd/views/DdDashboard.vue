@@ -9,7 +9,7 @@
         class="ddash__refresh" :class="{ 'ddash__refresh--busy': loading }"
         type="button" :disabled="loading" @click="load"
       >
-        <LiIcon name="refresh" />
+        <LiIcon name="rotate-cw" />
         {{ loading ? 'Refreshing…' : 'Refresh' }}
       </button>
     </header>
@@ -52,7 +52,7 @@
       <article v-if="show.expiring" class="ddash__card ddash__card--wide">
         <header class="ddash__cardhead">
           <div class="ddash__cardid">
-            <LiIcon name="hourglass_bottom" class="ddash__cardico" />
+            <LiIcon name="hourglass" class="ddash__cardico" />
             <div>
               <h2 class="ddash__cardtitle">Expiring soon</h2>
               <p class="ddash__cardsub">Promos ending in the next {{ EXPIRY_WINDOW_DAYS }} days</p>
@@ -102,7 +102,7 @@
       <article v-if="show.attention" class="ddash__card">
         <header class="ddash__cardhead">
           <div class="ddash__cardid">
-            <LiIcon name="report" class="ddash__cardico" />
+            <LiIcon name="flag" class="ddash__cardico" />
             <div>
               <h2 class="ddash__cardtitle">Needs attention</h2>
               <p class="ddash__cardsub">Rows that are wrong, not merely aging</p>
@@ -145,7 +145,7 @@
       <article v-if="show.starting" class="ddash__card">
         <header class="ddash__cardhead">
           <div class="ddash__cardid">
-            <LiIcon name="schedule" class="ddash__cardico" />
+            <LiIcon name="clock" class="ddash__cardico" />
             <div>
               <h2 class="ddash__cardtitle">Starting soon</h2>
               <p class="ddash__cardsub">Promos going live in the next {{ STARTING_WINDOW_DAYS }} days</p>
@@ -191,7 +191,7 @@
       <article v-if="show.coverage" class="ddash__card">
         <header class="ddash__cardhead">
           <div class="ddash__cardid">
-            <LiIcon name="account_tree" class="ddash__cardico" />
+            <LiIcon name="folder-tree" class="ddash__cardico" />
             <div>
               <h2 class="ddash__cardtitle">BU coverage</h2>
               <p class="ddash__cardsub">What points at each business unit — emptiest first</p>

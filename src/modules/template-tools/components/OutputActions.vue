@@ -5,7 +5,7 @@
       @click="handleCopy"
       :disabled="!content"
     >
-      <LiIcon :name="copied ? 'check' : 'content_copy'" />
+      <LiIcon :name="copied ? 'check' : 'copy'" />
       {{ copied ? 'Copied!' : 'Copy' }}
     </button>
     <button

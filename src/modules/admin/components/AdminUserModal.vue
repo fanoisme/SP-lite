@@ -35,7 +35,7 @@
       />
 
       <div v-if="error" class="adm-umodal__error">
-        <LiIcon name="error" />
+        <LiIcon name="circle-x" />
         {{ error }}
       </div>
       <p class="adm-umodal__note">

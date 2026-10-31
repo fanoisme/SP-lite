@@ -2,7 +2,7 @@
   <div :class="['li-avatar', `li-avatar--${size}`]" :style="avatarStyle" :aria-label="alt">
     <img v-if="src" :src="src" :alt="alt" class="li-avatar__img" @error="onError" />
     <span v-else-if="initials" class="li-avatar__initials">{{ initials }}</span>
-    <LiIcon v-else name="person" :size="iconSizeMap[size]" />
+    <LiIcon v-else name="user" :size="iconSizeMap[size]" />
     <span v-if="badge" :class="['li-avatar__badge', `li-avatar__badge--${badge}`]" />
   </div>
 </template>

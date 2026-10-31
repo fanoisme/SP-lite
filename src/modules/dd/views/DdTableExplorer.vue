@@ -5,10 +5,10 @@
         <div class="ddexpl__id">
           <h1 class="ddexpl__title">{{ meta.targetTable }}</h1>
           <p class="ddexpl__sub">
-            <LiIcon name="dns" />
+            <LiIcon name="server" />
             {{ meta.targetDb }}
             <RouterLink v-if="manageRoute" class="ddexpl__manage" :to="{ name: manageRoute }">
-              <LiIcon name="tune" />
+              <LiIcon name="sliders-horizontal" />
               Guided screen
             </RouterLink>
           </p>
@@ -25,7 +25,7 @@
           <LiDropdown align="right">
             <template #trigger>
               <span class="ddexpl__btn">
-                <LiIcon name="view_column" />
+                <LiIcon name="columns-3" />
                 Columns
               </span>
             </template>
@@ -50,12 +50,12 @@
           </LiDropdown>
 
           <button class="ddexpl__btn" type="button" :disabled="!total || exporting" @click="exportCsv">
-            <LiIcon name="file_save" />
+            <LiIcon name="save" />
             {{ exporting ? 'Exporting…' : 'Export CSV' }}
           </button>
 
           <button v-if="canCreate" class="ddexpl__btn ddexpl__btn--primary" type="button" @click="openCreate">
-            <LiIcon name="add" />
+            <LiIcon name="plus" />
             Insert row
           </button>
         </div>
@@ -65,7 +65,7 @@
            screen are not wrong, they are old — so this offers a reload rather
            than forcing one under the reader. -->
       <div v-if="showStale" class="ddexpl__stale">
-        <LiIcon name="sync_problem" />
+        <LiIcon name="refresh-cw-off" />
         <p class="ddexpl__stale-text">
           {{ staleCount }} {{ staleCount === 1 ? 'change' : 'changes' }}
           <template v-if="staleBy">by {{ staleBy }}</template>
@@ -73,7 +73,7 @@
         </p>
         <button class="ddexpl__stale-action" type="button" @click="refresh">Refresh</button>
         <button class="ddexpl__stale-close" type="button" aria-label="Dismiss" @click="staleDismissed = true">
-          <LiIcon name="close" />
+          <LiIcon name="x" />
         </button>
       </div>
 
@@ -86,7 +86,7 @@
           :class="{ 'ddexpl__btn--on': showFilters }"
           @click="showFilters = !showFilters"
         >
-          <LiIcon name="filter_alt" />
+          <LiIcon name="filter" />
           Filters
           <span v-if="activeFilters" class="ddexpl__pill">{{ activeFilters }}</span>
         </button>
@@ -134,10 +134,10 @@
         <template #cell-__actions="{ row }">
           <div class="ddexpl__row-actions">
             <button v-if="canUpdate" class="ddexpl__icon-btn" type="button" :aria-label="`Edit row ${row[pk]}`" title="Edit" @click="openEdit(row)">
-              <LiIcon name="edit" />
+              <LiIcon name="pencil" />
             </button>
             <button v-if="canCreate" class="ddexpl__icon-btn" type="button" :aria-label="`Duplicate row ${row[pk]}`" title="Duplicate" @click="openDuplicate(row)">
-              <LiIcon name="content_copy" />
+              <LiIcon name="copy" />
             </button>
             <button
               v-if="canDelete"
@@ -145,7 +145,7 @@
               type="button" :aria-label="`Delete row ${row[pk]}`" title="Delete"
               @click="pendingDelete = row"
             >
-              <LiIcon name="delete" />
+              <LiIcon name="trash-2" />
             </button>
           </div>
         </template>
