@@ -118,7 +118,7 @@ onMounted(() => {
 
 /* ── Header ── */
 .tpl-tools__header {
-  animation: headerReveal 0.6s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  animation: headerReveal 0.6s var(--ease-out) both;
 }
 
 @keyframes headerReveal {
@@ -144,35 +144,34 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--cta-primary-bg, #FFBC25), #FF9500);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
   border-radius: 14px;
   box-shadow: 0 4px 16px rgba(255, 188, 37, 0.3);
 }
 
 .tpl-tools__icon-badge .li-icon {
   font-size: 26px;
-  color: #fff;
+  color: var(--color-bg);
 }
 
 .tpl-tools__title {
   font-size: 26px;
   font-weight: 800;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
   margin: 0;
   letter-spacing: -0.5px;
-  font-family: 'Inter', sans-serif;
-}
+  }
 
 .tpl-tools__subtitle {
   font-size: 14px;
-  color: #8e8ea0;
+  color: var(--color-text-muted);
   margin: 2px 0 0;
   font-weight: 400;
 }
 
 /* ── Tabs ── */
 .tpl-tools__tabs-wrapper {
-  animation: tabsReveal 0.6s 0.1s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  animation: tabsReveal 0.6s 0.1s var(--ease-out) both;
 }
 
 @keyframes tabsReveal {
@@ -183,7 +182,7 @@ onMounted(() => {
 .tpl-tools__tabs {
   display: flex;
   position: relative;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--color-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -204,50 +203,50 @@ onMounted(() => {
   background: transparent;
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.3s var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: all 0.3s var(--ease-enter));
   position: relative;
   z-index: 1;
 }
 
 .tpl-tools__tab:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--color-bg);
 }
 
 .tpl-tools__tab--active {
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
 }
 
 .tpl-tools__tab-icon {
   font-size: 22px;
-  color: #8e8ea0;
-  transition: color 0.3s ease, transform 0.3s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+  color: var(--color-text-muted);
+  transition: color 0.3s ease, transform 0.3s var(--ease-spring));
 }
 
 .tpl-tools__tab--active .tpl-tools__tab-icon {
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
   transform: scale(1.1);
 }
 
 .tpl-tools__tab-label {
   font-size: 13px;
   font-weight: 600;
-  color: #555;
+  color: var(--color-text);
   transition: color 0.3s ease;
 }
 
 .tpl-tools__tab--active .tpl-tools__tab-label {
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
 }
 
 .tpl-tools__tab-desc {
   font-size: 11px;
-  color: #aaa;
+  color: var(--color-text-muted);
   font-weight: 400;
   transition: color 0.3s ease;
 }
 
 .tpl-tools__tab--active .tpl-tools__tab-desc {
-  color: #8e8ea0;
+  color: var(--color-text-muted);
 }
 
 .tpl-tools__tab-indicator {
@@ -256,8 +255,8 @@ onMounted(() => {
   height: calc(100% - 10px);
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-  transition: all 0.35s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px var(--color-border);
+  transition: all 0.35s var(--ease-spring));
   z-index: 0;
 }
 
@@ -275,10 +274,10 @@ onMounted(() => {
   background: rgba(255, 255, 255, 0.65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--color-bg);
   border-radius: 20px;
   padding: var(--space-lg, 24px);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04), 0 1px 4px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 24px var(--color-border), 0 1px 4px rgba(0, 0, 0, 0.02);
   transition: box-shadow 0.4s ease;
 }
 
@@ -288,7 +287,7 @@ onMounted(() => {
 
 /* ── Panel Transition ── */
 .panel-slide-enter-active {
-  transition: all 0.35s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+  transition: all 0.35s var(--ease-out);
 }
 .panel-slide-leave-active {
   transition: all 0.2s ease-in;

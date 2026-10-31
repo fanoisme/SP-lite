@@ -99,7 +99,7 @@ function handleTab(e) {
 
 .code-editor__line-count {
   font-size: 11px;
-  color: #aaa;
+  color: var(--color-text-muted);
   font-weight: 500;
 }
 
@@ -113,7 +113,7 @@ function handleTab(e) {
 }
 
 .code-editor:not(.code-editor--readonly) .code-editor__wrapper:focus-within {
-  border-color: var(--cta-primary-bg, #FFBC25);
+  border-color: var(--cta-primary-bg, var(--color-accent));
   box-shadow: 0 0 0 3px rgba(255, 188, 37, 0.1);
 }
 

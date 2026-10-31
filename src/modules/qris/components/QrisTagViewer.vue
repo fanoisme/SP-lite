@@ -121,7 +121,7 @@ function copyRaw() {
   padding: 12px 14px;
   background: rgba(255, 188, 37, 0.06);
   border: 1px solid rgba(255, 188, 37, 0.15);
-  border-radius: var(--radius-md, 16px);
+  border-radius: var(--radius-lg);
 }
 
 .tag-viewer__hl-label {
@@ -130,14 +130,14 @@ function copyRaw() {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-gray-500, #999);
+  color: var(--color-text-muted);
   margin-bottom: 4px;
 }
 
 .tag-viewer__hl-value {
   font-size: 14px;
   font-weight: 600;
-  color: var(--color-gray-900, #333);
+  color: var(--color-text-strong);
   word-break: break-all;
 }
 
@@ -149,9 +149,9 @@ function copyRaw() {
 
 /* ── Raw Value ── */
 .tag-viewer__raw {
-  background: rgba(255, 255, 255, 0.55);
+  background: var(--color-bg);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-md, 16px);
+  border-radius: var(--radius-lg);
   padding: 12px;
 }
 
@@ -167,7 +167,7 @@ function copyRaw() {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-gray-500, #999);
+  color: var(--color-text-muted);
 }
 
 .tag-viewer__copy {
@@ -175,13 +175,13 @@ function copyRaw() {
   border: none;
   cursor: pointer;
   padding: 4px;
-  border-radius: var(--radius-xs, 8px);
-  color: var(--color-gray-400, #B3B3B3);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-placeholder);
   transition: color 200ms;
 }
 
 .tag-viewer__copy:hover {
-  color: var(--color-gray-700, #666);
+  color: var(--color-text);
 }
 
 .tag-viewer__copy .li-icon {
@@ -195,7 +195,7 @@ function copyRaw() {
   font-family: 'SF Mono', 'Fira Code', monospace;
   font-size: 11px;
   line-height: 1.5;
-  color: var(--color-gray-700, #666);
+  color: var(--color-text);
   resize: none;
   outline: none;
 }
@@ -206,7 +206,7 @@ function copyRaw() {
   align-items: center;
   gap: 6px;
   padding: 8px 12px;
-  border-radius: var(--radius-xs, 8px);
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
 }
@@ -218,7 +218,7 @@ function copyRaw() {
 
 .tag-viewer__crc--fail {
   background: var(--color-error-container, #FDECEE);
-  color: var(--color-on-error-container, #A33129);
+  color: var(--color-on-error-container, var(--color-danger));
 }
 
 .tag-viewer__crc .li-icon {
@@ -232,9 +232,9 @@ function copyRaw() {
 
 /* ── Tag Table ── */
 .tag-viewer__table-wrap {
-  background: rgba(255, 255, 255, 0.55);
+  background: var(--color-bg);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-md, 16px);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   overflow-x: auto;
 }
@@ -257,14 +257,14 @@ function copyRaw() {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-gray-500, #999);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .tag-viewer__table td {
   padding: 8px 12px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-  color: var(--color-gray-700, #666);
+  color: var(--color-text);
 }
 
 .tag-viewer__table tr:last-child td {
@@ -276,19 +276,19 @@ function copyRaw() {
 }
 
 .tag-viewer__row--hl td {
-  color: var(--color-gray-900, #333);
+  color: var(--color-text-strong);
   font-weight: 600;
 }
 
 .tag-viewer__cell-id {
   font-family: 'SF Mono', 'Fira Code', monospace;
   font-weight: 600;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   width: 60px;
 }
 
 .tag-viewer__row--hl .tag-viewer__cell-id {
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 .tag-viewer__cell-name {
@@ -313,6 +313,6 @@ function copyRaw() {
   width: 50px;
   text-align: center;
   font-family: 'SF Mono', 'Fira Code', monospace;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 </style>

@@ -180,24 +180,24 @@ const previewStyle = computed(() => ({
   gap: 6px;
   font-size: 12px;
   font-weight: 600;
-  color: #666;
+  color: var(--color-text);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .style-editor__label .li-icon {
   font-size: 16px;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 .style-editor__select {
   width: 100%;
   padding: 10px 12px;
-  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  border: 1.5px solid var(--color-border-strong);
   border-radius: 10px;
   font-size: 13px;
   font-family: inherit;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
   background: white;
   cursor: pointer;
   transition: border-color 0.2s ease;
@@ -209,23 +209,23 @@ const previewStyle = computed(() => ({
 
 .style-editor__select:focus {
   outline: none;
-  border-color: var(--cta-primary-bg, #FFBC25);
+  border-color: var(--color-accent);
 }
 
 .style-editor__input {
   width: 100%;
   padding: 10px 12px;
-  border: 1.5px solid rgba(0, 0, 0, 0.1);
+  border: 1.5px solid var(--color-border-strong);
   border-radius: 10px;
   font-size: 13px;
   font-family: inherit;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
   transition: border-color 0.2s ease;
 }
 
 .style-editor__input:focus {
   outline: none;
-  border-color: var(--cta-primary-bg, #FFBC25);
+  border-color: var(--color-accent);
 }
 
 .style-editor__size-row {
@@ -240,7 +240,7 @@ const previewStyle = computed(() => ({
 
 .style-editor__unit {
   font-size: 13px;
-  color: #8e8ea0;
+  color: var(--color-text-muted);
   font-weight: 500;
 }
 
@@ -253,7 +253,7 @@ const previewStyle = computed(() => ({
 .style-editor__color-picker {
   width: 40px;
   height: 40px;
-  border: 2px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--color-border-strong);
   border-radius: 10px;
   cursor: pointer;
   padding: 2px;
@@ -278,7 +278,7 @@ const previewStyle = computed(() => ({
 .style-editor__toggle-group {
   display: flex;
   gap: 4px;
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--color-border);
   border-radius: 10px;
   padding: 3px;
   width: fit-content;
@@ -293,7 +293,7 @@ const previewStyle = computed(() => ({
   border: none;
   border-radius: 8px;
   background: transparent;
-  color: #8e8ea0;
+  color: var(--color-text-muted);
   cursor: pointer;
   font-family: inherit;
   transition: all 0.2s ease;
@@ -304,12 +304,12 @@ const previewStyle = computed(() => ({
 }
 
 .style-editor__toggle:hover {
-  color: #555;
+  color: var(--color-text);
 }
 
 .style-editor__toggle--active {
   background: white;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
@@ -322,7 +322,7 @@ const previewStyle = computed(() => ({
 .style-editor__preview-label {
   font-size: 11px;
   font-weight: 600;
-  color: #aaa;
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0;

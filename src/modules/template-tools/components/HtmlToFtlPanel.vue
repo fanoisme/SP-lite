@@ -109,7 +109,7 @@
           <div v-else-if="viewMode === 'pdf'" key="pdf" class="ftl-panel__preview-wrap">
             <div class="ftl-panel__a4-page">
               <iframe v-if="pdf.pdfUrl.value" :src="pdf.pdfUrl.value" class="ftl-panel__a4-iframe" title="Flying Saucer PDF"></iframe>
-              <div v-else style="padding:24px;text-align:center;color:#999;">
+              <div v-else style="padding:24px;text-align:center;color:var(--color-text-muted);">
                 {{ pdf.rendering.value ? 'Rendering…' : (pdf.javaAvailable.value ? 'Click PDF to render' : 'Java not detected — install a JRE for Flying Saucer PDF.') }}
               </div>
             </div>
@@ -171,7 +171,7 @@ const ftlPreviewHtml = computed(() => {
   preview = preview.replace(/<\/#if>/gi, '')
   preview = preview.replace(/<#list[^>]*>/gi, '')
   preview = preview.replace(/<\/#list>/gi, '')
-  preview = preview.replace(/\$\{[^}]*\}/g, '<span style="background:#FFBC2533;padding:2px 6px;border-radius:4px;font-size:0.85em;color:#b8860b;">var</span>')
+  preview = preview.replace(/\$\{[^}]*\}/g, '<span style="background:var(--color-accent)33;padding:2px 6px;border-radius:4px;font-size:0.85em;color:#b8860b;">var</span>')
   return preview
 })
 
@@ -242,27 +242,27 @@ async function renderPdf() {
   background: rgba(0, 0, 0, 0.06);
   font-size: 12px;
   font-weight: 700;
-  color: #aaa;
+  color: var(--color-text-muted);
   transition: all 0.4s ease;
 }
 
 .ftl-panel__step--done .ftl-panel__step-num,
 .ftl-panel__step--active .ftl-panel__step-num {
-  background: linear-gradient(135deg, var(--cta-primary-bg, #FFBC25), #FF9500);
-  color: #fff;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
+  color: var(--color-bg);
   box-shadow: 0 2px 8px rgba(255, 188, 37, 0.3);
 }
 
 .ftl-panel__step-label {
   font-size: 13px;
   font-weight: 500;
-  color: #aaa;
+  color: var(--color-text-muted);
   transition: color 0.3s ease;
 }
 
 .ftl-panel__step--done .ftl-panel__step-label,
 .ftl-panel__step--active .ftl-panel__step-label {
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
   font-weight: 600;
 }
 
@@ -277,7 +277,7 @@ async function renderPdf() {
 }
 
 .ftl-panel__step-line--done {
-  background: linear-gradient(90deg, var(--cta-primary-bg, #FFBC25), #FF9500);
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-strong));
 }
 
 /* ── Section ── */
@@ -299,12 +299,12 @@ async function renderPdf() {
   gap: 8px;
   font-size: 14px;
   font-weight: 700;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
 }
 
 .ftl-panel__section-title .li-icon {
   font-size: 20px;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 .ftl-panel__upload-btn {
@@ -312,13 +312,13 @@ async function renderPdf() {
   align-items: center;
   gap: 5px;
   padding: 7px 14px;
-  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  border: 1.5px solid var(--color-border-strong);
   border-radius: 10px;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   background: transparent;
-  color: #666;
+  color: var(--color-text);
   font-family: inherit;
   transition: all 0.25s ease;
 }
@@ -328,8 +328,8 @@ async function renderPdf() {
 }
 
 .ftl-panel__upload-btn:hover {
-  border-color: var(--cta-primary-bg, #FFBC25);
-  color: var(--color-on-surface, #1a1a2e);
+  border-color: var(--color-accent);
+  color: var(--color-text);
   background: rgba(255, 188, 37, 0.05);
 }
 
@@ -345,12 +345,12 @@ async function renderPdf() {
   border: 1px solid rgba(255, 188, 37, 0.15);
   border-radius: 10px;
   font-size: 13px;
-  color: #8b6914;
+  color: var(--color-accent-text);
 }
 
 .ftl-panel__fix-badge .li-icon {
   font-size: 18px;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 /* ── Convert Button ── */
@@ -363,13 +363,13 @@ async function renderPdf() {
   padding: 14px 32px;
   border: none;
   border-radius: 14px;
-  background: linear-gradient(135deg, var(--cta-primary-bg, #FFBC25), #FF9500);
-  color: #fff;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
+  color: var(--color-bg);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.3s var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: all 0.3s var(--ease-enter));
   align-self: flex-start;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(255, 188, 37, 0.3);
@@ -411,7 +411,7 @@ async function renderPdf() {
 /* ── Toggle Group ── */
 .ftl-panel__toggle-group {
   display: flex;
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--color-border);
   border-radius: 10px;
   padding: 3px;
 }
@@ -427,7 +427,7 @@ async function renderPdf() {
   font-weight: 500;
   cursor: pointer;
   background: transparent;
-  color: #8e8ea0;
+  color: var(--color-text-muted);
   font-family: inherit;
   transition: all 0.25s ease;
 }
@@ -436,7 +436,7 @@ async function renderPdf() {
 
 .ftl-panel__toggle--active {
   background: white;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   font-weight: 600;
 }
@@ -488,7 +488,7 @@ async function renderPdf() {
 
 /* ── Transitions ── */
 .slide-up-enter-active {
-  transition: all 0.5s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+  transition: all 0.5s var(--ease-out);
 }
 .slide-up-leave-active {
   transition: all 0.2s ease-in;
@@ -503,7 +503,7 @@ async function renderPdf() {
 }
 
 .badge-pop-enter-active {
-  transition: all 0.4s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+  transition: all 0.4s var(--ease-spring));
 }
 .badge-pop-leave-active {
   transition: all 0.2s ease;
@@ -517,7 +517,7 @@ async function renderPdf() {
 }
 
 .view-fade-enter-active {
-  transition: all 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+  transition: all 0.3s var(--ease-out);
 }
 .view-fade-leave-active {
   transition: all 0.15s ease-in;
