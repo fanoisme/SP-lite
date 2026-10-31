@@ -61,7 +61,11 @@ test('every var() in src resolves to a defined custom property', async () => {
   const unknown = []
   for (const file of files) {
     const text = await read(file)
-    const local = customPropsDefined(text.match(/<style[^>]*>([\s\S]*?)<\/style>/g)?.join('\n') ?? '')
+    // locally defined: CSS custom props in <style> blocks + keys bound via :style objects
+    const local = new Set([
+      ...customPropsDefined(text.match(/<style[^>]*>([\s\S]*?)<\/style>/g)?.join('\n') ?? ''),
+      ...[...text.matchAll(/'(--[\w-]+)'\s*:/g)].map(m => m[1]),
+    ])
     const lines = text.split('\n')
     for (let i = 0; i < lines.length; i++) {
       for (const m of lines[i].matchAll(/var\(\s*(--[\w-]+)/g)) {

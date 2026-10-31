@@ -110,15 +110,14 @@ const removeFile = (index) => {
 .li-upload {
   display: flex;
   flex-direction: column;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   width: 100%;
-  font-family: var(--font-family, 'Inter', sans-serif);
-}
+  }
 
 .li-upload-label {
-  font-size: var(--text-xs, 14px);
+  font-size: var(--text-sm);
   font-weight: 500;
-  color: var(--color-gray-800, #4D4D4D);
+  color: var(--color-text);
 }
 
 .li-upload-dropzone {
@@ -126,81 +125,81 @@ const removeFile = (index) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2xl, 32px);
-  border: 1.5px dashed var(--color-gray-300, #CCCCCC);
+  padding: var(--space-8);
+  border: 1.5px dashed var(--color-border-strong);
   border-radius: var(--radius-md, 8px);
-  background-color: var(--color-gray-0, #FFFFFF);
+  background-color: var(--color-bg);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
-  gap: var(--space-s, 8px);
+  transition: all var(--dur-short) var(--ease-out);
+  gap: var(--space-2);
 }
 
 .li-upload-dropzone:hover:not(.is-disabled) {
-  border-color: var(--color-orange-400, #FF6B00);
-  background-color: var(--color-yellow-100, #FFF3D6); /* Using lightest yellow/orange for hover bg */
+  border-color: var(--color-accent-strong);
+  background-color: var(--color-accent-soft); /* Using lightest yellow/orange for hover bg */
 }
 
 .li-upload.is-dragging .li-upload-dropzone {
-  border-color: var(--color-orange-400, #FF6B00);
-  background-color: var(--color-yellow-100, #FFF3D6);
+  border-color: var(--color-accent-strong);
+  background-color: var(--color-accent-soft);
 }
 
 .li-upload.is-disabled .li-upload-dropzone {
-  background-color: var(--color-gray-100, #F2F2F2);
+  background-color: var(--color-surface-2);
   cursor: not-allowed;
   opacity: 0.7;
 }
 
 .li-upload-icon {
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
 }
 
 .li-upload.is-dragging .li-upload-icon,
 .li-upload-dropzone:hover:not(.is-disabled) .li-upload-icon {
-  color: var(--color-orange-400, #FF6B00);
+  color: var(--color-accent-strong);
 }
 
 .li-upload-text {
-  font-size: var(--text-sm, 16px);
-  color: var(--color-gray-700, #666666);
+  font-size: var(--text-base);
+  color: var(--color-text);
   text-align: center;
 }
 
 .li-upload-highlight {
   font-weight: 600;
-  color: var(--color-orange-400, #FF6B00);
+  color: var(--color-accent-strong);
 }
 
 .li-upload-hint {
-  font-size: var(--text-xs, 14px);
-  color: var(--color-gray-500, #999999);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
   text-align: center;
 }
 
 .li-upload-file-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs, 4px);
-  margin-top: var(--space-s, 8px);
+  gap: var(--space-1);
+  margin-top: var(--space-2);
 }
 
 .li-upload-file-item {
   display: flex;
   align-items: center;
-  padding: var(--space-s, 8px) var(--space-m, 12px);
-  background-color: var(--color-gray-100, #F2F2F2);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-surface-2);
   border-radius: var(--radius-sm, 4px);
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
 }
 
 .li-file-icon {
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
 }
 
 .li-file-name {
   flex: 1;
-  font-size: var(--text-sm, 16px);
-  color: var(--color-gray-900, #333333);
+  font-size: var(--text-base);
+  color: var(--color-text-strong);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -209,17 +208,17 @@ const removeFile = (index) => {
 .li-file-remove {
   background: transparent;
   border: none;
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
   cursor: pointer;
   padding: 4px;
   border-radius: var(--radius-sm, 4px);
   display: flex;
-  transition: all var(--dur-short, 200ms);
+  transition: all var(--dur-short);
 }
 
 .li-file-remove:hover {
-  background-color: var(--color-gray-200, #E6E6E6);
-  color: var(--color-red-500, #A33129);
+  background-color: var(--color-border);
+  color: var(--color-danger);
 }
 
 .sr-only {

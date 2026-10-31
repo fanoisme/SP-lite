@@ -178,16 +178,15 @@ onUnmounted(() => {
 .li-datepicker {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs, 4px);
+  gap: var(--space-1);
   width: 100%;
-  font-family: var(--font-family, 'Inter', sans-serif);
   position: relative;
 }
 
 .li-datepicker-label {
-  font-size: var(--text-xs, 14px);
+  font-size: var(--text-sm);
   font-weight: 500;
-  color: var(--color-gray-800, #4D4D4D);
+  color: var(--color-text);
 }
 
 .li-datepicker-input-wrapper {
@@ -199,8 +198,8 @@ onUnmounted(() => {
 
 .li-datepicker-icon {
   position: absolute;
-  left: var(--space-m, 12px);
-  color: var(--color-gray-500, #999999);
+  left: var(--space-3);
+  color: var(--color-text-muted);
   display: flex;
   pointer-events: none;
 }
@@ -208,23 +207,23 @@ onUnmounted(() => {
 .li-datepicker-input {
   width: 100%;
   height: 40px; /* Base height */
-  padding: 0 var(--space-m, 12px) 0 40px;
-  background-color: var(--color-gray-0, #FFFFFF);
-  border: 1px solid var(--color-gray-300, #CCCCCC);
+  padding: 0 var(--space-3) 0 40px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-md, 8px);
   font-family: inherit;
-  font-size: var(--text-sm, 16px);
-  color: var(--color-gray-900, #333333);
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  font-size: var(--text-base);
+  color: var(--color-text-strong);
+  transition: all var(--dur-short) var(--ease-out);
   cursor: pointer;
 }
 
 .li-datepicker-input::placeholder {
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 
 .li-datepicker-input-wrapper:hover .li-datepicker-input {
-  border-color: var(--color-gray-400, #B3B3B3);
+  border-color: var(--color-text-placeholder);
 }
 
 .li-datepicker.is-disabled .li-datepicker-input-wrapper {
@@ -232,35 +231,35 @@ onUnmounted(() => {
 }
 
 .li-datepicker.is-disabled .li-datepicker-input {
-  background-color: var(--color-gray-100, #F2F2F2);
-  color: var(--color-gray-500, #999999);
+  background-color: var(--color-surface-2);
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
 .li-datepicker-hint,
 .li-datepicker-error {
-  font-size: var(--text-tiny, 12px);
+  font-size: var(--text-micro, 12px);
 }
 
 .li-datepicker-hint {
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
 }
 
 .li-datepicker-error {
-  color: var(--color-red-500, #A33129);
+  color: var(--color-danger);
 }
 
 /* Calendar Popover */
 .li-calendar-popover {
   position: absolute;
-  top: calc(100% + var(--space-xs, 4px));
+  top: calc(100% + var(--space-1));
   left: 0;
   width: 280px;
-  background-color: var(--color-gray-0, #FFFFFF);
+  background-color: var(--color-bg);
   border-radius: var(--radius-md, 8px);
-  box-shadow: var(--shadow-dropdown, 0 8px 24px rgba(0, 0, 0, 0.1));
-  border: 1px solid var(--color-gray-200, #E6E6E6);
-  padding: var(--space-m, 12px);
+  box-shadow: var(--shadow-pop, 0 8px 24px rgba(0, 0, 0, 0.1));
+  border: 1px solid var(--color-border);
+  padding: var(--space-3);
   z-index: 1000;
 }
 
@@ -268,19 +267,19 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--space-m, 12px);
+  margin-bottom: var(--space-3);
 }
 
 .li-calendar-title {
-  font-size: var(--text-sm, 16px);
+  font-size: var(--text-base);
   font-weight: 600;
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text-strong);
 }
 
 .li-calendar-nav {
   background: transparent;
   border: none;
-  color: var(--color-gray-600, #808080);
+  color: var(--color-text-muted);
   cursor: pointer;
   padding: 4px;
   border-radius: var(--radius-sm, 4px);
@@ -288,18 +287,18 @@ onUnmounted(() => {
 }
 
 .li-calendar-nav:hover {
-  background-color: var(--color-gray-100, #F2F2F2);
-  color: var(--color-gray-900, #333333);
+  background-color: var(--color-surface-2);
+  color: var(--color-text-strong);
 }
 
 .li-calendar-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
-  font-size: var(--text-tiny, 12px);
+  font-size: var(--text-micro, 12px);
   font-weight: 500;
-  color: var(--color-gray-500, #999999);
-  margin-bottom: var(--space-s, 8px);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
 }
 
 .li-calendar-days {
@@ -314,16 +313,16 @@ onUnmounted(() => {
   border: none;
   border-radius: var(--radius-sm, 4px);
   font-size: var(--text-sm, 14px);
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text-strong);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--dur-micro, 120ms);
+  transition: all var(--dur-quick);
 }
 
 .li-calendar-day:hover:not(.is-empty):not(.is-selected) {
-  background-color: var(--color-gray-100, #F2F2F2);
+  background-color: var(--color-surface-2);
 }
 
 .li-calendar-day.is-empty {
@@ -332,19 +331,19 @@ onUnmounted(() => {
 
 .li-calendar-day.is-today {
   font-weight: 700;
-  color: var(--color-orange-400, #FF6B00);
+  color: var(--color-accent-strong);
 }
 
 .li-calendar-day.is-selected {
-  background-color: var(--color-orange-400, #FF6B00);
-  color: var(--color-gray-0, #FFFFFF);
+  background-color: var(--color-accent-strong);
+  color: var(--color-bg);
   font-weight: 600;
 }
 
 /* Transitions */
 .calendar-fade-enter-active,
 .calendar-fade-leave-active {
-  transition: opacity var(--dur-short, 200ms), transform var(--dur-short, 200ms);
+  transition: opacity var(--dur-short), transform var(--dur-short);
 }
 .calendar-fade-enter-from,
 .calendar-fade-leave-to {

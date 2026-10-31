@@ -48,7 +48,6 @@ defineProps({
   align-items: center;
   justify-content: center;
   text-align: center;
-  font-family: 'Inter', system-ui, sans-serif;
   padding: 24px 16px;
 }
 
@@ -70,8 +69,8 @@ defineProps({
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background: var(--color-gray-100, #F2F2F2);
-  color: var(--color-gray-400, #B3B3B3);
+  background: var(--color-surface-2);
+  color: var(--color-text-placeholder);
 }
 
 .li-empty-state--sm .li-empty-state__icon-circle { width: 48px; height: 48px; }
@@ -88,7 +87,7 @@ defineProps({
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text-strong);
 }
 
 .li-empty-state--sm .li-empty-state__title { font-size: 14px; }
@@ -100,7 +99,7 @@ defineProps({
   font-size: 14px;
   font-weight: 400;
   line-height: 20px;
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
 }
 
 .li-empty-state--lg .li-empty-state__desc { max-width: 440px; }

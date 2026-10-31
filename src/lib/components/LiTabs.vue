@@ -83,14 +83,13 @@ const selectTab = (index, event) => {
   display: flex;
   flex-direction: column;
   width: 100%;
-  font-family: var(--font-family, 'Inter', sans-serif);
-}
+  }
 
 .li-tabs-list {
   display: flex;
   position: relative;
-  border-bottom: 1px solid var(--color-gray-200, #E6E6E6);
-  background: var(--color-gray-0, #FFFFFF);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-bg);
   overflow-x: auto;
   scrollbar-width: none; /* Firefox */
 }
@@ -107,31 +106,33 @@ const selectTab = (index, event) => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-s, 8px);
-  padding: 12px 16px;
+  gap: 6px;
+  height: 36px;
+  padding: 0 4px;
+  margin-right: 20px;
   background: transparent;
   border: none;
-  font-size: var(--text-sm, 16px);
+  font-size: var(--text-sm);
   font-weight: 500;
-  color: var(--color-gray-600, #808080);
+  color: var(--color-text-muted);
   cursor: pointer;
   white-space: nowrap;
-  transition: color var(--dur-short, 200ms) var(--ease-out);
+  transition: color var(--dur-short) var(--ease-out);
   outline: none;
 }
 
 .li-tab-button:focus-visible {
-  background-color: var(--color-gray-100, #F2F2F2);
+  background-color: var(--color-surface-2);
   border-radius: var(--radius-sm, 4px) var(--radius-sm, 4px) 0 0;
 }
 
 .li-tab-button.is-active {
-  color: var(--color-orange-400, #FF6B00);
+  color: var(--color-text);
   font-weight: 600;
 }
 
 .li-tab-button.is-disabled {
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   cursor: not-allowed;
 }
 
@@ -145,9 +146,9 @@ const selectTab = (index, event) => {
 }
 
 .li-tab-badge {
-  background-color: var(--color-red-400, #C83E3B);
-  color: white;
-  font-size: 10px;
+  background: var(--color-danger);
+  color: var(--color-on-danger);
+  font-size: var(--text-micro);
   font-weight: 700;
   padding: 0 4px;
   border-radius: 99px;
@@ -162,12 +163,12 @@ const selectTab = (index, event) => {
   position: absolute;
   bottom: 0;
   height: 2px;
-  background-color: var(--color-orange-400, #FF6B00);
-  transition: all var(--dur-short, 200ms) var(--ease-out);
-  border-radius: 2px 2px 0 0;
+  background-color: var(--color-accent-strong);
+  transition: left var(--dur-medium) var(--ease-spring), width var(--dur-medium) var(--ease-spring);
+  border-radius: 2px;
 }
 
 .li-tabs-panels {
-  padding-top: var(--space-l, 16px);
+  padding-top: var(--space-4);
 }
 </style>

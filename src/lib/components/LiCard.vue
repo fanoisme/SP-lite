@@ -39,16 +39,17 @@ const paddingMap = {
 </script>
 
 <style scoped>
+/* Allo flat card (APP.md: flat cards, the one soft card shadow). */
 .li-card {
-  background: var(--color-gray-0, #FFFFFF);
-  border-radius: 8px;
-  font-family: 'Inter', system-ui, sans-serif;
-  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--color-bg);
+  border-radius: 10px;
+  transition: box-shadow var(--dur-short) var(--ease-out),
+              transform var(--dur-short) var(--ease-out),
+              border-color var(--dur-quick);
 }
 
 .li-card--bordered {
-  border: 1px solid var(--color-gray-200, #E6E6E6);
+  border: 1px solid var(--color-border);
 }
 
 .li-card--flat {
@@ -57,12 +58,13 @@ const paddingMap = {
 }
 
 .li-card:not(.li-card--flat) {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-card);
 }
 
 .li-card--hover:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
-  transform: translateY(-1px);
+  box-shadow: 0 8px 20px -8px rgba(0, 5, 58, 0.18);
+  border-color: var(--color-border-strong);
+  transform: var(--lift);
 }
 
 .li-card__header {
@@ -71,12 +73,12 @@ const paddingMap = {
 
 .li-card__media {
   overflow: hidden;
-  border-radius: 8px 8px 0 0;
+  border-radius: 10px 10px 0 0;
   margin: -1px -1px 0 -1px;
 }
 
 .li-card__body {
-  line-height: 1.5;
+  line-height: var(--leading-sm);
 }
 
 .li-card__body--no-gutter {
@@ -88,7 +90,7 @@ const paddingMap = {
 }
 
 .li-card__footer-divider {
-  border-top: 1px solid var(--color-gray-200, #E6E6E6);
+  border-top: 1px solid var(--color-border);
   margin-bottom: 12px;
   margin-left: -16px;
   margin-right: -16px;

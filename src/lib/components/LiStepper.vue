@@ -63,8 +63,7 @@ defineEmits(['step-click'])
 
 <style scoped>
 .li-stepper {
-  font-family: 'Inter', system-ui, sans-serif;
-}
+  }
 
 .li-stepper__list {
   display: flex;
@@ -106,7 +105,7 @@ defineEmits(['step-click'])
 /* Connector */
 .li-stepper__connector {
   flex-shrink: 0;
-  background: var(--color-gray-200, #E6E6E6);
+  background: var(--color-border);
   transition: background 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -127,7 +126,7 @@ defineEmits(['step-click'])
 }
 
 .li-stepper__connector--completed {
-  background: var(--color-orange-400, #FF6B00);
+  background: var(--color-accent-strong);
 }
 
 /* Indicator circle */
@@ -138,9 +137,9 @@ defineEmits(['step-click'])
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 2px solid var(--color-gray-300, #CCCCCC);
-  background: var(--color-gray-0, #FFFFFF);
-  color: var(--color-gray-500, #999999);
+  border: 2px solid var(--color-border-strong);
+  background: var(--color-bg);
+  color: var(--color-text-muted);
   flex-shrink: 0;
   cursor: pointer;
   transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -154,7 +153,7 @@ defineEmits(['step-click'])
 }
 
 .li-stepper__indicator:focus-visible {
-  outline: 2px solid var(--color-orange-400, #FF6B00);
+  outline: 2px solid var(--color-accent-strong);
   outline-offset: 2px;
 }
 
@@ -166,19 +165,19 @@ defineEmits(['step-click'])
 
 /* Completed step */
 .li-stepper__step--completed .li-stepper__indicator {
-  background: var(--color-orange-400, #FF6B00);
-  border-color: var(--color-orange-400, #FF6B00);
-  color: var(--color-gray-0, #FFFFFF);
+  background: var(--color-accent-strong);
+  border-color: var(--color-accent-strong);
+  color: var(--color-bg);
 }
 
 /* Active step */
 .li-stepper__step--active .li-stepper__indicator {
-  border-color: var(--color-orange-400, #FF6B00);
-  color: var(--color-orange-400, #FF6B00);
+  border-color: var(--color-accent-strong);
+  color: var(--color-accent-strong);
 }
 
 .li-stepper__step--active .li-stepper__number {
-  color: var(--color-orange-400, #FF6B00);
+  color: var(--color-accent-strong);
 }
 
 /* Disabled step */
@@ -205,23 +204,23 @@ defineEmits(['step-click'])
   font-size: 13px;
   font-weight: 500;
   line-height: 18px;
-  color: var(--color-gray-700, #666666);
+  color: var(--color-text);
 }
 
 .li-stepper__step--active .li-stepper__label {
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text-strong);
   font-weight: 600;
 }
 
 .li-stepper__step--completed .li-stepper__label {
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
 }
 
 .li-stepper__caption {
   font-size: 11px;
   font-weight: 400;
   line-height: 16px;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 
 /* Vertical spacing */

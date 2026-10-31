@@ -2,9 +2,9 @@
   <Teleport to="body">
     <div class="li-toast-container">
       <TransitionGroup name="toast-list">
-        <div 
-          v-for="toast in toasts" 
-          :key="toast.id" 
+        <div
+          v-for="toast in toasts"
+          :key="toast.id"
           class="li-toast"
           :class="`li-toast-${toast.type}`"
         >
@@ -33,78 +33,81 @@ const { toasts, removeToast } = useToast();
 </script>
 
 <style scoped>
+/* Allo toast stack (app.css .toasts): bottom-right, inverse surface. */
 .li-toast-container {
   position: fixed;
-  bottom: var(--space-xl, 24px);
-  left: 50%;
-  transform: translateX(-50%);
+  right: var(--space-4);
+  bottom: var(--space-4);
   display: flex;
-  flex-direction: column-reverse;
-  gap: var(--space-s, 8px);
-  z-index: 2000;
+  flex-direction: column;
+  gap: var(--space-2);
+  z-index: var(--z-toast);
   pointer-events: none;
-  width: 100%;
-  max-width: 400px;
-  padding: 0 var(--space-l, 16px);
+  width: min(380px, calc(100vw - 32px));
 }
 
 .li-toast {
   pointer-events: auto;
   display: flex;
   align-items: flex-start;
-  padding: var(--space-m, 12px) var(--space-l, 16px);
-  background-color: var(--color-gray-900, #333333);
-  color: var(--color-gray-0, #FFFFFF);
-  border-radius: var(--radius-md, 16px);
-  box-shadow: var(--shadow-dropdown, 0 8px 24px rgba(0,0,0,0.1));
-  gap: var(--space-s, 8px);
-  font-family: var(--font-family, 'Inter', sans-serif);
+  padding: var(--space-3);
+  background: var(--color-inverse);
+  color: var(--color-on-inverse);
+  border-radius: 12px;
+  box-shadow: var(--shadow-pop);
+  gap: 10px;
 }
 
 .li-toast-icon {
   flex-shrink: 0;
-  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--color-bg);
+  color: var(--color-text);
+  display: grid;
+  place-items: center;
 }
+
+/* Variants — icon color on the inverse surface */
+.li-toast-success .li-toast-icon { color: var(--color-success); }
+.li-toast-error .li-toast-icon { color: var(--color-danger); }
+.li-toast-warning .li-toast-icon { color: var(--color-warning); }
+.li-toast-info .li-toast-icon { color: var(--color-info); }
 
 .li-toast-message {
   flex: 1;
-  font-size: var(--text-sm, 16px);
-  line-height: 1.4;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: var(--leading-sm);
 }
 
 .li-toast-close {
   background: transparent;
   border: none;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-on-inverse-muted);
   cursor: pointer;
   padding: 2px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
   display: flex;
-  transition: all var(--dur-short, 200ms);
+  transition: color var(--dur-quick), background var(--dur-quick);
 }
 
 .li-toast-close:hover {
-  color: var(--color-gray-0, #FFFFFF);
-  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-on-inverse);
+  background: color-mix(in srgb, var(--color-on-inverse) 10%, transparent);
 }
-
-/* Variants */
-.li-toast-success .li-toast-icon { color: var(--color-green-400, #10B981); }
-.li-toast-error .li-toast-icon { color: var(--color-red-400, #C83E3B); }
-.li-toast-warning .li-toast-icon { color: var(--color-yellow-400, #F9C700); }
-.li-toast-info .li-toast-icon { color: var(--color-blue-400, #2563EB); }
 
 /* Transitions */
-.toast-list-enter-active,
-.toast-list-leave-active {
-  transition: all var(--dur-medium, 300ms) var(--ease-out);
-}
+.toast-list-enter-active { transition: opacity var(--dur-medium) var(--ease-spring), transform var(--dur-medium) var(--ease-spring); }
+.toast-list-leave-active { transition: opacity 200ms var(--ease-exit), transform 200ms var(--ease-exit); }
 .toast-list-enter-from {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(24px) scale(0.96);
 }
 .toast-list-leave-to {
   opacity: 0;
-  transform: translateY(-20px);
+  transform: translateX(40px);
 }
 </style>
