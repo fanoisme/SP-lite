@@ -1,5 +1,5 @@
 <template>
-  <nav class="ddnav">
+  <nav class="ddnav" :class="{ 'ddnav--collapsed': collapsed }" @click="$emit('navigate')">
     <header class="ddnav__brand">
       <div class="ddnav__mark">
         <LiIcon name="boxes" />
@@ -113,6 +113,11 @@ import { useDdAccess } from '../composables/useDdAccess.js'
 import { useDdTableCounts } from '../composables/useDdTableCounts.js'
 import { DD_TABLES } from '../lib/schema.js'
 
+defineProps({
+  collapsed: { type: Boolean, default: false },
+})
+defineEmits(['navigate'])
+
 const { profile } = useAuth()
 const { canMenu, canDashboard, visibleDatabases, isReadOnly } = useDdAccess()
 const { counts, load } = useDdTableCounts()
@@ -166,93 +171,120 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* Allo project nav (board.html sidebar): surface fill, selected = warm tint
+   + 3px accent bar, 248 expanded / 56 collapsed. */
 .ddnav {
-  display: flex; flex-direction: column;
-  width: 240px; flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: var(--radius-md, 16px);
-  padding: 14px 10px 10px;
-  align-self: flex-start;
-  max-height: calc(100vh - 96px);
+  display: flex;
+  flex-direction: column;
+  width: 248px;
+  flex-shrink: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-2) var(--space-2);
+  overflow: hidden;
+  transition: width var(--dur-short) var(--ease-move);
 }
 
-.ddnav__brand { display: flex; align-items: center; gap: 10px; padding: 0 6px 12px; }
+.ddnav--collapsed { width: 56px; }
+
+.ddnav__brand { display: flex; align-items: center; gap: var(--space-2); padding: 0 var(--space-1) var(--space-3); }
 .ddnav__mark {
-  width: 34px; height: 34px; flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #6366F1, #8B5CF6);
-  border-radius: var(--radius-sm, 10px);
+  width: 32px; height: 32px; flex-shrink: 0;
+  display: grid; place-items: center;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-radius: var(--radius-sm);
 }
-.ddnav__mark .li-icon { font-size: 19px; color: #fff; }
+.ddnav__mark :deep(.li-icon) { font-size: 16px; }
 .ddnav__id { display: flex; flex-direction: column; min-width: 0; }
-.ddnav__name { font-size: 14px; font-weight: 800; letter-spacing: -0.2px; }
-.ddnav__sub { font-size: 11px; color: var(--color-gray-400, #aaa); }
+.ddnav__name { font-size: var(--text-sm); font-weight: 700; color: var(--color-text-strong); }
+.ddnav__sub { font-size: var(--text-xs); color: var(--color-text-muted); }
 
-.ddnav__scroll { overflow-y: auto; flex: 1; min-height: 0; }
+.ddnav--collapsed .ddnav__id,
+.ddnav--collapsed .ddnav__label,
+.ddnav--collapsed .ddnav__text,
+.ddnav--collapsed .ddnav__count,
+.ddnav--collapsed .ddnav__dbname,
+.ddnav--collapsed .ddnav__foot,
+.ddnav--collapsed .ddnav__labelrow { display: none; }
+
+.ddnav__scroll { overflow-y: auto; overflow-x: hidden; flex: 1; min-height: 0; }
 
 .ddnav__label {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase;
-  color: var(--color-gray-400, #aaa); margin: 14px 0 5px; padding: 0 6px;
+  font-size: var(--text-micro); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--color-text-muted); margin: var(--space-3) 0 var(--space-1); padding: 0 var(--space-2);
+  white-space: nowrap;
 }
 .ddnav__labelrow { display: flex; align-items: center; justify-content: space-between; }
-.ddnav__labelrow .ddnav__label { margin-bottom: 5px; }
+.ddnav__labelrow .ddnav__label { margin-bottom: var(--space-1); }
 .ddnav__icobtn {
-  border: none; background: transparent; cursor: pointer; padding: 2px 6px;
-  color: var(--color-gray-400, #aaa); display: flex; align-items: center;
+  border: none; background: transparent; cursor: pointer; padding: 2px var(--space-2);
+  color: var(--color-text-muted); display: flex; align-items: center;
+  border-radius: var(--radius-xs);
 }
-.ddnav__icobtn .li-icon { font-size: 16px; }
-.ddnav__icobtn:hover { color: var(--color-gray-700, #555); }
-.ddnav__icobtn--spin .li-icon { animation: ddspin 600ms linear infinite; }
+.ddnav__icobtn :deep(.li-icon) { font-size: 14px; }
+.ddnav__icobtn:hover { color: var(--color-text-strong); background: var(--color-hover); }
+.ddnav__icobtn:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 1px; }
+.ddnav__icobtn--spin :deep(.li-icon) { animation: ddspin 600ms linear infinite; }
 @keyframes ddspin { to { transform: rotate(360deg); } }
 
 .ddnav__item {
-  width: 100%; display: flex; align-items: center; gap: 9px;
-  padding: 8px 8px; border: none; background: transparent;
-  border-radius: var(--radius-sm, 10px); cursor: pointer;
-  font-family: var(--font-body, 'Inter', sans-serif); text-align: left;
-  color: var(--color-gray-700, #555); transition: background 160ms, color 160ms;
+  position: relative;
+  width: 100%; display: flex; align-items: center; gap: var(--space-2);
+  height: 32px; padding: 0 var(--space-2); border: none; background: transparent;
+  border-radius: var(--radius-sm); cursor: pointer;
+  font: inherit; text-align: left;
+  color: var(--color-text-muted);
+  transition: background var(--dur-quick), color var(--dur-quick);
 }
-.ddnav__item .li-icon { font-size: 18px; flex-shrink: 0; }
-.ddnav__item:hover { background: rgba(0, 0, 0, 0.04); }
-.ddnav__item--active { background: #fff; color: var(--color-on-surface, #1a1a2e); font-weight: 600; }
-.ddnav__item--active .li-icon { color: #6366F1; }
-.ddnav__item--nested { padding-left: 16px; }
+.ddnav__item :deep(.li-icon) { font-size: 16px; flex-shrink: 0; }
+.ddnav__item:hover { background: var(--color-hover); color: var(--color-text); }
+.ddnav__item:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+
+/* Selected: warm tint + 3px accent bar, never colour alone (APP.md rule 3) */
+.ddnav__item--active {
+  background: var(--color-selected);
+  color: var(--color-text-strong);
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--color-accent-strong);
+}
+.ddnav__item--active :deep(.li-icon) { color: var(--color-accent-text); }
+.ddnav__item--nested { padding-left: var(--space-4); }
 
 .ddnav__text {
-  font-size: 13px; flex: 1; min-width: 0;
+  font-size: var(--text-sm); flex: 1; min-width: 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.ddnav__text--mono { font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px; }
+.ddnav__text--mono { font-family: var(--font-mono); font-size: var(--text-xs); }
 .ddnav__count {
-  font-size: 10px; font-variant-numeric: tabular-nums;
-  background: rgba(0, 0, 0, 0.06); color: var(--color-gray-700, #555);
-  border-radius: 999px; padding: 1px 6px; flex-shrink: 0;
+  font-size: var(--text-micro); font-variant-numeric: tabular-nums;
+  background: var(--color-neutral-soft); color: var(--color-text);
+  border-radius: var(--radius-pill); padding: 1px 6px; flex-shrink: 0;
 }
 
-.ddnav__dbgroup { margin-bottom: 6px; }
+.ddnav__dbgroup { margin-bottom: var(--space-1); }
 .ddnav__dbname {
-  display: flex; align-items: center; gap: 6px; margin: 4px 0 2px; padding: 0 6px;
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 11px; color: var(--color-gray-500, #8e8ea0);
+  display: flex; align-items: center; gap: 6px; margin: var(--space-1) 0 2px; padding: 0 var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs); color: var(--color-text-muted);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.ddnav__dbname .li-icon { font-size: 14px; }
+.ddnav__dbname :deep(.li-icon) { font-size: 14px; }
 
 .ddnav__foot {
-  display: flex; align-items: center; gap: 6px;
-  padding: 10px 6px 0; margin-top: 6px;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex; align-items: center; gap: var(--space-1);
+  padding: var(--space-2) var(--space-1) 0; margin-top: var(--space-2);
+  border-top: 1px solid var(--color-border);
 }
 .ddnav__role, .ddnav__ro {
-  font-size: 10px; letter-spacing: 0.3px; border-radius: 999px; padding: 2px 8px;
+  font-size: var(--text-micro); letter-spacing: 0.03em; border-radius: var(--radius-pill); padding: 2px var(--space-2);
 }
-.ddnav__role { background: rgba(99, 102, 241, 0.1); color: #6366F1; font-weight: 600; }
-.ddnav__ro { background: rgba(0, 0, 0, 0.05); color: var(--color-gray-500, #8e8ea0); }
+.ddnav__role { background: var(--color-accent-soft); color: var(--color-accent-text); font-weight: 600; }
+.ddnav__ro { background: var(--color-neutral-soft); color: var(--color-text-muted); }
 
 @media (max-width: 900px) {
-  .ddnav { width: 100%; max-height: none; align-self: stretch; }
-  .ddnav__scroll { max-height: 320px; }
+  .ddnav { width: 100%; }
+  .ddnav__scroll { max-height: 60vh; }
 }
 </style>
