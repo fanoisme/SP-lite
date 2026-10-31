@@ -13,7 +13,8 @@
     "preview": "vite preview",
     "icons:sync": "node scripts/sync-icon-assets.mjs",
     "test:icons": "node --test tests/icon-assets.test.mjs",
-    "check:icons": "node scripts/check-icon-migration.mjs"
+    "check:icons": "node scripts/check-icon-migration.mjs",
+    "shots": "node scripts/shots.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
     "lucide-static": "^1.66.0",
+    "playwright": "^1.64.1",
     "vite": "^6.0.5"
   }
 }

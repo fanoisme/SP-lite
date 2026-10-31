@@ -1,0 +1,217 @@
+{
+  "profile": {
+    "id": "00000000-0000-0000-0000-000000000001",
+    "username": "shot.admin",
+    "full_name": "Shot Admin",
+    "email": "shot@local.test",
+    "role": "Admin",
+    "is_active": true
+  },
+  "roles": [
+    {
+      "id": 1,
+      "name": "Admin"
+    },
+    {
+      "id": 2,
+      "name": "Maker"
+    },
+    {
+      "id": 3,
+      "name": "Viewer"
+    }
+  ],
+  "module_access": [
+    {
+      "role": "Admin",
+      "module_id": "dashboard"
+    },
+    {
+      "role": "Admin",
+      "module_id": "qris"
+    },
+    {
+      "role": "Admin",
+      "module_id": "template-tools"
+    },
+    {
+      "role": "Admin",
+      "module_id": "video-frames"
+    },
+    {
+      "role": "Admin",
+      "module_id": "dd"
+    },
+    {
+      "role": "Admin",
+      "module_id": "admin"
+    },
+    {
+      "role": "Maker",
+      "module_id": "dashboard"
+    },
+    {
+      "role": "Maker",
+      "module_id": "qris"
+    }
+  ],
+  "feature_access": [
+    {
+      "role": "Admin",
+      "module_id": "dd",
+      "feature_id": "merchants.update"
+    },
+    {
+      "role": "Admin",
+      "module_id": "dd",
+      "feature_id": "db.ihybrid_discount.update"
+    },
+    {
+      "role": "Admin",
+      "module_id": "dd",
+      "feature_id": "bu-accounts"
+    },
+    {
+      "role": "Admin",
+      "module_id": "dd",
+      "feature_id": "merchants"
+    },
+    {
+      "role": "Admin",
+      "module_id": "dd",
+      "feature_id": "promos"
+    },
+    {
+      "role": "Admin",
+      "module_id": "dd",
+      "feature_id": "export"
+    },
+    {
+      "role": "Admin",
+      "module_id": "dd",
+      "feature_id": "audit"
+    },
+    {
+      "role": "Admin",
+      "module_id": "dd",
+      "feature_id": "sql"
+    },
+    {
+      "role": "Admin",
+      "module_id": "dd",
+      "feature_id": "email"
+    }
+  ],
+  "module_state": [
+    {
+      "module_id": "dashboard",
+      "is_enabled": true
+    },
+    {
+      "module_id": "qris",
+      "is_enabled": true
+    },
+    {
+      "module_id": "template-tools",
+      "is_enabled": true
+    },
+    {
+      "module_id": "video-frames",
+      "is_enabled": true
+    },
+    {
+      "module_id": "dd",
+      "is_enabled": true
+    },
+    {
+      "module_id": "admin",
+      "is_enabled": true
+    }
+  ],
+  "user_access": [],
+  "qrdd_bu_accounts": [
+    {
+      "id": 1,
+      "name": "ALLO Retail",
+      "sof": "QRIS",
+      "mdr_percent": "0.7000",
+      "active": true,
+      "created_at": "2026-10-01 09:00:00",
+      "updated_at": "2026-10-20 11:00:00",
+      "updated_by": "shot.admin"
+    },
+    {
+      "id": 2,
+      "name": "ALLO Merchant",
+      "sof:": null,
+      "mdr_percent": "0.3000",
+      "active": true,
+      "created_at": "2026-10-02 09:00:00",
+      "updated_at": "2026-10-21 11:00:00",
+      "updated_by": "shot.admin"
+    }
+  ],
+  "qrdd_merchant_whitelist": [
+    {
+      "id": 1,
+      "merchant_id": "936001140000001",
+      "mid": "MID001",
+      "nmid": "NMID001",
+      "name": "Warung Allo",
+      "status": "active",
+      "sof": "QRIS",
+      "created_at": "2026-10-01 09:00:00",
+      "updated_at": "2026-10-20 11:00:00"
+    }
+  ],
+  "qrdd_promo_rules": [
+    {
+      "id": 1,
+      "promo_name": "Cashback October",
+      "mdr_override": "0.1000",
+      "start_date": "2026-10-01",
+      "end_date": "2026-10-31",
+      "active": true,
+      "created_at": "2026-10-01 09:00:00",
+      "updated_at": "2026-10-20 11:00:00"
+    }
+  ],
+  "dd_audit_log": [
+    {
+      "id": 1,
+      "table_name": "qrdd_promo_rules",
+      "op": "UPDATE",
+      "record_key": "promo_name=Cashback October",
+      "column_name": "mdr_override",
+      "old_value": "0.2000",
+      "new_value": "0.1000",
+      "actor": "shot.admin",
+      "at": "2026-10-20 11:00:00"
+    }
+  ],
+  "dd_email_settings": [
+    {
+      "id": 1,
+      "recipients": "ops@allobank.com",
+      "schedule": "daily 07:00",
+      "enabled": true
+    }
+  ],
+  "dd_email_log": [
+    {
+      "id": 3,
+      "kind": "daily",
+      "status": "sent",
+      "at": "2026-10-20 07:00:00",
+      "detail": "3 recipients"
+    }
+  ],
+  "qris_history": [
+    {
+      "id": 1,
+      "payload": "00020101021226610014ID.CO.QRIS.WWW01189936...5303360540310304...5802ID5909Warung ID6007Jakarta6304ABCD",
+      "label": "Sample",
+      "created_at": "2026-10-20 07:00:00"
+    }
+  ]
+}
