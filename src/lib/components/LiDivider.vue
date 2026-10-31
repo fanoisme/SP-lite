@@ -14,13 +14,13 @@ defineProps({
 </script>
 
 <style scoped>
+/* Allo hairline divider on --color-border. */
 .li-divider {
   display: flex;
   align-items: center;
   width: 100%;
   border: none;
-  margin: 16px 0;
-  font-family: 'Inter', system-ui, sans-serif;
+  margin: var(--space-4) 0;
 }
 
 /* Horizontal line */
@@ -28,7 +28,7 @@ defineProps({
 .li-divider::after {
   content: '';
   flex: 1;
-  border-top: 1px solid var(--color-gray-200, #E6E6E6);
+  border-top: 1px solid var(--color-border);
 }
 
 /* With label — line on both sides */
@@ -44,12 +44,12 @@ defineProps({
 .li-divider__label {
   flex-shrink: 0;
   padding: 0 12px;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
-  color: var(--color-gray-500, #999999);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  line-height: var(--leading-xs);
+  color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   white-space: nowrap;
 }
 
@@ -59,7 +59,7 @@ defineProps({
   width: auto;
   height: 100%;
   min-height: 24px;
-  margin: 0 8px;
+  margin: 0 var(--space-2);
 }
 
 .li-divider--vertical::before,
@@ -70,12 +70,12 @@ defineProps({
 .li-divider--vertical::before {
   display: block;
   border-top: none;
-  border-left: 1px solid var(--color-gray-200, #E6E6E6);
+  border-left: 1px solid var(--color-border);
   height: 100%;
   width: 0;
 }
 
 .li-divider--vertical .li-divider__label {
-  padding: 8px 0;
+  padding: var(--space-2) 0;
 }
 </style>

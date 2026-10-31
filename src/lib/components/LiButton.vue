@@ -1,7 +1,8 @@
 <template>
-  <button 
+  <button
     :class="['li-btn', `li-btn-${variant}`, `li-btn-${size}`, { 'li-btn-icon-only': isIconOnly, 'li-btn-loading': loading }]"
     :disabled="disabled || loading"
+    :aria-busy="loading || undefined"
     @click="handleClick"
     ref="btn"
   >
@@ -19,14 +20,14 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useRipple } from '../composables/useRipple';
+import { ref } from 'vue';
 
 const props = defineProps({
   variant: {
     type: String,
     default: 'primary',
-    validator: (v) => ['primary', 'secondary', 'danger', 'ghost'].includes(v)
+    // ghost kept as an alias of subtle for existing call sites
+    validator: (v) => ['primary', 'secondary', 'subtle', 'ghost', 'danger', 'link'].includes(v)
   },
   size: {
     type: String,
@@ -42,111 +43,111 @@ const props = defineProps({
 
 const emit = defineEmits(['click']);
 const btn = ref(null);
-const { addRipple } = useRipple();
 
 const handleClick = (e) => {
   if (props.disabled || props.loading) return;
-  addRipple(e, btn.value);
   emit('click', e);
 };
 </script>
 
 <style scoped>
+/* Allo button (components.md → Buttons; app.css .btn). Compact sizes 28/32/40. */
 .li-btn {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-s, 8px);
-  border: none;
+  gap: var(--space-2);
+  border: 1px solid transparent;
   cursor: pointer;
-  border-radius: var(--radius-pill, 999px);
-  font-family: var(--font-family, 'Inter', sans-serif);
+  border-radius: var(--radius-pill);
+  font: inherit;
   font-weight: 600;
-  transition: all var(--dur-short, 200ms) var(--ease-out, cubic-bezier(0.4, 0, 0.2, 1));
+  white-space: nowrap;
   overflow: hidden;
-  user-select: none;
-  outline: none;
+  isolation: isolate;
+  transition:
+    background var(--dur-quick),
+    border-color var(--dur-quick),
+    box-shadow var(--dur-short) var(--ease-out),
+    transform var(--dur-instant) var(--ease-out);
 }
+
+.li-btn:active:not(:disabled) { transform: scale(0.97); }
 
 .li-btn:focus-visible {
-  box-shadow: 0 0 0 2px var(--color-gray-0, #fff), 0 0 0 4px var(--color-orange-400, #FF6B00);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
-.li-btn:active {
-  transform: translateY(1px);
+/* On the yellow fill the ring uses on-accent (APP.md §5) */
+.li-btn-primary:focus-visible {
+  outline-color: var(--color-on-accent);
 }
 
-.li-btn:disabled, .li-btn-loading {
-  cursor: not-allowed;
-  transform: none;
-}
+/* Sizes — compact */
+.li-btn-sm { height: 28px; padding: 0 12px; font-size: var(--text-xs); }
+.li-btn-md { height: 32px; padding: 0 16px; font-size: var(--text-sm); }
+.li-btn-lg { height: 40px; padding: 0 20px; font-size: var(--text-base); }
 
-/* Sizes */
-.li-btn-sm {
-  padding: 6px 12px;
-  font-size: var(--text-xs, 14px);
-  height: 32px;
-}
-
-.li-btn-md {
-  padding: 8px 16px;
-  font-size: var(--text-sm, 16px);
-  height: 40px;
-}
-
-.li-btn-lg {
-  padding: 12px 24px;
-  font-size: var(--text-sm, 16px);
-  height: 48px;
-}
-
-.li-btn-icon-only {
-  padding: 0;
-  width: auto;
-  aspect-ratio: 1/1;
-}
+.li-btn-icon-only { padding: 0; width: auto; aspect-ratio: 1/1; }
 
 /* Variants */
 .li-btn-primary {
-  background-color: var(--cta-primary-bg, #FFBC25);
-  color: var(--cta-primary-text, #1E1E1E);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 .li-btn-primary:hover:not(:disabled) {
-  background-color: var(--cta-primary-hover, #FAB000);
+  background: var(--color-accent-strong);
+  box-shadow: 0 6px 16px -6px rgba(255, 165, 0, 0.55);
 }
 
 .li-btn-secondary {
-  background-color: transparent;
-  color: var(--cta-secondary-text, #333333);
-  border: 1.5px solid var(--cta-secondary-border, #CCCCCC);
+  background: var(--color-bg);
+  color: var(--color-text);
+  border-color: var(--color-border-input);
 }
 .li-btn-secondary:hover:not(:disabled) {
-  border-color: var(--color-orange-400, #FF6B00);
+  background: var(--color-hover);
+  border-color: var(--color-text-muted);
+}
+
+.li-btn-subtle,
+.li-btn-ghost {
+  background: transparent;
+  color: var(--color-text);
+}
+.li-btn-subtle:hover:not(:disabled),
+.li-btn-ghost:hover:not(:disabled) {
+  background: var(--color-hover);
 }
 
 .li-btn-danger {
-  background-color: var(--cta-danger-bg, #C83E3B);
-  color: var(--cta-danger-text, #FFFFFF);
+  background: var(--color-danger);
+  color: var(--color-on-danger);
 }
 .li-btn-danger:hover:not(:disabled) {
-  background-color: var(--color-red-500, #A33129);
+  box-shadow: 0 6px 16px -6px rgba(198, 47, 47, 0.6);
 }
 
-.li-btn-ghost {
-  background-color: transparent;
-  color: var(--cta-ghost-text, #808080);
+.li-btn-link {
+  background: none;
+  color: var(--color-text-strong);
+  padding: 0 4px;
 }
-.li-btn-ghost:hover:not(:disabled) {
-  background-color: var(--cta-ghost-hover-bg, #F2F2F2);
-  color: var(--color-gray-900, #333333);
+.li-btn-link:hover:not(:disabled) {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
-/* Disabled overrides */
+/* Disabled */
 .li-btn:disabled {
-  background-color: var(--cta-disabled-bg, #EDF0F2);
-  color: var(--cta-disabled-text, #999999);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
   border-color: transparent;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Utils */
@@ -164,34 +165,19 @@ const handleClick = (e) => {
 .li-btn-spinner {
   width: 16px;
   height: 16px;
+  flex: none;
   border: 2px solid currentColor;
-  border-bottom-color: transparent;
+  border-right-color: transparent;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: li-btn-spin 0.7s linear infinite;
 }
 
-@keyframes spin {
-  100% { transform: rotate(360deg); }
+@keyframes li-btn-spin {
+  to { transform: rotate(360deg); }
 }
 
-:deep(.li-ripple-animation) {
-  position: absolute;
-  border-radius: 50%;
-  transform: scale(0);
-  animation: ripple var(--dur-medium, 300ms) linear;
-  background-color: rgba(255, 255, 255, 0.4);
-  pointer-events: none;
-}
-
-.li-btn-secondary :deep(.li-ripple-animation),
-.li-btn-ghost :deep(.li-ripple-animation) {
-  background-color: rgba(0, 0, 0, 0.1);
-}
-
-@keyframes ripple {
-  to {
-    transform: scale(4);
-    opacity: 0;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .li-btn-spinner { animation-duration: 1.5s; }
+  .li-btn:active:not(:disabled) { transform: none; }
 }
 </style>

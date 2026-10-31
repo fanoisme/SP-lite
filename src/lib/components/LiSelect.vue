@@ -70,50 +70,56 @@ const onBlur = (e) => {
 </script>
 
 <style scoped>
+/* Allo input skin applied to select (app.css .input). Compact 32px, radius 8. */
 .li-select-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs, 4px);
-  font-family: var(--font-family, 'Inter', sans-serif);
+  display: grid;
+  gap: 6px;
   width: 100%;
 }
 
 .li-select-label {
-  font-size: var(--text-xs, 14px);
-  font-weight: 500;
-  color: var(--color-gray-800, #4D4D4D);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-text);
 }
 
 .li-select-input-group {
   position: relative;
   display: flex;
   align-items: center;
-  background: var(--color-gray-0, #FFFFFF);
-  border: 1.5px solid var(--color-gray-300, #CCCCCC);
-  border-radius: var(--radius-sm, 4px);
-  transition: border-color var(--dur-short, 200ms) var(--ease-out);
+  height: 32px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--dur-quick), box-shadow var(--dur-short) var(--ease-out);
 }
 
 .li-select-input-group.is-focused {
-  border-color: var(--color-orange-400, #FF6B00);
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 4px var(--glow-focus);
 }
 
 .li-select-error .li-select-input-group {
-  border-color: var(--color-red-400, #C83E3B);
+  border-color: var(--color-danger);
+}
+
+.li-select-error .li-select-input-group.is-focused {
+  box-shadow: 0 0 0 4px var(--glow-danger);
 }
 
 .li-select-disabled .li-select-input-group {
-  background: var(--color-gray-100, #F2F2F2);
-  border-color: var(--color-gray-200, #E6E6E6);
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
 }
 
 .li-select-input {
   flex: 1;
   border: none;
   background: transparent;
-  padding: 12px 36px 12px 16px; /* extra padding on right for chevron */
-  font-size: var(--text-sm, 16px);
-  color: var(--color-gray-900, #333333);
+  padding: 0 32px 0 12px;
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--color-text-strong);
   outline: none;
   width: 100%;
   appearance: none;
@@ -127,13 +133,13 @@ const onBlur = (e) => {
 }
 
 .li-select-disabled .li-select-input {
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
 .li-select-icon {
-  padding: 0 12px;
-  color: var(--color-gray-600, #808080);
+  padding: 0 8px;
+  color: var(--color-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,12 +152,12 @@ const onBlur = (e) => {
 }
 
 .li-select-helper {
-  font-size: var(--text-xxs, 12px);
-  color: var(--color-gray-600, #808080);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
   min-height: 16px;
 }
 
 .li-select-error .li-select-helper {
-  color: var(--color-red-500, #A33129);
+  color: var(--color-danger);
 }
 </style>

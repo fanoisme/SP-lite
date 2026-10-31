@@ -1,7 +1,7 @@
 <template>
   <span
     :class="['li-spinner', `li-spinner--${size}`, { 'li-spinner--inline': inline }]"
-    :style="{ color: colorMap[variant] || 'inherit', borderTopColor: colorMap[variant] || 'currentColor' }"
+    :style="{ color: colorMap[variant] || 'inherit' }"
     role="status"
     :aria-label="label || 'Loading'"
   >
@@ -19,45 +19,44 @@ defineProps({
 })
 
 const colorMap = {
-  brand: 'var(--color-brand, #FFAF03)',
-  neutral: 'var(--color-gray-500, #999999)',
-  inverse: 'var(--color-gray-0, #FFFFFF)',
+  brand: 'var(--color-accent-strong)',
+  neutral: 'var(--color-text-muted)',
+  inverse: 'var(--color-on-inverse)',
 }
 </script>
 
 <style scoped>
+/* Allo spinner (app.css .spinner): currentColor ring, one transparent quarter. */
 .li-spinner {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  font-family: 'Inter', system-ui, sans-serif;
+  gap: var(--space-2);
 }
 
 .li-spinner--inline {
   flex-direction: row;
-  gap: 8px;
 }
 
 .li-spinner__arc {
   display: block;
   border-radius: 50%;
-  border: 2.5px solid var(--color-gray-200, #E6E6E6);
-  border-top-color: var(--color-brand, #FFAF03);
+  border: 2px solid currentColor;
+  border-right-color: transparent;
   animation: li-spin 0.7s linear infinite;
 }
 
-.li-spinner--xs .li-spinner__arc { width: 12px; height: 12px; border-width: 2px; }
-.li-spinner--sm .li-spinner__arc { width: 16px; height: 16px; border-width: 2px; }
-.li-spinner--md .li-spinner__arc { width: 24px; height: 24px; border-width: 2.5px; }
-.li-spinner--lg .li-spinner__arc { width: 32px; height: 32px; border-width: 3px; }
-.li-spinner--xl .li-spinner__arc { width: 48px; height: 48px; border-width: 4px; }
+.li-spinner--xs .li-spinner__arc { width: 12px; height: 12px; }
+.li-spinner--sm .li-spinner__arc { width: 16px; height: 16px; }
+.li-spinner--md .li-spinner__arc { width: 24px; height: 24px; }
+.li-spinner--lg .li-spinner__arc { width: 32px; height: 32px; }
+.li-spinner--xl .li-spinner__arc { width: 48px; height: 48px; border-width: 3px; }
 
 .li-spinner__label {
-  font-size: 12px;
+  font-size: var(--text-xs);
   font-weight: 500;
-  line-height: 16px;
-  color: var(--color-gray-600, #808080);
+  line-height: var(--leading-xs);
+  color: var(--color-text-muted);
 }
 
 @keyframes li-spin {

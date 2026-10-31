@@ -31,26 +31,26 @@ function lineWidth(i) {
 </script>
 
 <style scoped>
+/* Allo card shell carrying skeleton lines. */
 .li-skeleton-card {
-  padding: 16px;
-  background: var(--color-gray-0, #FFFFFF);
-  border-radius: 8px;
-  border: 1px solid var(--color-gray-200, #E6E6E6);
-  font-family: 'Inter', system-ui, sans-serif;
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
 }
 
 .li-skeleton-card__header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .li-skeleton-card__header-text {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
 }
 
 .li-skeleton-card__body {
@@ -59,8 +59,8 @@ function lineWidth(i) {
 }
 
 .li-skeleton-card__footer {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--color-gray-200, #E6E6E6);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
 }
 </style>

@@ -74,15 +74,14 @@ onBeforeUnmount(() => {
 
 .li-tooltip {
   position: fixed;
-  z-index: 9999;
-  padding: 6px 12px;
-  border-radius: 6px;
-  background: var(--color-gray-900, #333333);
-  color: var(--color-gray-0, #FFFFFF);
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 12px;
+  z-index: var(--z-toast);
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  background: var(--color-inverse);
+  color: var(--color-on-inverse);
+  font-size: var(--text-xs);
   font-weight: 500;
-  line-height: 16px;
+  line-height: var(--leading-xs);
   white-space: nowrap;
   pointer-events: none;
   transform: translate(-50%, -50%);
@@ -97,7 +96,7 @@ onBeforeUnmount(() => {
   position: absolute;
   width: 6px;
   height: 6px;
-  background: var(--color-gray-900, #333333);
+  background: var(--color-inverse);
   transform: rotate(45deg);
 }
 
@@ -126,8 +125,8 @@ onBeforeUnmount(() => {
   z-index: 1;
 }
 
-.li-tooltip-enter-active { transition: opacity 0.15s ease-out, transform 0.15s ease-out; }
-.li-tooltip-leave-active { transition: opacity 0.1s ease-in, transform 0.1s ease-in; }
+.li-tooltip-enter-active { transition: opacity var(--dur-quick) var(--ease-enter), transform var(--dur-quick) var(--ease-enter); }
+.li-tooltip-leave-active { transition: opacity 0.1s var(--ease-exit), transform 0.1s var(--ease-exit); }
 .li-tooltip-enter-from,
 .li-tooltip-leave-to { opacity: 0; transform: translate(-50%, calc(-50% - 4px)); }
 </style>

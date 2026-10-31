@@ -99,7 +99,6 @@ onMounted(() => {
 
 <style scoped>
 .li-countup {
-  font-family: var(--font-family, 'Inter', sans-serif);
   font-variant-numeric: tabular-nums;
 }
 </style>

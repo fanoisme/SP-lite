@@ -1,13 +1,13 @@
 <template>
   <div class="li-textfield-wrapper" :class="{ 'li-textfield-error': error, 'li-textfield-disabled': disabled }">
     <label v-if="label" class="li-textfield-label">{{ label }}</label>
-    
+
     <div class="li-textfield-input-group" :class="{ 'is-focused': isFocused }">
       <span v-if="prefix || $slots.prefix" class="li-textfield-prefix">
         <slot name="prefix">{{ prefix }}</slot>
       </span>
-      
-      <textarea 
+
+      <textarea
         v-if="type === 'area'"
         ref="inputRef"
         class="li-textfield-input li-textfield-textarea"
@@ -15,11 +15,12 @@
         :placeholder="placeholder"
         :disabled="disabled"
         :rows="rows"
+        :aria-invalid="error ? 'true' : undefined"
         @input="onInput"
         @focus="onFocus"
         @blur="onBlur"
       ></textarea>
-      <input 
+      <input
         v-else
         ref="inputRef"
         class="li-textfield-input"
@@ -27,17 +28,18 @@
         :value="modelValue"
         :placeholder="placeholder"
         :disabled="disabled"
+        :aria-invalid="error ? 'true' : undefined"
         @input="onInput"
         @focus="onFocus"
         @blur="onBlur"
       />
-      
+
       <span v-if="suffix || $slots.suffix" class="li-textfield-suffix">
         <slot name="suffix">{{ suffix }}</slot>
       </span>
     </div>
 
-    <div v-if="helperText || error" class="li-textfield-helper">
+    <div v-if="error || helperText" class="li-textfield-helper" :class="{ 'li-textfield-helper--error': error }">
       {{ error || helperText }}
     </div>
   </div>
@@ -86,88 +88,96 @@ const onBlur = (e) => {
 </script>
 
 <style scoped>
+/* Allo field + input (app.css .field / .input). Compact: 32px, radius 8. */
 .li-textfield-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs, 4px);
-  font-family: var(--font-family, 'Inter', sans-serif);
+  display: grid;
+  gap: 6px;
   width: 100%;
 }
 
 .li-textfield-label {
-  font-size: var(--text-xs, 14px);
-  font-weight: 500;
-  color: var(--color-gray-800, #4D4D4D);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-text);
 }
 
 .li-textfield-input-group {
   display: flex;
   align-items: center;
-  background: var(--color-gray-0, #FFFFFF);
-  border: 1.5px solid var(--color-gray-300, #CCCCCC);
-  border-radius: var(--radius-xs, 8px);
-  transition: border-color var(--dur-short, 200ms) var(--ease-out);
-  overflow: hidden;
+  height: 32px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--dur-quick), box-shadow var(--dur-short) var(--ease-out);
 }
 
 .li-textfield-input-group.is-focused {
-  border-color: var(--color-orange-400, #FF6B00);
+  border-color: var(--color-focus);
+  box-shadow: 0 0 0 4px var(--glow-focus);
 }
 
 .li-textfield-error .li-textfield-input-group {
-  border-color: var(--color-red-400, #C83E3B);
+  border-color: var(--color-danger);
+}
+
+.li-textfield-error .li-textfield-input-group.is-focused {
+  box-shadow: 0 0 0 4px var(--glow-danger);
 }
 
 .li-textfield-disabled .li-textfield-input-group {
-  background: var(--color-gray-100, #F2F2F2);
-  border-color: var(--color-gray-200, #E6E6E6);
+  background: var(--color-surface-2);
+  border-color: var(--color-border);
 }
 
 .li-textfield-input {
   flex: 1;
   border: none;
   background: transparent;
-  padding: 12px 16px;
-  font-size: var(--text-sm, 16px);
-  color: var(--color-gray-900, #333333);
+  padding: 0 12px;
+  font: inherit;
+  font-size: var(--text-sm);
+  color: var(--color-text-strong);
   outline: none;
   width: 100%;
+  min-width: 0;
 }
 
 .li-textfield-textarea {
+  height: auto;
+  min-height: 88px;
+  padding: 8px 12px;
   resize: vertical;
-  min-height: 80px;
 }
 
 .li-textfield-input::placeholder {
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 
 .li-textfield-disabled .li-textfield-input {
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
 .li-textfield-prefix,
 .li-textfield-suffix {
   padding: 0 12px;
-  color: var(--color-gray-600, #808080);
+  color: var(--color-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--text-sm, 16px);
+  font-size: var(--text-sm);
 }
 
 .li-textfield-prefix { padding-right: 0; }
 .li-textfield-suffix { padding-left: 0; }
 
 .li-textfield-helper {
-  font-size: var(--text-xxs, 12px);
-  color: var(--color-gray-600, #808080);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
   min-height: 16px;
 }
 
-.li-textfield-error .li-textfield-helper {
-  color: var(--color-red-500, #A33129);
+.li-textfield-helper--error {
+  color: var(--color-danger);
 }
 </style>

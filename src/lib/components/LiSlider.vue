@@ -23,9 +23,7 @@
         <div class="li-slider-fill" :style="{ width: fillPercentage + '%' }"></div>
       </div>
       
-      <div class="li-slider-thumb" :style="{ left: fillPercentage + '%' }" :class="{ 'is-focused': isFocused }">
-        <div class="li-slider-thumb-inner"></div>
-      </div>
+      <div class="li-slider-thumb" :style="{ left: fillPercentage + '%' }" :class="{ 'is-focused': isFocused }"></div>
     </div>
   </div>
 </template>
@@ -68,12 +66,12 @@ const onInput = (e) => {
 </script>
 
 <style scoped>
+/* Allo slider (app.css .rng): text-strong thumb, focus ring, spring press. */
 .li-slider-wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   width: 100%;
-  font-family: var(--font-family, 'Inter', sans-serif);
 }
 
 .li-slider-disabled {
@@ -84,37 +82,41 @@ const onInput = (e) => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .li-slider-label {
-  font-size: var(--text-sm, 16px);
-  font-weight: 500;
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text);
+  font-weight: 600;
 }
 
 .li-slider-value {
-  font-size: var(--text-sm, 16px);
-  color: var(--color-orange-400, #FF6B00);
+  color: var(--color-text);
   font-weight: 600;
 }
 
 .li-slider-container {
   position: relative;
-  height: 24px;
+  height: 28px;
   display: flex;
   align-items: center;
 }
 
 .li-slider-input {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
-  cursor: pointer;
+  cursor: grab;
   z-index: 3;
   margin: 0;
+}
+
+.li-slider-input:active {
+  cursor: grabbing;
 }
 
 .li-slider-disabled .li-slider-input {
@@ -127,15 +129,15 @@ const onInput = (e) => {
   transform: translateY(-50%);
   width: 100%;
   height: 4px;
-  background-color: var(--color-gray-200, #E6E6E6);
-  border-radius: var(--radius-pill, 999px);
+  background: var(--color-surface-2);
+  border-radius: var(--radius-pill);
   overflow: hidden;
   z-index: 1;
 }
 
 .li-slider-fill {
   height: 100%;
-  background-color: var(--color-orange-400, #FF6B00);
+  background: var(--color-text-strong);
   transition: width 0.1s linear;
 }
 
@@ -145,27 +147,24 @@ const onInput = (e) => {
   transform: translate(-50%, -50%);
   width: 20px;
   height: 20px;
-  background-color: var(--color-gray-0, #FFFFFF);
-  border: 1.5px solid var(--color-gray-300, #CCCCCC);
+  background: var(--color-bg);
+  border: 2px solid var(--color-text-strong);
   border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 5, 58, 0.25);
   z-index: 2;
-  transition: left 0.1s linear, box-shadow var(--dur-micro, 120ms);
+  transition: left 0.1s linear, transform var(--dur-short) var(--ease-spring), border-color var(--dur-quick);
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
 }
 
-.li-slider-thumb.is-focused,
-.li-slider-input:active + .li-slider-track + .li-slider-thumb {
-  border-color: var(--color-orange-400, #FF6B00);
-  box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.2);
+.li-slider-input:active ~ .li-slider-thumb {
+  transform: translate(-50%, -50%) scale(1.18);
 }
 
-.li-slider-thumb-inner {
-  width: 8px;
-  height: 8px;
-  background-color: var(--color-orange-400, #FF6B00);
-  border-radius: 50%;
+.li-slider-thumb.is-focused {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 </style>

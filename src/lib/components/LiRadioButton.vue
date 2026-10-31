@@ -57,12 +57,13 @@ const handleChange = () => {
 </script>
 
 <style scoped>
+/* Allo radio (components.md → Radio): 16px ring, text-strong fill, 2px focus ring. */
 .li-radio-wrapper {
   display: inline-flex;
   align-items: flex-start;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   cursor: pointer;
-  font-family: var(--font-family, 'Inter', sans-serif);
+  user-select: none;
 }
 
 .li-radio-disabled {
@@ -73,35 +74,36 @@ const handleChange = () => {
 .li-radio-input-container {
   position: relative;
   padding-top: 2px;
+  display: inline-flex;
 }
 
 .li-radio-outer {
-  width: 20px;
-  height: 20px;
-  border: 1.5px solid var(--color-gray-400, #B3B3B3);
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--color-border-input);
   border-radius: 50%;
-  background-color: var(--color-gray-0, #FFFFFF);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--dur-micro, 120ms) var(--ease-out);
+  background: var(--color-bg);
+  display: grid;
+  place-items: center;
+  transition: border-color var(--dur-quick);
 }
 
 .li-radio-outer.is-checked {
-  border-color: var(--color-orange-400, #FF6B00);
+  border-color: var(--color-text-strong);
 }
 
 .li-radio-outer.is-focused {
-  box-shadow: 0 0 0 2px var(--color-gray-0, #fff), 0 0 0 4px var(--color-orange-400, #FF6B00);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 .li-radio-inner {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background-color: var(--color-orange-400, #FF6B00);
+  background: var(--color-text-strong);
   transform: scale(0);
-  transition: transform var(--dur-micro, 120ms) var(--ease-out);
+  transition: transform var(--dur-short) var(--ease-spring);
 }
 
 .li-radio-inner.is-checked {
@@ -115,14 +117,14 @@ const handleChange = () => {
 }
 
 .li-radio-label {
-  font-size: var(--text-sm, 16px);
-  color: var(--color-gray-900, #333333);
-  line-height: 24px;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  line-height: var(--leading-sm);
 }
 
 .li-radio-description {
-  font-size: var(--text-xs, 14px);
-  color: var(--color-gray-600, #808080);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
 }
 
 .sr-only {
