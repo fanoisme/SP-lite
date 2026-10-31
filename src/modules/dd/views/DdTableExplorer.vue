@@ -551,7 +551,7 @@ onMounted(() => activate(meta.value?.id ?? null))
   display: inline-flex; align-items: center; gap: 4px; margin-left: 6px;
   font-family: var(--font-sans);
   font-size: 12px; font-weight: 600; text-decoration: none;
-  color: #6366F1; border-bottom: 1px solid transparent; transition: border-color 160ms;
+  color: var(--color-accent-text); border-bottom: 1px solid transparent; transition: border-color 160ms;
 }
 .ddexpl__manage:hover { border-bottom-color: currentColor; }
 .ddexpl__manage .li-icon { font-size: 15px; }
@@ -580,10 +580,10 @@ onMounted(() => activate(meta.value?.id ?? null))
   border-color: var(--color-accent);
 }
 .ddexpl__btn--primary:hover:not(:disabled) { background: var(--color-accent-strong); }
-.ddexpl__btn--on { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.35); color: #6366F1; }
+.ddexpl__btn--on { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.35); color: var(--color-accent-text); }
 .ddexpl__pill {
   font-size: 11px; font-weight: 700; line-height: 1;
-  background: #6366F1; color: #fff; border-radius: 999px; padding: 2px 6px;
+  background: var(--color-accent); color: var(--color-on-accent); border-radius: 999px; padding: 2px 6px;
 }
 
 .ddexpl__colmenu { max-height: 60vh; overflow-y: auto; min-width: 240px; padding: 2px; }
@@ -594,7 +594,7 @@ onMounted(() => activate(meta.value?.id ?? null))
 .ddexpl__link {
   background: none; border: none; padding: 0; cursor: pointer;
   font-family: var(--font-sans);
-  font-size: 12px; font-weight: 600; color: #6366F1;
+  font-size: 12px; font-weight: 600; color: var(--color-accent-text);
 }
 .ddexpl__link:hover { text-decoration: underline; }
 .ddexpl__colopt {
