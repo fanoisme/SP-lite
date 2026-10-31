@@ -6,9 +6,10 @@
       <div class="dash__head-body">
         <h1 class="dash__title">Halo, {{ displayName }} 👋</h1>
         <p class="dash__subtitle">
-          <span class="dash__role-tag">{{ profile?.role || '—' }}</span>
-          <span class="dash__sep">·</span>
-          <span>{{ profile?.is_active ? 'Aktif' : 'Pending' }}</span>
+          {{ profile?.role || '—' }}
+          <LiBadge :variant="profile?.is_active ? 'success' : 'neutral'" size="sm">
+            {{ profile?.is_active ? 'Aktif' : 'Pending' }}
+          </LiBadge>
         </p>
       </div>
     </header>
@@ -69,6 +70,7 @@ import { MODULE_REGISTRY } from '@/lib/modules.js'
 import { useAuth } from '@/composables/useAuth.js'
 import { useAccess } from '@/composables/useAccess.js'
 import { useDdSummary } from '@/modules/dd/composables/useDdSummary.js'
+import LiBadge from '@/lib/components/LiBadge.vue'
 
 const { profile, session } = useAuth()
 const { canModule } = useAccess()
@@ -100,134 +102,112 @@ onMounted(() => {
 </script>
 
 <style scoped>
+/* L3 overview (dashboard.html): page head two lines, flat stat tiles, no glass. */
 .dash {
-  max-width: 960px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xl, 32px);
-  animation: dash-in 500ms var(--ease-smooth, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  gap: var(--space-8);
+  animation: dash-in var(--dur-long) var(--ease-enter) both;
 }
 
 @keyframes dash-in {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(8px); }
 }
 
-/* ── Header ── */
+/* ── Page head ── */
 .dash__header {
   display: flex;
   align-items: center;
-  gap: var(--space-m, 12px);
-  padding: var(--space-l, 16px) var(--space-xl, 24px);
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: var(--radius-lg, 20px);
-  box-shadow: var(--shadow-sm);
+  gap: var(--space-4);
 }
 
 .dash__avatar {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-md, 16px);
-  background: linear-gradient(135deg, var(--cta-primary-bg, #FFBC25), var(--color-orange-300, #FF8C00));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-display, 'Inter', sans-serif);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-accent-soft);
+  color: var(--color-accent-text);
+  display: grid;
+  place-items: center;
   font-weight: 700;
-  font-size: 22px;
-  color: var(--cta-primary-text, #1E1E1E);
+  font-size: var(--text-base);
   flex-shrink: 0;
-}
-
-.dash__head-body {
-  min-width: 0;
+  box-shadow: 0 0 0 2px var(--color-bg);
 }
 
 .dash__title {
-  font-family: var(--font-display, 'Inter', sans-serif);
   font-weight: 700;
-  font-size: 22px;
-  color: var(--color-on-surface, #333);
+  font-size: 24px;
+  line-height: 32px;
+  color: var(--color-text-strong);
   margin: 0 0 4px;
-  letter-spacing: -0.5px;
 }
 
 .dash__subtitle {
   display: flex;
   align-items: center;
-  gap: var(--space-xs, 6px);
+  gap: var(--space-2);
   margin: 0;
-  font-size: 13px;
-  color: var(--color-on-surface-muted, #999);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
 }
 
-.dash__role-tag {
-  font-weight: 700;
-  color: var(--cta-primary-bg, #FFBC25);
-}
-
-.dash__sep {
-  opacity: 0.5;
-}
-
-/* ── Section ── */
+/* ── Sections ── */
 .dash__section-title {
-  font-size: 13px;
+  font-size: var(--text-xs);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--color-on-surface-muted, #999);
-  margin: 0 0 var(--space-m, 12px);
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-3);
 }
 
 .dash__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: var(--space-m, 12px);
+  gap: var(--space-4);
 }
 
 .dash__card {
-  position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs, 4px);
-  padding: var(--space-l, 16px);
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: var(--radius-md, 16px);
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   text-decoration: none;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
+  transition: border-color var(--dur-quick), box-shadow var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out);
 }
 
 .dash__card:hover {
-  border-color: var(--cta-primary-bg, #FFBC25);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-3px);
+  border-color: var(--color-border-strong);
+  box-shadow: 0 8px 20px -8px rgba(0, 5, 58, 0.18);
+  transform: var(--lift);
+}
+
+.dash__card:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 .dash__card-icon {
-  font-size: 28px;
-  color: var(--cta-primary-bg, #FFBC25);
-  margin-bottom: var(--space-xs, 4px);
+  font-size: 24px;
+  color: var(--color-accent-text);
+  margin-bottom: var(--space-2);
 }
 
 .dash__card-label {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--color-on-surface, #333);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--color-text-strong);
 }
 
 .dash__card-desc {
-  font-size: 12px;
-  color: var(--color-on-surface-muted, #999);
-  line-height: 1.4;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  line-height: var(--leading-xs);
   flex: 1;
 }
 
@@ -235,18 +215,17 @@ onMounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  margin-top: var(--space-s, 8px);
-  font-size: 12px;
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
   font-weight: 700;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-text-strong);
 }
 
-.dash__card-cta .li-icon {
-  font-size: 16px;
-  transition: transform var(--dur-short, 200ms) var(--ease-out);
+.dash__card-cta :deep(.li-icon) {
+  transition: transform var(--dur-short) var(--ease-out);
 }
 
-.dash__card:hover .dash__card-cta .li-icon {
+.dash__card:hover .dash__card-cta :deep(.li-icon) {
   transform: translateX(3px);
 }
 
@@ -254,50 +233,49 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-s, 8px);
-  padding: var(--space-3xl, 48px);
-  color: var(--color-on-surface-muted, #999);
-  font-size: 13px;
+  gap: var(--space-2);
+  padding: var(--space-12);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
   text-align: center;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: var(--radius-md, 16px);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
 }
 
-.dash__empty .li-icon {
-  font-size: 32px;
-  color: var(--color-gray-300, #ccc);
-}
-
-@media (max-width: 640px) {
-  .dash__title { font-size: 18px; }
-  .dash__avatar { width: 44px; height: 44px; font-size: 18px; }
-}
-
+/* ── Stat tiles ── */
 .dash__summary-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: var(--space-m, 12px);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-4);
 }
+
 .dash__summary-card {
-  display: flex; flex-direction: column; align-items: center; gap: 4px;
-  padding: var(--space-l, 16px);
-  background: rgba(255,255,255,0.55);
-  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-  border: 1px solid rgba(99,102,241,0.1);
-  border-radius: var(--radius-md, 16px);
-  transition: all 200ms;
+  display: grid;
+  gap: var(--space-1);
+  justify-items: center;
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
 }
-.dash__summary-card:hover {
-  border-color: rgba(99,102,241,0.3);
-  box-shadow: 0 4px 16px rgba(99,102,241,0.08);
-  transform: translateY(-2px);
-}
+
 .dash__summary-num {
-  font-size: 28px; font-weight: 800; color: #6366F1;
-  letter-spacing: -0.5px; font-family: var(--font-display, 'Inter', sans-serif);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-text-strong);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--leading-sm);
 }
+
 .dash__summary-label {
-  font-size: 11px; font-weight: 600; color: var(--color-gray-500, #8e8ea0);
-  text-transform: uppercase; text-align: center;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash { animation: none; }
 }
 </style>
