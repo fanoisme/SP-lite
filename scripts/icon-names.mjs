@@ -8,7 +8,7 @@ export const ICON_NAMES = Object.freeze([
   'calendar', 'check', 'chevron-down', 'chevron-left', 'chevron-right',
   'circle-check', 'circle-user', 'circle-x', 'clapperboard', 'clipboard',
   'clock', 'cloud-upload', 'code', 'columns-3', 'construction',
-  'copy', 'download', 'eraser', 'eye', 'file-check',
+  'copy', 'download', 'eraser', 'eye', 'eye-off', 'file-check',
   'file-text', 'file-type', 'file-up', 'file-video', 'filter',
   'filter-x', 'flag', 'folder-tree', 'frame', 'hard-drive',
   'history', 'hourglass', 'inbox', 'info', 'italic',
