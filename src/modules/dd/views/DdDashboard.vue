@@ -358,7 +358,7 @@ onMounted(load)
 .ddash__kpi {
   position: relative; display: flex; flex-direction: column;
   padding: 18px 20px; border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--color-bg);
   border: 1px solid var(--color-border);
   text-decoration: none; color: inherit;
   transition: transform 200ms, border-color 200ms, box-shadow 200ms;
@@ -378,7 +378,7 @@ a.ddash__kpi:hover {
 }
 .ddash__kpilabel { font-size: 13px; font-weight: 600; color: var(--color-text); margin-top: 4px; }
 .ddash__kpimeta {
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
   font-size: 11px; color: var(--color-text-placeholder); margin-top: 2px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
@@ -395,7 +395,7 @@ a.ddash__kpi:hover {
 .ddash__card {
   display: flex; flex-direction: column; gap: 12px; min-width: 0;
   padding: 18px 20px; border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--color-bg);
   border: 1px solid var(--color-border);
 }
 .ddash__card--wide { grid-column: 1 / -1; }
@@ -405,7 +405,7 @@ a.ddash__kpi:hover {
 .ddash__cardico {
   font-size: 18px; color: var(--color-accent-text); flex-shrink: 0;
   background: rgba(201, 133, 0, 0.1);
-  border-radius: var(--radius-sm, 10px); padding: 6px;
+  border-radius: var(--radius-sm); padding: 6px;
 }
 .ddash__cardtitle { font-size: 15px; font-weight: 700; margin: 0; letter-spacing: -0.2px; }
 .ddash__cardsub { font-size: 12px; color: var(--color-text-muted); margin: 2px 0 0; }
@@ -427,7 +427,7 @@ a.ddash__kpi:hover {
 .ddash__row {
   display: flex; align-items: center; gap: 10px;
   padding: 9px 8px; margin: 0 -8px;
-  border-radius: var(--radius-sm, 10px);
+  border-radius: var(--radius-sm);
   text-decoration: none; color: inherit;
   transition: background 160ms;
 }
@@ -442,7 +442,7 @@ a.ddash__row:hover { background: rgba(201, 133, 0, 0.06); }
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .ddash__key {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11px;
+  font-family: var(--font-mono); font-size: 11px;
   background: var(--color-border); border-radius: 5px; padding: 1px 5px;
 }
 .ddash__when {

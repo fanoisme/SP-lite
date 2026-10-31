@@ -162,7 +162,7 @@ onUnmounted(() => {
 .landing__wrap {
   max-width: 1152px;
   margin: 0 auto;
-  padding: 0 var(--gutter, 16px);
+  padding: 0 var(--gutter);
   width: 100%;
 }
 @media (min-width: 600px)  { .landing__wrap { padding-inline: 48px; } }
@@ -214,7 +214,7 @@ onUnmounted(() => {
 
 /* ── Hero ── */
 .landing__hero {
-  padding: var(--space-15, 60px) 0;
+  padding: var(--space-15) 0;
 }
 
 .landing__hero-badge {
@@ -312,7 +312,7 @@ onUnmounted(() => {
 
 /* ── Features ── */
 .landing__features {
-  padding: var(--space-15, 60px) 0;
+  padding: var(--space-15) 0;
   border-top: 1px solid var(--color-border);
 }
 

@@ -95,7 +95,7 @@ function literalPropValue(node, name) {
       && prop.arg?.isStatic
       && prop.arg.content === name
     ) {
-      return prop.exp?.content.match(/^['"]([a-z0-9-]+)['"]$/)?.[1]
+      return prop.exp?.content.match(/^['"]([a-z0-9_-]+)['"]$/)?.[1]
     }
   }
   return undefined
@@ -112,7 +112,7 @@ function boundPropExpression(node, name) {
 
 function stringLiterals(expression) {
   const values = []
-  for (const match of expression.matchAll(/(['"])([a-z0-9-]+)\1/g)) {
+  for (const match of expression.matchAll(/(['"])([a-z0-9_-]+)\1/g)) {
     values.push(match[2])
   }
   return values

@@ -36,7 +36,7 @@
 
         <div v-else class="docx-panel__drop-content">
           <div class="docx-panel__drop-icon-wrap" :class="{ 'docx-panel__drop-icon-wrap--bounce': isDragging }">
-            <LiIcon :name="isDragging ? 'file_download' : 'file-up'" />
+            <LiIcon :name="isDragging ? 'download' : 'file-up'" />
           </div>
           <p class="docx-panel__drop-title">
             {{ isDragging ? 'Drop your file here' : 'Upload Word Document' }}
@@ -213,7 +213,7 @@ function reset() {
   border-radius: 16px;
   background: linear-gradient(135deg, rgba(255, 188, 37, 0.02), rgba(255, 149, 0, 0.02));
   cursor: pointer;
-  transition: all 0.4s var(--ease-enter));
+  transition: all 0.4s var(--ease-enter);
   overflow: hidden;
 }
 
@@ -263,7 +263,7 @@ function reset() {
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
   border-radius: 18px;
   box-shadow: 0 6px 20px rgba(255, 188, 37, 0.25);
-  transition: transform 0.3s var(--ease-spring));
+  transition: transform 0.3s var(--ease-spring);
 }
 
 .docx-panel__drop-icon-wrap--bounce {
@@ -420,7 +420,7 @@ function reset() {
   background: transparent;
   color: var(--color-text-muted);
   font-family: inherit;
-  transition: all 0.25s var(--ease-enter));
+  transition: all 0.25s var(--ease-enter);
 }
 
 .docx-panel__toggle .li-icon {
@@ -562,7 +562,7 @@ function reset() {
 }
 .docx-panel__msg--error {
   background: rgba(200, 62, 59, 0.06);
-  color: var(--color-danger, var(--color-danger));
+  color: var(--color-danger);
 }
 .docx-panel__msg--info {
   background: rgba(16, 185, 129, 0.06);

@@ -437,7 +437,7 @@ async function pasteFromClipboard() {
   border-radius: var(--radius-sm);
   font-size: 13px;
   color: var(--color-text-strong);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--color-bg);
   outline: none;
   transition: border-color 200ms;
 }
@@ -500,7 +500,7 @@ async function pasteFromClipboard() {
   font-size: 12px;
   line-height: 1.6;
   color: var(--color-text-strong);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--color-bg);
   resize: vertical;
   outline: none;
   transition: border-color 200ms;

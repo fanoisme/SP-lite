@@ -171,7 +171,7 @@ const executeSelected = (command) => {
   right: 0;
   bottom: 0;
   background-color: var(--color-overlay);
-  backdrop-filter: blur(4px);
+  
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -183,8 +183,8 @@ const executeSelected = (command) => {
   width: 100%;
   max-width: 600px;
   background-color: var(--color-bg);
-  border-radius: var(--radius-lg, 16px);
-  box-shadow: var(--shadow-pop, 0 16px 48px rgba(0, 0, 0, 0.15));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-pop);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -224,7 +224,7 @@ const executeSelected = (command) => {
   background: var(--color-surface-2);
   border: 1px solid var(--color-border);
   padding: 4px 6px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
   cursor: pointer;
 }
 
@@ -247,7 +247,7 @@ const executeSelected = (command) => {
   display: flex;
   align-items: center;
   padding: var(--space-3);
-  border-radius: var(--radius-md, 8px);
+  border-radius: var(--radius-md);
   cursor: pointer;
   gap: var(--space-3);
   transition: background-color var(--dur-quick);
@@ -289,7 +289,7 @@ const executeSelected = (command) => {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   padding: 2px 6px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
   box-shadow: 0 1px 1px rgba(0,0,0,0.05);
 }
 

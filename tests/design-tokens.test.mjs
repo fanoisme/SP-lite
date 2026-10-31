@@ -95,3 +95,42 @@ test('no raw hex literals in Li component styles (except mascot art)', async () 
   }
   assert.deepEqual(offenders, [], `hex literals in component skins (${offenders.length}):\n${offenders.join('\n')}`)
 })
+
+test('no invalid CSS left by token swaps: unbalanced parens on a var() line', async () => {
+  const files = await walkVue(SRC)
+  const offenders = []
+  for (const file of files) {
+    const text = await read(file)
+    const styles = text.match(/<style[^>]*>([\s\S]*?)<\/style>/g)?.join('\n') ?? ''
+    const lines = styles.split('\n')
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+      if (!line.includes('var(')) continue
+      const open = (line.match(/\(/g) || []).length
+      const close = (line.match(/\)/g) || []).length
+      if (open !== close) {
+        offenders.push(`${relative(ROOT, file)} [style+${i}] ${line.trim().slice(0, 70)}`)
+      }
+    }
+  }
+  assert.deepEqual(offenders, [], `invalid CSS declarations (${offenders.length}):\n${offenders.join('\n')}`)
+})
+
+test('no white-glass dark-mode breakers in view styles', async () => {
+  const files = await walkVue(SRC)
+  const offenders = []
+  for (const file of files) {
+    const text = await read(file)
+    const styles = text.match(/<style[^>]*>([\s\S]*?)<\/style>/g)?.join('\n') ?? ''
+    const lines = styles.split('\n')
+    for (let i = 0; i < lines.length; i++) {
+      if (/rgba\(\s*255\s*,\s*255\s*,\s*255/.test(lines[i]) && file.includes('modules')) {
+        offenders.push(`white-rgba: ${relative(ROOT, file)} ${lines[i].trim().slice(0, 60)}`)
+      }
+      if (/backdrop-filter/.test(lines[i]) && file.includes('modules')) {
+        offenders.push(`backdrop-filter: ${relative(ROOT, file)} ${lines[i].trim().slice(0, 60)}`)
+      }
+    }
+  }
+  assert.deepEqual(offenders, [], `dark-mode breakers (${offenders.length}):\n${offenders.join('\n')}`)
+})

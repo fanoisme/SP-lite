@@ -174,8 +174,8 @@ function tryClose() {
 .aud__avatar {
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-sm, 12px);
-  background: linear-gradient(135deg, var(--color-info-soft), var(--color-info-soft, #60A5FA));
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--color-info-soft), var(--color-info-soft));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -257,7 +257,7 @@ function tryClose() {
 
 .aud__chip {
   padding: 2px 10px;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   background: var(--color-surface-2);
   font-size: 11px;
   font-weight: 500;
@@ -304,7 +304,7 @@ function tryClose() {
   gap: var(--space-2);
   margin: 0;
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-md, 12px);
+  border-radius: var(--radius-md);
   background: var(--color-surface-2);
   font-size: 13px;
   color: var(--color-text-muted);
@@ -320,13 +320,13 @@ function tryClose() {
   padding: 10px 20px;
   background: none;
   border: 1.5px solid var(--color-border-strong);
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 13px;
   font-weight: 600;
   font-family: var(--font-sans);
   color: var(--color-text-muted);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
 }
 
 .aud__cancel-btn:hover {
@@ -339,12 +339,12 @@ function tryClose() {
   background: var(--color-accent);
   color: var(--color-on-accent);
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 13px;
   font-weight: 700;
   font-family: var(--font-sans);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
 }
 
 .aud__save-btn:hover:not(:disabled) {

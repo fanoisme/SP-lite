@@ -185,7 +185,7 @@ function formatDate(dateStr) {
 }
 
 .detail__qr-wrap {
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--color-bg);
   border-radius: var(--radius-lg);
   padding: 12px;
   display: flex;
@@ -230,12 +230,12 @@ function formatDate(dateStr) {
 }
 
 .detail__hl-value--valid {
-  color: var(--color-success, var(--color-success));
+  color: var(--color-success);
   font-weight: 600;
 }
 
 .detail__hl-value--invalid {
-  color: var(--color-danger, var(--color-danger));
+  color: var(--color-danger);
   font-weight: 600;
 }
 

@@ -278,7 +278,7 @@ async function onChangePassword() {
 .profile__header-badge {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-md, 16px);
+  border-radius: var(--radius-md);
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
   display: flex;
   align-items: center;
@@ -320,7 +320,7 @@ async function onChangePassword() {
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 500;
   margin-bottom: var(--space-4);
@@ -355,7 +355,7 @@ async function onChangePassword() {
   padding: var(--space-1);
   color: inherit;
   opacity: 0.5;
-  border-radius: var(--radius-xs, 8px);
+  border-radius: var(--radius-xs);
   transition: opacity 200ms var(--ease-out), background 200ms var(--ease-out);
 }
 
@@ -383,10 +383,8 @@ async function onChangePassword() {
 /* ── Card ── */
 .profile__card {
   background: var(--color-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--color-border, var(--color-border));
-  border-radius: var(--radius-lg, 24px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   padding: var(--space-6);
   box-shadow: var(--shadow-card);
   display: flex;
@@ -410,7 +408,7 @@ async function onChangePassword() {
 .profile__card-icon {
   width: 40px;
   height: 40px;
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm);
   background: var(--color-warning-soft);
   display: flex;
   align-items: center;
@@ -452,8 +450,8 @@ async function onChangePassword() {
 .profile__avatar {
   width: 56px;
   height: 56px;
-  border-radius: var(--radius-md, 16px);
-  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-soft), #FFA726));
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -485,7 +483,7 @@ async function onChangePassword() {
   display: inline-flex;
   align-items: center;
   padding: 2px 10px;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -546,11 +544,11 @@ async function onChangePassword() {
   width: 100%;
   padding: 10px 12px 10px 38px;
   border: 1.5px solid var(--color-border-strong);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm);
   font-size: 14px;
   font-family: var(--font-sans);
   color: var(--color-text);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--color-bg);
   outline: none;
   transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out), background 200ms var(--ease-out);
 }
@@ -558,7 +556,7 @@ async function onChangePassword() {
 .profile__input:focus {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 3px rgba(249, 199, 0, 0.12), var(--shadow-card);
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--color-bg);
 }
 
 .profile__input::placeholder {
@@ -566,7 +564,7 @@ async function onChangePassword() {
 }
 
 .profile__input:disabled {
-  background: var(--color-surface-2), #EDF0F2);
+  background: var(--color-surface-2);
   color: var(--color-text-muted);
   cursor: not-allowed;
 }
@@ -579,7 +577,7 @@ async function onChangePassword() {
   gap: var(--space-2);
   padding: 12px var(--space-6);
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 14px;
   font-weight: 700;
   font-family: var(--font-sans);
@@ -663,7 +661,7 @@ async function onChangePassword() {
   transform: translateY(-50%);
   width: 28px;
   height: 28px;
-  border-radius: var(--radius-xs, 8px);
+  border-radius: var(--radius-xs);
   border: none;
   background: transparent;
   color: var(--color-text-muted);

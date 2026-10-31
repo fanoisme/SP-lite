@@ -397,9 +397,9 @@ onMounted(() => {
 
 .ddexp__panel {
   display: flex; flex-direction: column; gap: var(--space-2);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--color-bg);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: var(--radius-md, 16px);
+  border-radius: var(--radius-md);
   padding: 18px 20px;
 }
 .ddexp__panel-head { display: flex; flex-direction: column; gap: 2px; }
@@ -413,21 +413,21 @@ onMounted(() => {
 .ddexp__error {
   font-size: 13px; color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08);
-  border-radius: var(--radius-sm, 12px); padding: 10px 14px; margin: 0;
+  border-radius: var(--radius-sm); padding: 10px 14px; margin: 0;
 }
 .ddexp__warn {
   font-size: 13px; color: var(--color-text);
   background: rgba(255, 188, 37, 0.14);
-  border-radius: var(--radius-sm, 12px); padding: 10px 14px; margin: 0;
+  border-radius: var(--radius-sm); padding: 10px 14px; margin: 0;
 }
 .ddexp__warn-list {
   font-size: 12px; color: var(--color-text); margin: 0;
   padding: 10px 14px 10px 30px; list-style: disc;
-  background: rgba(255, 188, 37, 0.14); border-radius: var(--radius-sm, 12px);
+  background: rgba(255, 188, 37, 0.14); border-radius: var(--radius-sm);
 }
 
 .ddexp__key {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  font-family: var(--font-mono); font-size: 12px;
   background: rgba(0, 0, 0, 0.04); border-radius: 5px; padding: 1px 6px;
 }
 /* A rename means the WHERE clause targets a key that is no longer on screen. */
@@ -440,7 +440,7 @@ onMounted(() => {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 .ddexp__target {
-  grid-column: 1; font-family: var(--font-mono, ui-monospace, monospace);
+  grid-column: 1; font-family: var(--font-mono);
   font-size: 11px; color: var(--color-text-placeholder);
 }
 .ddexp__rows {
@@ -455,7 +455,7 @@ onMounted(() => {
 
 .ddexp__code {
   background: var(--color-inverse);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm);
   padding: 14px 0; max-height: 55vh; overflow: auto;
 }
 .ddexp__line { display: flex; align-items: flex-start; gap: 12px; padding: 0 16px; }
@@ -463,11 +463,11 @@ onMounted(() => {
    the gutter must not smuggle line numbers into a production paste. */
 .ddexp__ln {
   user-select: none; flex: 0 0 44px; text-align: right;
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
   font-size: 11px; line-height: 1.75; color: #5d666f;
 }
 .ddexp__src {
-  flex: 1; font-family: var(--font-mono, ui-monospace, monospace);
+  flex: 1; font-family: var(--font-mono);
   font-size: 12px; line-height: 1.75; color: #E4E7EC;
   white-space: pre-wrap; word-break: break-word;
 }

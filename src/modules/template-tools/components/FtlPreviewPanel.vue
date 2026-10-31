@@ -44,7 +44,7 @@
             @click="renderFlyingSaucerPdf"
             :disabled="!inputFtl.trim() || pdf.rendering.value"
           >
-            <LiIcon :name="pdf.rendering.value ? 'hourglass_top' : 'sparkle'" />
+            <LiIcon :name="pdf.rendering.value ? 'hourglass' : 'sparkle'" />
             {{ pdf.rendering.value ? 'Rendering…' : 'Render Flying Saucer PDF' }}
           </button>
           <button
@@ -927,9 +927,7 @@ ${bodyHtml}
   padding: 10px 14px;
   border-radius: 16px;
   background: var(--color-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--color-bg);
   box-shadow: var(--shadow-card);
 }
 
@@ -954,7 +952,7 @@ ${bodyHtml}
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
-  transition: all var(--dur-quick) var(--ease-enter));
+  transition: all var(--dur-quick) var(--ease-enter);
 }
 
 .ftl-preview__tab .li-icon { font-size: 18px; }
@@ -997,7 +995,7 @@ ${bodyHtml}
   cursor: pointer;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(255, 188, 37, 0.3);
-  transition: all var(--dur-quick) var(--ease-enter));
+  transition: all var(--dur-quick) var(--ease-enter);
 }
 
 .ftl-preview__cta .li-icon { font-size: 18px; }
@@ -1013,7 +1011,7 @@ ${bodyHtml}
   position: absolute;
   top: 0; left: -100%;
   width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-bg) 30%, transparent), transparent);
   transition: left 0.5s ease;
   pointer-events: none;
 }
@@ -1021,7 +1019,7 @@ ${bodyHtml}
 
 .ftl-preview__btn-spinner {
   width: 16px; height: 16px;
-  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border: 2.5px solid color-mix(in srgb, currentColor 30%, transparent);
   border-top-color: var(--color-bg);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -1062,9 +1060,7 @@ ${bodyHtml}
   padding: 16px;
   border-radius: 16px;
   background: var(--color-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--color-bg);
   box-shadow: var(--shadow-card);
   min-width: 0;
 }
@@ -1084,8 +1080,6 @@ ${bodyHtml}
   justify-content: center;
   padding: var(--space-4);
   background: rgba(15, 17, 26, 0.55);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
 }
 .ftl-preview__modal {
   display: flex;
@@ -1094,11 +1088,9 @@ ${bodyHtml}
   max-height: 92vh;
   padding: 16px;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: var(--color-bg);
   border: 1px solid var(--color-bg);
-  box-shadow: var(--shadow-pop, 0 20px 60px rgba(0, 0, 0, 0.3));
+  box-shadow: var(--shadow-pop);
 }
 .ftl-preview__modal-head {
   display: flex;
@@ -1195,7 +1187,7 @@ ${bodyHtml}
 .ftl-preview__vars {
   border: 1px solid var(--color-border-strong);
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--color-surface);
   overflow: hidden;
 }
 .ftl-preview__vars-head {
@@ -1238,7 +1230,7 @@ ${bodyHtml}
   border: 1px solid rgba(200, 62, 59, 0.1);
   border-radius: 10px;
   font-size: 13px;
-  color: var(--color-danger, var(--color-danger));
+  color: var(--color-danger);
 }
 .ftl-preview__error .li-icon { font-size: 16px; }
 
@@ -1267,7 +1259,7 @@ ${bodyHtml}
   border-radius: 10px;
 }
 .ftl-preview__pending-info { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #065f46; }
-.ftl-preview__pending-info .li-icon { font-size: 18px; color: var(--color-success, var(--color-success)); }
+.ftl-preview__pending-info .li-icon { font-size: 18px; color: var(--color-success); }
 .ftl-preview__pending-actions { display: flex; gap: 6px; }
 .ftl-preview__pending-btn {
   display: inline-flex;
@@ -1349,7 +1341,7 @@ ${bodyHtml}
   position: absolute;
   z-index: 100;
   background: var(--color-inverse);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border-strong);
   border-radius: 12px;
   padding: 6px 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -1363,7 +1355,7 @@ ${bodyHtml}
   font-size: 11px;
   font-family: inherit;
   color: var(--color-on-inverse-muted);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--color-border);
   cursor: pointer;
   appearance: none;
   background-image: var(--select-arrow);
@@ -1382,16 +1374,16 @@ ${bodyHtml}
   font-size: 11px;
   font-family: inherit;
   color: var(--color-on-inverse-muted);
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--color-border);
   text-align: center;
 }
 .ftl-preview__tb-input:focus { outline: none; border-color: var(--color-accent); }
 .ftl-preview__tb-unit { font-size: 10px; color: var(--color-text-muted); font-weight: 500; }
-.ftl-preview__tb-divider { width: 1px; height: 20px; background: rgba(255, 255, 255, 0.1); margin: 0 2px; flex-shrink: 0; }
+.ftl-preview__tb-divider { width: 1px; height: 20px; background: var(--color-border-strong); margin: 0 2px; flex-shrink: 0; }
 .ftl-preview__tb-color-wrap { position: relative; display: flex; align-items: center; gap: 2px; }
 .ftl-preview__tb-color {
   width: 26px; height: 26px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid color-mix(in srgb, var(--color-on-inverse) 15%, transparent);
   border-radius: 6px;
   cursor: pointer;
   padding: 1px;
@@ -1418,10 +1410,10 @@ ${bodyHtml}
   flex-shrink: 0;
 }
 .ftl-preview__tb-btn .li-icon { font-size: 17px; }
-.ftl-preview__tb-btn:hover { color: var(--color-on-inverse-muted); background: rgba(255, 255, 255, 0.08); }
+.ftl-preview__tb-btn:hover { color: var(--color-on-inverse-muted); background: color-mix(in srgb, var(--color-on-inverse) 8%, transparent); }
 .ftl-preview__tb-btn--active { color: var(--color-accent); background: rgba(255, 188, 37, 0.12); }
 .ftl-preview__tb-btn--active:hover { background: rgba(255, 188, 37, 0.18); }
-.ftl-preview__tb-btn--save { color: var(--color-success, var(--color-success)); }
+.ftl-preview__tb-btn--save { color: var(--color-success); }
 .ftl-preview__tb-btn--save:hover { background: rgba(16, 185, 129, 0.12); }
 .ftl-preview__tb-btn--cancel { color: #e74c3c; }
 .ftl-preview__tb-btn--cancel:hover { background: rgba(231, 76, 60, 0.12); }
@@ -1477,7 +1469,7 @@ ${bodyHtml}
 .ftl-preview__java-warn a { color: #c45e00; text-decoration: underline; }
 
 /* ── Transitions (preserved) ── */
-.badge-pop-enter-active { transition: all 0.4s var(--ease-spring)); }
+.badge-pop-enter-active { transition: all 0.4s var(--ease-spring); }
 .badge-pop-leave-active { transition: all 0.2s ease; }
 .badge-pop-enter-from { opacity: 0; transform: scale(0.9) translateY(-4px); }
 .badge-pop-leave-to { opacity: 0; }
@@ -1489,7 +1481,7 @@ ${bodyHtml}
 .view-fade-leave-active { transition: all 0.15s ease-in; }
 .view-fade-enter-from { opacity: 0; transform: translateY(8px); }
 .view-fade-leave-to { opacity: 0; }
-.toolbar-pop-enter-active { transition: all 0.25s var(--ease-spring)); }
+.toolbar-pop-enter-active { transition: all 0.25s var(--ease-spring); }
 .toolbar-pop-leave-active { transition: all 0.15s ease-in; }
 .toolbar-pop-enter-from { opacity: 0; transform: scale(0.92) translateY(6px); }
 .toolbar-pop-leave-to { opacity: 0; transform: scale(0.95); }

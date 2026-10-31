@@ -131,7 +131,7 @@ function updateValue(name, value) {
 
 /* Transition */
 .vars-pop-enter-active {
-  transition: all 0.4s var(--ease-spring));
+  transition: all 0.4s var(--ease-spring);
 }
 .vars-pop-leave-active {
   transition: all 0.2s ease;

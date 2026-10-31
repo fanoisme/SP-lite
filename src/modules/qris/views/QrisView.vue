@@ -270,7 +270,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  animation: qris-reveal 0.6s var(--ease-enter)) both;
+  animation: qris-reveal 0.6s var(--ease-enter) both;
 }
 
 @keyframes qris-reveal {
@@ -280,7 +280,7 @@ onUnmounted(() => {
 
 /* ── Header ── */
 .qris__header {
-  animation: header-reveal 0.6s var(--ease-enter)) both;
+  animation: header-reveal 0.6s var(--ease-enter) both;
 }
 
 @keyframes header-reveal {
@@ -309,7 +309,7 @@ onUnmounted(() => {
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
   border-radius: var(--radius-md);
   box-shadow: 0 4px 16px rgba(255, 188, 37, 0.3);
-  transition: transform var(--dur-medium) var(--ease-spring));
+  transition: transform var(--dur-medium) var(--ease-spring);
 }
 
 .qris__icon-badge:hover {
@@ -338,7 +338,7 @@ onUnmounted(() => {
 
 /* ── Tabs ── */
 .qris__tabs-wrapper {
-  animation: tabs-reveal 0.6s 0.1s var(--ease-enter)) both;
+  animation: tabs-reveal 0.6s 0.1s var(--ease-enter) both;
 }
 
 @keyframes tabs-reveal {
@@ -349,10 +349,8 @@ onUnmounted(() => {
 .qris__tabs {
   display: flex;
   position: relative;
-  background: var(--color-bg), var(--color-bg));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border), rgba(0, 0, 0, 0.06));
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 5px;
   gap: 2px;
@@ -387,7 +385,7 @@ onUnmounted(() => {
   color: var(--color-text-muted);
   transition:
     color var(--dur-medium) var(--ease-out),
-    transform var(--dur-medium) var(--ease-spring));
+    transform var(--dur-medium) var(--ease-spring);
 }
 
 .qris__tab--active .qris__tab-icon {
@@ -424,7 +422,7 @@ onUnmounted(() => {
   background: var(--color-bg);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
-  transition: all 0.35s var(--ease-spring));
+  transition: all 0.35s var(--ease-spring);
   z-index: 0;
 }
 
@@ -439,7 +437,7 @@ onUnmounted(() => {
 
 /* ── Panel Fade Transition ── */
 .panel-fade-enter-active {
-  transition: all 0.35s var(--ease-enter));
+  transition: all 0.35s var(--ease-enter);
 }
 
 .panel-fade-leave-active {
@@ -463,7 +461,7 @@ onUnmounted(() => {
   gap: var(--space-2);
   margin-bottom: var(--space-4);
   padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--color-border-strong));
+  border-bottom: 1px solid var(--color-border-strong);
 }
 
 .qris__section-icon {
@@ -489,15 +487,13 @@ onUnmounted(() => {
 
 .qris__left,
 .qris__right {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--color-border), var(--color-bg));
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
   box-shadow: var(--shadow-card);
   transition: box-shadow var(--dur-long) var(--ease-out);
-  animation: card-stagger 0.5s var(--ease-enter)) both;
+  animation: card-stagger 0.5s var(--ease-enter) both;
 }
 
 .qris__left {
@@ -523,7 +519,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  animation: result-enter 0.4s var(--ease-enter)) both;
+  animation: result-enter 0.4s var(--ease-enter) both;
 }
 
 @keyframes result-enter {
@@ -535,9 +531,9 @@ onUnmounted(() => {
   display: flex;
   justify-content: center;
   padding: var(--space-6);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--color-bg);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border), var(--color-bg));
+  border: 1px solid var(--color-border);
 }
 
 .qris__qr-img {
@@ -602,14 +598,12 @@ onUnmounted(() => {
 
 /* ── History View ── */
 .qris__history-view {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--color-border), var(--color-bg));
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-6);
   box-shadow: var(--shadow-card);
-  animation: card-stagger 0.5s 0.15s var(--ease-enter)) both;
+  animation: card-stagger 0.5s 0.15s var(--ease-enter) both;
 }
 
 /* ── Reduced Motion ── */

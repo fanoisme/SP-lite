@@ -150,7 +150,7 @@ function copyRaw() {
 /* ── Raw Value ── */
 .tag-viewer__raw {
   background: var(--color-bg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-lg);
   padding: 12px;
 }
@@ -233,7 +233,7 @@ function copyRaw() {
 /* ── Tag Table ── */
 .tag-viewer__table-wrap {
   background: var(--color-bg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-lg);
   overflow: hidden;
   overflow-x: auto;

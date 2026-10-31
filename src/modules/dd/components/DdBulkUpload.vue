@@ -780,7 +780,7 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
 .ddbulk__tpl { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
 .ddbulk__cols {
   flex: 1; min-width: 0;
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 10.5px;
+  font-family: var(--font-mono); font-size: 10.5px;
   color: var(--color-text-muted);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
@@ -796,7 +796,7 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
   content: ''; flex: 1; height: 1px; background: var(--color-border-strong);
 }
 .ddbulk__paste :deep(textarea) {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px; white-space: pre;
+  font-family: var(--font-mono); font-size: 12px; white-space: pre;
 }
 
 .ddbulk__error {
@@ -825,7 +825,7 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
 .ddbulk__detail { display: flex; flex-direction: column; gap: var(--space-3); }
 .ddbulk__detail-head { display: flex; align-items: center; gap: 8px; }
 .ddbulk__detail-key {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  font-family: var(--font-mono); font-size: 12px;
   background: rgba(0,0,0,0.04); border-radius: 5px; padding: 2px 7px;
 }
 .ddbulk__detail-problems {
@@ -842,7 +842,7 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
 .ddbulk__detail-fields dd { margin: 0; padding: 8px 12px; background: var(--color-bg); font-size: 13px; }
 .ddbulk__detail-fields dt { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; color: var(--color-text); }
 .ddbulk__detail-fields dt code {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11px;
+  font-family: var(--font-mono); font-size: 11px;
   color: var(--color-text-placeholder);
 }
 .ddbulk__detail-fields dt.is-missing { background: rgba(0,0,0,0.02); }

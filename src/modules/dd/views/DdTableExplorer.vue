@@ -537,13 +537,13 @@ onMounted(() => activate(meta.value?.id ?? null))
 /* The downstream table name is the title, in the schema's own typeface — this
    screen is about the table as it exists, not about its friendly label. */
 .ddexpl__title {
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
   font-size: 22px; font-weight: 700; margin: 0; letter-spacing: -0.3px;
   overflow-wrap: anywhere;
 }
 .ddexpl__sub {
   display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
   font-size: 12px; color: var(--color-text-muted); margin: 4px 0 0;
 }
 .ddexpl__sub .li-icon { font-size: 15px; }
@@ -566,7 +566,7 @@ onMounted(() => activate(meta.value?.id ?? null))
 .ddexpl__btn {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 16px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
+  border-radius: var(--radius-pill); background: transparent;
   font-family: var(--font-sans);
   font-size: 13px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms; white-space: nowrap;
@@ -599,11 +599,11 @@ onMounted(() => activate(meta.value?.id ?? null))
 .ddexpl__link:hover { text-decoration: underline; }
 .ddexpl__colopt {
   display: flex; align-items: center; gap: 8px;
-  padding: 5px 8px; border-radius: var(--radius-sm, 8px); cursor: pointer;
+  padding: 5px 8px; border-radius: var(--radius-sm); cursor: pointer;
 }
 .ddexpl__colopt:hover { background: rgba(0, 0, 0, 0.04); }
 .ddexpl__colopt code {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  font-family: var(--font-mono); font-size: 12px;
   flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 /* Stamps are off by default, so they read as the secondary set they are. */
@@ -616,7 +616,7 @@ onMounted(() => activate(meta.value?.id ?? null))
 }
 .ddexpl__reset {
   padding: 10px 18px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
+  border-radius: var(--radius-pill); background: transparent;
   font-family: var(--font-sans);
   font-size: 13px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms;
@@ -626,12 +626,12 @@ onMounted(() => activate(meta.value?.id ?? null))
 .ddexpl__colfilters {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: var(--space-2);
-  padding: 14px; border-radius: var(--radius-sm, 12px);
+  padding: 14px; border-radius: var(--radius-sm);
   background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.06);
 }
 .ddexpl__colfilter { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .ddexpl__colfilter-label {
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
   font-size: 11px; color: var(--color-text-muted);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
@@ -639,20 +639,20 @@ onMounted(() => activate(meta.value?.id ?? null))
 .ddexpl__error {
   font-size: 13px; color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08);
-  border-radius: var(--radius-sm, 12px); padding: 10px 14px; margin: 0;
+  border-radius: var(--radius-sm); padding: 10px 14px; margin: 0;
 }
 .ddexpl__pagination { display: flex; justify-content: center; }
 
 .ddexpl__stale {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 14px; border-radius: var(--radius-sm, 12px);
+  padding: 10px 14px; border-radius: var(--radius-sm);
   background: rgba(255, 188, 37, 0.12);
   border: 1px solid rgba(255, 188, 37, 0.35);
 }
 .ddexpl__stale .li-icon { font-size: 19px; color: var(--color-accent-text); }
 .ddexpl__stale-text { margin: 0; flex: 1; font-size: 13px; color: var(--color-text); }
 .ddexpl__stale-action {
-  padding: 6px 14px; border: none; border-radius: var(--radius-pill, 999px);
+  padding: 6px 14px; border: none; border-radius: var(--radius-pill);
   background: var(--color-accent); color: var(--color-on-accent);
   font-family: var(--font-sans);
   font-size: 12px; font-weight: 700; cursor: pointer; transition: all 200ms;
@@ -667,7 +667,7 @@ onMounted(() => activate(meta.value?.id ?? null))
 /* Every cell is monospaced: aligned digits are how a person spots the row whose
    percentage has one decimal too many. */
 .ddexpl__raw {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  font-family: var(--font-mono); font-size: 12px;
   display: inline-block; max-width: 260px;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom;
 }
@@ -681,7 +681,7 @@ onMounted(() => activate(meta.value?.id ?? null))
 .ddexpl__row-actions { display: inline-flex; align-items: center; gap: 2px; }
 .ddexpl__icon-btn {
   background: none; border: none; cursor: pointer; padding: 6px;
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm);
   display: inline-flex; align-items: center; justify-content: center;
   color: var(--color-text-placeholder); transition: all 200ms;
 }
@@ -691,7 +691,7 @@ onMounted(() => activate(meta.value?.id ?? null))
 
 .ddexpl__confirm { margin: 0 0 8px; font-size: 14px; color: var(--color-text-strong); }
 .ddexpl__confirm code {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  font-family: var(--font-mono); font-size: 12px;
   background: rgba(0, 0, 0, 0.04); border-radius: 5px; padding: 1px 6px;
 }
 .ddexpl__confirm-note { margin: 0; font-size: 12.5px; color: var(--color-text-muted); }

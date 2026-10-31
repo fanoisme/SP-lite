@@ -210,7 +210,7 @@ onUnmounted(() => {
   padding: 0 var(--space-3) 0 40px;
   background-color: var(--color-bg);
   border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md, 8px);
+  border-radius: var(--radius-md);
   font-family: inherit;
   font-size: var(--text-base);
   color: var(--color-text-strong);
@@ -238,7 +238,7 @@ onUnmounted(() => {
 
 .li-datepicker-hint,
 .li-datepicker-error {
-  font-size: var(--text-micro, 12px);
+  font-size: var(--text-micro);
 }
 
 .li-datepicker-hint {
@@ -256,8 +256,8 @@ onUnmounted(() => {
   left: 0;
   width: 280px;
   background-color: var(--color-bg);
-  border-radius: var(--radius-md, 8px);
-  box-shadow: var(--shadow-pop, 0 8px 24px rgba(0, 0, 0, 0.1));
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
   border: 1px solid var(--color-border);
   padding: var(--space-3);
   z-index: 1000;
@@ -282,7 +282,7 @@ onUnmounted(() => {
   color: var(--color-text-muted);
   cursor: pointer;
   padding: 4px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
   display: flex;
 }
 
@@ -295,7 +295,7 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
-  font-size: var(--text-micro, 12px);
+  font-size: var(--text-micro);
   font-weight: 500;
   color: var(--color-text-muted);
   margin-bottom: var(--space-2);
@@ -311,8 +311,8 @@ onUnmounted(() => {
   aspect-ratio: 1;
   background: transparent;
   border: none;
-  border-radius: var(--radius-sm, 4px);
-  font-size: var(--text-sm, 14px);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
   color: var(--color-text-strong);
   cursor: pointer;
   display: flex;

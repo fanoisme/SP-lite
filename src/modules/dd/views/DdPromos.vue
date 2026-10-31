@@ -559,7 +559,7 @@ onMounted(() => {
 .ddpromo__stale-x .li-icon { font-size: 17px; color: inherit; }
 
 .ddpromo__code {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  font-family: var(--font-mono); font-size: 12px;
   background: var(--color-border); border-radius: 5px; padding: 1px 6px;
 }
 .ddpromo__name { font-weight: 600; }

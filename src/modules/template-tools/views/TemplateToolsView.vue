@@ -183,8 +183,6 @@ onMounted(() => {
   display: flex;
   position: relative;
   background: var(--color-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 16px;
   padding: 5px;
@@ -203,7 +201,7 @@ onMounted(() => {
   background: transparent;
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.3s var(--ease-enter));
+  transition: all 0.3s var(--ease-enter);
   position: relative;
   z-index: 1;
 }
@@ -219,7 +217,7 @@ onMounted(() => {
 .tpl-tools__tab-icon {
   font-size: 22px;
   color: var(--color-text-muted);
-  transition: color 0.3s ease, transform 0.3s var(--ease-spring));
+  transition: color 0.3s ease, transform 0.3s var(--ease-spring);
 }
 
 .tpl-tools__tab--active .tpl-tools__tab-icon {
@@ -256,7 +254,7 @@ onMounted(() => {
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px var(--color-border);
-  transition: all 0.35s var(--ease-spring));
+  transition: all 0.35s var(--ease-spring);
   z-index: 0;
 }
 
@@ -271,9 +269,7 @@ onMounted(() => {
 }
 
 .tpl-tools__card {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: var(--color-bg);
   border: 1px solid var(--color-bg);
   border-radius: 20px;
   padding: var(--space-4);

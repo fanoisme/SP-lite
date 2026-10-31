@@ -107,10 +107,10 @@ defineEmits(['open-module', 'toggle-enabled'])
   padding: var(--space-4);
   background: var(--color-bg);
   border: 1px solid var(--color-surface-2);
-  border-radius: var(--radius-md, 16px);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
 }
 
 .adm-modules__card:hover {
@@ -179,13 +179,13 @@ defineEmits(['open-module', 'toggle-enabled'])
   cursor: pointer;
   user-select: none;
   padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   background: var(--color-border);
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
 }
 
 .adm-modules__switch.is-on {
-  color: var(--color-success, #10b981);
+  color: var(--color-success);
   background: rgba(16, 185, 129, 0.1);
 }
 
@@ -213,7 +213,7 @@ defineEmits(['open-module', 'toggle-enabled'])
 
 .adm-modules__card-cta .li-icon {
   font-size: 16px;
-  transition: transform var(--dur-short, 200ms) var(--ease-out);
+  transition: transform var(--dur-short) var(--ease-out);
 }
 
 .adm-modules__card:hover .adm-modules__card-cta {

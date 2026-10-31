@@ -110,12 +110,12 @@ async function onToggle(on) {
   cursor: pointer;
   user-select: none;
   padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   background: var(--color-border);
 }
 
 .amd__switch.is-on {
-  color: var(--color-success, #10b981);
+  color: var(--color-success);
   background: rgba(16, 185, 129, 0.1);
 }
 
@@ -180,7 +180,7 @@ async function onToggle(on) {
   font-weight: 600;
   color: var(--color-text-muted);
   background: var(--color-border);
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
 }
 
 .amd__done-btn {
@@ -188,12 +188,12 @@ async function onToggle(on) {
   background: var(--color-accent);
   color: var(--color-on-accent);
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 13px;
   font-weight: 700;
   font-family: var(--font-sans);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
 }
 
 .amd__done-btn:hover {

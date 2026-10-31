@@ -374,7 +374,7 @@ onMounted(() => {
 .ddbu__name { font-weight: 600; font-size: 13px; }
 .ddbu__acct { display: flex; flex-direction: column; max-width: 240px; }
 .ddbu__acct-num {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11.5px;
+  font-family: var(--font-mono); font-size: 11.5px;
   overflow-wrap: anywhere;
 }
 .ddbu__acct-name {

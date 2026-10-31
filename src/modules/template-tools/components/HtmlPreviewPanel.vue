@@ -66,7 +66,7 @@
                 @click="toggleWysiwyg"
                 :title="wysiwygMode ? 'Disable inline editing' : 'Enable inline editing'"
               >
-                <LiIcon :name="wysiwygMode ? 'edit_off' : 'pencil'" />
+                <LiIcon :name="wysiwygMode ? 'pencil-off' : 'pencil'" />
                 {{ wysiwygMode ? 'Editing' : 'Edit' }}
               </button>
             </Transition>
@@ -809,7 +809,7 @@ onBeforeUnmount(() => {
   gap: 6px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-success, var(--color-success));
+  color: var(--color-success);
   padding: 4px 10px;
   background: rgba(16, 185, 129, 0.08);
   border-radius: 20px;
@@ -819,7 +819,7 @@ onBeforeUnmount(() => {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--color-success, var(--color-success));
+  background: var(--color-success);
   animation: livePulse 1.5s infinite;
 }
 
@@ -857,7 +857,7 @@ onBeforeUnmount(() => {
 .html-preview__wysiwyg-toggle--active {
   background: rgba(16, 185, 129, 0.08);
   border-color: rgba(16, 185, 129, 0.3);
-  color: var(--color-success, var(--color-success));
+  color: var(--color-success);
 }
 
 /* ── Hint ── */
@@ -872,7 +872,7 @@ onBeforeUnmount(() => {
   gap: 6px;
   padding: 6px 14px;
   background: rgba(26, 26, 46, 0.85);
-  backdrop-filter: blur(8px);
+  
   border-radius: 8px;
   font-size: 12px;
   font-weight: 500;
@@ -949,8 +949,8 @@ onBeforeUnmount(() => {
   position: absolute;
   z-index: 100;
   background: rgba(26, 26, 46, 0.95);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  border: 1px solid var(--color-border-strong);
   border-radius: 10px;
   padding: 6px 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -965,7 +965,7 @@ onBeforeUnmount(() => {
 }
 
 .html-preview__tb-select {
-  background: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--color-on-inverse) 8%, transparent);
   border: 1px solid var(--color-border);
   border-radius: 6px;
   color: var(--color-on-inverse-muted);
@@ -989,7 +989,7 @@ onBeforeUnmount(() => {
 
 .html-preview__tb-input {
   width: 44px;
-  background: rgba(255, 255, 255, 0.08);
+  background: color-mix(in srgb, var(--color-on-inverse) 8%, transparent);
   border: 1px solid var(--color-border);
   border-radius: 6px;
   color: var(--color-on-inverse-muted);
@@ -1021,7 +1021,7 @@ onBeforeUnmount(() => {
 .html-preview__tb-color {
   width: 24px;
   height: 24px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid color-mix(in srgb, var(--color-on-inverse) 15%, transparent);
   border-radius: 6px;
   cursor: pointer;
   padding: 0;
@@ -1070,7 +1070,7 @@ onBeforeUnmount(() => {
 }
 
 .html-preview__tb-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-border-strong);
   color: var(--color-bg);
 }
 
@@ -1081,7 +1081,7 @@ onBeforeUnmount(() => {
 
 .html-preview__tb-btn--save {
   background: rgba(16, 185, 129, 0.2);
-  color: var(--color-success, var(--color-success));
+  color: var(--color-success);
 }
 
 .html-preview__tb-btn--save:hover {
@@ -1099,7 +1099,7 @@ onBeforeUnmount(() => {
 
 /* ── Transitions ── */
 .badge-pop-enter-active {
-  transition: all 0.4s var(--ease-spring));
+  transition: all 0.4s var(--ease-spring);
 }
 .badge-pop-leave-active { transition: all 0.2s ease; }
 .badge-pop-enter-from {
@@ -1122,7 +1122,7 @@ onBeforeUnmount(() => {
 .view-fade-leave-to { opacity: 0; }
 
 .toolbar-pop-enter-active {
-  transition: all 0.3s var(--ease-spring));
+  transition: all 0.3s var(--ease-spring);
 }
 .toolbar-pop-leave-active { transition: all 0.15s ease; }
 .toolbar-pop-enter-from {

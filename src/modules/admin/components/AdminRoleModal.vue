@@ -71,7 +71,7 @@ async function onSubmit() {
   color: var(--color-danger);
   padding: var(--space-2);
   background: var(--color-danger-soft);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm);
 }
 
 .adm-rmodal__error .li-icon {

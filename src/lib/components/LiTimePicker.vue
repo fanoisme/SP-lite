@@ -213,7 +213,7 @@ onUnmounted(() => {
   padding: 0 var(--space-3) 0 40px;
   background-color: var(--color-bg);
   border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md, 8px);
+  border-radius: var(--radius-md);
   font-family: inherit;
   font-size: var(--text-base);
   color: var(--color-text-strong);
@@ -241,7 +241,7 @@ onUnmounted(() => {
 
 .li-timepicker-hint,
 .li-timepicker-error {
-  font-size: var(--text-micro, 12px);
+  font-size: var(--text-micro);
 }
 
 .li-timepicker-hint {
@@ -259,8 +259,8 @@ onUnmounted(() => {
   left: 0;
   width: 200px;
   background-color: var(--color-bg);
-  border-radius: var(--radius-md, 8px);
-  box-shadow: var(--shadow-pop, 0 8px 24px rgba(0, 0, 0, 0.1));
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
   border: 1px solid var(--color-border);
   z-index: 1000;
   overflow: hidden;
@@ -293,7 +293,7 @@ onUnmounted(() => {
 .li-time-item {
   padding: var(--space-2) 0;
   text-align: center;
-  font-size: var(--text-sm, 14px);
+  font-size: var(--text-sm);
   color: var(--color-text);
   cursor: pointer;
   transition: all var(--dur-quick);
@@ -324,7 +324,7 @@ onUnmounted(() => {
   font-weight: 500;
   cursor: pointer;
   padding: 4px 12px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
 }
 
 .li-time-btn-clear {

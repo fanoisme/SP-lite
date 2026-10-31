@@ -143,7 +143,7 @@ onUnmounted(() => {
   color: var(--color-text-muted);
   cursor: pointer;
   padding: 4px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;

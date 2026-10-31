@@ -369,7 +369,7 @@ async function renderPdf() {
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
-  transition: all 0.3s var(--ease-enter));
+  transition: all 0.3s var(--ease-enter);
   align-self: flex-start;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(255, 188, 37, 0.3);
@@ -400,7 +400,7 @@ async function renderPdf() {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--color-bg) 30%, transparent), transparent);
   transition: left 0.5s ease;
 }
 
@@ -503,7 +503,7 @@ async function renderPdf() {
 }
 
 .badge-pop-enter-active {
-  transition: all 0.4s var(--ease-spring));
+  transition: all 0.4s var(--ease-spring);
 }
 .badge-pop-leave-active {
   transition: all 0.2s ease;

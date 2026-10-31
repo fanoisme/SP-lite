@@ -73,7 +73,7 @@
           </div>
           <div class="vf__toolbar-actions">
             <button class="vf__btn vf__btn--sm" @click="toggleAll">
-              <LiIcon :name="allSelected ? 'square-x' : 'select_all'" />
+              <LiIcon :name="allSelected ? 'square-x' : 'list-checks'" />
               {{ allSelected ? 'Deselect All' : 'Select All' }}
             </button>
             <button class="vf__btn vf__btn--sm vf__btn--primary" @click="download(false)">
@@ -101,7 +101,7 @@
             @click="toggleSelect(i)"
           >
             <div class="vf__card-check">
-              <LiIcon :name="frame.selected ? 'check_box' : 'check_box_outline_blank'" />
+              <LiIcon :name="frame.selected ? 'square-check' : 'square'" />
             </div>
             <img :src="frame._url" class="vf__thumb" loading="lazy" />
             <div class="vf__card-meta">
@@ -186,14 +186,14 @@ async function download(selectedOnly) {
 }
 
 .vf__title {
-  font-size: var(--text-xl), 24px);
+  font-size: var(--text-xl);
   font-weight: 700;
   color: var(--color-text-strong);
   margin: 0 0 var(--space-1);
 }
 
 .vf__subtitle {
-  font-size: var(--text-sm, 13px);
+  font-size: var(--text-sm);
   color: var(--color-text-muted);
   margin: 0;
 }
@@ -212,8 +212,8 @@ async function download(selectedOnly) {
   gap: var(--space-2);
   padding: var(--space-8) var(--space-4);
   border: 2px dashed var(--color-border-strong);
-  border-radius: var(--radius-lg, 16px);
-  background: var(--color-bg), rgba(255, 255, 255, 0.6));
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -226,19 +226,19 @@ async function download(selectedOnly) {
 
 .vf__upload-icon { font-size: 40px; color: var(--color-text-placeholder); }
 .vf__upload-text { font-weight: 600; color: var(--color-text); }
-.vf__upload-hint { font-size: var(--text-xs, 11px); color: var(--color-text-placeholder); }
+.vf__upload-hint { font-size: var(--text-xs); color: var(--color-text-placeholder); }
 
 /* ── Slider ── */
 .vf__options { display: flex; flex-direction: column; gap: var(--space-1); }
 
 .vf__slider-label {
   display: flex; justify-content: space-between;
-  font-size: var(--text-sm, 13px); font-weight: 600; color: var(--color-text);
+  font-size: var(--text-sm); font-weight: 600; color: var(--color-text);
 }
 
 .vf__slider-value { color: var(--color-accent); font-weight: 700; }
 .vf__slider { width: 100%; accent-color: var(--color-accent); }
-.vf__slider-hint { font-size: var(--text-xs, 11px); color: var(--color-text-placeholder); }
+.vf__slider-hint { font-size: var(--text-xs); color: var(--color-text-placeholder); }
 
 /* ── Actions ── */
 .vf__actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
@@ -246,8 +246,8 @@ async function download(selectedOnly) {
 .vf__btn {
   display: inline-flex; align-items: center; gap: var(--space-1);
   padding: var(--space-2) var(--space-4);
-  font-size: var(--text-sm, 13px); font-weight: 600;
-  border: none; border-radius: var(--radius-md, 12px);
+  font-size: var(--text-sm); font-weight: 600;
+  border: none; border-radius: var(--radius-md);
   cursor: pointer; transition: all 0.2s ease;
   background: var(--color-surface-2); color: var(--color-text);
 }
@@ -263,7 +263,7 @@ async function download(selectedOnly) {
 
 .vf__btn--sm {
   padding: var(--space-1) var(--space-3);
-  font-size: var(--text-xs, 11px);
+  font-size: var(--text-xs);
 }
 
 .vf__btn .li-icon { font-size: 18px; }
@@ -272,9 +272,9 @@ async function download(selectedOnly) {
 .vf__progress {
   display: flex; align-items: center; gap: var(--space-2);
   padding: var(--space-3);
-  background: var(--color-bg), rgba(255, 255, 255, 0.6));
-  border-radius: var(--radius-md, 12px);
-  font-size: var(--text-sm, 13px); color: var(--color-text-muted);
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm); color: var(--color-text-muted);
 }
 
 .vf__spinner {
@@ -291,14 +291,14 @@ async function download(selectedOnly) {
 .vf__error {
   display: flex; align-items: center; gap: var(--space-2);
   padding: var(--space-3);
-  background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-md, 12px);
-  font-size: var(--text-sm, 13px); color: var(--color-danger);
+  background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-md);
+  font-size: var(--text-sm); color: var(--color-danger);
 }
 .vf__error .li-icon { font-size: 18px; }
 
 .vf__status {
   display: flex; align-items: center; gap: var(--space-2);
-  font-size: var(--text-sm, 13px); color: var(--color-success), var(--color-success));
+  font-size: var(--text-sm); color: var(--color-success);
 }
 .vf__status .li-icon { font-size: 18px; }
 
@@ -307,18 +307,18 @@ async function download(selectedOnly) {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
   gap: var(--space-2);
   padding: var(--space-3);
-  background: var(--color-bg), rgba(255, 255, 255, 0.6));
-  border-radius: var(--radius-md, 12px);
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
 }
 
 .vf__toolbar-info {
   display: flex; align-items: center; gap: var(--space-2);
-  font-size: var(--text-sm, 13px); color: var(--color-text-muted);
+  font-size: var(--text-sm); color: var(--color-text-muted);
 }
 
 .vf__toolbar-count { font-weight: 700; color: var(--color-text); }
-.vf__toolbar-size { font-size: var(--text-xs, 11px); color: var(--color-text-placeholder); }
+.vf__toolbar-size { font-size: var(--text-xs); color: var(--color-text-placeholder); }
 .vf__toolbar-sep { color: var(--color-border-strong); }
 .vf__toolbar-selected { font-weight: 600; color: var(--color-accent); }
 
@@ -335,9 +335,9 @@ async function download(selectedOnly) {
 
 .vf__card {
   position: relative;
-  border-radius: var(--radius-md, 12px);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  background: var(--color-bg), var(--color-bg));
+  background: var(--color-bg);
   box-shadow: var(--shadow-card);
   border: 2px solid transparent;
   cursor: pointer;
@@ -382,7 +382,7 @@ async function download(selectedOnly) {
 
 .vf__card-label {
   display: block;
-  font-size: var(--text-sm, 13px);
+  font-size: var(--text-sm);
   font-weight: 700;
   color: var(--color-text);
   margin-bottom: var(--space-1);

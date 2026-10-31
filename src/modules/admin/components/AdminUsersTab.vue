@@ -72,7 +72,7 @@
               :title="row.is_active ? 'Deactivate account' : 'Activate account'"
               @click="$emit('update-active', row.id, !row.is_active)"
             >
-              <LiIcon :name="row.is_active ? 'circle-check' : 'hourglass_empty'" />
+              <LiIcon :name="row.is_active ? 'circle-check' : 'hourglass'" />
             </button>
             <button
               class="adm-users__manage-btn"
@@ -195,12 +195,12 @@ function formatDate(dateStr) {
   background: var(--color-accent);
   color: var(--color-on-accent);
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-weight: 600;
   font-size: 13px;
   font-family: var(--font-sans);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
   white-space: nowrap;
 }
 
@@ -240,8 +240,8 @@ function formatDate(dateStr) {
 .adm-users__avatar {
   width: 28px;
   height: 28px;
-  border-radius: var(--radius-xs, 8px);
-  background: linear-gradient(135deg, var(--color-info-soft), var(--color-info-soft, #60A5FA));
+  border-radius: var(--radius-xs);
+  background: linear-gradient(135deg, var(--color-info-soft), var(--color-info-soft));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -274,8 +274,8 @@ function formatDate(dateStr) {
   border: none;
   cursor: pointer;
   padding: var(--space-2);
-  border-radius: var(--radius-sm, 12px);
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  border-radius: var(--radius-sm);
+  transition: all var(--dur-short) var(--ease-out);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -286,7 +286,7 @@ function formatDate(dateStr) {
 }
 
 .adm-users__status-btn.is-active {
-  color: var(--color-success, var(--color-success));
+  color: var(--color-success);
 }
 
 .adm-users__status-btn.is-pending {
@@ -307,9 +307,9 @@ function formatDate(dateStr) {
   border: none;
   cursor: pointer;
   padding: var(--space-2);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm);
   color: var(--color-text-placeholder);
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -346,9 +346,9 @@ function formatDate(dateStr) {
   border: none;
   cursor: pointer;
   padding: var(--space-2);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm);
   color: var(--color-text-placeholder);
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
   display: inline-flex;
   align-items: center;
   justify-content: center;

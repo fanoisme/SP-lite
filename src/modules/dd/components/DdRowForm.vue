@@ -22,7 +22,7 @@
         </template>
       </p>
       <button class="ddrf__toggle" type="button" :aria-pressed="jsonMode" @click="toggleJson">
-        <LiIcon :name="jsonMode ? 'view_list' : 'braces'" />
+        <LiIcon :name="jsonMode ? 'list' : 'braces'" />
         {{ jsonMode ? 'Fields' : 'Raw JSON' }}
       </button>
     </div>
@@ -270,7 +270,7 @@ async function submit() {
 
 <style scoped>
 .ddrf__head { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
-.ddrf__table { font-family: var(--font-mono, ui-monospace, monospace); color: var(--color-accent-text); }
+.ddrf__table { font-family: var(--font-mono); color: var(--color-accent-text); }
 
 .ddrf__lead {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
@@ -281,7 +281,7 @@ async function submit() {
   color: var(--color-text-muted);
 }
 .ddrf__lead-text code, .ddrf__label code, .ddrf__stamp code {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11.5px;
+  font-family: var(--font-mono); font-size: 11.5px;
   background: var(--color-border); border-radius: 5px; padding: 1px 6px;
 }
 .ddrf__toggle {
@@ -313,7 +313,7 @@ async function submit() {
 /* The JSON view is code, so it is set as code — a proportional font here makes
    a misplaced brace invisible. */
 .ddrf__json :deep(.li-textfield-input) {
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
   font-size: 12px; line-height: 1.6;
 }
 

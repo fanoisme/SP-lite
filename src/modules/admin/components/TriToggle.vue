@@ -32,21 +32,21 @@ const options = [
   display: inline-flex;
   gap: 4px;
   padding: 3px;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   background: var(--color-surface-2);
 }
 
 .tri__btn {
   padding: 5px 12px;
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-text-muted);
   font-size: 12px;
   font-weight: 600;
   font-family: var(--font-sans);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
   white-space: nowrap;
 }
 
@@ -56,7 +56,7 @@ const options = [
 
 /* Active state per mode */
 .tri__btn--grant.tri__btn--active {
-  background: var(--color-success, var(--color-success));
+  background: var(--color-success);
   color: var(--color-bg);
 }
 

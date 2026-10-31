@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "SP-lite â€” public, static, backend-free QRIS Tools, Template Tools, and Video Frames, derived from SO-Platform.",
+  "description": "SP-lite — public, static, backend-free QRIS Tools, Template Tools, and Video Frames, derived from SO-Platform.",
   "engines": {
     "node": ">=20.0.0"
   },

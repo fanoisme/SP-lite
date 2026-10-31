@@ -374,7 +374,7 @@ onMounted(() => {
 /* Same monospace treatment the audit log gives a column name: these are keys,
    not prose, and a leading zero has to read as part of the value. */
 .ddmer__id {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  font-family: var(--font-mono); font-size: 12px;
   background: var(--color-border); border-radius: 5px; padding: 1px 6px;
 }
 .ddmer__name { font-weight: 600; }

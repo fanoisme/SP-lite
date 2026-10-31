@@ -148,7 +148,7 @@ function decodeImageFile(file) {
   padding: 40px 24px;
   border: 2px dashed var(--color-border-strong);
   border-radius: var(--radius-lg);
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--color-surface);
   cursor: pointer;
   transition: all 200ms var(--ease-out);
   outline: none;
@@ -221,7 +221,7 @@ function decodeImageFile(file) {
   font-size: 12px;
   line-height: 1.5;
   color: var(--color-text-strong);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--color-bg);
   resize: vertical;
   outline: none;
   transition: border-color 200ms;
@@ -292,7 +292,7 @@ function decodeImageFile(file) {
   gap: 12px;
   padding: 12px;
   background: var(--color-bg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-lg);
 }
 

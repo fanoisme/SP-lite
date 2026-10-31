@@ -123,7 +123,7 @@ const selectTab = (index, event) => {
 
 .li-tab-button:focus-visible {
   background-color: var(--color-surface-2);
-  border-radius: var(--radius-sm, 4px) var(--radius-sm, 4px) 0 0;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
 
 .li-tab-button.is-active {

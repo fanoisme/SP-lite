@@ -113,12 +113,12 @@ function deleteTooltip(role) {
   background: var(--color-accent);
   color: var(--color-on-accent);
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-weight: 600;
   font-size: 13px;
   font-family: var(--font-sans);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
   white-space: nowrap;
 }
 
@@ -168,10 +168,10 @@ function deleteTooltip(role) {
   padding: var(--space-4);
   background: var(--color-bg);
   border: 1px solid var(--color-surface-2);
-  border-radius: var(--radius-md, 16px);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-card);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
 }
 
 .adm-roles__card:hover {
@@ -217,9 +217,9 @@ function deleteTooltip(role) {
   border: none;
   cursor: pointer;
   padding: var(--space-2);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm);
   color: var(--color-text-placeholder);
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -256,7 +256,7 @@ function deleteTooltip(role) {
 
 .adm-roles__card-cta .li-icon {
   font-size: 16px;
-  transition: transform var(--dur-short, 200ms) var(--ease-out);
+  transition: transform var(--dur-short) var(--ease-out);
 }
 
 .adm-roles__card:hover .adm-roles__card-cta {

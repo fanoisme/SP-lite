@@ -15,7 +15,7 @@
     <div class="li-combobox__input-wrap">
       <!-- Left icon -->
       <span v-if="iconLeft" class="li-combobox__icon li-combobox__icon--left">
-        <LiIcon :name="iconLeft" size="md" color="var(--color-text-muted, #666666)" />
+        <LiIcon :name="iconLeft" size="md" color="var(--color-text-muted)" />
       </span>
 
       <!-- Text input -->
@@ -39,9 +39,9 @@
       <!-- Chevron / clear -->
       <span class="li-combobox__icon li-combobox__icon--right">
         <LiIcon
-          :name="isOpen ? 'expand_less' : 'chevron-down'"
+          :name="isOpen ? 'chevron-up' : 'chevron-down'"
           size="md"
-          color="var(--color-text-muted, #666666)"
+          color="var(--color-text-muted)"
         />
       </span>
     </div>
@@ -80,7 +80,7 @@
             >
               <span class="li-combobox__option-text">{{ option.label ?? option.value ?? option }}</span>
               <span v-if="isSelected(option)" class="li-combobox__option-check">
-                <LiIcon name="check" size="md" color="var(--color-accent-strong, #FF6B00)" />
+                <LiIcon name="check" size="md" color="var(--color-accent-strong)" />
               </span>
             </li>
 
@@ -344,7 +344,7 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
   align-items: center;
   background: var(--color-bg);
   border: 1px solid var(--color-border-strong);
-  border-radius: var(--radius-md, 8px);
+  border-radius: var(--radius-md);
   min-height: 44px;
   padding: 0 12px;
   gap: 8px;
@@ -417,8 +417,8 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
 .li-combobox__dropdown {
   background: var(--color-bg);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md, 8px);
-  box-shadow: var(--shadow-pop, 0 8px 24px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.06));
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
   max-height: 240px;
   overflow-y: auto;
   z-index: 9999;

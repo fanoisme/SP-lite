@@ -210,7 +210,7 @@ function expiryClass(dateStr) {
   gap: 12px;
   padding: 12px 16px;
   background: var(--color-bg);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: transform 200ms var(--ease-out);

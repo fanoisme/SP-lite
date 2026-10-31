@@ -127,7 +127,7 @@ const removeFile = (index) => {
   justify-content: center;
   padding: var(--space-8);
   border: 1.5px dashed var(--color-border-strong);
-  border-radius: var(--radius-md, 8px);
+  border-radius: var(--radius-md);
   background-color: var(--color-bg);
   cursor: pointer;
   transition: all var(--dur-short) var(--ease-out);
@@ -188,7 +188,7 @@ const removeFile = (index) => {
   align-items: center;
   padding: var(--space-2) var(--space-3);
   background-color: var(--color-surface-2);
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
   gap: var(--space-2);
 }
 
@@ -211,7 +211,7 @@ const removeFile = (index) => {
   color: var(--color-text-muted);
   cursor: pointer;
   padding: 4px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
   display: flex;
   transition: all var(--dur-short);
 }

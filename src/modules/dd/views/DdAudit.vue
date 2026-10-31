@@ -133,7 +133,7 @@ onMounted(() => { load(); loadActors() })
 .ddaudit__error {
   font-size: 13px; color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08);
-  border-radius: var(--radius-sm, 12px); padding: 10px 14px; margin: 0;
+  border-radius: var(--radius-sm); padding: 10px 14px; margin: 0;
 }
 .ddaudit__pagination { display: flex; justify-content: center; }
 
@@ -143,7 +143,7 @@ onMounted(() => { load(); loadActors() })
 }
 .ddaudit__reset {
   padding: 10px 18px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
+  border-radius: var(--radius-pill); background: transparent;
   font-family: var(--font-sans);
   font-size: 13px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms;
@@ -158,7 +158,7 @@ onMounted(() => { load(); loadActors() })
 .ddaudit__export {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 16px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
+  border-radius: var(--radius-pill); background: transparent;
   font-family: var(--font-sans);
   font-size: 13px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms; white-space: nowrap;
@@ -168,7 +168,7 @@ onMounted(() => { load(); loadActors() })
 .ddaudit__export .li-icon { font-size: 17px; }
 
 .ddaudit__col {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  font-family: var(--font-mono); font-size: 12px;
   background: rgba(0, 0, 0, 0.04); border-radius: 5px; padding: 1px 6px;
 }
 .ddaudit__muted { color: var(--color-text-placeholder); }

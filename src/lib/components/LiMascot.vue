@@ -102,8 +102,8 @@ onBeforeUnmount(() => clearTimeout(blinkTimer))
 }
 
 /* Ear flap: a quick spring flap once per 8s cycle (left ear leads, right follows) */
-.li-mascot--animated .m-ear-l { transform-origin: 30px 24px; animation: mascot-ear 8000ms var(--ease-spring, ease-in-out) infinite; }
-.li-mascot--animated .m-ear-r { transform-origin: 66px 24px; animation: mascot-ear 8000ms var(--ease-spring, ease-in-out) 160ms infinite; }
+.li-mascot--animated .m-ear-l { transform-origin: 30px 24px; animation: mascot-ear 8000ms var(--ease-spring) infinite; }
+.li-mascot--animated .m-ear-r { transform-origin: 66px 24px; animation: mascot-ear 8000ms var(--ease-spring) 160ms infinite; }
 @keyframes mascot-ear {
   34% { transform: rotate(-7deg); }
   38% { transform: rotate(3deg); }

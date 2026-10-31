@@ -690,7 +690,7 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__reload {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 16px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
+  border-radius: var(--radius-pill); background: transparent;
   font-family: var(--font-sans);
   font-size: 13px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms; white-space: nowrap;
@@ -708,7 +708,7 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__side { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
 .ddsql__panel {
   border: 1px solid rgba(0, 0, 0, 0.07);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-sm);
   padding: 12px; min-width: 0;
 }
 .ddsql__panel-title {
@@ -726,8 +726,8 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__table-head {
   width: 100%; display: flex; align-items: center; gap: 4px;
   padding: 5px 6px; border: none; background: transparent;
-  border-radius: var(--radius-xs, 8px); cursor: pointer; text-align: left;
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  border-radius: var(--radius-xs); cursor: pointer; text-align: left;
+  font-family: var(--font-mono); font-size: 12px;
   color: var(--color-text); transition: background 200ms;
 }
 .ddsql__table-head:hover { background: rgba(0, 0, 0, 0.04); }
@@ -739,8 +739,8 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__cols { padding: 2px 0 6px; }
 .ddsql__col {
   display: block; width: 100%; padding: 3px 6px 3px 24px;
-  border: none; background: transparent; border-radius: var(--radius-xs, 8px);
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11.5px;
+  border: none; background: transparent; border-radius: var(--radius-xs);
+  font-family: var(--font-mono); font-size: 11.5px;
   color: var(--color-text-muted); text-align: left; cursor: pointer;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   transition: all 200ms;
@@ -750,7 +750,7 @@ onMounted(() => { if (canRead.value) mountAll() })
 
 .ddsql__denied {
   display: flex; gap: 6px; margin: 10px 0 0; padding: 8px;
-  border-radius: var(--radius-xs, 8px); background: rgba(0, 0, 0, 0.04);
+  border-radius: var(--radius-xs); background: rgba(0, 0, 0, 0.04);
   font-size: 11px; line-height: 1.5; color: var(--color-text-muted);
 }
 .ddsql__denied .li-icon { font-size: 15px; flex: none; }
@@ -759,7 +759,7 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__save > :first-child { flex: 1; min-width: 0; }
 .ddsql__save-btn {
   flex: none; padding: 8px 12px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
+  border-radius: var(--radius-pill); background: transparent;
   font-family: var(--font-sans); font-size: 12px; font-weight: 600;
   color: var(--color-text); cursor: pointer; transition: all 200ms;
 }
@@ -770,14 +770,14 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__item-main {
   flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
   padding: 5px 6px; border: none; background: transparent;
-  border-radius: var(--radius-xs, 8px); cursor: pointer; text-align: left;
+  border-radius: var(--radius-xs); cursor: pointer; text-align: left;
   font-family: var(--font-sans); font-size: 12px;
   color: var(--color-text); transition: background 200ms;
 }
 .ddsql__item-main:hover { background: rgba(0, 0, 0, 0.04); }
 .ddsql__item-sql {
   flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11px;
+  font-family: var(--font-mono); font-size: 11px;
 }
 .ddsql__item-ms { flex: none; font-size: 10px; color: var(--color-text-placeholder); }
 .ddsql__item-del {
@@ -798,14 +798,14 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .ddsql__bar-hint {
   margin-left: auto; font-size: 11px; color: var(--color-text-placeholder);
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
 }
 
 .ddsql__editor {
   width: 100%; box-sizing: border-box; resize: vertical;
   padding: 14px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-sm, 12px); background: var(--color-bg);
-  font-family: var(--font-mono, ui-monospace, 'JetBrains Mono', monospace);
+  border-radius: var(--radius-sm); background: var(--color-bg);
+  font-family: var(--font-mono);
   font-size: 13px; line-height: 1.7; color: var(--color-text-strong);
   /* Tab is bound to indentation, so the caret stays inside the query. */
   tab-size: 2; outline: none; transition: border-color 200ms;
@@ -813,18 +813,18 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__editor:focus { border-color: var(--color-accent-strong); }
 
 .ddsql__problem {
-  background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-sm, 12px);
+  background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-sm);
   padding: 10px 14px; color: var(--color-danger);
 }
 .ddsql__problem-msg { margin: 0; font-size: 13px; line-height: 1.55; white-space: pre-wrap; }
 .ddsql__problem-at { margin: 4px 0 0; font-size: 11px; opacity: 0.8; }
 .ddsql__caret {
-  margin: 6px 0 0; font-family: var(--font-mono, ui-monospace, monospace);
+  margin: 6px 0 0; font-family: var(--font-mono);
   font-size: 12px; line-height: 1.4; white-space: pre; overflow-x: auto;
 }
 .ddsql__error {
   font-size: 12px; color: var(--color-danger);
-  background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-xs, 8px);
+  background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-xs);
   padding: 6px 10px; margin: 0 0 8px;
 }
 
@@ -832,7 +832,7 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__result-note { font-size: 13px; color: var(--color-text-muted); }
 .ddsql__result-ms { margin-left: auto; font-size: 11px; color: var(--color-text-placeholder); }
 
-.ddsql__value { font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px; }
+.ddsql__value { font-family: var(--font-mono); font-size: 12px; }
 /* A NULL must not look like an empty string — the difference matters here. */
 .ddsql__null {
   font-style: normal; font-size: 11px; letter-spacing: 0.4px;
@@ -842,9 +842,9 @@ onMounted(() => { if (canRead.value) mountAll() })
 /* ── confirm modal ── */
 .ddsql__confirm { display: flex; flex-direction: column; gap: 14px; }
 .ddsql__stmt {
-  margin: 0; padding: 12px; border-radius: var(--radius-sm, 12px);
+  margin: 0; padding: 12px; border-radius: var(--radius-sm);
   background: rgba(0, 0, 0, 0.05);
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
   font-size: 12.5px; line-height: 1.6; white-space: pre-wrap; word-break: break-word;
 }
 .ddsql__facts { display: flex; flex-wrap: wrap; gap: 20px; margin: 0; }
