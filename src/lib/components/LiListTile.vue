@@ -37,8 +37,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRipple } from '../composables/useRipple';
+import { ref } from 'vue';
 
 const props = defineProps({
   title: String,
@@ -53,13 +52,6 @@ const props = defineProps({
 defineEmits(['click']);
 
 const tileRef = ref(null);
-const { addRipple } = useRipple();
-
-onMounted(() => {
-  if (tileRef.value && (props.interactive || tileRef.value.hasAttribute('onClick'))) {
-    tileRef.value.addEventListener('mousedown', (e) => addRipple(e, tileRef.value));
-  }
-});
 </script>
 
 <style scoped>

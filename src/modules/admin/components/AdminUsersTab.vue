@@ -20,7 +20,7 @@
     </p>
 
     <!-- Users table inside glass card -->
-    <LiGlassCard variant="light" size="md" :hoverable="false" class="adm-users__card">
+    <div class="adm-users__card">
       <LiTable
         :data="paginatedUsers"
         :columns="columns"
@@ -107,13 +107,12 @@
       <div v-if="totalPages > 1" class="adm-users__pagination">
         <LiPagination v-model="currentPage" :totalPages="totalPages" />
       </div>
-    </LiGlassCard>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import LiGlassCard from '@lib/components/LiGlassCard.vue'
 import LiTable from '@lib/components/LiTable.vue'
 import LiTextField from '@lib/components/LiTextField.vue'
 import LiSelect from '@lib/components/LiSelect.vue'
