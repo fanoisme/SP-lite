@@ -32,7 +32,6 @@ const SESSION = {
 }
 
 const ROUTES = [
-  ['landing', '/', true],
   ['login', '/login', true],
   ['dashboard', '/dashboard', false],
   ['qris', '/qris', false],
@@ -147,7 +146,6 @@ try {
   for (const [name, path, bare] of ROUTES) {
     for (const width of [1440, 375]) {
       for (const theme of ['light', 'dark']) {
-        if (name === 'landing' && theme === 'dark') continue // marketing stays light
         try {
           await shot(page, name, path, width, theme, bare)
         } catch (e) {

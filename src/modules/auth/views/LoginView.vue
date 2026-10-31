@@ -5,10 +5,10 @@
       <LiLogo size="sm" :animate="true" :show-subtitle="false" />
       <div>
         <h2 class="auth__brand-title">
-          Satu toolbox, <em>semua</em> kerjaan harianmu
+          Welcome to <em>SP-lite</em>
         </h2>
         <p class="auth__brand-sub">
-          QRIS, template, dan video tools turunan SO-Platform. Sign in sekali, pekerjaan tersimpan lintas device.
+          Sign in to continue to your workspace. Don't have an account yet? Ask an admin to add you.
         </p>
       </div>
       <div class="auth__coins"><i></i><i></i><i></i></div>

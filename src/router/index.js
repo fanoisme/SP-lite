@@ -6,14 +6,12 @@ import { byTargetTable } from '../modules/dd/lib/schema.js'
 
 // SP-lite — hash history so GitHub Pages (no server-side rewrites) can
 // serve deep links correctly.
-const PUBLIC_ROUTES = ['landing', 'login']
+const PUBLIC_ROUTES = ['login']
 
 const routes = [
-  {
-    path: '/',
-    name: 'landing',
-    component: () => import('../modules/landing/views/LandingView.vue'),
-  },
+  // The landing page was removed: / funnels to login, and the guard sends
+  // authenticated users straight to their first accessible module.
+  { path: '/', redirect: '/login' },
   {
     path: '/login',
     name: 'login',
