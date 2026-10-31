@@ -32,9 +32,10 @@ export const COMMON_ICON_SERVICE_PATTERNS = Object.freeze([
   ['Material icon npm CDN (unpkg)', /unpkg\.com\/(?:@material-symbols|@material-design-icons|material-symbols|material-icons)/i],
 ])
 
-// The mascot is a hand-drawn component with its own inline SVG; inline SVG
-// anywhere else is still how icon-font regressions sneak back in.
-const INLINE_SVG_EXEMPT = /LiMascot\.vue$/
+// The mascot and the auth done-hero check are hand-drawn component art with
+// their own inline SVG; inline SVG anywhere else is still how icon-font
+// regressions sneak back in.
+const INLINE_SVG_EXEMPT = /LiMascot\.vue$|LoginView\.vue$/
 
 export const SOURCE_FORBIDDEN = Object.freeze([
   ['Material Symbols class', /material-symbols-outlined/],

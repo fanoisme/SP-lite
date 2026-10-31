@@ -6,7 +6,7 @@
   <router-view v-if="isBareRoute" />
 
   <div v-else class="app">
-    <!-- Topbar (app.css .topbar): mobile menu, logo, products + ink, search, theme, avatar -->
+    <!-- Topbar (app.css .topbar): mobile menu, logo, search, theme, avatar — nav lives in the sidebar -->
     <header class="topbar">
       <button class="icon-btn mobile-menu" aria-label="Open navigation menu" @click="menuOpen = true">
         <LiIcon name="menu" size="sm" />
@@ -16,21 +16,6 @@
         <LiLogo size="xs" :show-subtitle="false" />
         <span>Workspace</span>
       </router-link>
-
-      <!-- Products: horizontal module links with a sliding accent ink -->
-      <nav ref="productsNav" class="products" aria-label="Modules">
-        <router-link
-          v-for="mod in modules"
-          :key="mod.path"
-          :to="mod.path"
-          class="products__link"
-          :aria-current="isActive(mod.path) ? 'page' : undefined"
-        >
-          <LiIcon :name="mod.icon" size="sm" />
-          <span>{{ mod.label }}</span>
-        </router-link>
-        <span class="products__ink" :style="inkStyle" />
-      </nav>
 
       <div class="topbar__end">
         <button class="search-trigger" aria-label="Search (Ctrl K)" @click="paletteOpen = true">
@@ -146,7 +131,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import router from './router/index.js'
 import { useAuth } from './composables/useAuth.js'
@@ -238,34 +223,6 @@ async function handleLogout() {
   routerInstance.push({ name: 'login' })
 }
 
-// ── Products ink: accent underline glides under the current product link ──
-const productsNav = ref(null)
-const inkStyle = ref({ opacity: 0 })
-
-async function placeInk() {
-  await nextTick()
-  const nav = productsNav.value
-  if (!nav) return
-  const active = nav.querySelector('[aria-current="page"]')
-  if (!active) {
-    inkStyle.value = { opacity: 0 }
-    return
-  }
-  inkStyle.value = {
-    left: `${active.offsetLeft}px`,
-    width: `${active.offsetWidth}px`,
-    opacity: 1,
-  }
-}
-
-watch(() => route.path, placeInk)
-watch(modules, placeInk)
-onMounted(() => {
-  placeInk()
-  window.addEventListener('resize', placeInk)
-})
-onBeforeUnmount(() => window.removeEventListener('resize', placeInk))
-
 // ── Sidebar collapse (persisted like DD's) ──
 const SIDEBAR_KEY = 'sp-sidebar'
 const sidebarCollapsed = ref(false)
@@ -338,42 +295,6 @@ watch(() => route.path, () => {
   font-weight: 600;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
-}
-
-/* Products + sliding ink */
-.products {
-  display: flex;
-  gap: var(--space-1);
-  height: 100%;
-  position: relative;
-  min-width: 0;
-  overflow: hidden;
-}
-
-.products__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0 var(--space-2);
-  color: var(--color-text-muted);
-  white-space: nowrap;
-  text-decoration: none;
-  font-size: var(--text-sm);
-  transition: color var(--dur-quick);
-}
-
-.products__link:hover,
-.products__link[aria-current='page'] { color: var(--color-text); }
-.products__link[aria-current='page'] { font-weight: 600; }
-.products__link:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -4px; }
-
-.products__ink {
-  position: absolute;
-  bottom: 0;
-  height: 3px;
-  border-radius: 3px 3px 0 0;
-  background: var(--color-accent);
-  transition: left var(--dur-medium) var(--ease-spring), width var(--dur-medium) var(--ease-spring), opacity var(--dur-quick);
 }
 
 .topbar__end {
@@ -655,7 +576,6 @@ kbd {
   .search-trigger__grow, .search-trigger kbd { display: none; }
   .topbar { gap: var(--space-2); padding: 0 var(--space-2); }
   .topbar__logo span { display: none; }
-  .products { display: none; }
   :deep(.main > *) { padding: var(--space-4) var(--space-4) var(--space-8); }
 }
 
