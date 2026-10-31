@@ -5,7 +5,7 @@
       <div class="admin__header-content">
         <div class="admin__title-group">
           <div class="admin__icon-badge">
-            <LiIcon name="admin_panel_settings" />
+            <LiIcon name="shield" />
           </div>
           <div>
             <h1 class="admin__title">Admin Panel</h1>
@@ -14,15 +14,15 @@
         </div>
         <div class="admin__stats">
           <span class="admin__stat-chip">
-            <LiIcon name="group" />
+            <LiIcon name="users" />
             {{ stats.users }} users
           </span>
           <span class="admin__stat-chip">
-            <LiIcon name="shield_person" />
+            <LiIcon name="shield-user" />
             {{ stats.roles }} roles
           </span>
           <span class="admin__stat-chip">
-            <LiIcon name="apps" />
+            <LiIcon name="layout-grid" />
             {{ stats.modulesEnabled }}/{{ stats.modulesTotal }} modules
           </span>
         </div>
@@ -148,7 +148,7 @@
         <div class="admin__delete-actions">
           <button class="admin__cancel-btn" @click="deleteTarget = null">Cancel</button>
           <button class="admin__danger-btn" @click="confirmDelete">
-            <LiIcon name="delete" />
+            <LiIcon name="trash-2" />
             Delete
           </button>
         </div>
@@ -194,9 +194,9 @@ const {
 // Tab state
 const activeTab = ref(0)
 const tabDefs = [
-  { id: 'users', label: 'Users', desc: 'Manage users', icon: 'group' },
-  { id: 'roles', label: 'Roles', desc: 'Role management', icon: 'shield_person' },
-  { id: 'modules', label: 'Modules', desc: 'Module access', icon: 'apps' },
+  { id: 'users', label: 'Users', desc: 'Manage users', icon: 'users' },
+  { id: 'roles', label: 'Roles', desc: 'Role management', icon: 'shield-user' },
+  { id: 'modules', label: 'Modules', desc: 'Module access', icon: 'layout-grid' },
 ]
 
 // Pill tab indicator
@@ -346,11 +346,11 @@ onUnmounted(() => {
 .admin {
   max-width: 1280px;
   margin: 0 auto;
-  padding: var(--space-lg, 24px) var(--space-xl, 32px);
+  padding: var(--space-4) var(--space-6);
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg, 24px);
-  animation: admin-in 500ms var(--ease-smooth, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  gap: var(--space-4);
+  animation: admin-in 500ms var(--ease-enter) both;
 }
 
 @keyframes admin-in {
@@ -360,7 +360,7 @@ onUnmounted(() => {
 
 /* ── Header ── */
 .admin__header {
-  animation: headerReveal 600ms var(--ease-smooth, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  animation: headerReveal 600ms var(--ease-enter) both;
 }
 
 @keyframes headerReveal {
@@ -372,20 +372,20 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-lg, 16px);
+  gap: var(--space-4);
 }
 
 .admin__title-group {
   display: flex;
   align-items: center;
-  gap: var(--space-m, 12px);
+  gap: var(--space-3);
 }
 
 .admin__icon-badge {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-md, 16px);
-  background: linear-gradient(135deg, var(--cta-primary-bg, #FFBC25), var(--color-orange-300, #FF8C00));
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -395,58 +395,56 @@ onUnmounted(() => {
 
 .admin__icon-badge .li-icon {
   font-size: 24px;
-  color: var(--color-gray-0, #fff);
+  color: var(--color-bg);
 }
 
 .admin__title {
-  font-family: var(--font-display, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-weight: 700;
   font-size: 24px;
-  color: var(--color-on-surface, #333);
-  margin: 0 0 var(--space-xs, 4px);
+  color: var(--color-text);
+  margin: 0 0 var(--space-1);
   letter-spacing: -0.5px;
 }
 
 .admin__subtitle {
   font-size: 13px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
   margin: 0;
 }
 
 /* ── Header Stats ── */
 .admin__stats {
   display: flex;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   flex-wrap: wrap;
 }
 
 .admin__stat-chip {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs, 6px);
-  padding: var(--space-xs, 6px) var(--space-m, 12px);
-  border-radius: var(--radius-pill, 999px);
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid var(--glass-border, rgba(0, 0, 0, 0.06));
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-on-surface-variant, #666);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  color: var(--color-text-muted);
 }
 
 .admin__stat-chip .li-icon {
   font-size: 14px;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 /* ── Panel Transitions ── */
 .panel-slide-enter-active {
-  transition: all var(--dur-medium, 300ms) var(--ease-smooth, cubic-bezier(0.16, 1, 0.3, 1));
+  transition: all var(--dur-medium) var(--ease-enter);
 }
 
 .panel-slide-leave-active {
-  transition: all var(--dur-short, 200ms) var(--ease-snap, cubic-bezier(0.6, 0, 0.2, 1));
+  transition: all var(--dur-short) var(--ease-move);
 }
 
 .panel-slide-enter-from {
@@ -462,58 +460,58 @@ onUnmounted(() => {
 /* ── Delete Modal ── */
 .admin__delete-text {
   font-size: 14px;
-  color: var(--color-on-surface-variant, #666);
+  color: var(--color-text-muted);
   line-height: 1.6;
   margin: 0;
 }
 
 .admin__delete-text strong {
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
   font-weight: 600;
 }
 
 .admin__delete-actions {
   display: flex;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   justify-content: flex-end;
 }
 
 .admin__cancel-btn {
   padding: 10px 20px;
   background: none;
-  border: 1.5px solid var(--color-outline, #CCC);
-  border-radius: var(--radius-pill, 999px);
+  border: 1.5px solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
   font-size: 13px;
   font-weight: 600;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  color: var(--color-on-surface-variant, #666);
+  font-family: var(--font-sans);
+  color: var(--color-text-muted);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
 }
 
 .admin__cancel-btn:hover {
-  border-color: var(--color-gray-400, #B3B3B3);
-  color: var(--color-on-surface, #333);
+  border-color: var(--color-text-placeholder);
+  color: var(--color-text);
 }
 
 .admin__danger-btn {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   padding: 10px 24px;
-  background: var(--color-error, #C83E3B);
-  color: #fff;
+  background: var(--color-danger);
+  color: var(--color-bg);
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 13px;
   font-weight: 700;
-  font-family: var(--font-body, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
 }
 
 .admin__danger-btn:hover {
-  background: #A33129;
+  background: var(--color-danger);
   transform: translateY(-1px);
 }
 
@@ -524,8 +522,8 @@ onUnmounted(() => {
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .admin {
-    padding: var(--space-l, 16px);
-    gap: var(--space-l, 16px);
+    padding: var(--space-4);
+    gap: var(--space-4);
   }
 
   .admin__header-content {
@@ -563,27 +561,27 @@ onUnmounted(() => {
 .admin__tabs-wrapper { }
 .admin__tabs {
   display: flex; position: relative;
-  background: rgba(255,255,255,0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-md, 16px);
+  background: var(--color-hover); 
+  border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-md);
   padding: 5px; gap: 2px;
 }
 .admin__tab {
   flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: 14px 12px; border: none; border-radius: var(--radius-sm, 12px);
+  padding: 14px 12px; border: none; border-radius: var(--radius-sm);
   background: transparent; cursor: pointer;
-  font-family: var(--font-body, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   transition: all 300ms ease-out;
   position: relative; z-index: 1;
 }
-.admin__tab:hover { background: rgba(255,255,255,0.5); }
-.admin__tab--active { color: var(--color-on-surface, #1a1a2e); }
-.admin__tab-icon { font-size: 22px; color: var(--color-gray-500, #8e8ea0); transition: color 300ms ease-out, transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1); }
-.admin__tab--active .admin__tab-icon { color: var(--cta-primary-bg, #FFBC25); transform: scale(1.1); }
-.admin__tab-label { font-size: 13px; font-weight: 600; color: var(--color-gray-700, #555); transition: color 300ms ease-out; }
-.admin__tab--active .admin__tab-label { color: var(--color-on-surface, #1a1a2e); }
+.admin__tab:hover { background: var(--color-hover); }
+.admin__tab--active { color: var(--color-text); }
+.admin__tab-icon { font-size: 22px; color: var(--color-text-muted); transition: color 300ms ease-out, transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1); }
+.admin__tab--active .admin__tab-icon { color: var(--color-accent); transform: scale(1.1); }
+.admin__tab-label { font-size: 13px; font-weight: 600; color: var(--color-text); transition: color 300ms ease-out; }
+.admin__tab--active .admin__tab-label { color: var(--color-text); }
 .admin__tab-indicator {
   position: absolute; top: 5px; height: calc(100% - 10px);
-  background: #fff; border-radius: var(--radius-sm, 12px);
+  background: var(--color-bg); border-radius: var(--radius-sm);
   box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.02);
   transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 0;

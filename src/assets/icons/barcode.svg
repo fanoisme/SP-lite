@@ -1,1 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 -960 960 960"><path d="M40-200v-560h85v560H40Zm120 0v-560h80v560h-80Zm120 0v-560h40v560h-40Zm120 0v-560h80v560h-80Zm120 0v-560h120v560H520Zm160 0v-560h40v560h-40Zm120 0v-560h120v560H800Z"/></svg>
+<!-- @license lucide-static v1.66.0 - ISC -->
+<svg
+  class="lucide lucide-barcode"
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M3 5v14" />
+  <path d="M8 5v14" />
+  <path d="M12 5v14" />
+  <path d="M17 5v14" />
+  <path d="M21 5v14" />
+</svg>

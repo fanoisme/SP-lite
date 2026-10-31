@@ -5,7 +5,7 @@
       @click="handleCopy"
       :disabled="!content"
     >
-      <LiIcon :name="copied ? 'check' : 'content_copy'" />
+      <LiIcon :name="copied ? 'check' : 'copy'" />
       {{ copied ? 'Copied!' : 'Copy' }}
     </button>
     <button
@@ -75,7 +75,7 @@ function handleDownload() {
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.25s var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: all 0.25s var(--ease-enter);
   font-family: inherit;
 }
 
@@ -84,20 +84,20 @@ function handleDownload() {
 }
 
 .output-actions__btn--copy {
-  background: rgba(0, 0, 0, 0.04);
-  color: #555;
+  background: var(--color-border);
+  color: var(--color-text);
   border: 1.5px solid rgba(0, 0, 0, 0.06);
 }
 
 .output-actions__btn--copy:hover:not(:disabled) {
-  background: rgba(0, 0, 0, 0.08);
+  background: var(--color-border-strong);
   transform: translateY(-1px);
-  border-color: rgba(0, 0, 0, 0.1);
+  border-color: var(--color-border-strong);
 }
 
 .output-actions__btn--download {
-  background: linear-gradient(135deg, var(--cta-primary-bg, #FFBC25), #FF9500);
-  color: #fff;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
+  color: var(--color-bg);
   box-shadow: 0 2px 8px rgba(255, 188, 37, 0.25);
 }
 

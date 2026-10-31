@@ -19,7 +19,7 @@
         <slot name="badge" />
       </span>
       <LiIcon
-        name="expand_more"
+        name="chevron-down"
         size="sm"
         class="li-accordion-item__chevron"
       />
@@ -70,12 +70,11 @@ watch(expanded, async (val) => {
 
 <style scoped>
 .li-accordion-item {
-  border-bottom: 1px solid var(--color-gray-200, #E6E6E6);
-  font-family: 'Inter', system-ui, sans-serif;
-}
+  border-bottom: 1px solid var(--color-border);
+  }
 
 .li-accordion-item:first-child {
-  border-top: 1px solid var(--color-gray-200, #E6E6E6);
+  border-top: 1px solid var(--color-border);
 }
 
 .li-accordion-item--disabled {
@@ -90,17 +89,16 @@ watch(expanded, async (val) => {
   gap: 12px;
   border: none;
   background: transparent;
-  font-family: 'Inter', system-ui, sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text-strong);
   text-align: left;
   cursor: pointer;
   transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .li-accordion-item__trigger:hover:not(:disabled) {
-  background: var(--color-gray-100, #F2F2F2);
+  background: var(--color-surface-2);
   margin: 0 -12px;
   padding-left: 12px;
   padding-right: 12px;
@@ -108,7 +106,7 @@ watch(expanded, async (val) => {
 }
 
 .li-accordion-item__trigger:focus-visible {
-  outline: 2px solid var(--color-orange-400, #FF6B00);
+  outline: 2px solid var(--color-accent-strong);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -120,12 +118,12 @@ watch(expanded, async (val) => {
 .li-accordion-item__icon {
   display: flex;
   align-items: center;
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
   flex-shrink: 0;
 }
 
 .li-accordion-item--expanded .li-accordion-item__icon {
-  color: var(--color-orange-400, #FF6B00);
+  color: var(--color-accent-strong);
 }
 
 .li-accordion-item__title {
@@ -138,14 +136,14 @@ watch(expanded, async (val) => {
 }
 
 .li-accordion-item__chevron {
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   flex-shrink: 0;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .li-accordion-item--expanded .li-accordion-item__chevron {
   transform: rotate(180deg);
-  color: var(--color-gray-700, #666666);
+  color: var(--color-text);
 }
 
 .li-accordion-item__body-wrapper {
@@ -157,7 +155,7 @@ watch(expanded, async (val) => {
   padding: 0 0 16px 0;
   font-size: 14px;
   line-height: 22px;
-  color: var(--color-gray-700, #666666);
+  color: var(--color-text);
 }
 
 /* Icon spacing adjustment */

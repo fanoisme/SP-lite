@@ -22,7 +22,7 @@
         </template>
       </p>
       <button class="ddrf__toggle" type="button" :aria-pressed="jsonMode" @click="toggleJson">
-        <LiIcon :name="jsonMode ? 'view_list' : 'data_object'" />
+        <LiIcon :name="jsonMode ? 'list' : 'braces'" />
         {{ jsonMode ? 'Fields' : 'Raw JSON' }}
       </button>
     </div>
@@ -270,67 +270,66 @@ async function submit() {
 
 <style scoped>
 .ddrf__head { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
-.ddrf__table { font-family: var(--font-mono, ui-monospace, monospace); color: #6366F1; }
+.ddrf__table { font-family: var(--font-mono); color: var(--color-accent-text); }
 
 .ddrf__lead {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
-  margin-bottom: var(--space-md, 16px);
+  margin-bottom: var(--space-3);
 }
 .ddrf__lead-text {
   margin: 0; font-size: 12.5px; line-height: 1.6;
-  color: var(--color-gray-500, #8e8ea0);
+  color: var(--color-text-muted);
 }
 .ddrf__lead-text code, .ddrf__label code, .ddrf__stamp code {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11.5px;
-  background: rgba(0, 0, 0, 0.04); border-radius: 5px; padding: 1px 6px;
+  font-family: var(--font-mono); font-size: 11.5px;
+  background: var(--color-border); border-radius: 5px; padding: 1px 6px;
 }
 .ddrf__toggle {
   display: inline-flex; align-items: center; gap: 6px; flex: none;
-  padding: 6px 14px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 12px; font-weight: 600; color: var(--color-gray-700, #666);
+  padding: 6px 14px; border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill); background: transparent;
+  font-size: 12px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms; white-space: nowrap;
 }
-.ddrf__toggle:hover { background: rgba(0, 0, 0, 0.04); }
+.ddrf__toggle:hover { background: var(--color-border); }
 .ddrf__toggle .li-icon { font-size: 16px; }
 
 .ddrf__problems {
-  margin: 0 0 var(--space-md, 16px); padding: 10px 14px 10px 30px;
-  border-radius: var(--radius-sm, 12px);
+  margin: 0 0 var(--space-3); padding: 10px 14px 10px 30px;
+  border-radius: var(--radius-md);
   background: rgba(200, 62, 59, 0.08);
-  font-size: 12.5px; line-height: 1.7; color: var(--color-red-500, #A33129);
+  font-size: 12.5px; line-height: 1.7; color: var(--color-danger);
 }
 
 .ddrf__fields {
   display: grid; grid-template-columns: 1fr 1fr;
-  gap: var(--space-sm, 12px) var(--space-md, 16px);
+  gap: var(--space-2) var(--space-3);
 }
 .ddrf__field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .ddrf__label { display: flex; align-items: center; gap: 6px; }
-.ddrf__req { color: var(--color-red-400, #C83E3B); font-weight: 700; font-size: 12px; }
-.ddrf__nullable { font-size: 10px; letter-spacing: 0.3px; color: var(--color-gray-400, #B3B3B3); }
+.ddrf__req { color: var(--color-danger); font-weight: 700; font-size: 12px; }
+.ddrf__nullable { font-size: 10px; letter-spacing: 0.3px; color: var(--color-text-placeholder); }
 
 /* The JSON view is code, so it is set as code — a proportional font here makes
    a misplaced brace invisible. */
 .ddrf__json :deep(.li-textfield-input) {
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
   font-size: 12px; line-height: 1.6;
 }
 
-.ddrf__stamps { margin-top: var(--space-md, 16px); padding-top: 12px; border-top: 1px solid rgba(0, 0, 0, 0.06); }
+.ddrf__stamps { margin-top: var(--space-3); padding-top: 12px; border-top: 1px solid var(--color-border); }
 .ddrf__stamps-title {
   margin: 0 0 8px; font-size: 10px; font-weight: 700; letter-spacing: 0.7px;
-  text-transform: uppercase; color: var(--color-gray-400, #aaa);
+  text-transform: uppercase; color: var(--color-text-placeholder);
 }
 .ddrf__stamps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
 .ddrf__stamp { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .ddrf__stamp-value {
-  font-size: 12px; color: var(--color-gray-700, #666); min-width: 0;
+  font-size: 12px; color: var(--color-text); min-width: 0;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .ddrf__null {
-  font-size: 11px; letter-spacing: 0.4px; color: var(--color-gray-400, #aaa);
+  font-size: 11px; letter-spacing: 0.4px; color: var(--color-text-placeholder);
 }
 
 @media (max-width: 640px) {

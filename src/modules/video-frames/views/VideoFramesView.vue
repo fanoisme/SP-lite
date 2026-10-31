@@ -15,7 +15,7 @@
         @drop.prevent="onDrop"
         @click="$refs.input.click()"
       >
-        <LiIcon name="video_file" class="vf__upload-icon" />
+        <LiIcon name="file-video" class="vf__upload-icon" />
         <span class="vf__upload-text">{{ fileName || 'Drop video here or click to browse' }}</span>
         <span class="vf__upload-hint">MP4, WebM, MOV — max 500MB</span>
         <input ref="input" type="file" accept="video/*" hidden @change="onFile" />
@@ -34,11 +34,11 @@
       <!-- Actions -->
       <div class="vf__actions" v-if="fileName && !processing">
         <button v-if="frames.length === 0" class="vf__btn vf__btn--primary" @click="run">
-          <LiIcon name="play_arrow" />
+          <LiIcon name="play" />
           Extract Frames
         </button>
         <button v-if="frames.length > 0" class="vf__btn" @click="run">
-          <LiIcon name="refresh" />
+          <LiIcon name="rotate-cw" />
           Re-extract
         </button>
       </div>
@@ -51,13 +51,13 @@
 
       <!-- Error -->
       <div class="vf__error" v-if="error">
-        <LiIcon name="error" />
+        <LiIcon name="circle-x" />
         <span>{{ error }}</span>
       </div>
 
       <!-- Status message -->
       <div class="vf__status" v-if="progress && !processing && !error">
-        <LiIcon name="check_circle" />
+        <LiIcon name="circle-check" />
         <span>{{ progress }}</span>
       </div>
 
@@ -73,7 +73,7 @@
           </div>
           <div class="vf__toolbar-actions">
             <button class="vf__btn vf__btn--sm" @click="toggleAll">
-              <LiIcon :name="allSelected ? 'deselect' : 'select_all'" />
+              <LiIcon :name="allSelected ? 'square-x' : 'list-checks'" />
               {{ allSelected ? 'Deselect All' : 'Select All' }}
             </button>
             <button class="vf__btn vf__btn--sm vf__btn--primary" @click="download(false)">
@@ -85,7 +85,7 @@
               :disabled="selectedCount === 0"
               @click="download(true)"
             >
-              <LiIcon name="download_done" />
+              <LiIcon name="file-check" />
               Selected ({{ selectedCount }})
             </button>
           </div>
@@ -101,22 +101,22 @@
             @click="toggleSelect(i)"
           >
             <div class="vf__card-check">
-              <LiIcon :name="frame.selected ? 'check_box' : 'check_box_outline_blank'" />
+              <LiIcon :name="frame.selected ? 'square-check' : 'square'" />
             </div>
             <img :src="frame._url" class="vf__thumb" loading="lazy" />
             <div class="vf__card-meta">
               <span class="vf__card-label">Frame {{ i + 1 }}</span>
               <div class="vf__card-details">
                 <span class="vf__card-detail">
-                  <LiIcon name="schedule" />
+                  <LiIcon name="clock" />
                   {{ formatTime(frame.time) }}
                 </span>
                 <span class="vf__card-detail">
-                  <LiIcon name="aspect_ratio" />
+                  <LiIcon name="frame" />
                   {{ frame.width }}×{{ frame.height }}
                 </span>
                 <span class="vf__card-detail">
-                  <LiIcon name="hard_drive_2" />
+                  <LiIcon name="hard-drive" />
                   {{ formatSize(frame.size) }}
                 </span>
               </div>
@@ -178,31 +178,30 @@ async function download(selectedOnly) {
 .vf {
   max-width: 1100px;
   margin: 0 auto;
-  padding: var(--space-lg, 24px);
+  padding: var(--space-4);
 }
 
 .vf__header {
-  margin-bottom: var(--space-xl, 32px);
+  margin-bottom: var(--space-6);
 }
 
 .vf__title {
-  font-family: var(--font-display, 'Inter', sans-serif);
-  font-size: var(--text-2xl, 24px);
+  font-size: var(--text-xl);
   font-weight: 700;
-  color: var(--color-gray-900, #1a1a2e);
-  margin: 0 0 var(--space-xs, 4px);
+  color: var(--color-text-strong);
+  margin: 0 0 var(--space-1);
 }
 
 .vf__subtitle {
-  font-size: var(--text-sm, 13px);
-  color: var(--color-gray-500, #808080);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
   margin: 0;
 }
 
 .vf__body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg, 24px);
+  gap: var(--space-4);
 }
 
 /* ── Upload Zone ── */
@@ -210,78 +209,78 @@ async function download(selectedOnly) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-sm, 8px);
-  padding: var(--space-2xl, 40px) var(--space-lg, 24px);
-  border: 2px dashed var(--color-gray-300, #ccc);
-  border-radius: var(--radius-lg, 16px);
-  background: var(--color-glass-light, rgba(255, 255, 255, 0.6));
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-4);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-bg);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .vf__upload-zone:hover,
 .vf__upload-zone--drag {
-  border-color: var(--cta-primary-bg, #FFBC25);
+  border-color: var(--color-accent);
   background: rgba(255, 188, 37, 0.05);
 }
 
-.vf__upload-icon { font-size: 40px; color: var(--color-gray-400, #999); }
-.vf__upload-text { font-weight: 600; color: var(--color-gray-700, #333); }
-.vf__upload-hint { font-size: var(--text-xs, 11px); color: var(--color-gray-400, #999); }
+.vf__upload-icon { font-size: 40px; color: var(--color-text-placeholder); }
+.vf__upload-text { font-weight: 600; color: var(--color-text); }
+.vf__upload-hint { font-size: var(--text-xs); color: var(--color-text-placeholder); }
 
 /* ── Slider ── */
-.vf__options { display: flex; flex-direction: column; gap: var(--space-xs, 4px); }
+.vf__options { display: flex; flex-direction: column; gap: var(--space-1); }
 
 .vf__slider-label {
   display: flex; justify-content: space-between;
-  font-size: var(--text-sm, 13px); font-weight: 600; color: var(--color-gray-700, #333);
+  font-size: var(--text-sm); font-weight: 600; color: var(--color-text);
 }
 
-.vf__slider-value { color: var(--cta-primary-bg, #FFBC25); font-weight: 700; }
-.vf__slider { width: 100%; accent-color: var(--cta-primary-bg, #FFBC25); }
-.vf__slider-hint { font-size: var(--text-xs, 11px); color: var(--color-gray-400, #999); }
+.vf__slider-value { color: var(--color-accent); font-weight: 700; }
+.vf__slider { width: 100%; accent-color: var(--color-accent); }
+.vf__slider-hint { font-size: var(--text-xs); color: var(--color-text-placeholder); }
 
 /* ── Actions ── */
-.vf__actions { display: flex; gap: var(--space-sm, 8px); flex-wrap: wrap; }
+.vf__actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
 
 .vf__btn {
-  display: inline-flex; align-items: center; gap: var(--space-xs, 4px);
-  padding: var(--space-sm, 8px) var(--space-lg, 24px);
-  font-size: var(--text-sm, 13px); font-weight: 600;
-  border: none; border-radius: var(--radius-md, 12px);
+  display: inline-flex; align-items: center; gap: var(--space-1);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm); font-weight: 600;
+  border: none; border-radius: var(--radius-md);
   cursor: pointer; transition: all 0.2s ease;
-  background: var(--color-gray-100, #f0f0f0); color: var(--color-gray-700, #333);
+  background: var(--color-surface-2); color: var(--color-text);
 }
 
-.vf__btn:hover { background: var(--color-gray-200, #e0e0e0); }
+.vf__btn:hover { background: var(--color-border); }
 .vf__btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .vf__btn--primary {
-  background: var(--cta-primary-bg, #FFBC25); color: var(--color-gray-900, #1a1a2e);
+  background: var(--color-accent); color: var(--color-text-strong);
 }
-.vf__btn--primary:hover { background: var(--cta-primary-hover, #e6a820); }
-.vf__btn--primary:disabled { background: var(--cta-primary-bg, #FFBC25); opacity: 0.4; }
+.vf__btn--primary:hover { background: var(--color-accent-strong); }
+.vf__btn--primary:disabled { background: var(--color-accent); opacity: 0.4; }
 
 .vf__btn--sm {
-  padding: var(--space-xs, 4px) var(--space-md, 16px);
-  font-size: var(--text-xs, 11px);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
 }
 
 .vf__btn .li-icon { font-size: 18px; }
 
 /* ── Progress ── */
 .vf__progress {
-  display: flex; align-items: center; gap: var(--space-sm, 8px);
-  padding: var(--space-md, 16px);
-  background: var(--color-glass-light, rgba(255, 255, 255, 0.6));
-  border-radius: var(--radius-md, 12px);
-  font-size: var(--text-sm, 13px); color: var(--color-gray-600, #555);
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm); color: var(--color-text-muted);
 }
 
 .vf__spinner {
   width: 18px; height: 18px;
-  border: 2px solid var(--color-gray-200, #e0e0e0);
-  border-top-color: var(--cta-primary-bg, #FFBC25);
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: vf-spin 0.8s linear infinite;
 }
@@ -290,81 +289,81 @@ async function download(selectedOnly) {
 
 /* ── Error / Status ── */
 .vf__error {
-  display: flex; align-items: center; gap: var(--space-sm, 8px);
-  padding: var(--space-md, 16px);
-  background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-md, 12px);
-  font-size: var(--text-sm, 13px); color: var(--color-red-400, #C83E3B);
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-3);
+  background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-md);
+  font-size: var(--text-sm); color: var(--color-danger);
 }
 .vf__error .li-icon { font-size: 18px; }
 
 .vf__status {
-  display: flex; align-items: center; gap: var(--space-sm, 8px);
-  font-size: var(--text-sm, 13px); color: var(--color-green-600, #10B981);
+  display: flex; align-items: center; gap: var(--space-2);
+  font-size: var(--text-sm); color: var(--color-success);
 }
 .vf__status .li-icon { font-size: 18px; }
 
 /* ── Toolbar ── */
 .vf__toolbar {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
-  gap: var(--space-sm, 8px);
-  padding: var(--space-md, 16px);
-  background: var(--color-glass-light, rgba(255, 255, 255, 0.6));
-  border-radius: var(--radius-md, 12px);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
 }
 
 .vf__toolbar-info {
-  display: flex; align-items: center; gap: var(--space-sm, 8px);
-  font-size: var(--text-sm, 13px); color: var(--color-gray-600, #555);
+  display: flex; align-items: center; gap: var(--space-2);
+  font-size: var(--text-sm); color: var(--color-text-muted);
 }
 
-.vf__toolbar-count { font-weight: 700; color: var(--color-gray-800, #1a1a2e); }
-.vf__toolbar-size { font-size: var(--text-xs, 11px); color: var(--color-gray-400, #999); }
-.vf__toolbar-sep { color: var(--color-gray-300, #ccc); }
-.vf__toolbar-selected { font-weight: 600; color: var(--cta-primary-bg, #FFBC25); }
+.vf__toolbar-count { font-weight: 700; color: var(--color-text); }
+.vf__toolbar-size { font-size: var(--text-xs); color: var(--color-text-placeholder); }
+.vf__toolbar-sep { color: var(--color-border-strong); }
+.vf__toolbar-selected { font-weight: 600; color: var(--color-accent); }
 
 .vf__toolbar-actions {
-  display: flex; gap: var(--space-xs, 4px); flex-wrap: wrap;
+  display: flex; gap: var(--space-1); flex-wrap: wrap;
 }
 
 /* ── Frame Grid ── */
 .vf__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: var(--space-md, 16px);
+  gap: var(--space-3);
 }
 
 .vf__card {
   position: relative;
-  border-radius: var(--radius-md, 12px);
+  border-radius: var(--radius-md);
   overflow: hidden;
-  background: var(--color-glass-light, rgba(255, 255, 255, 0.8));
-  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.08));
+  background: var(--color-bg);
+  box-shadow: var(--shadow-card);
   border: 2px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .vf__card:hover {
-  box-shadow: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--shadow-pop);
   transform: translateY(-2px);
 }
 
 .vf__card--selected {
-  border-color: var(--cta-primary-bg, #FFBC25);
-  box-shadow: 0 0 0 1px var(--cta-primary-bg), var(--shadow-sm);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent), var(--shadow-card);
 }
 
 .vf__card--selected:hover {
-  box-shadow: 0 0 0 1px var(--cta-primary-bg), var(--shadow-md);
+  box-shadow: 0 0 0 1px var(--color-accent), var(--shadow-pop);
 }
 
 .vf__card-check {
   position: absolute;
-  top: var(--space-xs, 4px);
-  left: var(--space-xs, 4px);
+  top: var(--space-1);
+  left: var(--space-1);
   z-index: 2;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
   filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
 }
 
@@ -378,21 +377,21 @@ async function download(selectedOnly) {
 }
 
 .vf__card-meta {
-  padding: var(--space-sm, 8px) var(--space-md, 16px);
+  padding: var(--space-2) var(--space-3);
 }
 
 .vf__card-label {
   display: block;
-  font-size: var(--text-sm, 13px);
+  font-size: var(--text-sm);
   font-weight: 700;
-  color: var(--color-gray-800, #1a1a2e);
-  margin-bottom: var(--space-xs, 4px);
+  color: var(--color-text);
+  margin-bottom: var(--space-1);
 }
 
 .vf__card-details {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm, 8px);
+  gap: var(--space-2);
 }
 
 .vf__card-detail {
@@ -401,7 +400,7 @@ async function download(selectedOnly) {
   gap: 2px;
   font-size: 10px;
   font-weight: 500;
-  color: var(--color-gray-500, #808080);
+  color: var(--color-text-muted);
 }
 
 .vf__card-detail .li-icon {
@@ -412,7 +411,7 @@ async function download(selectedOnly) {
 @media (max-width: 640px) {
   .vf__grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-sm, 8px);
+    gap: var(--space-2);
   }
 
   .vf__toolbar {
@@ -430,11 +429,11 @@ async function download(selectedOnly) {
   }
 
   .vf__card-meta {
-    padding: var(--space-xs, 4px) var(--space-sm, 8px);
+    padding: var(--space-1) var(--space-2);
   }
 
   .vf__card-details {
-    gap: var(--space-xs, 4px);
+    gap: var(--space-1);
   }
 }
 </style>

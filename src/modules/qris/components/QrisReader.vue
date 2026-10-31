@@ -9,7 +9,7 @@
       @drop.prevent="handleDrop"
       tabindex="0"
     >
-      <LiIcon name="qr_code_scanner" class="reader__dropzone-icon" />
+      <LiIcon name="scan-line" class="reader__dropzone-icon" />
       <p class="reader__dropzone-text">
         Drop QR image here, paste from clipboard (Ctrl+V), or
         <label class="reader__browse">
@@ -38,7 +38,7 @@
 
     <!-- Error -->
     <div v-if="error" class="reader__error">
-      <LiIcon name="error" />
+      <LiIcon name="circle-x" />
       {{ error }}
     </div>
 
@@ -146,9 +146,9 @@ function decodeImageFile(file) {
   justify-content: center;
   gap: 12px;
   padding: 40px 24px;
-  border: 2px dashed rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-lg, 24px);
-  background: rgba(255, 255, 255, 0.3);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
   cursor: pointer;
   transition: all 200ms var(--ease-out);
   outline: none;
@@ -156,30 +156,30 @@ function decodeImageFile(file) {
 
 .reader__dropzone:hover,
 .reader__dropzone--active {
-  border-color: var(--cta-primary-bg, #FFBC25);
+  border-color: var(--color-accent);
   background: rgba(255, 188, 37, 0.04);
 }
 
 .reader__dropzone-icon {
   font-size: 40px;
-  color: var(--color-gray-300, #CCC);
+  color: var(--color-border-strong);
 }
 
 .reader__dropzone:hover .reader__dropzone-icon,
 .reader__dropzone--active .reader__dropzone-icon {
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 .reader__dropzone-text {
   font-size: 13px;
-  color: var(--color-gray-500, #999);
+  color: var(--color-text-muted);
   text-align: center;
   margin: 0;
   line-height: 1.6;
 }
 
 .reader__browse {
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -191,7 +191,7 @@ function decodeImageFile(file) {
   align-items: center;
   gap: 12px;
   font-size: 11px;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
@@ -215,33 +215,32 @@ function decodeImageFile(file) {
 .reader__textarea {
   flex: 1;
   padding: 10px 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: var(--radius-xs, 8px);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
   font-family: 'SF Mono', 'Fira Code', monospace;
   font-size: 12px;
   line-height: 1.5;
-  color: var(--color-gray-900, #333);
-  background: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-strong);
+  background: var(--color-bg);
   resize: vertical;
   outline: none;
   transition: border-color 200ms;
 }
 
 .reader__textarea:focus {
-  border-color: var(--color-yellow-400, #F9C700);
+  border-color: var(--color-accent);
 }
 
 .reader__parse-btn {
   padding: 10px 20px;
-  background: var(--cta-primary-bg, #FFBC25);
-  color: var(--cta-primary-text, #1E1E1E);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   transition: transform 200ms;
-  font-family: var(--font-body, 'Inter', sans-serif);
   white-space: nowrap;
 }
 
@@ -274,9 +273,9 @@ function decodeImageFile(file) {
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: var(--color-error-container, #FDECEE);
-  color: var(--color-on-error-container, #A33129);
-  border-radius: var(--radius-xs, 8px);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 500;
 }
@@ -292,20 +291,20 @@ function decodeImageFile(file) {
   align-items: center;
   gap: 12px;
   padding: 12px;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-md, 16px);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
 }
 
 .reader__preview-img {
   width: 64px;
   height: 64px;
-  border-radius: var(--radius-xs, 8px);
+  border-radius: var(--radius-sm);
   object-fit: contain;
 }
 
 .reader__preview-label {
   font-size: 12px;
-  color: var(--color-gray-500, #999);
+  color: var(--color-text-muted);
 }
 </style>

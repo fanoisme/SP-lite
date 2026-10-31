@@ -9,7 +9,7 @@
         class="adm-users__search"
       />
       <button class="adm-users__add-btn" @click="$emit('add-user')">
-        <LiIcon name="person_add" />
+        <LiIcon name="user-plus" />
         Add User
       </button>
     </div>
@@ -20,7 +20,7 @@
     </p>
 
     <!-- Users table inside glass card -->
-    <LiGlassCard variant="light" size="md" :hoverable="false" class="adm-users__card">
+    <div class="adm-users__card">
       <LiTable
         :data="paginatedUsers"
         :columns="columns"
@@ -72,7 +72,7 @@
               :title="row.is_active ? 'Deactivate account' : 'Activate account'"
               @click="$emit('update-active', row.id, !row.is_active)"
             >
-              <LiIcon :name="row.is_active ? 'check_circle' : 'hourglass_empty'" />
+              <LiIcon :name="row.is_active ? 'circle-check' : 'hourglass'" />
             </button>
             <button
               class="adm-users__manage-btn"
@@ -80,7 +80,7 @@
               @click="$emit('open-user', row)"
               title="Manage access"
             >
-              <LiIcon name="tune" />
+              <LiIcon name="sliders-horizontal" />
             </button>
             <button
               class="adm-users__delete-btn"
@@ -89,7 +89,7 @@
               @click="$emit('delete-user', row)"
               title="Delete user"
             >
-              <LiIcon name="delete" />
+              <LiIcon name="trash-2" />
             </button>
           </div>
         </template>
@@ -107,13 +107,12 @@
       <div v-if="totalPages > 1" class="adm-users__pagination">
         <LiPagination v-model="currentPage" :totalPages="totalPages" />
       </div>
-    </LiGlassCard>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import LiGlassCard from '@lib/components/LiGlassCard.vue'
 import LiTable from '@lib/components/LiTable.vue'
 import LiTextField from '@lib/components/LiTextField.vue'
 import LiSelect from '@lib/components/LiSelect.vue'
@@ -179,8 +178,8 @@ function formatDate(dateStr) {
 .adm-users__toolbar {
   display: flex;
   align-items: center;
-  gap: var(--space-m, 12px);
-  margin-bottom: var(--space-l, 16px);
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .adm-users__search {
@@ -191,22 +190,22 @@ function formatDate(dateStr) {
 .adm-users__add-btn {
   display: flex;
   align-items: center;
-  gap: var(--space-s, 6px);
+  gap: var(--space-2);
   padding: 10px 20px;
-  background: var(--cta-primary-bg, #FFBC25);
-  color: var(--cta-primary-text, #1E1E1E);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-weight: 600;
   font-size: 13px;
-  font-family: var(--font-body, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
   white-space: nowrap;
 }
 
 .adm-users__add-btn:hover {
-  background: var(--cta-primary-hover, #FFB60A);
+  background: var(--color-accent-strong);
   transform: translateY(-2px);
 }
 
@@ -217,10 +216,10 @@ function formatDate(dateStr) {
 .adm-users__hint {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs, 6px);
+  gap: var(--space-1);
   margin: 0;
   font-size: 12px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 .adm-users__hint .li-icon {
@@ -235,30 +234,30 @@ function formatDate(dateStr) {
 .adm-users__username {
   display: flex;
   align-items: center;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
 }
 
 .adm-users__avatar {
   width: 28px;
   height: 28px;
-  border-radius: var(--radius-xs, 8px);
-  background: linear-gradient(135deg, var(--color-blue-100, #E6E6FF), var(--color-blue-200, #60A5FA));
+  border-radius: var(--radius-xs);
+  background: linear-gradient(135deg, var(--color-info-soft), var(--color-info-soft));
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 11px;
   font-weight: 700;
-  color: var(--color-blue-500, #0047B2);
+  color: var(--color-info);
   flex-shrink: 0;
 }
 
 .adm-users__name {
   font-weight: 600;
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
 }
 
 .adm-users__custom-dot {
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
   font-size: 10px;
   line-height: 1;
   margin-left: -2px;
@@ -274,9 +273,9 @@ function formatDate(dateStr) {
   background: none;
   border: none;
   cursor: pointer;
-  padding: var(--space-s, 6px);
-  border-radius: var(--radius-sm, 12px);
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  transition: all var(--dur-short) var(--ease-out);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -287,15 +286,15 @@ function formatDate(dateStr) {
 }
 
 .adm-users__status-btn.is-active {
-  color: var(--color-success, #10B981);
+  color: var(--color-success);
 }
 
 .adm-users__status-btn.is-pending {
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 .adm-users__status-btn:hover:not(:disabled) {
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--color-border);
 }
 
 .adm-users__status-btn:disabled {
@@ -307,17 +306,17 @@ function formatDate(dateStr) {
   background: none;
   border: none;
   cursor: pointer;
-  padding: var(--space-s, 6px);
-  border-radius: var(--radius-sm, 12px);
-  color: var(--color-gray-400, #B3B3B3);
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-placeholder);
+  transition: all var(--dur-short) var(--ease-out);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .adm-users__manage-btn:hover {
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
   background: rgba(255, 188, 37, 0.12);
 }
 
@@ -331,32 +330,32 @@ function formatDate(dateStr) {
 
 .adm-users__date {
   font-size: 12px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 .adm-users__pagination {
   display: flex;
   justify-content: center;
-  padding: var(--space-l, 16px);
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border);
 }
 
 .adm-users__delete-btn {
   background: none;
   border: none;
   cursor: pointer;
-  padding: var(--space-s, 6px);
-  border-radius: var(--radius-sm, 12px);
-  color: var(--color-gray-400, #B3B3B3);
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  padding: var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-placeholder);
+  transition: all var(--dur-short) var(--ease-out);
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
 .adm-users__delete-btn:hover:not(:disabled) {
-  color: var(--color-error, #C83E3B);
+  color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08);
 }
 

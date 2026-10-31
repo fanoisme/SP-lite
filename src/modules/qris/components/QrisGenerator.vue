@@ -8,7 +8,7 @@
         :aria-pressed="qrType === 'emvco'"
         @click="qrType = 'emvco'"
       >
-        <LiIcon name="qr_code_2" />
+        <LiIcon name="qr-code" />
         EMVCo QRIS
       </button>
       <button
@@ -30,7 +30,7 @@
         :aria-pressed="mode === 'form'"
         @click="mode = 'form'"
       >
-        <LiIcon name="edit_note" />
+        <LiIcon name="notebook-pen" />
         Form Input
       </button>
       <button
@@ -39,7 +39,7 @@
         :aria-pressed="mode === 'paste'"
         @click="mode = 'paste'"
       >
-        <LiIcon name="content_paste" />
+        <LiIcon name="clipboard" />
         Paste Value
       </button>
     </div>
@@ -73,7 +73,7 @@
       <!-- Advanced Fields -->
       <details class="gen__advanced">
         <summary class="gen__advanced-toggle">
-          <LiIcon name="tune" />
+          <LiIcon name="sliders-horizontal" />
           Advanced Options
           <span class="gen__advanced-hint">optional — defaults will be used if not edited</span>
         </summary>
@@ -116,7 +116,7 @@
       <button class="gen__submit" @click="handleGenerate" :disabled="generating || !form.merchantName || !form.merchantCity">
         <span v-if="generating" class="gen__submit-spinner"></span>
         <span v-else>
-          <LiIcon name="qr_code_2" />
+          <LiIcon name="qr-code" />
           Generate EMVCo QRIS
         </span>
       </button>
@@ -177,7 +177,7 @@
       <div class="gen__paste-header">
         <label class="gen__label">Paste QR Code Value</label>
         <button class="gen__clipboard-btn" @click="pasteFromClipboard" title="Paste from clipboard">
-          <LiIcon name="content_paste" />
+          <LiIcon name="clipboard" />
           Clipboard
         </button>
       </div>
@@ -201,7 +201,7 @@
 
     <!-- Error -->
     <div v-if="error" class="gen__error">
-      <LiIcon name="error" />
+      <LiIcon name="circle-x" />
       {{ error }}
     </div>
   </div>
@@ -311,7 +311,7 @@ async function pasteFromClipboard() {
   display: flex;
   gap: 4px;
   background: rgba(0, 0, 0, 0.03);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-md);
   padding: 3px;
   margin-bottom: 12px;
 }
@@ -325,23 +325,22 @@ async function pasteFromClipboard() {
   padding: 10px 14px;
   background: none;
   border: none;
-  border-radius: var(--radius-xs, 8px);
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-gray-500, #999);
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: all 200ms var(--ease-out);
-  font-family: var(--font-body, 'Inter', sans-serif);
-}
+  }
 
 .gen__type-btn:hover {
-  color: var(--color-gray-700, #666);
+  color: var(--color-text);
 }
 
 .gen__type-btn--active {
-  background: var(--color-gray-0, #fff);
-  color: var(--color-gray-900, #333);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  background: var(--color-bg);
+  color: var(--color-text-strong);
+  box-shadow: 0 1px 4px var(--color-border-strong);
 }
 
 .gen__type-btn .li-icon {
@@ -353,7 +352,7 @@ async function pasteFromClipboard() {
   display: flex;
   gap: 4px;
   background: rgba(0, 0, 0, 0.03);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-md);
   padding: 3px;
 }
 
@@ -366,23 +365,22 @@ async function pasteFromClipboard() {
   padding: 8px 14px;
   background: none;
   border: none;
-  border-radius: var(--radius-xs, 8px);
+  border-radius: var(--radius-sm);
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-gray-500, #999);
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: all 200ms var(--ease-out);
-  font-family: var(--font-body, 'Inter', sans-serif);
-}
+  }
 
 .gen__mode-btn:hover {
-  color: var(--color-gray-700, #666);
+  color: var(--color-text);
 }
 
 .gen__mode-btn--active {
-  background: var(--color-gray-0, #fff);
-  color: var(--color-gray-900, #333);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  background: var(--color-bg);
+  color: var(--color-text-strong);
+  box-shadow: 0 1px 4px var(--color-border-strong);
 }
 
 .gen__mode-btn .li-icon {
@@ -401,7 +399,7 @@ async function pasteFromClipboard() {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-gray-500, #999);
+  color: var(--color-text-muted);
   margin: 0 0 10px;
 }
 
@@ -420,33 +418,32 @@ async function pasteFromClipboard() {
 .gen__label {
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-gray-700, #666);
+  color: var(--color-text);
 }
 
 .gen__req {
-  color: var(--color-red-400, #C83E3B);
+  color: var(--color-danger);
 }
 
 .gen__opt {
   font-weight: 400;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   font-size: 11px;
 }
 
 .gen__input {
   padding: 10px 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: var(--radius-xs, 8px);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
   font-size: 13px;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  color: var(--color-gray-900, #333);
-  background: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-strong);
+  background: var(--color-bg);
   outline: none;
   transition: border-color 200ms;
 }
 
 .gen__input:focus {
-  border-color: var(--color-yellow-400, #F9C700);
+  border-color: var(--color-accent);
 }
 
 .gen__input--mono {
@@ -471,20 +468,19 @@ async function pasteFromClipboard() {
   align-items: center;
   gap: 4px;
   padding: 4px 10px;
-  background: rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: var(--radius-xs, 8px);
+  background: var(--color-border);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
   font-size: 11px;
   font-weight: 600;
-  color: var(--color-gray-600, #888);
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: all 200ms;
-  font-family: var(--font-body, 'Inter', sans-serif);
-}
+  }
 
 .gen__clipboard-btn:hover {
-  background: rgba(0, 0, 0, 0.08);
-  color: var(--color-gray-800, #444);
+  background: var(--color-border-strong);
+  color: var(--color-text);
 }
 
 .gen__clipboard-btn .li-icon {
@@ -498,13 +494,13 @@ async function pasteFromClipboard() {
 .gen__textarea {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: var(--radius-xs, 8px);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
   font-family: 'SF Mono', 'Fira Code', monospace;
   font-size: 12px;
   line-height: 1.6;
-  color: var(--color-gray-900, #333);
-  background: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-strong);
+  background: var(--color-bg);
   resize: vertical;
   outline: none;
   transition: border-color 200ms;
@@ -512,7 +508,7 @@ async function pasteFromClipboard() {
 }
 
 .gen__textarea:focus {
-  border-color: var(--color-yellow-400, #F9C700);
+  border-color: var(--color-accent);
   box-shadow: 0 0 0 3px rgba(249, 199, 0, 0.1);
 }
 
@@ -521,14 +517,14 @@ async function pasteFromClipboard() {
   bottom: 8px;
   right: 10px;
   font-size: 10px;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   pointer-events: none;
 }
 
 /* ── Advanced ── */
 .gen__advanced {
   border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-md);
   overflow: hidden;
 }
 
@@ -543,7 +539,7 @@ async function pasteFromClipboard() {
   padding: 12px 16px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-gray-700, #666);
+  color: var(--color-text);
   cursor: pointer;
   list-style: none;
   background: rgba(0, 0, 0, 0.02);
@@ -555,13 +551,13 @@ async function pasteFromClipboard() {
 
 .gen__advanced-toggle .li-icon {
   font-size: 18px;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 
 .gen__advanced-hint {
   font-size: 11px;
   font-weight: 400;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   margin-left: auto;
 }
 
@@ -576,16 +572,15 @@ async function pasteFromClipboard() {
   justify-content: center;
   gap: 8px;
   padding: 12px 24px;
-  background: var(--cta-primary-bg, #FFBC25);
-  color: var(--cta-primary-text, #1E1E1E);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: transform 200ms var(--ease-out);
-  font-family: var(--font-body, 'Inter', sans-serif);
-}
+  }
 
 .gen__submit:hover:not(:disabled) {
   transform: translateY(-1px);
@@ -619,9 +614,9 @@ async function pasteFromClipboard() {
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: var(--color-error-container, #FDECEE);
-  color: var(--color-on-error-container, #A33129);
-  border-radius: var(--radius-xs, 8px);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 500;
 }

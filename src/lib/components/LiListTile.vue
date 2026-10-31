@@ -37,8 +37,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRipple } from '../composables/useRipple';
+import { ref } from 'vue';
 
 const props = defineProps({
   title: String,
@@ -53,34 +52,26 @@ const props = defineProps({
 defineEmits(['click']);
 
 const tileRef = ref(null);
-const { addRipple } = useRipple();
-
-onMounted(() => {
-  if (tileRef.value && (props.interactive || tileRef.value.hasAttribute('onClick'))) {
-    tileRef.value.addEventListener('mousedown', (e) => addRipple(e, tileRef.value));
-  }
-});
 </script>
 
 <style scoped>
 .li-list-tile {
   display: flex;
   align-items: center;
-  padding: var(--space-l, 16px);
-  gap: var(--space-m, 12px);
-  background-color: var(--color-gray-0, #FFFFFF);
-  font-family: var(--font-family, 'Inter', sans-serif);
+  padding: var(--space-4);
+  gap: var(--space-3);
+  background-color: var(--color-bg);
   position: relative;
   overflow: hidden;
 }
 
 .li-list-tile-interactive {
   cursor: pointer;
-  transition: background-color var(--dur-short, 200ms) var(--ease-out);
+  transition: background-color var(--dur-short) var(--ease-out);
 }
 
 .li-list-tile-interactive:hover {
-  background-color: var(--color-gray-100, #F2F2F2);
+  background-color: var(--color-surface-2);
 }
 
 .li-list-tile-leading {
@@ -95,7 +86,7 @@ onMounted(() => {
   height: 40px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: var(--color-gray-200, #E6E6E6);
+  background-color: var(--color-border);
 }
 
 .li-list-tile-avatar img {
@@ -108,8 +99,8 @@ onMounted(() => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: var(--color-gray-100, #F2F2F2);
-  color: var(--color-gray-600, #808080);
+  background-color: var(--color-surface-2);
+  color: var(--color-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -129,17 +120,17 @@ onMounted(() => {
 }
 
 .li-list-tile-title {
-  font-size: var(--text-sm, 16px);
+  font-size: var(--text-base);
   font-weight: 600;
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text-strong);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .li-list-tile-subtitle {
-  font-size: var(--text-xs, 14px);
-  color: var(--color-gray-600, #808080);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
@@ -150,12 +141,12 @@ onMounted(() => {
 .li-list-tile-trailing {
   display: flex;
   align-items: center;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   flex-shrink: 0;
 }
 
 .li-list-tile-action-icon {
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   display: flex;
   align-items: center;
 }
@@ -166,12 +157,12 @@ onMounted(() => {
 }
 
 .li-list-tile-badge {
-  background-color: var(--color-orange-400, #FF6B00);
+  background-color: var(--color-accent-strong);
   color: white;
-  font-size: var(--text-tiny, 10px);
+  font-size: var(--text-micro);
   font-weight: 700;
   padding: 2px 6px;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   min-width: 18px;
   text-align: center;
 }

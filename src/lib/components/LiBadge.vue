@@ -1,5 +1,5 @@
 <template>
-  <span :class="['li-badge', `li-badge-${variant}`, `li-badge-${size}`, { 'li-badge-pill': isPill }]">
+  <span :class="['li-badge', `li-badge-${variant}`, `li-badge-${size}`]">
     <span v-if="$slots.iconLeft" class="li-badge-icon">
       <slot name="iconLeft"></slot>
     </span>
@@ -18,8 +18,8 @@ defineProps({
   variant: {
     type: String,
     default: 'neutral',
-    // neutral, success, info, warning, error, brand
-    validator: (v) => ['neutral', 'success', 'info', 'warning', 'error', 'brand'].includes(v)
+    // Allo status tones (APP.md §2); brand = accent tone
+    validator: (v) => ['neutral', 'info', 'discovery', 'success', 'warning', 'error', 'brand'].includes(v)
   },
   size: {
     type: String,
@@ -34,30 +34,25 @@ defineProps({
 </script>
 
 <style scoped>
+/* Allo status lozenge (app.css .loz): tone text on tone -soft, radius 3, no border. */
 .li-badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-xs, 4px);
-  border-radius: var(--radius-md, 8px);
-  font-family: var(--font-family, 'Inter', sans-serif);
-  font-weight: 600;
+  gap: 4px;
+  height: 20px;
+  width: fit-content;
+  padding: 0 6px;
+  border-radius: var(--radius-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
   line-height: 1;
+  text-transform: uppercase;
   white-space: nowrap;
+  transition: background var(--dur-medium) var(--ease-move), color var(--dur-medium) var(--ease-move);
 }
 
-.li-badge-pill {
-  border-radius: var(--radius-pill, 999px);
-}
-
-.li-badge-sm {
-  padding: 2px 6px;
-  font-size: var(--text-tiny, 10px);
-}
-
-.li-badge-md {
-  padding: 4px 8px;
-  font-size: var(--text-xxs, 12px);
-}
+.li-badge-sm { font-size: 10px; height: 18px; }
+.li-badge-md { font-size: var(--text-micro); }
 
 .li-badge-icon {
   display: inline-flex;
@@ -70,35 +65,12 @@ defineProps({
   height: 12px;
 }
 
-/* Variants */
-.li-badge-neutral {
-  background-color: var(--color-gray-100, #F2F2F2);
-  color: var(--color-gray-800, #4D4D4D);
-  border: 1px solid var(--color-gray-300, #CCCCCC);
-}
-
-.li-badge-success {
-  background-color: var(--color-green-100, #ECFF8F);
-  color: var(--color-green-500, #17A3E6);
-}
-
-.li-badge-info {
-  background-color: var(--color-blue-100, #E6E6FF);
-  color: var(--color-blue-500, #0047B2);
-}
-
-.li-badge-warning {
-  background-color: var(--color-yellow-100, #FFF3D6);
-  color: var(--color-orange-500, #FF3000);
-}
-
-.li-badge-error {
-  background-color: var(--color-red-100, #D4A73F); /* Using light danger from tokens */
-  color: var(--color-red-500, #A33129);
-}
-
-.li-badge-brand {
-  background-color: var(--color-yellow-200, #FFEB3B);
-  color: var(--color-gray-900, #333333);
-}
+/* Status tones */
+.li-badge-neutral { background: var(--color-neutral-soft); color: var(--color-text); }
+.li-badge-info { background: var(--color-info-soft); color: var(--color-info); }
+.li-badge-discovery { background: var(--color-discovery-soft); color: var(--color-discovery); }
+.li-badge-success { background: var(--color-success-soft); color: var(--color-success); }
+.li-badge-warning { background: var(--color-warning-soft); color: var(--color-warning); }
+.li-badge-error { background: var(--color-danger-soft); color: var(--color-danger); }
+.li-badge-brand { background: var(--color-accent-soft); color: var(--color-accent-text); }
 </style>

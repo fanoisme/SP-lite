@@ -8,7 +8,7 @@
       <div class="ddbu__actions">
         <p class="ddbu__count">{{ total }} {{ total === 1 ? 'business unit' : 'business units' }}</p>
         <button class="ddbu__btn" type="button" :disabled="!total || exporting" @click="exportXlsx">
-          <LiIcon name="file_save" />
+          <LiIcon name="save" />
           {{ exporting ? 'Exporting…' : 'Export XLSX' }}
         </button>
         <button v-if="canCreate" class="ddbu__btn" type="button" @click="showBulk = true">
@@ -16,7 +16,7 @@
           Bulk Upload
         </button>
         <button v-if="canCreate" class="ddbu__btn ddbu__btn--primary" type="button" @click="openForm(null)">
-          <LiIcon name="add" />
+          <LiIcon name="plus" />
           Add
         </button>
       </div>
@@ -26,7 +26,7 @@
          screen are not wrong, they are old — so this offers a reload rather than
          forcing one and losing whatever the reader was in the middle of. -->
     <div v-if="showStale" class="ddbu__stale">
-      <LiIcon name="sync_problem" />
+      <LiIcon name="refresh-cw-off" />
       <p class="ddbu__stale-text">
         {{ staleCount }} {{ staleCount === 1 ? 'change' : 'changes' }}
         <template v-if="staleBy">by {{ staleBy }}</template>
@@ -34,7 +34,7 @@
       </p>
       <button class="ddbu__stale-action" type="button" @click="refresh">Refresh</button>
       <button class="ddbu__stale-close" type="button" aria-label="Dismiss" @click="staleDismissed = true">
-        <LiIcon name="close" />
+        <LiIcon name="x" />
       </button>
     </div>
 
@@ -99,7 +99,7 @@
       <template #cell-actions="{ row }">
         <div class="ddbu__row-actions">
           <button v-if="canUpdate" class="ddbu__icon-btn" type="button" :aria-label="`Edit ${row.name}`" title="Edit" @click="openForm(row)">
-            <LiIcon name="edit" />
+            <LiIcon name="pencil" />
           </button>
           <button
             v-if="canDelete"
@@ -109,7 +109,7 @@
             title="Delete"
             @click="pendingDelete = row"
           >
-            <LiIcon name="delete" />
+            <LiIcon name="trash-2" />
           </button>
         </div>
       </template>
@@ -305,49 +305,47 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.ddbu { display: flex; flex-direction: column; gap: var(--space-md, 16px); }
+.ddbu { display: flex; flex-direction: column; gap: var(--space-3); }
 .ddbu__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .ddbu__title { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -0.4px; }
-.ddbu__sub { font-size: 14px; color: var(--color-gray-500, #8e8ea0); margin: 2px 0 0; }
-.ddbu__count { font-size: 13px; color: var(--color-gray-500, #8e8ea0); margin: 0; white-space: nowrap; }
+.ddbu__sub { font-size: 14px; color: var(--color-text-muted); margin: 2px 0 0; }
+.ddbu__count { font-size: 13px; color: var(--color-text-muted); margin: 0; white-space: nowrap; }
 .ddbu__actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .ddbu__error {
-  font-size: 13px; color: var(--color-red-400, #C83E3B);
+  font-size: 13px; color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08);
-  border-radius: var(--radius-sm, 12px); padding: 10px 14px; margin: 0;
+  border-radius: var(--radius-md); padding: 10px 14px; margin: 0;
 }
 .ddbu__pagination { display: flex; justify-content: center; }
 
 .ddbu__btn {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 13px; font-weight: 600; color: var(--color-gray-700, #666);
+  padding: 8px 16px; border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill); background: transparent;
+  font-size: 13px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms; white-space: nowrap;
 }
-.ddbu__btn:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
+.ddbu__btn:hover:not(:disabled) { background: var(--color-border); }
 .ddbu__btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .ddbu__btn .li-icon { font-size: 17px; }
 .ddbu__btn--primary {
-  background: var(--cta-primary-bg, #FFBC25);
-  color: var(--cta-primary-text, #1E1E1E);
-  border-color: var(--cta-primary-bg, #FFBC25);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
 }
-.ddbu__btn--primary:hover:not(:disabled) { background: var(--cta-primary-hover, #FAB000); }
+.ddbu__btn--primary:hover:not(:disabled) { background: var(--color-accent-strong); }
 
 .ddbu__filters {
   display: grid; grid-template-columns: 2fr 1fr auto;
-  gap: var(--space-sm, 12px); align-items: end;
+  gap: var(--space-2); align-items: end;
 }
 .ddbu__reset {
-  padding: 10px 18px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 13px; font-weight: 600; color: var(--color-gray-700, #666);
+  padding: 10px 18px; border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill); background: transparent;
+  font-size: 13px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms;
 }
-.ddbu__reset:hover { background: rgba(0, 0, 0, 0.04); }
+.ddbu__reset:hover { background: var(--color-border); }
 
 @media (max-width: 900px) {
   .ddbu__filters { grid-template-columns: 1fr; }
@@ -355,67 +353,66 @@ onMounted(() => {
 
 .ddbu__stale {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 14px; border-radius: var(--radius-sm, 12px);
+  padding: 10px 14px; border-radius: var(--radius-md);
   background: rgba(255, 188, 37, 0.12);
   border: 1px solid rgba(255, 188, 37, 0.35);
 }
-.ddbu__stale .li-icon { font-size: 19px; color: var(--color-yellow-500, #F4A600); }
-.ddbu__stale-text { margin: 0; flex: 1; font-size: 13px; color: var(--color-gray-800, #4D4D4D); }
+.ddbu__stale .li-icon { font-size: 19px; color: var(--color-accent-text); }
+.ddbu__stale-text { margin: 0; flex: 1; font-size: 13px; color: var(--color-text); }
 .ddbu__stale-action {
-  padding: 6px 14px; border: none; border-radius: var(--radius-pill, 999px);
-  background: var(--cta-primary-bg, #FFBC25); color: var(--cta-primary-text, #1E1E1E);
-  font-family: var(--font-body, 'Inter', sans-serif);
+  padding: 6px 14px; border: none; border-radius: var(--radius-pill);
+  background: var(--color-accent); color: var(--color-on-accent);
   font-size: 12px; font-weight: 700; cursor: pointer; transition: all 200ms;
 }
-.ddbu__stale-action:hover { background: var(--cta-primary-hover, #FAB000); }
+.ddbu__stale-action:hover { background: var(--color-accent-strong); }
 .ddbu__stale-close {
   background: none; border: none; cursor: pointer; padding: 2px;
-  display: inline-flex; color: var(--color-gray-500, #8e8ea0);
+  display: inline-flex; color: var(--color-text-muted);
 }
 .ddbu__stale-close .li-icon { font-size: 16px; color: inherit; }
 
 .ddbu__name { font-weight: 600; font-size: 13px; }
 .ddbu__acct { display: flex; flex-direction: column; max-width: 240px; }
 .ddbu__acct-num {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11.5px;
+  font-family: var(--font-mono); font-size: 11.5px;
   overflow-wrap: anywhere;
 }
 .ddbu__acct-name {
-  font-size: 11.5px; color: var(--color-gray-500, #8e8ea0);
+  font-size: 11.5px; color: var(--color-text-muted);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
 .ddbu__split { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .ddbu__split-bar {
   width: 70px; height: 6px; flex: none; overflow: hidden;
-  border-radius: var(--radius-pill, 999px);
-  background: var(--color-gray-200, #E6E6E6);
+  border-radius: var(--radius-pill);
+  background: var(--color-border);
 }
 .ddbu__split-fill {
   display: block; height: 100%;
-  border-radius: var(--radius-pill, 999px);
-  background: var(--gradient-brand, linear-gradient(135deg, #FFAF03, #FF6B00));
+  border-radius: var(--radius-pill);
+  background: var(--color-accent);
   transition: width 300ms;
 }
 .ddbu__split-nums {
-  font-size: 11.5px; color: var(--color-gray-600, #808080);
+  font-size: 11.5px; color: var(--color-text-muted);
   font-variant-numeric: tabular-nums;
 }
 
-.ddbu__when { font-size: 12px; color: var(--color-gray-600, #808080); display: block; }
-.ddbu__by { font-size: 11px; color: var(--color-gray-400, #B3B3B3); }
+.ddbu__when { font-size: 12px; color: var(--color-text-muted); display: block; }
+.ddbu__by { font-size: 11px; color: var(--color-text-placeholder); }
 
 .ddbu__row-actions { display: inline-flex; align-items: center; gap: 2px; }
 .ddbu__icon-btn {
   background: none; border: none; cursor: pointer; padding: 6px;
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-md);
   display: inline-flex; align-items: center; justify-content: center;
-  color: var(--color-gray-400, #B3B3B3); transition: all 200ms;
+  color: var(--color-text-placeholder); transition: all 200ms;
 }
-.ddbu__icon-btn:hover { color: var(--cta-primary-bg, #FFBC25); background: rgba(255, 188, 37, 0.12); }
-.ddbu__icon-btn--danger:hover { color: var(--color-red-400, #C83E3B); background: rgba(200, 62, 59, 0.08); }
+.ddbu__icon-btn:hover { color: var(--color-accent); background: rgba(255, 188, 37, 0.12); }
+.ddbu__icon-btn--danger:hover { color: var(--color-danger); background: rgba(200, 62, 59, 0.08); }
 .ddbu__icon-btn .li-icon { font-size: 18px; }
 
-.ddbu__confirm { margin: 0 0 8px; font-size: 14px; color: var(--color-gray-900, #333); }
-.ddbu__confirm-note { margin: 0; font-size: 12.5px; color: var(--color-gray-500, #8e8ea0); }
+.ddbu__confirm { margin: 0 0 8px; font-size: 14px; color: var(--color-text-strong); }
+.ddbu__confirm-note { margin: 0; font-size: 12.5px; color: var(--color-text-muted); }
 </style>

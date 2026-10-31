@@ -3,7 +3,7 @@
     <!-- Toolbar -->
     <div v-if="history.length > 0 || !loading" class="hist__toolbar">
       <button class="hist__btn hist__btn--clear" @click="showClearConfirm = true">
-        <LiIcon name="delete_sweep" />
+        <LiIcon name="eraser" />
         Clear History
       </button>
 
@@ -66,7 +66,7 @@
           </span>
         </div>
         <button class="hist__delete" aria-label="Delete history entry" @click.stop="$emit('delete', entry.id)" title="Delete">
-          <LiIcon name="delete" />
+          <LiIcon name="trash-2" />
         </button>
       </div>
     </div>
@@ -190,7 +190,7 @@ function expiryClass(dateStr) {
   align-items: center;
   gap: 8px;
   padding: 40px;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   font-size: 13px;
 }
 
@@ -209,9 +209,9 @@ function expiryClass(dateStr) {
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-md, 16px);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
   cursor: pointer;
   transition: transform 200ms var(--ease-out);
 }
@@ -223,7 +223,7 @@ function expiryClass(dateStr) {
 .hist__qr {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-xs, 8px);
+  border-radius: var(--radius-sm);
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -239,7 +239,7 @@ function expiryClass(dateStr) {
 .hist__name {
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-gray-900, #333);
+  color: var(--color-text-strong);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -254,19 +254,19 @@ function expiryClass(dateStr) {
 .hist__amount {
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-gray-700, #666);
+  color: var(--color-text);
 }
 
 .hist__mid {
   font-size: 11px;
   font-family: 'SF Mono', 'Fira Code', monospace;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 
 .hist__type-badge {
   display: inline-block;
   padding: 1px 6px;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 9px;
   font-weight: 700;
   text-transform: uppercase;
@@ -274,18 +274,18 @@ function expiryClass(dateStr) {
 }
 
 .hist__type-badge--emvco {
-  background: var(--color-info-container, #E6E6FF);
-  color: var(--color-on-info-container, #0047B2);
+  background: var(--color-info-soft);
+  color: var(--color-info);
 }
 
 .hist__type-badge--proprietary {
-  background: var(--color-warning-container, #FFF3D6);
-  color: var(--color-on-warning-container, #FF3000);
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
 }
 
 .hist__date {
   font-size: 11px;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 
 .hist__delete {
@@ -293,14 +293,14 @@ function expiryClass(dateStr) {
   border: none;
   cursor: pointer;
   padding: 6px;
-  border-radius: var(--radius-xs, 8px);
-  color: var(--color-gray-400, #B3B3B3);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-placeholder);
   transition: all 200ms;
   flex-shrink: 0;
 }
 
 .hist__delete:hover {
-  color: var(--color-red-400, #C83E3B);
+  color: var(--color-danger);
   background: rgba(200, 62, 59, 0.06);
 }
 
@@ -321,15 +321,15 @@ function expiryClass(dateStr) {
 .hist__qr-skel {
   width: 48px;
   height: 48px;
-  border-radius: var(--radius-xs, 8px);
-  background: var(--color-gray-200, #E6E6E6);
+  border-radius: var(--radius-sm);
+  background: var(--color-border);
   animation: hist-shimmer 1.5s infinite;
   flex-shrink: 0;
 }
 
 .hist__skel-line {
   border-radius: 4px;
-  background: var(--color-gray-200, #E6E6E6);
+  background: var(--color-border);
   animation: hist-shimmer 1.5s infinite;
 }
 
@@ -370,8 +370,7 @@ function expiryClass(dateStr) {
   gap: 6px;
   padding: 6px 14px;
   border: 1px solid transparent;
-  border-radius: var(--radius-pill, 999px);
-  font-family: var(--font-body, 'Inter', sans-serif);
+  border-radius: var(--radius-pill);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -384,7 +383,7 @@ function expiryClass(dateStr) {
 }
 
 .hist__btn--clear {
-  color: var(--color-red-400, #C83E3B);
+  color: var(--color-danger);
   border-color: rgba(200, 62, 59, 0.25);
 }
 
@@ -393,27 +392,27 @@ function expiryClass(dateStr) {
 }
 
 .hist__btn--export {
-  color: var(--color-gray-700, #666);
-  border-color: rgba(0, 0, 0, 0.1);
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
 }
 
 .hist__btn--export:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--color-border);
 }
 
 .hist__btn--cancel {
-  color: var(--color-gray-700, #666);
-  border-color: rgba(0, 0, 0, 0.1);
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
 }
 
 .hist__btn--cancel:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--color-border);
 }
 
 .hist__btn--confirm-clear {
-  color: #fff;
-  background: var(--color-red-400, #C83E3B);
-  border-color: var(--color-red-400, #C83E3B);
+  color: var(--color-bg);
+  background: var(--color-danger);
+  border-color: var(--color-danger);
 }
 
 .hist__btn--confirm-clear:hover {
@@ -430,9 +429,9 @@ function expiryClass(dateStr) {
   right: 0;
   top: calc(100% + 6px);
   min-width: 120px;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: var(--radius-sm, 12px);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
   padding: 6px;
   z-index: 100;
@@ -444,7 +443,7 @@ function expiryClass(dateStr) {
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   padding: 4px 8px 2px;
   letter-spacing: 0.5px;
 }
@@ -453,17 +452,16 @@ function expiryClass(dateStr) {
   border: none;
   background: transparent;
   padding: 6px 10px;
-  font-family: var(--font-body, 'Inter', sans-serif);
   font-size: 13px;
-  color: var(--color-gray-900, #333);
+  color: var(--color-text-strong);
   text-align: left;
-  border-radius: var(--radius-xs, 8px);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   transition: background 150ms;
 }
 
 .hist__export-item:hover {
-  background: var(--color-gray-100, #F2F2F2);
+  background: var(--color-surface-2);
 }
 
 .hist__export-divider {
@@ -481,11 +479,11 @@ function expiryClass(dateStr) {
 
 .hist__expiry {
   font-size: 10px;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 
 .hist__expiry--warn {
-  color: var(--color-red-400, #C83E3B);
+  color: var(--color-danger);
   font-weight: 600;
 }
 
@@ -499,7 +497,7 @@ function expiryClass(dateStr) {
 /* ── Confirm Modal Text ── */
 .hist__confirm-text {
   font-size: 14px;
-  color: var(--color-gray-700, #666);
+  color: var(--color-text);
   line-height: 1.6;
   margin: 0;
 }

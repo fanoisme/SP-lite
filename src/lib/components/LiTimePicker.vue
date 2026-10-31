@@ -4,7 +4,7 @@
     
     <div class="li-timepicker-input-wrapper" @click="toggleDropdown" ref="wrapperRef">
       <div class="li-timepicker-icon">
-        <LiIcon name="schedule" size="md" />
+        <LiIcon name="clock" size="md" />
       </div>
       <input 
         type="text" 
@@ -181,16 +181,15 @@ onUnmounted(() => {
 .li-timepicker {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs, 4px);
+  gap: var(--space-1);
   width: 100%;
-  font-family: var(--font-family, 'Inter', sans-serif);
   position: relative;
 }
 
 .li-timepicker-label {
-  font-size: var(--text-xs, 14px);
+  font-size: var(--text-sm);
   font-weight: 500;
-  color: var(--color-gray-800, #4D4D4D);
+  color: var(--color-text);
 }
 
 .li-timepicker-input-wrapper {
@@ -202,8 +201,8 @@ onUnmounted(() => {
 
 .li-timepicker-icon {
   position: absolute;
-  left: var(--space-m, 12px);
-  color: var(--color-gray-500, #999999);
+  left: var(--space-3);
+  color: var(--color-text-muted);
   display: flex;
   pointer-events: none;
 }
@@ -211,23 +210,23 @@ onUnmounted(() => {
 .li-timepicker-input {
   width: 100%;
   height: 40px;
-  padding: 0 var(--space-m, 12px) 0 40px;
-  background-color: var(--color-gray-0, #FFFFFF);
-  border: 1px solid var(--color-gray-300, #CCCCCC);
-  border-radius: var(--radius-md, 8px);
+  padding: 0 var(--space-3) 0 40px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
   font-family: inherit;
-  font-size: var(--text-sm, 16px);
-  color: var(--color-gray-900, #333333);
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  font-size: var(--text-base);
+  color: var(--color-text-strong);
+  transition: all var(--dur-short) var(--ease-out);
   cursor: pointer;
 }
 
 .li-timepicker-input::placeholder {
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 
 .li-timepicker-input-wrapper:hover .li-timepicker-input {
-  border-color: var(--color-gray-400, #B3B3B3);
+  border-color: var(--color-text-placeholder);
 }
 
 .li-timepicker.is-disabled .li-timepicker-input-wrapper {
@@ -235,34 +234,34 @@ onUnmounted(() => {
 }
 
 .li-timepicker.is-disabled .li-timepicker-input {
-  background-color: var(--color-gray-100, #F2F2F2);
-  color: var(--color-gray-500, #999999);
+  background-color: var(--color-surface-2);
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
 .li-timepicker-hint,
 .li-timepicker-error {
-  font-size: var(--text-tiny, 12px);
+  font-size: var(--text-micro);
 }
 
 .li-timepicker-hint {
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
 }
 
 .li-timepicker-error {
-  color: var(--color-red-500, #A33129);
+  color: var(--color-danger);
 }
 
 /* Dropdown */
 .li-time-dropdown {
   position: absolute;
-  top: calc(100% + var(--space-xs, 4px));
+  top: calc(100% + var(--space-1));
   left: 0;
   width: 200px;
-  background-color: var(--color-gray-0, #FFFFFF);
-  border-radius: var(--radius-md, 8px);
-  box-shadow: var(--shadow-dropdown, 0 8px 24px rgba(0, 0, 0, 0.1));
-  border: 1px solid var(--color-gray-200, #E6E6E6);
+  background-color: var(--color-bg);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
+  border: 1px solid var(--color-border);
   z-index: 1000;
   overflow: hidden;
   display: flex;
@@ -272,14 +271,14 @@ onUnmounted(() => {
 .li-time-columns {
   display: flex;
   height: 200px;
-  border-bottom: 1px solid var(--color-gray-200, #E6E6E6);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .li-time-column {
   flex: 1;
   overflow-y: auto;
   scroll-behavior: smooth;
-  border-right: 1px solid var(--color-gray-100, #F2F2F2);
+  border-right: 1px solid var(--color-surface-2);
 }
 
 .li-time-column:last-child {
@@ -292,62 +291,62 @@ onUnmounted(() => {
 }
 
 .li-time-item {
-  padding: var(--space-s, 8px) 0;
+  padding: var(--space-2) 0;
   text-align: center;
-  font-size: var(--text-sm, 14px);
-  color: var(--color-gray-700, #666666);
+  font-size: var(--text-sm);
+  color: var(--color-text);
   cursor: pointer;
-  transition: all var(--dur-micro, 120ms);
+  transition: all var(--dur-quick);
 }
 
 .li-time-item:hover {
-  background-color: var(--color-gray-100, #F2F2F2);
+  background-color: var(--color-surface-2);
 }
 
 .li-time-item.is-selected {
-  background-color: var(--color-yellow-100, #FFF3D6);
-  color: var(--color-orange-400, #FF6B00);
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent-strong);
   font-weight: 600;
 }
 
 .li-time-actions {
   display: flex;
-  padding: var(--space-s, 8px);
-  gap: var(--space-s, 8px);
+  padding: var(--space-2);
+  gap: var(--space-2);
   justify-content: flex-end;
-  background-color: var(--color-gray-0, #FFFFFF);
+  background-color: var(--color-bg);
 }
 
 .li-time-btn {
   background: transparent;
   border: none;
-  font-size: var(--text-xs, 14px);
+  font-size: var(--text-sm);
   font-weight: 500;
   cursor: pointer;
   padding: 4px 12px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
 }
 
 .li-time-btn-clear {
-  color: var(--color-gray-600, #808080);
+  color: var(--color-text-muted);
 }
 
 .li-time-btn-clear:hover {
-  background-color: var(--color-gray-100, #F2F2F2);
+  background-color: var(--color-surface-2);
 }
 
 .li-time-btn-ok {
-  color: var(--color-orange-400, #FF6B00);
+  color: var(--color-accent-strong);
 }
 
 .li-time-btn-ok:hover {
-  background-color: var(--color-yellow-100, #FFF3D6);
+  background-color: var(--color-accent-soft);
 }
 
 /* Transitions */
 .dropdown-fade-enter-active,
 .dropdown-fade-leave-active {
-  transition: opacity var(--dur-short, 200ms), transform var(--dur-short, 200ms);
+  transition: opacity var(--dur-short), transform var(--dur-short);
 }
 .dropdown-fade-enter-from,
 .dropdown-fade-leave-to {

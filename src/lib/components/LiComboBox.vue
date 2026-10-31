@@ -15,7 +15,7 @@
     <div class="li-combobox__input-wrap">
       <!-- Left icon -->
       <span v-if="iconLeft" class="li-combobox__icon li-combobox__icon--left">
-        <LiIcon :name="iconLeft" size="md" color="var(--color-gray-600, #666666)" />
+        <LiIcon :name="iconLeft" size="md" color="var(--color-text-muted)" />
       </span>
 
       <!-- Text input -->
@@ -39,9 +39,9 @@
       <!-- Chevron / clear -->
       <span class="li-combobox__icon li-combobox__icon--right">
         <LiIcon
-          :name="isOpen ? 'expand_less' : 'expand_more'"
+          :name="isOpen ? 'chevron-up' : 'chevron-down'"
           size="md"
-          color="var(--color-gray-600, #666666)"
+          color="var(--color-text-muted)"
         />
       </span>
     </div>
@@ -80,7 +80,7 @@
             >
               <span class="li-combobox__option-text">{{ option.label ?? option.value ?? option }}</span>
               <span v-if="isSelected(option)" class="li-combobox__option-check">
-                <LiIcon name="check" size="md" color="var(--color-orange-400, #FF6B00)" />
+                <LiIcon name="check" size="md" color="var(--color-accent-strong)" />
               </span>
             </li>
 
@@ -336,15 +336,15 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
   font-size: 12px;
   line-height: 16px;
   font-weight: 600;
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text-strong);
 }
 
 .li-combobox__input-wrap {
   display: flex;
   align-items: center;
-  background: var(--color-gray-0, #ffffff);
-  border: 1px solid var(--color-gray-300, #d1d5db);
-  border-radius: var(--radius-md, 8px);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
   min-height: 44px;
   padding: 0 12px;
   gap: 8px;
@@ -353,21 +353,21 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
 }
 
 .li-combobox__input-wrap:focus-within {
-  border-color: var(--color-orange-400, #FF6B00);
+  border-color: var(--color-accent-strong);
   box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.12);
 }
 
 .li-combobox--error .li-combobox__input-wrap {
-  border-color: var(--color-red-400, #ef4444);
+  border-color: var(--color-danger);
 }
 
 .li-combobox--disabled .li-combobox__input-wrap {
-  background: var(--color-gray-100, #f3f4f6);
+  background: var(--color-surface-2);
   cursor: not-allowed;
 }
 
 .li-combobox--disabled .li-combobox__input {
-  color: var(--color-gray-500, #888888);
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
@@ -375,16 +375,15 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
   flex: 1;
   border: none;
   background: transparent;
-  font-family: 'Inter', system-ui, sans-serif;
   font-size: 16px;
   line-height: 24px;
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text-strong);
   outline: none;
   min-width: 0;
 }
 
 .li-combobox__input::placeholder {
-  color: var(--color-gray-400, #9ca3af);
+  color: var(--color-text-placeholder);
 }
 
 .li-combobox__icon {
@@ -411,15 +410,15 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
 .li-combobox__error-text {
   font-size: 12px;
   line-height: 16px;
-  color: var(--color-red-400, #ef4444);
+  color: var(--color-danger);
 }
 
 /* Dropdown (teleported) */
 .li-combobox__dropdown {
-  background: var(--color-surface-bright, #ffffff);
-  border: 1px solid var(--color-gray-200, #e5e7eb);
-  border-radius: var(--radius-md, 8px);
-  box-shadow: var(--shadow-dropdown, 0 8px 24px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.06));
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-pop);
   max-height: 240px;
   overflow-y: auto;
   z-index: 9999;
@@ -435,7 +434,7 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
   padding: 10px 16px;
   font-size: 14px;
   line-height: 24px;
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text-strong);
   cursor: pointer;
   transition: background 0.15s ease;
   display: flex;
@@ -449,22 +448,22 @@ onBeforeUnmount(() => document.removeEventListener('click', handleClickOutside))
 }
 
 .li-combobox__option--highlighted {
-  background: var(--color-surface, #f3f4f6);
+  background: var(--color-surface);
 }
 
 .li-combobox__option--selected {
-  color: var(--color-orange-400, #FF6B00);
+  color: var(--color-accent-strong);
   font-weight: 600;
 }
 
 .li-combobox__option--free-text {
   font-style: italic;
-  color: var(--color-blue-400, #2563eb);
-  border-top: 1px solid var(--color-gray-200, #e5e7eb);
+  color: var(--color-info);
+  border-top: 1px solid var(--color-border);
 }
 
 .li-combobox__option--empty {
-  color: var(--color-gray-400, #9ca3af);
+  color: var(--color-text-placeholder);
   cursor: default;
 }
 

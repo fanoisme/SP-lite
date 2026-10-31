@@ -3,9 +3,9 @@
     <div v-if="isVisible" class="li-banner" :class="[`li-banner-${variant}`]">
       <div class="li-banner-icon">
         <slot name="icon">
-          <LiIcon v-if="variant === 'success'" name="check_circle" size="md" />
-          <LiIcon v-else-if="variant === 'error'" name="error" size="md" />
-          <LiIcon v-else-if="variant === 'warning'" name="warning" size="md" />
+          <LiIcon v-if="variant === 'success'" name="circle-check" size="md" />
+          <LiIcon v-else-if="variant === 'error'" name="circle-x" size="md" />
+          <LiIcon v-else-if="variant === 'warning'" name="triangle-alert" size="md" />
           <LiIcon v-else name="info" size="md" />
         </slot>
       </div>
@@ -22,7 +22,7 @@
       </div>
       
       <button v-if="dismissible" class="li-banner-close" @click="dismiss" aria-label="Dismiss banner">
-        <LiIcon name="close" size="sm" />
+        <LiIcon name="x" size="sm" />
       </button>
     </div>
   </Transition>
@@ -67,12 +67,14 @@ const dismiss = () => {
 .li-banner {
   display: flex;
   align-items: flex-start;
-  padding: var(--space-m, 12px) var(--space-l, 16px);
-  border-radius: var(--radius-md, 8px);
-  gap: var(--space-m, 12px);
-  font-family: var(--font-family, 'Inter', sans-serif);
+  padding: var(--space-3);
+  border-radius: 10px;
+  gap: 10px;
   width: 100%;
+  animation: li-banner-rise var(--dur-medium) var(--ease-enter);
 }
+
+@keyframes li-banner-rise { from { opacity: 0; transform: translateY(8px); } }
 
 .li-banner-icon {
   flex-shrink: 0;
@@ -83,74 +85,61 @@ const dismiss = () => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs, 4px);
+  gap: var(--space-1);
 }
 
 .li-banner-title {
   margin: 0;
-  font-size: var(--text-sm, 16px);
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text);
 }
 
 .li-banner-message {
-  font-size: var(--text-xs, 14px);
-  color: var(--color-gray-800, #4D4D4D);
-  line-height: 1.4;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  line-height: var(--leading-sm);
 }
 
 .li-banner-actions {
-  margin-top: var(--space-s, 8px);
+  margin-top: var(--space-2);
   display: flex;
-  gap: var(--space-m, 12px);
+  gap: var(--space-3);
 }
 
 .li-banner-close {
   background: transparent;
   border: none;
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
   cursor: pointer;
   padding: 4px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
   display: flex;
   margin: -4px -4px -4px 0;
-  transition: all var(--dur-short, 200ms);
+  transition: background var(--dur-quick), color var(--dur-quick);
 }
 
-/* Variants */
-.li-banner-info {
-  background-color: var(--color-blue-100, #E6E6FF);
-}
-.li-banner-info .li-banner-icon { color: var(--color-blue-500, #0047B2); }
-
-.li-banner-success {
-  background-color: var(--color-green-100, #ECFF8F);
-}
-.li-banner-success .li-banner-icon { color: var(--color-green-500, #17A3E6); }
-
-.li-banner-warning {
-  background-color: var(--color-yellow-100, #FFF3D6);
-}
-.li-banner-warning .li-banner-icon { color: var(--color-orange-500, #FF3000); }
-
-.li-banner-error {
-  background-color: var(--color-red-100, #D4A73F); /* Using light danger from tokens */
-}
-.li-banner-error .li-banner-icon { color: var(--color-red-500, #A33129); }
+/* Variants — Allo banner tones */
+.li-banner-info    { background: var(--color-info-soft); }
+.li-banner-info .li-banner-icon { color: var(--color-info); }
+.li-banner-success { background: var(--color-success-soft); }
+.li-banner-success .li-banner-icon { color: var(--color-success); }
+.li-banner-warning { background: var(--color-warning-soft); }
+.li-banner-warning .li-banner-icon { color: var(--color-warning); }
+.li-banner-error   { background: var(--color-danger-soft); }
+.li-banner-error .li-banner-icon { color: var(--color-danger); }
 
 .li-banner-close:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: var(--color-gray-900, #333333);
+  background: var(--color-hover);
+  color: var(--color-text-strong);
 }
 
 /* Transitions */
-.banner-fade-enter-active,
-.banner-fade-leave-active {
-  transition: opacity var(--dur-medium, 300ms), transform var(--dur-medium, 300ms);
-}
+.banner-fade-enter-active { transition: opacity var(--dur-medium) var(--ease-enter), transform var(--dur-medium) var(--ease-enter); }
+.banner-fade-leave-active { transition: opacity 160ms var(--ease-exit), transform 160ms var(--ease-exit); }
 .banner-fade-enter-from,
 .banner-fade-leave-to {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-8px);
 }
 </style>

@@ -160,30 +160,30 @@ async function submit() {
 </script>
 
 <style scoped>
-.ddmerf { display: flex; flex-direction: column; gap: var(--space-sm, 12px); }
-.ddmerf__req { margin: 0; font-size: 12.5px; color: var(--color-gray-500, #8e8ea0); }
-.ddmerf__req span { color: var(--color-red-400, #C83E3B); font-weight: 700; }
+.ddmerf { display: flex; flex-direction: column; gap: var(--space-2); }
+.ddmerf__req { margin: 0; font-size: 12.5px; color: var(--color-text-muted); }
+.ddmerf__req span { color: var(--color-danger); font-weight: 700; }
 
 .ddmerf__field { display: flex; flex-direction: column; gap: 4px; }
 .ddmerf__note {
   margin: 0; font-size: 12px; line-height: 1.45;
-  color: var(--color-gray-600, #808080);
+  color: var(--color-text-muted);
 }
 .ddmerf__warn {
   display: flex; align-items: flex-start; gap: 6px;
   margin: 0; padding: 8px 10px;
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-md);
   background: rgba(255, 188, 37, 0.14);
   font-size: 12px; line-height: 1.45;
-  color: var(--color-gray-800, #4D4D4D);
+  color: var(--color-text);
 }
 .ddmerf__warn .li-icon { font-size: 16px; flex-shrink: 0; }
 
 .ddmerf__problems {
   margin: 0; padding: 10px 14px 10px 30px;
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-md);
   background: rgba(200, 62, 59, 0.08);
-  color: var(--color-red-400, #C83E3B);
+  color: var(--color-danger);
   font-size: 12.5px; line-height: 1.6;
 }
 </style>

@@ -5,12 +5,12 @@
 
 export const MODULE_REGISTRY = [
   {
-    id: 'dashboard', label: 'Dashboard', icon: 'dashboard', path: '/dashboard',
+    id: 'dashboard', label: 'Dashboard', icon: 'layout-dashboard', path: '/dashboard',
     desc: 'Overview and quick links to your tools.',
     features: [],
   },
   {
-    id: 'qris', label: 'QRIS Tools', icon: 'qr_code_2', path: '/qris',
+    id: 'qris', label: 'QRIS Tools', icon: 'qr-code', path: '/qris',
     desc: 'Generate, read, and review QRIS codes.',
     features: [
       { id: 'generator', label: 'Generator', desc: 'Build EMVCo QR + CRC.' },
@@ -19,7 +19,7 @@ export const MODULE_REGISTRY = [
     ],
   },
   {
-    id: 'template-tools', label: 'Template Tools', icon: 'auto_awesome', path: '/template-tools',
+    id: 'template-tools', label: 'Template Tools', icon: 'sparkles', path: '/template-tools',
     desc: 'Convert DOCX to HTML/FTL and preview output.',
     features: [
       { id: 'docx-to-html', label: 'DOCX → HTML', desc: 'Convert DOCX template to HTML.' },
@@ -29,7 +29,7 @@ export const MODULE_REGISTRY = [
     ],
   },
   {
-    id: 'video-frames', label: 'Video Frames', icon: 'movie', path: '/video-frames',
+    id: 'video-frames', label: 'Video Frames', icon: 'clapperboard', path: '/video-frames',
     desc: 'Extract distinct frames from a video clip.',
     features: [],
   },
@@ -39,7 +39,7 @@ export const MODULE_REGISTRY = [
   // ids are gone. Grants were carried across to `dd` by the seed migration
   // before removal, so nobody had to re-tick a box.
   {
-    id: 'dd', label: 'DD MPM', icon: 'inventory', path: '/dd',
+    id: 'dd', label: 'DD MPM', icon: 'boxes', path: '/dd',
     desc: 'Business units, merchants, promo rules, audit and exports.',
     features: [
       { id: 'bu-accounts.read',   label: 'BU Accounts — Read',   desc: 'View business unit accounts.' },
@@ -76,7 +76,7 @@ export const MODULE_REGISTRY = [
     ],
   },
   {
-    id: 'admin', label: 'Admin Panel', icon: 'admin_panel_settings', path: '/admin',
+    id: 'admin', label: 'Admin Panel', icon: 'shield', path: '/admin',
     desc: 'Manage users, roles, and module access.',
     features: [],
   },

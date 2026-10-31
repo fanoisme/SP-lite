@@ -60,7 +60,7 @@ they export bare and lose leading zeros.
 - `@` → `src/`
 - `@lib` → `src/lib/`
 
-**Design system:** Custom component library in `src/lib/components/` (LiButton, LiModal, LiTable, etc.). Design tokens in `src/assets/tokens.css`.
+**Design system: Allo Design System** (`E:\Work\Vibe\design-system-guide` — the guide repo is the reference; its `mockups/` are the reference implementation). Tokens in `src/assets/tokens.css` are the guide's `tokens.css` verbatim (role names only, never hex, both themes); base rules + z-scale in `src/assets/allo-base.css`. Compact density everywhere except `landing` (L1, light-only) and `auth` (L2, comfortable). App shell is the guide's Shell B (top bar 56 + Ctrl-K palette; DD nests its own 248/56 sidebar). Dark mode = `data-theme="dark"` value swap via `src/composables/useTheme.js` (stored `sp-theme` wins over OS). Components in `src/lib/components/` (LiButton, LiModal, LiTable…) keep the `Li*` API and wear Allo skins. Icons: Lucide, local SVGs synced from `lucide-static` by `npm run icons:sync` (registry `scripts/icon-names.mjs`). The mascot is `LiMascot.vue` — SP-lite's golden retriever as layered SVG, part-animated (breath/blink/ear/tilt; static twin `src/assets/brand/sp-lite-mark.svg`; the old cross-dissolve GIF was removed — blending photographed poses ghosts). Visual gate: `npm run shots` re-shoots every route at 1440/375 × light/dark with Supabase fully route-mocked (`tests/fixtures/`) and fails on unmocked requests or blank shots; compare against the guide's mockups when changing skins. `node --test tests/*.test.mjs` gates token usage (every `var()` must resolve; no hex in `Li*` styles).
 
 ## Key files
 

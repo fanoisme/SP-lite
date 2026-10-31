@@ -20,7 +20,7 @@
           <h2 v-if="title" class="li-drawer__title">{{ title }}</h2>
           <slot name="header" />
           <button class="li-drawer__close" :aria-label="closeLabel || 'Close'" @click="close()">
-            <LiIcon name="close" size="md" />
+            <LiIcon name="x" size="md" />
           </button>
         </div>
 
@@ -115,18 +115,17 @@ onBeforeUnmount(() => {
 .li-drawer__backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(34, 34, 51, 0.5);
-  z-index: 9990;
+  background: var(--color-overlay);
+  z-index: var(--z-overlay);
 }
 
 .li-drawer {
   position: fixed;
-  z-index: 10000;
-  background: var(--color-gray-0, #FFFFFF);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15), 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: var(--z-modal);
+  background: var(--color-bg);
+  box-shadow: -24px 0 64px -16px rgba(0, 5, 58, 0.25);
   display: flex;
   flex-direction: column;
-  font-family: 'Inter', system-ui, sans-serif;
 }
 
 /* Placement */
@@ -134,33 +133,33 @@ onBeforeUnmount(() => {
   left: 0;
   top: 0;
   bottom: 0;
-  border-radius: 0 16px 16px 0;
+  border-radius: 0;
 }
 
 .li-drawer--right {
   right: 0;
   top: 0;
   bottom: 0;
-  border-radius: 16px 0 0 16px;
+  border-radius: 0;
 }
 
 .li-drawer--bottom {
   left: 0;
   right: 0;
   bottom: 0;
-  border-radius: 16px 16px 0 0;
+  border-radius: 14px 14px 0 0;
   max-height: 90vh;
 }
 
-/* Width sizing (left/right) */
+/* Width sizing (left/right) — md = the Allo detail drawer (600) */
 .li-drawer--left.li-drawer--sm,
 .li-drawer--right.li-drawer--sm { width: 320px; }
 
 .li-drawer--left.li-drawer--md,
-.li-drawer--right.li-drawer--md { width: 420px; }
+.li-drawer--right.li-drawer--md { width: min(600px, 100vw); }
 
 .li-drawer--left.li-drawer--lg,
-.li-drawer--right.li-drawer--lg { width: 560px; }
+.li-drawer--right.li-drawer--lg { width: 720px; }
 
 .li-drawer--left.li-drawer--full,
 .li-drawer--right.li-drawer--full { width: 100vw; }
@@ -171,17 +170,17 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 12px;
   padding: 16px 24px;
-  border-bottom: 1px solid var(--color-gray-200, #E6E6E6);
+  border-bottom: 1px solid var(--color-border);
   flex-shrink: 0;
 }
 
 .li-drawer__title {
   flex: 1;
   margin: 0;
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 600;
-  line-height: 24px;
-  color: var(--color-gray-900, #333333);
+  line-height: var(--leading-base);
+  color: var(--color-text-strong);
 }
 
 .li-drawer__close {
@@ -193,20 +192,19 @@ onBeforeUnmount(() => {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-              color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background var(--dur-quick), color var(--dur-quick);
 }
 
 .li-drawer__close:hover {
-  background: var(--color-gray-100, #F2F2F2);
-  color: var(--color-gray-700, #666666);
+  background: var(--color-hover);
+  color: var(--color-text-strong);
 }
 
 .li-drawer__close:focus-visible {
-  outline: 2px solid var(--color-orange-400, #FF6B00);
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
@@ -219,32 +217,29 @@ onBeforeUnmount(() => {
 
 /* Footer */
 .li-drawer__footer {
-  padding: 12px 24px;
-  border-top: 1px solid var(--color-gray-200, #E6E6E6);
+  padding: var(--space-3) 24px;
+  border-top: 1px solid var(--color-border);
   flex-shrink: 0;
 }
 
-/* Transitions — fade backdrop */
-.li-drawer-fade-enter-active { transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-.li-drawer-fade-leave-active { transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+/* Transitions — Allo drawer-in/out (dur-medium expo-in, 200ms exit) */
+.li-drawer-fade-enter-active { transition: opacity var(--dur-medium) var(--ease-out); }
+.li-drawer-fade-leave-active { transition: opacity 180ms var(--ease-exit); }
 .li-drawer-fade-enter-from,
 .li-drawer-fade-leave-to { opacity: 0; }
 
-/* Transitions — slide left */
-.li-drawer-slide-left-enter-active { transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
-.li-drawer-slide-left-leave-active { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+.li-drawer-slide-left-enter-active { transition: transform var(--dur-medium) var(--ease-enter); }
+.li-drawer-slide-left-leave-active { transition: transform 200ms var(--ease-exit); }
 .li-drawer-slide-left-enter-from { transform: translateX(-100%); }
 .li-drawer-slide-left-leave-to   { transform: translateX(-100%); }
 
-/* Transitions — slide right */
-.li-drawer-slide-right-enter-active { transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
-.li-drawer-slide-right-leave-active { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+.li-drawer-slide-right-enter-active { transition: transform var(--dur-medium) var(--ease-enter); }
+.li-drawer-slide-right-leave-active { transition: transform 200ms var(--ease-exit); }
 .li-drawer-slide-right-enter-from { transform: translateX(100%); }
 .li-drawer-slide-right-leave-to   { transform: translateX(100%); }
 
-/* Transitions — slide bottom */
-.li-drawer-slide-bottom-enter-active { transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
-.li-drawer-slide-bottom-leave-active { transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+.li-drawer-slide-bottom-enter-active { transition: transform var(--dur-medium) var(--ease-enter); }
+.li-drawer-slide-bottom-leave-active { transition: transform 200ms var(--ease-exit); }
 .li-drawer-slide-bottom-enter-from { transform: translateY(100%); }
 .li-drawer-slide-bottom-leave-to   { transform: translateY(100%); }
 </style>

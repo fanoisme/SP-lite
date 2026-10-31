@@ -9,7 +9,7 @@
   >
     <LiIcon v-if="iconLeft" :name="iconLeft" size="xxs" />
     <span class="li-chip__label"><slot /></span>
-    <LiIcon v-if="removable" name="close" size="xxs" class="li-chip__remove" @click.stop="$emit('remove')" />
+    <LiIcon v-if="removable" name="x" size="xxs" class="li-chip__remove" @click.stop="$emit('remove')" />
     <LiIcon v-else-if="iconRight" :name="iconRight" size="xxs" />
   </span>
 </template>
@@ -31,55 +31,50 @@ defineEmits(['click', 'remove'])
 </script>
 
 <style scoped>
+/* Allo tag (app.css .tag): bordered pill, surface fill, 24px. */
 .li-chip {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-family: 'Inter', system-ui, sans-serif;
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
   user-select: none;
-  transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: border-color var(--dur-quick), background var(--dur-quick);
 }
 
-.li-chip--sm  { padding: 2px 8px;  font-size: 10px; border-radius: 4px; }
-.li-chip--md  { padding: 4px 12px; font-size: 12px; border-radius: 6px; }
-.li-chip--pill { border-radius: 999px; }
+.li-chip--sm  { height: 20px; padding: 0 8px; font-size: var(--text-micro); }
+.li-chip--md  { height: 24px; padding: 0 10px; font-size: var(--text-xs); }
+.li-chip--pill { border-radius: var(--radius-pill); }
 
 .li-chip--clickable {
   cursor: pointer;
 }
 
+.li-chip--clickable:hover {
+  border-color: var(--color-text-muted);
+  background: var(--color-hover);
+}
+
 .li-chip--clickable:focus-visible {
-  outline: 2px solid var(--color-orange-400, #FF6B00);
+  outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
-/* Variants */
-.li-chip--neutral { background: var(--color-gray-100, #F2F2F2); color: var(--color-gray-700, #666666); }
-.li-chip--neutral.li-chip--clickable:hover { background: var(--color-gray-200, #E6E6E6); }
-
-.li-chip--brand { background: var(--color-yellow-100, #FFF3D6); color: #8B5E00; }
-.li-chip--brand.li-chip--clickable:hover { background: var(--color-yellow-200, #FFEB3B); }
-
-.li-chip--success { background: var(--color-green-100, #ECFF8F); color: var(--color-green-400, #10B981); }
-.li-chip--success.li-chip--clickable:hover { background: var(--color-green-200, #6EE7B7); }
-
-.li-chip--warning { background: var(--color-orange-100, #FFB700); color: var(--color-orange-400, #FF6B00); }
-.li-chip--warning.li-chip--clickable:hover { background: var(--color-orange-200, #FFA726); }
-
-.li-chip--error { background: var(--color-red-100, #D4A73F); color: var(--color-red-400, #C83E3B); }
-.li-chip--error.li-chip--clickable:hover { background: var(--color-red-200, #E57373); }
-
-.li-chip--info { background: var(--color-blue-100, #E6E6FF); color: var(--color-blue-400, #2563EB); }
-.li-chip--info.li-chip--clickable:hover { background: var(--color-blue-200, #60A5FA); }
+/* Variants — soft tone fills */
+.li-chip--brand   { background: var(--color-accent-soft); border-color: transparent; color: var(--color-accent-text); }
+.li-chip--success { background: var(--color-success-soft); border-color: transparent; color: var(--color-success); }
+.li-chip--warning { background: var(--color-warning-soft); border-color: transparent; color: var(--color-warning); }
+.li-chip--error   { background: var(--color-danger-soft); border-color: transparent; color: var(--color-danger); }
+.li-chip--info    { background: var(--color-info-soft); border-color: transparent; color: var(--color-info); }
 
 .li-chip__remove {
   cursor: pointer;
   opacity: 0.7;
-  transition: opacity 0.15s ease;
+  transition: opacity var(--dur-quick);
 }
 
 .li-chip__remove:hover { opacity: 1; }

@@ -9,7 +9,7 @@
             HTML Source
           </div>
           <label class="html-preview__upload-btn">
-            <LiIcon name="upload_file" />
+            <LiIcon name="file-up" />
             Upload
             <input
               type="file"
@@ -31,7 +31,7 @@
         <!-- Auto-fix badge -->
         <Transition name="badge-pop">
           <div v-if="fixesApplied.length > 0" class="html-preview__fix-badge">
-            <LiIcon name="auto_fix_high" />
+            <LiIcon name="wand-sparkles" />
             <span>Auto-fixed <strong>{{ fixesApplied.length }}</strong> issue{{ fixesApplied.length > 1 ? 's' : '' }}</span>
           </div>
         </Transition>
@@ -47,7 +47,7 @@
       <div class="html-preview__right">
         <div class="html-preview__section-header">
           <div class="html-preview__section-title">
-            <LiIcon name="preview" />
+            <LiIcon name="eye" />
             Live Preview
           </div>
           <div class="html-preview__header-actions">
@@ -66,7 +66,7 @@
                 @click="toggleWysiwyg"
                 :title="wysiwygMode ? 'Disable inline editing' : 'Enable inline editing'"
               >
-                <LiIcon :name="wysiwygMode ? 'edit_off' : 'edit'" />
+                <LiIcon :name="wysiwygMode ? 'pencil-off' : 'pencil'" />
                 {{ wysiwygMode ? 'Editing' : 'Edit' }}
               </button>
             </Transition>
@@ -94,7 +94,7 @@
             />
             <div v-else key="empty" class="html-preview__empty">
               <div class="html-preview__empty-icon">
-                <LiIcon name="preview" />
+                <LiIcon name="eye" />
               </div>
               <p class="html-preview__empty-title">No Preview</p>
               <p class="html-preview__empty-sub">Enter HTML code on the left to see a live preview</p>
@@ -161,8 +161,8 @@
                   />
                   <button
                     class="html-preview__tb-clear-bg"
-                    v-if="styleConfig.bgColor !== '#ffffff'"
-                    @click="styleConfig.bgColor = '#ffffff'; applyLiveStyle()"
+                    v-if="styleConfig.bgColor !== 'var(--color-bg)'"
+                    @click="styleConfig.bgColor = 'var(--color-bg)'; applyLiveStyle()"
                     title="Remove background"
                   >×</button>
                 </div>
@@ -178,7 +178,7 @@
                   @click="toggleBold"
                   title="Bold"
                 >
-                  <LiIcon name="format_bold" />
+                  <LiIcon name="bold" />
                 </button>
 
                 <!-- Italic -->
@@ -190,7 +190,7 @@
                   @click="toggleItalic"
                   title="Italic"
                 >
-                  <LiIcon name="format_italic" />
+                  <LiIcon name="italic" />
                 </button>
 
                 <!-- Underline -->
@@ -202,7 +202,7 @@
                   @click="toggleUnderline"
                   title="Underline"
                 >
-                  <LiIcon name="format_underlined" />
+                  <LiIcon name="underline" />
                 </button>
 
                 <div class="html-preview__tb-divider"></div>
@@ -216,7 +216,7 @@
                   @click="setAlign('left')"
                   title="Align Left"
                 >
-                  <LiIcon name="format_align_left" />
+                  <LiIcon name="align-left" />
                 </button>
                 <button
                   class="html-preview__tb-btn"
@@ -226,7 +226,7 @@
                   @click="setAlign('center')"
                   title="Align Center"
                 >
-                  <LiIcon name="format_align_center" />
+                  <LiIcon name="align-center" />
                 </button>
                 <button
                   class="html-preview__tb-btn"
@@ -236,7 +236,7 @@
                   @click="setAlign('right')"
                   title="Align Right"
                 >
-                  <LiIcon name="format_align_right" />
+                  <LiIcon name="align-right" />
                 </button>
                 <button
                   class="html-preview__tb-btn"
@@ -246,7 +246,7 @@
                   @click="setAlign('justify')"
                   title="Justify"
                 >
-                  <LiIcon name="format_align_justify" />
+                  <LiIcon name="align-justify" />
                 </button>
 
                 <div class="html-preview__tb-divider"></div>
@@ -257,7 +257,7 @@
                 </button>
                 <!-- Revert -->
                 <button class="html-preview__tb-btn html-preview__tb-btn--cancel" @click="revertCurrent" aria-label="Revert this element" title="Revert">
-                  <LiIcon name="close" />
+                  <LiIcon name="x" />
                 </button>
               </div>
             </div>
@@ -299,7 +299,7 @@ const styleConfig = reactive({
   fontFamily: "'Times New Roman', serif",
   fontSize: 12,
   fontColor: '#000000',
-  bgColor: '#ffffff',
+  bgColor: 'var(--color-bg)',
   fontWeight: 'normal',
   fontStyle: 'normal',
   textDecoration: 'none',
@@ -415,11 +415,11 @@ function onIframeLoad() {
         cursor: pointer !important;
       }
       [data-sop-selected] {
-        outline: 2px solid #FFBC25 !important;
+        outline: 2px solid var(--color-accent) !important;
         outline-offset: 3px;
       }
       [data-sop-editing] {
-        outline: 2px solid #10B981 !important;
+        outline: 2px solid var(--color-success) !important;
         outline-offset: 3px;
         cursor: text !important;
         min-width: 20px;
@@ -471,7 +471,7 @@ function onIframeLoad() {
       styleConfig.fontFamily = computed.fontFamily || "'Times New Roman', serif"
       styleConfig.fontSize = Math.round((parseInt(computed.fontSize) || 16) * 0.75) || 12
       styleConfig.fontColor = rgbToHex(computed.color)
-      styleConfig.bgColor = rgbToHex(computed.backgroundColor) || '#ffffff'
+      styleConfig.bgColor = rgbToHex(computed.backgroundColor) || 'var(--color-bg)'
       styleConfig.fontWeight = computed.fontWeight || 'normal'
       styleConfig.fontStyle = computed.fontStyle || 'normal'
       styleConfig.textDecoration = computed.textDecoration || 'none'
@@ -659,7 +659,7 @@ function setAlign(align) {
 // ── Helpers ──
 
 function rgbToHex(rgb) {
-  if (!rgb || rgb === 'transparent' || rgb === 'rgba(0, 0, 0, 0)') return '#ffffff'
+  if (!rgb || rgb === 'transparent' || rgb === 'rgba(0, 0, 0, 0)') return 'var(--color-bg)'
   if (rgb.startsWith('#')) return rgb
   const match = rgb.match(/\d+/g)
   if (!match || match.length < 3) return '#000000'
@@ -686,7 +686,7 @@ onBeforeUnmount(() => {
 .html-preview {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md, 16px);
+  gap: var(--space-3);
 }
 
 .html-preview__layout {
@@ -722,12 +722,12 @@ onBeforeUnmount(() => {
   gap: 8px;
   font-size: 14px;
   font-weight: 700;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
 }
 
 .html-preview__section-title .li-icon {
   font-size: 20px;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 .html-preview__header-actions {
@@ -741,13 +741,13 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 5px;
   padding: 7px 14px;
-  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  border: 1.5px solid var(--color-border-strong);
   border-radius: 10px;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   background: transparent;
-  color: #666;
+  color: var(--color-text);
   font-family: inherit;
   transition: all 0.25s ease;
 }
@@ -757,8 +757,8 @@ onBeforeUnmount(() => {
 }
 
 .html-preview__upload-btn:hover {
-  border-color: var(--cta-primary-bg, #FFBC25);
-  color: var(--color-on-surface, #1a1a2e);
+  border-color: var(--color-accent);
+  color: var(--color-text);
   background: rgba(255, 188, 37, 0.05);
 }
 
@@ -794,12 +794,12 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(255, 188, 37, 0.15);
   border-radius: 10px;
   font-size: 13px;
-  color: #8b6914;
+  color: var(--color-accent-text);
 }
 
 .html-preview__fix-badge .li-icon {
   font-size: 18px;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 /* ── Live Badge ── */
@@ -809,7 +809,7 @@ onBeforeUnmount(() => {
   gap: 6px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-success, #10B981);
+  color: var(--color-success);
   padding: 4px 10px;
   background: rgba(16, 185, 129, 0.08);
   border-radius: 20px;
@@ -819,7 +819,7 @@ onBeforeUnmount(() => {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--color-success, #10B981);
+  background: var(--color-success);
   animation: livePulse 1.5s infinite;
 }
 
@@ -834,13 +834,13 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 5px;
   padding: 5px 12px;
-  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  border: 1.5px solid var(--color-border-strong);
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   background: transparent;
-  color: #666;
+  color: var(--color-text);
   font-family: inherit;
   transition: all 0.25s ease;
 }
@@ -850,14 +850,14 @@ onBeforeUnmount(() => {
 }
 
 .html-preview__wysiwyg-toggle:hover {
-  border-color: var(--cta-primary-bg, #FFBC25);
-  color: var(--color-on-surface, #1a1a2e);
+  border-color: var(--color-accent);
+  color: var(--color-text);
 }
 
 .html-preview__wysiwyg-toggle--active {
   background: rgba(16, 185, 129, 0.08);
   border-color: rgba(16, 185, 129, 0.3);
-  color: var(--color-success, #10B981);
+  color: var(--color-success);
 }
 
 /* ── Hint ── */
@@ -872,18 +872,18 @@ onBeforeUnmount(() => {
   gap: 6px;
   padding: 6px 14px;
   background: rgba(26, 26, 46, 0.85);
-  backdrop-filter: blur(8px);
+  
   border-radius: 8px;
   font-size: 12px;
   font-weight: 500;
-  color: #fff;
+  color: var(--color-bg);
   pointer-events: none;
   white-space: nowrap;
 }
 
 .html-preview__hint .li-icon {
   font-size: 16px;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 /* ── Preview Frame ── */
@@ -934,7 +934,7 @@ onBeforeUnmount(() => {
 .html-preview__empty-title {
   font-size: 16px;
   font-weight: 700;
-  color: #999;
+  color: var(--color-text-muted);
   margin: 0;
 }
 
@@ -949,8 +949,8 @@ onBeforeUnmount(() => {
   position: absolute;
   z-index: 100;
   background: rgba(26, 26, 46, 0.95);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  
+  border: 1px solid var(--color-border-strong);
   border-radius: 10px;
   padding: 6px 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
@@ -965,10 +965,10 @@ onBeforeUnmount(() => {
 }
 
 .html-preview__tb-select {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, var(--color-on-inverse) 8%, transparent);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  color: #e0e0e0;
+  color: var(--color-on-inverse-muted);
   font-size: 12px;
   padding: 4px 6px;
   font-family: inherit;
@@ -977,8 +977,8 @@ onBeforeUnmount(() => {
 }
 
 .html-preview__tb-select option {
-  background: #1a1b26;
-  color: #e0e0e0;
+  background: var(--color-inverse);
+  color: var(--color-on-inverse-muted);
 }
 
 .html-preview__tb-size {
@@ -989,10 +989,10 @@ onBeforeUnmount(() => {
 
 .html-preview__tb-input {
   width: 44px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: color-mix(in srgb, var(--color-on-inverse) 8%, transparent);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  color: #e0e0e0;
+  color: var(--color-on-inverse-muted);
   font-size: 12px;
   padding: 4px 6px;
   text-align: center;
@@ -1002,13 +1002,13 @@ onBeforeUnmount(() => {
 
 .html-preview__tb-unit {
   font-size: 10px;
-  color: #888;
+  color: var(--color-text-muted);
 }
 
 .html-preview__tb-divider {
   width: 1px;
   height: 20px;
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--color-border);
   margin: 0 4px;
 }
 
@@ -1021,7 +1021,7 @@ onBeforeUnmount(() => {
 .html-preview__tb-color {
   width: 24px;
   height: 24px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid color-mix(in srgb, var(--color-on-inverse) 15%, transparent);
   border-radius: 6px;
   cursor: pointer;
   padding: 0;
@@ -1038,8 +1038,8 @@ onBeforeUnmount(() => {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: #C83E3B;
-  color: #fff;
+  background: var(--color-danger);
+  color: var(--color-bg);
   border: none;
   font-size: 10px;
   line-height: 1;
@@ -1059,7 +1059,7 @@ onBeforeUnmount(() => {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #aaa;
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: all 0.15s ease;
   padding: 0;
@@ -1070,18 +1070,18 @@ onBeforeUnmount(() => {
 }
 
 .html-preview__tb-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background: var(--color-border-strong);
+  color: var(--color-bg);
 }
 
 .html-preview__tb-btn--active {
   background: rgba(255, 188, 37, 0.2);
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 .html-preview__tb-btn--save {
   background: rgba(16, 185, 129, 0.2);
-  color: var(--color-success, #10B981);
+  color: var(--color-success);
 }
 
 .html-preview__tb-btn--save:hover {
@@ -1090,7 +1090,7 @@ onBeforeUnmount(() => {
 
 .html-preview__tb-btn--cancel {
   background: rgba(200, 62, 59, 0.15);
-  color: #C83E3B;
+  color: var(--color-danger);
 }
 
 .html-preview__tb-btn--cancel:hover {
@@ -1099,7 +1099,7 @@ onBeforeUnmount(() => {
 
 /* ── Transitions ── */
 .badge-pop-enter-active {
-  transition: all 0.4s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+  transition: all 0.4s var(--ease-spring);
 }
 .badge-pop-leave-active { transition: all 0.2s ease; }
 .badge-pop-enter-from {
@@ -1112,7 +1112,7 @@ onBeforeUnmount(() => {
 .fade-enter-from, .fade-leave-to { opacity: 0; }
 
 .view-fade-enter-active {
-  transition: all 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+  transition: all 0.3s var(--ease-out);
 }
 .view-fade-leave-active { transition: all 0.15s ease-in; }
 .view-fade-enter-from {
@@ -1122,7 +1122,7 @@ onBeforeUnmount(() => {
 .view-fade-leave-to { opacity: 0; }
 
 .toolbar-pop-enter-active {
-  transition: all 0.3s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+  transition: all 0.3s var(--ease-spring);
 }
 .toolbar-pop-leave-active { transition: all 0.15s ease; }
 .toolbar-pop-enter-from {

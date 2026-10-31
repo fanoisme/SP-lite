@@ -1,224 +1,237 @@
-/* 
-  General Lithium (1.0) Unified Tokens
-  Derived from Claude's GoldenPaws and AG's Lithium Kit 1.0 
-*/
+/* Generated from tokens.json. Edit the JSON, then regenerate. Components use these, never raw hex. */
+/* Inter 4.1 (rsms/inter, SIL OFL: fonts/OFL.txt), self-hosted. Latin + Latin Extended, weights 400–800, optical
+   size pinned to text (14), all OpenType features kept. No request to Google Fonts. */
+@font-face {
+  font-family: Inter;
+  src: url("fonts/Inter-latin.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
-  /* ═══ Gray — Text & Surfaces ═══ */
-  --color-gray-900:  #333333; /* Primary text (Ink 800/900) */
-  --color-gray-800:  #4D4D4D;
-  --color-gray-700:  #666666;
-  --color-gray-600:  #808080; /* Disabled text */
-  --color-gray-500:  #999999; /* Subtitles, metadata */
-  --color-gray-400:  #B3B3B3;
-  --color-gray-300:  #CCCCCC; /* Rule lines, Stroke 200 */
-  --color-gray-200:  #E6E6E6;
-  --color-gray-100:  #F2F2F2; /* Surface backgrounds */
-  --color-gray-0:    #FFFFFF; /* Pure White */
+  /* colour roles */
+  --color-bg: #ffffff;
+  --color-surface: #f8f9fb;
+  --color-surface-2: #edf0f2;
+  --color-border: #edf0f2;
+  --color-border-strong: #d0d6dd;
+  --color-border-input: #7d8695;
+  --color-text: #333333;
+  --color-text-strong: #232933;
+  --color-text-muted: #626b79;
+  --color-text-placeholder: #6b7482;
+  --color-accent: #ffbc25;
+  --color-accent-strong: #ffa500;
+  --color-accent-soft: #fff4d6;
+  --color-accent-tint: #ffe7ad;
+  --color-on-accent: #333333;
+  --color-accent-text: #9a5b00;
+  --color-accent-text-large: #b26a00;
+  --color-inverse: #282828;
+  --color-inverse-surface: #333333;
+  --color-on-inverse: #ffffff;
+  --color-on-inverse-muted: #c4c9d0;
+  --color-danger: #c62f2f;
+  --color-success: #1f7a4d;
+  --color-positive-large: #138a5e;
+  --color-positive-soft: #ecfff8;
+  --color-warning: #8a5a00;
+  --color-focus: #232933;
 
-  /* ═══ Brand ═══ */
-  --color-brand:     #FFAF03; /* Logo only. DO NOT use for buttons. */
+  /* product tiers (comparison table headers, fade from tier-base) */
+  --color-tier-base: #fafafa;
+  --color-tier-1: #b4e2ce;
+  --color-tier-2: #3b7182;
+  --color-tier-3: #333333;
+  --gradient-tier-1: linear-gradient(90deg, var(--color-tier-base), var(--color-tier-1));
+  --gradient-tier-2: linear-gradient(90deg, var(--color-tier-base), var(--color-tier-2));
+  --gradient-tier-3: linear-gradient(90deg, var(--color-tier-base), var(--color-tier-3));
 
-  /* ═══ Yellow — UI accents & Primary Buttons ═══ */
-  --color-yellow-500:  #F4A600;
-  --color-yellow-400:  #F9C700;
-  --color-yellow-300:  #FDDD00;
-  --color-yellow-200:  #FFEB3B;
-  --color-yellow-100:  #FFF3D6; /* Tint 100 */
+  /* data visualisation — validated with the dataviz skill (see components.md → Charts) */
+  --viz-1: #c98500;   /* amber  · brand-aligned, >= 3:1 on white */
+  --viz-2: #2a78d6;   /* blue */
+  --viz-3: #e87ba4;   /* magenta  (< 3:1: needs direct labels / table view) */
+  --viz-4: #008300;   /* green */
+  --viz-5: #1baf7a;   /* aqua     (< 3:1: needs direct labels / table view) */
+  --viz-6: #eb6834;   /* orange */
+  --viz-7: #4a3aa7;   /* violet */
+  --viz-8: #e34948;   /* red */
+  --viz-other: #9aa3af;            /* de-emphasis / "Other" */
+  --viz-grid: #edf0f2;             /* hairline gridlines */
+  --viz-axis: #d0d6dd;             /* baseline / axis */
+  --viz-ink: #626b79;              /* axis + label text (5.4:1) */
+  --viz-seq-100: #fff1cc; --viz-seq-200: #ffe29a; --viz-seq-300: #ffd166; --viz-seq-400: #ffbc25;
+  --viz-seq-500: #eda100; --viz-seq-600: #c98500; --viz-seq-700: #9a5b00;
+  --viz-ord-1: #eda100; --viz-ord-2: #c98500; --viz-ord-3: #a86a00; --viz-ord-4: #7a4a00;   /* ordinal: funnel stages, tiers */
+  --viz-div-neg-3: #2a78d6; --viz-div-neg-2: #6da7ec; --viz-div-neg-1: #b7d3f6; --viz-div-mid: #edf0f2;
+  --viz-div-pos-1: #f6c4c4; --viz-div-pos-2: #ee8a8a; --viz-div-pos-3: #e34948;
+  --viz-good: #0ca30c; --viz-warning: #fab219; --viz-serious: #ec835a; --viz-critical: #d03b3b;   /* status marks: always with icon + label */
 
-  /* ═══ Orange — Warnings ═══ */
-  --color-orange-500:  #FF3000;
-  --color-orange-400:  #FF6B00;
-  --color-orange-300:  #FF8C00;
-  --color-orange-200:  #FFA726;
-  --color-orange-100:  #FFB700;
+  /* app (internal workspace): interaction states, status, priority — see APP.md */
+  --color-hover: #f1f3f6;
+  --color-selected: #fff8e6;
+  --color-overlay: #14171c;
+  --color-neutral-soft: #edf0f2;
+  --color-info: #1d5fbf;          --color-info-soft: #e8f0fc;
+  --color-discovery: #5b3bb0;     --color-discovery-soft: #f1ebfd;
+  --color-success-soft: #e3f5eb;
+  --color-warning-soft: #fff4d6;
+  --color-danger-soft: #fdecec;
+  --color-prio-highest: #b42323;
+  --color-prio-high: #b54708;
+  --color-prio-medium: #9a5b00;
+  --color-prio-low: #1d5fbf;
+  --color-prio-lowest: #626b79;
 
-  /* ═══ Red — Danger & Errors ═══ */
-  --color-red-500:  #A33129; /* Danger text */
-  --color-red-400:  #C83E3B; /* Error badge, destructive */
-  --color-red-300:  #D4735F;
-  --color-red-200:  #E57373;
-  --color-red-100:  #D4A73F; /* Light danger bg */
+  /* focus / danger glow (4px soft ring around fields; yellow glows are fine on both themes) */
+  --glow-focus: rgba(35, 41, 51, .12);
+  --glow-danger: rgba(198, 47, 47, .14);
+  /* text/icons on solid status fills, and the accent link colour inside inverse surfaces */
+  --color-on-danger: #ffffff;
+  --color-on-success: #ffffff;
+  --color-accent-on-inverse: #ffbc25;
 
-  /* ═══ Green — Positive & Success ═══ */
-  --color-green-500:  #17A3E6; /* Success text */
-  --color-green-400:  #10B981; /* Success badge */
-  --color-green-300:  #34D399;
-  --color-green-200:  #6EE7B7;
-  --color-green-100:  #ECFF8F;
+  /* type */
+  --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --text-micro: 10px;   --leading-micro: 14px;
+  --text-xs: 12px;      --leading-xs: 16px;
+  --text-sm: 14px;      --leading-sm: 20px;
+  --text-base: 16px;    --leading-base: 24px;
+  --text-lg: 20px;      --leading-lg: 30px;
+  --text-xl: 32px;      --leading-xl: 48px;
+  --text-display: clamp(36px, 5.6vw + 10px, 80px);
+  --leading-display: 1.2;
+  --tracking-display: 0.02em;
 
-  /* ═══ Blue — Informative & Links ═══ */
-  --color-blue-500:  #0047B2;
-  --color-blue-400:  #2563EB; /* Action link */
-  --color-blue-300:  #3B82F6;
-  --color-blue-200:  #60A5FA;
-  --color-blue-100:  #E6E6FF;
+  /* space (4/8 base, plus the 60 and 144 the site uses for sections) */
+  --space-0: 0; --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
+  --space-15: 60px; --space-24: 96px; --space-36: 144px;
 
-  /* ═══ Special Surfaces ═══ */
-  --color-overlay:     #222233CC; /* Modal scrim */
-  --color-page-bg:     #E6E6E6;
-  --color-section-bg:  #F5F7FA;
-  --color-bg-dark:     #212324;
-  
-  /* ═══ Semantic Alias Layer ═══ */
-  --color-on-surface:          var(--color-gray-900);
-  --color-on-surface-variant:  var(--color-gray-600);
-  --color-on-surface-muted:    var(--color-gray-500);
-  --color-surface:             var(--color-gray-100);
-  --color-surface-bright:      var(--color-gray-0);
-  --color-surface-disabled:    #EDF0F2;
+  /* radius */
+  --radius-xs: 3px; --radius-sm: 8px; --radius-md: 12px; --radius-lg: 16px; --radius-pill: 999px;
 
-  --color-success:             var(--color-green-400);
-  --color-success-container:   var(--color-green-100);
-  --color-on-success-container: var(--color-green-500);
+  /* shadow */
+  --shadow-header: 0 8px 30px rgba(0, 5, 58, .05);
+  --shadow-card: 0 1px 2px rgba(0, 5, 58, .06), 0 2px 8px rgba(0, 5, 58, .05);
+  --shadow-pop: 0 12px 32px rgba(0, 5, 58, .12);
 
-  --color-info:                var(--color-blue-400);
-  --color-info-container:      var(--color-blue-100);
-  --color-on-info-container:   var(--color-blue-500);
+  /* motion — see MOTION.md. Marketing aliases kept: --dur-fast/base/slow, --ease, --ease-out */
+  --dur-instant: 90ms;    /* press, checkbox tick start */
+  --dur-quick: 140ms;     /* hover, colour, focus ring */
+  --dur-short: 200ms;     /* menus, tooltips, toggles, tab indicator */
+  --dur-medium: 280ms;    /* dialogs, drawers, toasts, list reorder */
+  --dur-long: 420ms;      /* page enter, board column moves */
+  --dur-hero: 700ms;      /* celebration moments only */
+  --dur-fast: 200ms; --dur-base: 300ms; --dur-slow: 700ms; --dur-tab-cycle: 5000ms;
+  --ease: ease;
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --ease-enter: cubic-bezier(.16, 1, .3, 1);      /* expo-out: arrives fast, settles soft */
+  --ease-exit: cubic-bezier(.4, 0, 1, 1);         /* leaves quickly, no lingering */
+  --ease-move: cubic-bezier(.65, 0, .35, 1);      /* on-screen to on-screen (layout, reorder) */
+  /* gentle spring, ~6% overshoot: thumbs, toggles, drops, pops */
+  --ease-spring: linear(0, 0.007, 0.029 2.2%, 0.118 4.7%, 0.625 14.4%, 0.826 19%, 0.962 23.8%, 1.009 27.1%, 1.041 30.6%, 1.059 34.3%, 1.063 38.2%, 1.055 42.7%, 1.016 54.4%, 1.002 62.5%, 0.996 72.3%, 1);
+  --stagger: 28ms;        /* per item, cap at 8 items */
+  --lift: translateY(-2px);
 
-  --color-warning:             var(--color-orange-400);
-  --color-warning-container:   var(--color-yellow-100);
-  --color-on-warning-container: var(--color-orange-500);
-
-  --color-error:               var(--color-red-400);
-  --color-error-container:     #FDECEE;
-  --color-on-error-container:  var(--color-red-500);
-
-  --color-outline:             var(--color-gray-300);
-  --color-outline-variant:     var(--color-gray-200);
-
-  /* CTA Button Tokens */
-  --cta-primary-bg:       #FFBC25; /* Default Yellow Action */
-  --cta-primary-text:     #1E1E1E;
-  --cta-primary-hover:    #FFB60A;
-  --cta-secondary-border: #D0D6DD;
-  --cta-secondary-text:   #333333;
-  --cta-danger-bg:        #DA473F;
-  --cta-danger-text:      #FFFFFF;
-  --cta-ghost-text:       #808080;
-  --cta-ghost-hover-bg:   #EDF0F2;
-
-  /* ═══ Macro Layout ═══ */
-  --space-xs:  4px;
-  --space-s:   8px;
-  --space-m:   12px;
-  --space-l:   16px;  /* Mobile screen edge padding */
-  --space-xl:  24px;  /* Gap between unrelated sections */
-  --space-2xl: 32px;
-  --space-3xl: 48px;
-
-  /* Legacy AG Tokens (from original tokens.css) */
-  --space-100: 8px;
-  --space-200: 16px;
-  --space-500: 40px;
-  --space-1000: 80px;
-
-  /* ═══ Micro Spatial ═══ */
-  --spatial-space25:  2px;
-  --spatial-space50:  4px;
-  --spatial-space100: 8px;  /* Intra-component gap */
-  --spatial-space300: 24px;
-  --spatial-space500: 40px;
-
-  /* ═══ Radius — Organic & Fluid ═══ */
-  --radius-xs:   8px;
-  --radius-sm:   12px;
-  --radius-md:   16px;
-  --radius-lg:   24px;
-  --radius-xl:   32px;
-  --radius-2xl:  48px;
-  --radius-pill: 999px;
-  --border-radius-radius50: 8px; /* Legacy support */
-  --border-width-width150: 0px; /* No hard borders */
-
-  /* ═══ Typography ═══ */
-  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-body:    "Inter", ui-sans-serif, system-ui, sans-serif;
-
-  /* ═══ 3D & Spatial Depth ═══ */
-  --perspective-base:     1000px;
-  --perspective-close:    600px;
-  --rotate-subtle:        2deg;
-  --rotate-medium:        4deg;
-  --rotate-dynamic:       8deg;
-  --translate-z-near:     20px;
-  --translate-z-mid:      40px;
-  --translate-z-far:      80px;
-
-  /* ═══ Easing — Expressive Curves ═══ */
-  --ease-out:    cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-snap:   cubic-bezier(0.6, 0, 0.2, 1);
-
-  /* ═══ Duration — Expanded Scale ═══ */
-  --dur-instant: 80ms;
-  --dur-micro:   120ms;
-  --dur-short:   200ms;
-  --dur-medium:  300ms;
-  --dur-long:    500ms;
-  --dur-hero:    800ms;
-
-  /* ═══ Layered Shadows — Soft & Diffused ═══ */
-  --shadow-sm:    0 2px 8px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.02);
-  --shadow-md:    0 4px 16px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.04);
-  --shadow-lg:    0 8px 32px rgba(0,0,0,0.08), 0 16px 48px rgba(0,0,0,0.06);
-  --shadow-xl:    0 16px 48px rgba(0,0,0,0.1), 0 32px 80px rgba(0,0,0,0.08);
-  --shadow-glow:  0 0 24px rgba(255, 188, 37, 0.25), 0 0 64px rgba(255, 188, 37, 0.08);
-  --shadow-glow-intense: 0 0 32px rgba(255, 188, 37, 0.4), 0 0 88px rgba(255, 188, 37, 0.15);
-  --shadow-float: 0 8px 32px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
-  --shadow-elevated: 0 16px 48px rgba(0,0,0,0.1), 0 4px 16px rgba(0,0,0,0.06);
-
-  /* ═══ Glass Surfaces — Fluid & Organic ═══ */
-  --glass-blur:        blur(20px);
-  --glass-blur-hover:  blur(24px);
-  --glass-saturate:    saturate(1.6);
-  --glass-bg-light:    rgba(255, 255, 255, 0.5);
-  --glass-bg-dark:     rgba(33, 35, 36, 0.6);
-  --glass-border:      rgba(255, 255, 255, 0.12);
-  --glass-highlight:   rgba(255, 255, 255, 0.1); /* Softer light catch */
-  --glass-edge-glow:   rgba(255, 255, 255, 0.2);  /* Subtle edge highlight */
-  --glass-noise-opacity: 0.03; /* Lighter noise grain */
-
-  /* ═══ Ambient & Effects ═══ */
-  --spotlight-size:    200px;  /* Cursor spotlight radius */
-  --spotlight-color:   rgba(255, 188, 37, 0.05); /* Brand-tinted cursor glow */
-  --pulse-duration:    3s;     /* Ambient CTA pulse cycle */
-  --breathe-duration:  8s;     /* Glass surface opacity breathe cycle */
-
-  /* ═══ Z-Index Layers ═══ */
-  --z-base:      0;
-  --z-content:   10;
-  --z-glass:     20;
-  --z-sticky:    30;
-  --z-overlay:   40;
-  --z-modal:     50;
-  --z-toast:     60;
-
-  /* ═══ Scroll Choreography ═══ */
-  --reveal-stagger:  80ms;     /* Delay between staggered children */
-  --reveal-duration: 700ms;    /* Default scroll reveal duration */
-  --cascade-bg:      0ms;      /* Background layer reveals first */
-  --cascade-title:   100ms;    /* Title follows bg */
-  --cascade-content: 200ms;    /* Content follows title */
-  --cascade-cta:     300ms;    /* CTA appears last */
-
-  /* ═══ Organic Shapes & Fluid Design ═══ */
-  --shape-blob-1: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
-  --shape-blob-2: polygon(50% 0%, 80% 10%, 100% 35%, 100% 70%, 80% 90%, 50% 100%, 20% 90%, 0% 70%, 0% 35%, 20% 10%);
-  --shape-soft-rect: polygon(4% 0%, 96% 0%, 100% 4%, 100% 96%, 96% 100%, 4% 100%, 0% 96%, 0% 4%);
-
-  /* Fluid spacing — use clamp() for responsive organic spacing */
-  --fluid-xs:   clamp(4px, 0.5vw, 8px);
-  --fluid-s:    clamp(8px, 1vw, 16px);
-  --fluid-m:    clamp(12px, 1.5vw, 24px);
-  --fluid-l:    clamp(16px, 2vw, 32px);
-  --fluid-xl:   clamp(24px, 3vw, 48px);
-  --fluid-2xl:  clamp(32px, 4vw, 64px);
-  --fluid-3xl:  clamp(48px, 6vw, 96px);
-
-  /* Organic border treatments */
-  --border-subtle: 1px solid rgba(0, 0, 0, 0.04);
-  --border-ghost:  1px solid rgba(0, 0, 0, 0.02);
-  --border-none:   none;
+  /* layout */
+  --max-width: 1440px;
+  --content-width: 1152px;
+  --gutter: 16px;
+  --section-y: 40px;
+  --header-height: 64px;
 }
+@media (min-width: 600px)  { :root { --gutter: 48px; --section-y: 48px; } }
+@media (min-width: 1024px) { :root { --gutter: 144px; --section-y: 60px; --header-height: 80px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  /* keep opacity fades (they don't trigger vestibular issues), drop movement */
+  :root { --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; --dur-long: 120ms; --dur-hero: 0ms; --stagger: 0ms; --lift: none; }
+}
+
+/* ───────────── Dark theme ─────────────
+   Product surfaces only (customer portals, tools, dashboards); the marketing site stays light.
+   Applied by data-theme="dark" on <html> (app.js sets it from the stored choice or the OS).
+   Same roles, same names — only values change. Contrast: python3 contrast.py tokens.json
+   (checks light AND dark). Viz palette: python3 validate_palette.py tokens.json. */
+:root[data-theme="dark"] {
+  --color-bg: #16181d;
+  --color-surface: #1c1f25;
+  --color-surface-2: #242830;
+  --color-border: #242830;
+  --color-border-strong: #343945;
+  --color-border-input: #8a93a3;
+  --color-text: #e8eaee;
+  --color-text-strong: #f4f5f7;
+  --color-text-muted: #a3abb8;
+  --color-text-placeholder: #9aa3af;
+  --color-accent: #ffbc25;          /* the brand yellow does not move */
+  --color-accent-strong: #ffc95e;   /* on dark, "strong" brightens instead of deepening */
+  --color-accent-soft: #33290f;
+  --color-accent-tint: #453613;
+  --color-on-accent: #333333;       /* dark text on yellow, in both themes */
+  --color-accent-text: #ffc14d;
+  --color-accent-text-large: #ffd27d;
+  --color-inverse: #f0f1f4;         /* inverse flips: toasts, tooltips become light */
+  --color-inverse-surface: #e0e2e7;
+  --color-on-inverse: #232933;
+  --color-on-inverse-muted: #5b6470;
+  --color-danger: #f08a8a;
+  --color-success: #4ecb8a;
+  --color-positive-large: #3fd09b;
+  --color-positive-soft: #12301f;
+  --color-warning: #e8bd49;
+  --color-focus: #f4f5f7;           /* a light ring on dark surfaces; on a yellow fill the ring uses on-accent */
+  --color-hover: #21242b;
+  --color-selected: #3a2e10;
+  --color-overlay: #0a0b0e;
+  --color-neutral-soft: #242830;
+  --color-info: #6da7ee;          --color-info-soft: #1a2a3f;
+  --color-discovery: #9d8ae8;     --color-discovery-soft: #262040;
+  --color-success-soft: #12301f;
+  --color-warning-soft: #33290f;
+  --color-danger-soft: #3a1c1c;
+  --color-prio-highest: #ff7a7a;
+  --color-prio-high: #ffa35c;
+  --color-prio-medium: #ffc14d;
+  --color-prio-low: #6da7ee;
+  --color-prio-lowest: #a3abb8;
+
+  /* data visualisation — dark variants, validated with validate_palette.py (see components.md → Charts) */
+  --viz-1: #ffb648;   /* amber  · brand-aligned, >= 3:1 on dark */
+  --viz-2: #6da7ec;   /* blue */
+  --viz-3: #f2a9c6;   /* magenta */
+  --viz-4: #40b950;   /* green */
+  --viz-5: #6fe0ba;   /* aqua */
+  --viz-6: #f2905f;   /* orange */
+  --viz-7: #a08ef0;   /* violet */
+  --viz-8: #f2837f;   /* red */
+  --viz-other: #6b7482;
+  --viz-grid: #242830;
+  --viz-axis: #343945;
+  --viz-ink: #a3abb8;
+  --viz-seq-100: #33290f; --viz-seq-200: #4a350f; --viz-seq-300: #6b4a0e; --viz-seq-400: #8f6210;
+  --viz-seq-500: #b5812a; --viz-seq-600: #dba13f; --viz-seq-700: #ffc65e;   /* "more" gets brighter, not darker */
+  --viz-ord-1: #8f6210; --viz-ord-2: #b5812a; --viz-ord-3: #dba13f; --viz-ord-4: #ffc65e;
+  --viz-div-neg-3: #6da7ec; --viz-div-neg-2: #4f7fb8; --viz-div-neg-1: #35547c; --viz-div-mid: #242830;
+  --viz-div-pos-1: #7a4040; --viz-div-pos-2: #c06a6a; --viz-div-pos-3: #f2837f;   /* extremes are the brightest steps */
+  --viz-good: #3fd06f; --viz-warning: #ffc14d; --viz-serious: #f5a077; --viz-critical: #ff8080;
+
+  /* depth comes from darker, tighter shadows; separation is still surface colour first */
+  --shadow-header: 0 8px 30px rgba(0, 0, 0, .4);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, .5), 0 2px 8px rgba(0, 0, 0, .4);
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, .55);
+  --glow-focus: rgba(244, 245, 247, .18);
+  --glow-danger: rgba(240, 138, 138, .2);
+  /* bright status fills in dark mode take dark ink */
+  --color-on-danger: #232933;
+  --color-on-success: #12301f;
+  --color-accent-on-inverse: #9a5b00;
+}
+
+/* base */
+html { font-family: var(--font-sans); color: var(--color-text); background: var(--color-bg); -webkit-font-smoothing: antialiased; }
+body { margin: 0; font-size: var(--text-base); line-height: var(--leading-base); }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }

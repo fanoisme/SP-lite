@@ -38,12 +38,13 @@ const isFocused = ref(false);
 </script>
 
 <style scoped>
+/* Allo switch (app.css .switch): 36×20 track, success fill, spring thumb. */
 .li-toggle-wrapper {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-m, 12px);
+  gap: var(--space-2);
   cursor: pointer;
-  font-family: var(--font-family, 'Inter', sans-serif);
+  user-select: none;
 }
 
 .li-toggle-disabled {
@@ -53,48 +54,54 @@ const isFocused = ref(false);
 
 .li-toggle {
   position: relative;
-  width: 44px;
-  height: 24px;
+  width: 36px;
+  height: 20px;
 }
 
 .li-toggle-track {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--color-gray-300, #CCCCCC);
-  border-radius: var(--radius-pill, 999px);
-  transition: background-color var(--dur-short, 200ms) var(--ease-out);
+  inset: 0;
+  background: var(--color-border-input);
+  border-radius: var(--radius-pill);
+  transition: background var(--dur-short);
 }
 
 .li-toggle-track.is-checked {
-  background-color: var(--color-orange-400, #FF6B00);
+  background: var(--color-success);
 }
 
 .li-toggle-track.is-focused {
-  box-shadow: 0 0 0 2px var(--color-gray-0, #fff), 0 0 0 4px var(--color-orange-400, #FF6B00);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 .li-toggle-thumb {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 20px;
-  height: 20px;
-  background-color: var(--color-gray-0, #FFFFFF);
+  width: 16px;
+  height: 16px;
+  background: var(--color-bg);
   border-radius: 50%;
-  transition: transform var(--dur-micro, 120ms) var(--ease-out);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform var(--dur-medium) var(--ease-spring), width var(--dur-short) var(--ease-out);
 }
 
 .li-toggle-thumb.is-checked {
-  transform: translateX(20px);
+  transform: translateX(16px);
+}
+
+.li-toggle-wrapper:active .li-toggle-thumb {
+  width: 20px;
+}
+
+.li-toggle-wrapper:active .li-toggle-thumb.is-checked {
+  transform: translateX(12px);
 }
 
 .li-toggle-label {
-  font-size: var(--text-sm, 16px);
-  color: var(--color-gray-900, #333333);
+  font-size: var(--text-sm);
+  color: var(--color-text);
 }
 
 .sr-only {

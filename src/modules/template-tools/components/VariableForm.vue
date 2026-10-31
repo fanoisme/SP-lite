@@ -2,7 +2,7 @@
   <Transition name="vars-pop">
     <div class="var-form" v-if="variables.length > 0">
       <div class="var-form__header">
-        <LiIcon name="data_object" class="var-form__icon" />
+        <LiIcon name="braces" class="var-form__icon" />
         <span class="var-form__title">Variables Detected</span>
         <span class="var-form__count">{{ variables.length }}</span>
       </div>
@@ -65,19 +65,19 @@ function updateValue(name, value) {
 
 .var-form__icon {
   font-size: 18px;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 .var-form__title {
   font-size: 13px;
   font-weight: 700;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
 }
 
 .var-form__count {
   padding: 2px 8px;
-  background: var(--cta-primary-bg, #FFBC25);
-  color: #fff;
+  background: var(--color-accent);
+  color: var(--color-bg);
   border-radius: 20px;
   font-size: 11px;
   font-weight: 700;
@@ -99,7 +99,7 @@ function updateValue(name, value) {
   min-width: 120px;
   font-size: 12px;
   font-weight: 600;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
   font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
   background: rgba(255, 188, 37, 0.08);
   padding: 4px 8px;
@@ -110,18 +110,18 @@ function updateValue(name, value) {
 .var-form__input {
   flex: 1;
   padding: 9px 14px;
-  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  border: 1.5px solid var(--color-border-strong);
   border-radius: 10px;
   font-size: 13px;
   font-family: inherit;
-  color: var(--color-on-surface, #1a1a2e);
-  background: rgba(255, 255, 255, 0.8);
+  color: var(--color-text);
+  background: var(--color-bg);
   transition: border-color 0.25s ease, box-shadow 0.25s ease;
   outline: none;
 }
 
 .var-form__input:focus {
-  border-color: var(--cta-primary-bg, #FFBC25);
+  border-color: var(--color-accent);
   box-shadow: 0 0 0 3px rgba(255, 188, 37, 0.1);
 }
 
@@ -131,7 +131,7 @@ function updateValue(name, value) {
 
 /* Transition */
 .vars-pop-enter-active {
-  transition: all 0.4s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+  transition: all 0.4s var(--ease-spring);
 }
 .vars-pop-leave-active {
   transition: all 0.2s ease;

@@ -349,76 +349,76 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.ddmail { display: flex; flex-direction: column; gap: var(--space-md, 16px); }
+.ddmail { display: flex; flex-direction: column; gap: var(--space-3); }
 .ddmail__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .ddmail__title { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -0.4px; }
-.ddmail__sub { font-size: 14px; color: var(--color-gray-500, #8e8ea0); margin: 2px 0 0; }
-.ddmail__count { font-size: 13px; color: var(--color-gray-500, #8e8ea0); margin: 0; white-space: nowrap; }
-.ddmail__loading { font-size: 13px; color: var(--color-gray-500, #8e8ea0); }
+.ddmail__sub { font-size: 14px; color: var(--color-text-muted); margin: 2px 0 0; }
+.ddmail__count { font-size: 13px; color: var(--color-text-muted); margin: 0; white-space: nowrap; }
+.ddmail__loading { font-size: 13px; color: var(--color-text-muted); }
 .ddmail__error {
-  font-size: 13px; color: var(--color-red-400, #C83E3B);
+  font-size: 13px; color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08);
-  border-radius: var(--radius-sm, 12px); padding: 10px 14px; margin: 0;
+  border-radius: var(--radius-sm); padding: 10px 14px; margin: 0;
 }
 
 .ddmail__card {
-  display: flex; flex-direction: column; gap: var(--space-sm, 12px);
-  padding: var(--space-md, 16px);
+  display: flex; flex-direction: column; gap: var(--space-2);
+  padding: var(--space-3);
   border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: var(--radius-md, 16px);
-  background: var(--color-surface, #fff);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
 }
 .ddmail__card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
 .ddmail__card-title { font-size: 16px; font-weight: 700; margin: 0; }
-.ddmail__card-sub { font-size: 13px; color: var(--color-gray-500, #8e8ea0); margin: 2px 0 0; }
+.ddmail__card-sub { font-size: 13px; color: var(--color-text-muted); margin: 2px 0 0; }
 .ddmail__card-state { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
 .ddmail__id {
   display: inline-block; margin-top: 6px;
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11px;
+  font-family: var(--font-mono); font-size: 11px;
   background: rgba(0, 0, 0, 0.04); border-radius: 5px; padding: 1px 6px;
 }
 
 .ddmail__fields {
   display: grid; grid-template-columns: 1fr 1fr;
-  gap: var(--space-sm, 12px) var(--space-md, 16px); align-items: start;
+  gap: var(--space-2) var(--space-3); align-items: start;
 }
 .ddmail__full { grid-column: 1 / -1; }
 
 .ddmail__card-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .ddmail__buttons { display: flex; align-items: center; gap: 8px; margin-left: auto; }
-.ddmail__muted { font-size: 12px; color: var(--color-gray-400, #aaa); }
+.ddmail__muted { font-size: 12px; color: var(--color-text-placeholder); }
 /* The last failure is the most useful thing on the card while SMTP is
    unconfirmed, so it takes the footer slot rather than hiding in the table. */
 .ddmail__last-error {
   margin: 0; font-size: 12.5px; line-height: 1.5;
-  color: var(--color-red-400, #C83E3B);
+  color: var(--color-danger);
   flex: 1 1 320px; min-width: 0;
 }
 
-.ddmail__history { display: flex; flex-direction: column; gap: var(--space-sm, 12px); }
+.ddmail__history { display: flex; flex-direction: column; gap: var(--space-2); }
 .ddmail__section {
-  margin: var(--space-sm, 12px) 0 0; font-size: 11px; font-weight: 700;
+  margin: var(--space-2) 0 0; font-size: 11px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--color-gray-400, #aaa);
+  color: var(--color-text-placeholder);
 }
-.ddmail__err-cell { font-size: 12px; color: var(--color-red-400, #C83E3B); }
+.ddmail__err-cell { font-size: 12px; color: var(--color-danger); }
 
 .ddmail__preview {
   width: 100%; height: 60vh; border: none;
-  border-radius: var(--radius-sm, 12px); background: #EFF1F4;
+  border-radius: var(--radius-sm); background: #EFF1F4;
 }
 
-.ddmail__confirm { margin: 0 0 8px; font-size: 14px; line-height: 1.7; color: var(--color-gray-700, #666); }
-.ddmail__confirm--warn { color: var(--color-red-400, #C83E3B); }
+.ddmail__confirm { margin: 0 0 8px; font-size: 14px; line-height: 1.7; color: var(--color-text); }
+.ddmail__confirm--warn { color: var(--color-danger); }
 .ddmail__recipients { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 4px; }
 .ddmail__recipients li {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12.5px;
+  font-family: var(--font-mono); font-size: 12.5px;
   display: flex; align-items: baseline; gap: 8px;
 }
 .ddmail__kind {
-  font-family: var(--font-body, 'Inter', sans-serif); font-size: 10px; font-weight: 700;
+  font-family: var(--font-sans); font-size: 10px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--color-gray-400, #aaa); min-width: 22px;
+  color: var(--color-text-placeholder); min-width: 22px;
 }
 
 @media (max-width: 900px) {

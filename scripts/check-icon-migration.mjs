@@ -1,3 +1,7 @@
+// Icon governance for the Allo restyle: Lucide-only, local assets only.
+// Keeps the original armour (no icon fonts, no icon CDNs, no stray inline
+// SVG outside the mascot) and audits the third-party notices for the two
+// things actually shipped: lucide-static (ISC) and Inter (SIL OFL).
 import { spawnSync } from 'node:child_process'
 import { access, readdir, readFile } from 'node:fs/promises'
 import { extname, resolve } from 'node:path'
@@ -12,6 +16,8 @@ export const EXTERNAL_URL_ALLOWLIST = Object.freeze([
   ['W3C namespaces and DTDs', /^https?:\/\/www\.w3\.org\//i],
   ['Adoptium Temurin releases page', /^https:\/\/adoptium\.net\/temurin\/releases/i],
   ['Supabase placeholder/API', /^https:\/\/(?:[\w-]+\.)*supabase\.co(?:\/|$|\?)/i],
+  ['Lucide icon source comment', /^https:\/\/lucide\.dev\//i],
+  ['Inter upstream (rsms)', /^https:\/\/rsms\.me\/inter\//i],
 ])
 
 export const COMMON_ICON_SERVICE_PATTERNS = Object.freeze([
@@ -25,6 +31,10 @@ export const COMMON_ICON_SERVICE_PATTERNS = Object.freeze([
   ['Material icon npm CDN (jsDelivr)', /cdn\.jsdelivr\.net\/npm\/(?:@material-symbols|@material-design-icons|material-symbols|material-icons)/i],
   ['Material icon npm CDN (unpkg)', /unpkg\.com\/(?:@material-symbols|@material-design-icons|material-symbols|material-icons)/i],
 ])
+
+// The mascot is a hand-drawn component with its own inline SVG; inline SVG
+// anywhere else is still how icon-font regressions sneak back in.
+const INLINE_SVG_EXEMPT = /LiMascot\.vue$/
 
 export const SOURCE_FORBIDDEN = Object.freeze([
   ['Material Symbols class', /material-symbols-outlined/],
@@ -42,13 +52,16 @@ export const DIST_FORBIDDEN = Object.freeze([
   ...COMMON_ICON_SERVICE_PATTERNS,
 ])
 
-const ALLOWED_PUBLIC_FONT_DIRS = new Set([
-  'inter',
-  'jetbrains-mono',
-  'space-grotesk',
-])
+export function cleanExtractedUrl(raw) {
+  return raw.replace(/[\\),.;]+$/, '')
+}
 
-const ICON_TOKEN_RE = /^(?:icons?|glyphs?|symbols?|fonts?)$/
+export function isAllowlistedExternalUrl(url) {
+  const cleaned = cleanExtractedUrl(url)
+  return EXTERNAL_URL_ALLOWLIST.some(([, pattern]) => pattern.test(cleaned))
+}
+
+const ICON_TOKEN_RE = /^(?:icons?|glyphs?|symbols?)$/
 const ICON_FONT_EXTENSION_RE = /\.(?:svg|woff2?|ttf|otf|eot)(?:[?#]|$)/i
 
 function splitIconTokens(value) {
@@ -57,31 +70,6 @@ function splitIconTokens(value) {
 
 function partHasIconKeyword(value) {
   return splitIconTokens(value).some(token => ICON_TOKEN_RE.test(token))
-}
-
-export function normalizeFontIdentifier(name) {
-  return String(name || '').toLowerCase().replace(/[\s_-]+/g, '')
-}
-
-export function isForbiddenMaterialFontIdentifier(name) {
-  return /material(?:symbols|icons)/.test(normalizeFontIdentifier(name))
-}
-
-export function isForbiddenPublicFontPath(relativePath) {
-  const parts = relativePath.split(/[/\\]/)
-  return parts.some(part => {
-    const stem = part.includes('.') ? part.slice(0, part.lastIndexOf('.')) : part
-    return isForbiddenMaterialFontIdentifier(part) || isForbiddenMaterialFontIdentifier(stem)
-  })
-}
-
-export function cleanExtractedUrl(raw) {
-  return raw.replace(/[\\),.;]+$/, '')
-}
-
-export function isAllowlistedExternalUrl(url) {
-  const cleaned = cleanExtractedUrl(url)
-  return EXTERNAL_URL_ALLOWLIST.some(([, pattern]) => pattern.test(cleaned))
 }
 
 export function isIconAssetUrl(url) {
@@ -99,18 +87,15 @@ export function isIconAssetUrl(url) {
   for (const label of parsed.hostname.split('.')) {
     if (partHasIconKeyword(label)) return true
   }
-
   for (const segment of parsed.pathname.split('/')) {
     if (segment && partHasIconKeyword(segment)) return true
   }
-
   const query = parsed.search.slice(1)
   if (query) {
     for (const chunk of query.split(/[&=#]/)) {
       if (chunk && partHasIconKeyword(chunk)) return true
     }
   }
-
   const hash = parsed.hash.slice(1)
   if (hash && partHasIconKeyword(hash)) return true
 
@@ -172,8 +157,11 @@ export function runProductionBuild() {
   })
 }
 
-function auditText(content, scope, patterns) {
+function auditText(content, scope, patterns, file = '') {
   const failures = []
+  if (INLINE_SVG_EXEMPT.test(file)) {
+    patterns = patterns.filter(([label]) => label !== 'inline SVG' && label !== 'SVG data URI')
+  }
   for (const label of scanContent(content, patterns)) {
     failures.push(`${scope} ${label}`)
   }
@@ -191,7 +179,7 @@ export async function auditSource() {
   ]
   for (const file of files) {
     const source = await readFile(file, 'utf8')
-    for (const msg of auditText(source, 'source', SOURCE_FORBIDDEN)) {
+    for (const msg of auditText(source, 'source', SOURCE_FORBIDDEN, file.pathname)) {
       failures.push(`${msg}: ${file.pathname}`)
     }
   }
@@ -222,41 +210,7 @@ export async function auditDist() {
   return failures
 }
 
-async function walkPublicFonts(url, relativePath = '') {
-  const entries = []
-  for (const entry of await readdir(url, { withFileTypes: true })) {
-    const nextRelative = relativePath ? `${relativePath}/${entry.name}` : entry.name
-    const child = new URL(`${entry.name}${entry.isDirectory() ? '/' : ''}`, url)
-    entries.push({ entry, child, relativePath: nextRelative })
-    if (entry.isDirectory()) {
-      entries.push(...await walkPublicFonts(child, nextRelative))
-    }
-  }
-  return entries
-}
-
-export async function auditPublicFonts() {
-  const failures = []
-  const fontsRoot = new URL('../public/fonts/', import.meta.url)
-  try {
-    await access(fontsRoot)
-  } catch {
-    return failures
-  }
-
-  for (const { entry, relativePath } of await walkPublicFonts(fontsRoot)) {
-    const topLevel = relativePath.split('/')[0]
-    if (entry.isDirectory() && relativePath === topLevel && !ALLOWED_PUBLIC_FONT_DIRS.has(topLevel)) {
-      failures.push(`public font directory not allowlisted: public/fonts/${topLevel}`)
-    }
-    if (isForbiddenPublicFontPath(relativePath)) {
-      failures.push(`forbidden Material icon font artifact: public/fonts/${relativePath}`)
-    }
-  }
-  return failures
-}
-
-async function auditLicenseFile(url, scope, canonicalApache) {
+async function auditLicenseFile(url, scope, canonicalIsc) {
   let notice
   try {
     notice = await readFile(url, 'utf8')
@@ -266,34 +220,34 @@ async function auditLicenseFile(url, scope, canonicalApache) {
 
   const failures = []
   const normalizedNotice = notice.replace(/\r\n?/g, '\n')
-  const normalizedApache = canonicalApache.replace(/\r\n?/g, '\n').trim()
-  if (!notice.includes('@material-symbols/svg-400') || !/Material Symbols/i.test(notice)) {
-    failures.push(`${scope} third-party notice does not identify Material Symbols`)
+  const normalizedIsc = canonicalIsc.replace(/\r\n?/g, '\n').trim()
+  if (!notice.includes('lucide-static') || !/Lucide/i.test(notice)) {
+    failures.push(`${scope} third-party notice does not identify Lucide`)
   }
-  if (!notice.includes('@material-design-icons/svg') || !/Material Design Icons/i.test(notice)) {
-    failures.push(`${scope} third-party notice does not identify Material Design Icons`)
+  if (!notice.includes('Inter') || !/SIL Open Font License/i.test(notice)) {
+    failures.push(`${scope} third-party notice does not identify Inter (OFL)`)
   }
-  if (!normalizedNotice.includes(normalizedApache) || !notice.includes('END OF TERMS AND CONDITIONS')) {
-    failures.push(`${scope} third-party notice does not contain the complete Apache License 2.0 text`)
+  if (!normalizedNotice.includes(normalizedIsc)) {
+    failures.push(`${scope} third-party notice does not contain the complete ISC licence text`)
   }
   return failures
 }
 
 export async function auditThirdPartyLicenses() {
-  const canonicalApache = await readFile(
-    new URL('../node_modules/@material-symbols/svg-400/LICENSE', import.meta.url),
+  const canonicalIsc = await readFile(
+    new URL('../node_modules/lucide-static/LICENSE', import.meta.url),
     'utf8',
   )
   return [
     ...await auditLicenseFile(
       new URL('../public/THIRD_PARTY_LICENSES.txt', import.meta.url),
       'public',
-      canonicalApache,
+      canonicalIsc,
     ),
     ...await auditLicenseFile(
       new URL('../dist/THIRD_PARTY_LICENSES.txt', import.meta.url),
       'dist',
-      canonicalApache,
+      canonicalIsc,
     ),
   ]
 }
@@ -301,7 +255,7 @@ export async function auditThirdPartyLicenses() {
 export async function runAudit({ skipBuild = false } = {}) {
   const failures = []
   if (!skipBuild) {
-    console.log('Building fresh production bundle for icon migration audit…')
+    console.log('Building fresh production bundle for icon audit…')
     const build = runProductionBuild()
     if (build.status !== 0) {
       return [`production build failed:\n${build.stderr || build.stdout}`]
@@ -310,7 +264,6 @@ export async function runAudit({ skipBuild = false } = {}) {
 
   failures.push(...await auditSource())
   failures.push(...await auditDist())
-  failures.push(...await auditPublicFonts())
   failures.push(...await auditThirdPartyLicenses())
   return failures
 }
@@ -324,6 +277,6 @@ if (isMain) {
     console.error(failures.join('\n'))
     process.exitCode = 1
   } else {
-    console.log('Local icon migration check passed (source, fresh dist, public fonts, third-party licenses)')
+    console.log('Lucide icon check passed (source, fresh dist, third-party licenses)')
   }
 }

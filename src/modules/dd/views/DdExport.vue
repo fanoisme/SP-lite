@@ -381,57 +381,57 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.ddexp { display: flex; flex-direction: column; gap: var(--space-md, 16px); }
+.ddexp { display: flex; flex-direction: column; gap: var(--space-3); }
 .ddexp__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .ddexp__title { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -0.4px; }
-.ddexp__sub { font-size: 14px; color: var(--color-gray-500, #8e8ea0); margin: 2px 0 0; }
-.ddexp__count { font-size: 13px; color: var(--color-gray-500, #8e8ea0); margin: 0; white-space: nowrap; }
+.ddexp__sub { font-size: 14px; color: var(--color-text-muted); margin: 2px 0 0; }
+.ddexp__count { font-size: 13px; color: var(--color-text-muted); margin: 0; white-space: nowrap; }
 
 .ddexp__panels {
   display: grid; grid-template-columns: 3fr 2fr;
-  gap: var(--space-md, 16px); align-items: start;
+  gap: var(--space-3); align-items: start;
 }
 @media (max-width: 1100px) {
   .ddexp__panels { grid-template-columns: 1fr; }
 }
 
 .ddexp__panel {
-  display: flex; flex-direction: column; gap: var(--space-sm, 12px);
-  background: rgba(255, 255, 255, 0.6);
+  display: flex; flex-direction: column; gap: var(--space-2);
+  background: var(--color-bg);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: var(--radius-md, 16px);
+  border-radius: var(--radius-md);
   padding: 18px 20px;
 }
 .ddexp__panel-head { display: flex; flex-direction: column; gap: 2px; }
 .ddexp__panel-title { font-size: 16px; font-weight: 700; margin: 0; }
-.ddexp__panel-lead { font-size: 13px; line-height: 1.55; color: var(--color-gray-500, #8e8ea0); margin: 0; }
+.ddexp__panel-lead { font-size: 13px; line-height: 1.55; color: var(--color-text-muted); margin: 0; }
 .ddexp__panel-foot { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
 
-.ddexp__cutoff { display: grid; grid-template-columns: 1fr auto; gap: var(--space-sm, 12px); align-items: end; }
-.ddexp__hint { font-size: 12px; color: var(--color-gray-400, #aaa); margin: 0; }
+.ddexp__cutoff { display: grid; grid-template-columns: 1fr auto; gap: var(--space-2); align-items: end; }
+.ddexp__hint { font-size: 12px; color: var(--color-text-placeholder); margin: 0; }
 
 .ddexp__error {
-  font-size: 13px; color: var(--color-red-400, #C83E3B);
+  font-size: 13px; color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08);
-  border-radius: var(--radius-sm, 12px); padding: 10px 14px; margin: 0;
+  border-radius: var(--radius-sm); padding: 10px 14px; margin: 0;
 }
 .ddexp__warn {
-  font-size: 13px; color: var(--color-gray-700, #666);
+  font-size: 13px; color: var(--color-text);
   background: rgba(255, 188, 37, 0.14);
-  border-radius: var(--radius-sm, 12px); padding: 10px 14px; margin: 0;
+  border-radius: var(--radius-sm); padding: 10px 14px; margin: 0;
 }
 .ddexp__warn-list {
-  font-size: 12px; color: var(--color-gray-700, #666); margin: 0;
+  font-size: 12px; color: var(--color-text); margin: 0;
   padding: 10px 14px 10px 30px; list-style: disc;
-  background: rgba(255, 188, 37, 0.14); border-radius: var(--radius-sm, 12px);
+  background: rgba(255, 188, 37, 0.14); border-radius: var(--radius-sm);
 }
 
 .ddexp__key {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  font-family: var(--font-mono); font-size: 12px;
   background: rgba(0, 0, 0, 0.04); border-radius: 5px; padding: 1px 6px;
 }
 /* A rename means the WHERE clause targets a key that is no longer on screen. */
-.ddexp__renamed { font-size: 11px; color: var(--color-gray-400, #aaa); margin-left: 6px; }
+.ddexp__renamed { font-size: 11px; color: var(--color-text-placeholder); margin-left: 6px; }
 
 .ddexp__tables { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .ddexp__table {
@@ -440,22 +440,22 @@ onMounted(() => {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 .ddexp__target {
-  grid-column: 1; font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 11px; color: var(--color-gray-400, #aaa);
+  grid-column: 1; font-family: var(--font-mono);
+  font-size: 11px; color: var(--color-text-placeholder);
 }
 .ddexp__rows {
   grid-column: 2; grid-row: 1 / span 2;
-  font-size: 12px; color: var(--color-gray-500, #8e8ea0);
+  font-size: 12px; color: var(--color-text-muted);
   font-variant-numeric: tabular-nums; white-space: nowrap;
 }
 
 .ddexp__modal-title { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
-.ddexp__modal-sub { margin: 2px 0 0; font-size: 12px; color: var(--color-gray-400, #aaa); }
-.ddexp__confirm { font-size: 13px; line-height: 1.6; margin: 0; color: var(--color-gray-700, #666); }
+.ddexp__modal-sub { margin: 2px 0 0; font-size: 12px; color: var(--color-text-placeholder); }
+.ddexp__confirm { font-size: 13px; line-height: 1.6; margin: 0; color: var(--color-text); }
 
 .ddexp__code {
-  background: var(--color-bg-dark, #212324);
-  border-radius: var(--radius-sm, 12px);
+  background: var(--color-inverse);
+  border-radius: var(--radius-sm);
   padding: 14px 0; max-height: 55vh; overflow: auto;
 }
 .ddexp__line { display: flex; align-items: flex-start; gap: 12px; padding: 0 16px; }
@@ -463,11 +463,11 @@ onMounted(() => {
    the gutter must not smuggle line numbers into a production paste. */
 .ddexp__ln {
   user-select: none; flex: 0 0 44px; text-align: right;
-  font-family: var(--font-mono, ui-monospace, monospace);
+  font-family: var(--font-mono);
   font-size: 11px; line-height: 1.75; color: #5d666f;
 }
 .ddexp__src {
-  flex: 1; font-family: var(--font-mono, ui-monospace, monospace);
+  flex: 1; font-family: var(--font-mono);
   font-size: 12px; line-height: 1.75; color: #E4E7EC;
   white-space: pre-wrap; word-break: break-word;
 }

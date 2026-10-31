@@ -16,24 +16,18 @@ defineProps({
 </script>
 
 <style scoped>
+/* Allo skeleton (app.css .skel): warm shimmer, slow and low-contrast. */
 .li-skeleton {
-  background: var(--color-gray-200, #E6E6E6);
-  border-radius: 6px;
-  position: relative;
-  overflow: hidden;
-}
-
-.li-skeleton::after {
-  content: '';
-  position: absolute;
-  inset: 0;
+  display: block;
+  border-radius: var(--radius-xs);
   background: linear-gradient(
     90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.5) 50%,
-    transparent 100%
+    var(--color-surface-2) 25%,
+    color-mix(in srgb, var(--color-accent-soft) 35%, var(--color-surface-2)) 45%,
+    var(--color-surface-2) 65%
   );
-  animation: li-shimmer 1.5s ease-in-out infinite;
+  background-size: 300% 100%;
+  animation: li-shimmer 1.6s linear infinite;
 }
 
 .li-skeleton--circle {
@@ -42,8 +36,7 @@ defineProps({
 
 .li-skeleton--text {
   height: 14px;
-  border-radius: 4px;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-2);
 }
 
 .li-skeleton--text:last-child {
@@ -51,7 +44,11 @@ defineProps({
 }
 
 @keyframes li-shimmer {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  from { background-position: 100% 0; }
+  to   { background-position: -100% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .li-skeleton { animation: none; }
 }
 </style>

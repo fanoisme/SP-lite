@@ -17,7 +17,7 @@
                 <h3 class="li-bottomsheet-title">{{ title }}</h3>
               </slot>
               <button v-if="closable" class="li-bottomsheet-close" @click="close" aria-label="Close">
-                <LiIcon name="close" size="lg" />
+                <LiIcon name="x" size="lg" />
               </button>
             </div>
             
@@ -91,22 +91,18 @@ onUnmounted(() => {
 <style scoped>
 .li-bottomsheet-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--color-overlay, rgba(34, 34, 51, 0.8));
+  inset: 0;
+  background: var(--color-overlay);
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  z-index: 1000;
+  z-index: var(--z-modal);
 }
 
 .li-bottomsheet {
-  background-color: var(--color-gray-0, #FFFFFF);
-  border-radius: var(--radius-lg, 16px) var(--radius-lg, 16px) 0 0;
-  box-shadow: var(--shadow-modal, 0 -8px 24px rgba(0, 0, 0, 0.1));
-  font-family: var(--font-family, 'Inter', sans-serif);
+  background: var(--color-bg);
+  border-radius: 14px 14px 0 0;
+  box-shadow: 0 -24px 64px -12px rgba(0, 5, 58, 0.28);
   display: flex;
   flex-direction: column;
   max-height: 90vh;
@@ -123,72 +119,70 @@ onUnmounted(() => {
 .li-bottomsheet-drag-bar {
   width: 40px;
   height: 4px;
-  background-color: var(--color-gray-300, #CCCCCC);
-  border-radius: 2px;
+  background: var(--color-border-strong);
+  border-radius: var(--radius-pill);
 }
 
 .li-bottomsheet-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-s, 8px) var(--space-l, 16px) var(--space-m, 12px);
+  padding: var(--space-2) var(--space-4) var(--space-3);
 }
 
 .li-bottomsheet-title {
   margin: 0;
-  font-size: var(--text-md, 20px);
-  font-weight: 700;
-  color: var(--color-gray-900, #333333);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--color-text-strong);
 }
 
 .li-bottomsheet-close {
   background: transparent;
   border: none;
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
   cursor: pointer;
   padding: 4px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: background var(--dur-quick), color var(--dur-quick);
 }
 
 .li-bottomsheet-close:hover {
-  color: var(--color-gray-900, #333333);
-  background-color: var(--color-gray-100, #F2F2F2);
+  color: var(--color-text-strong);
+  background: var(--color-hover);
 }
 
 .li-bottomsheet-body {
-  padding: 0 var(--space-l, 16px) var(--space-l, 16px);
+  padding: 0 var(--space-4) var(--space-4);
   overflow-y: auto;
-  font-size: var(--text-sm, 16px);
-  color: var(--color-gray-700, #666666);
+  font-size: var(--text-sm);
+  color: var(--color-text);
 }
 
 .li-bottomsheet-footer {
-  padding: var(--space-l, 16px);
-  border-top: 1px solid var(--color-gray-200, #E6E6E6);
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
-  gap: var(--space-m, 12px);
+  gap: var(--space-3);
 }
 
 /* Transitions */
-.sheet-fade-enter-active,
-.sheet-fade-leave-active {
-  transition: opacity var(--dur-medium, 300ms) var(--ease-out);
-}
+.sheet-fade-enter-active { transition: opacity var(--dur-medium) var(--ease-out); }
+.sheet-fade-leave-active { transition: opacity 180ms var(--ease-exit); }
 .sheet-fade-enter-from,
 .sheet-fade-leave-to {
   opacity: 0;
 }
 
 .sheet-slide-enter-active {
-  transition: transform 280ms cubic-bezier(.2,.8,.2,1);
+  transition: transform var(--dur-medium) var(--ease-enter);
 }
 .sheet-slide-leave-active {
-  transition: transform 200ms cubic-bezier(.4,0,1,1);
+  transition: transform 200ms var(--ease-exit);
 }
 .sheet-slide-enter-from,
 .sheet-slide-leave-to {

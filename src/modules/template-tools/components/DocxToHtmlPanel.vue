@@ -26,7 +26,7 @@
         <div v-if="converting" class="docx-panel__converting">
           <div class="docx-panel__loader">
             <div class="docx-panel__loader-ring"></div>
-            <LiIcon name="description" class="docx-panel__loader-icon" />
+            <LiIcon name="file-text" class="docx-panel__loader-icon" />
           </div>
           <p class="docx-panel__converting-text">Converting your document...</p>
           <div class="docx-panel__progress-bar">
@@ -36,7 +36,7 @@
 
         <div v-else class="docx-panel__drop-content">
           <div class="docx-panel__drop-icon-wrap" :class="{ 'docx-panel__drop-icon-wrap--bounce': isDragging }">
-            <LiIcon :name="isDragging ? 'file_download' : 'upload_file'" />
+            <LiIcon :name="isDragging ? 'download' : 'file-up'" />
           </div>
           <p class="docx-panel__drop-title">
             {{ isDragging ? 'Drop your file here' : 'Upload Word Document' }}
@@ -68,18 +68,18 @@
               :aria-pressed="viewMode === 'preview'"
               @click="viewMode = 'preview'"
             >
-              <LiIcon name="preview" />
+              <LiIcon name="eye" />
               Preview
             </button>
           </div>
 
           <div class="docx-panel__toolbar-right">
             <div class="docx-panel__file-info">
-              <LiIcon name="description" />
+              <LiIcon name="file-text" />
               {{ fileName }}
             </div>
             <button class="docx-panel__new-btn" @click="reset">
-              <LiIcon name="add" />
+              <LiIcon name="plus" />
               New
             </button>
           </div>
@@ -115,7 +115,7 @@
             :class="`docx-panel__msg--${msg.type || 'info'}`"
             :style="{ animationDelay: `${i * 60}ms` }"
           >
-            <LiIcon :name="msg.type === 'warning' ? 'warning' : msg.type === 'error' ? 'error' : 'check_circle'" />
+            <LiIcon :name="msg.type === 'triangle-alert' ? 'triangle-alert' : msg.type === 'circle-x' ? 'circle-x' : 'circle-check'" />
             {{ msg.message }}
           </div>
         </div>
@@ -197,7 +197,7 @@ function reset() {
 .docx-panel {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md, 16px);
+  gap: var(--space-3);
   overflow: hidden;
   min-height: 0;
 }
@@ -209,11 +209,11 @@ function reset() {
   align-items: center;
   justify-content: center;
   min-height: 280px;
-  border: 2px dashed rgba(0, 0, 0, 0.1);
+  border: 2px dashed var(--color-border-strong);
   border-radius: 16px;
   background: linear-gradient(135deg, rgba(255, 188, 37, 0.02), rgba(255, 149, 0, 0.02));
   cursor: pointer;
-  transition: all 0.4s var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: all 0.4s var(--ease-enter);
   overflow: hidden;
 }
 
@@ -225,7 +225,7 @@ function reset() {
 }
 
 .docx-panel__dropzone--active {
-  border-color: var(--cta-primary-bg, #FFBC25);
+  border-color: var(--color-accent);
   background: linear-gradient(135deg, rgba(255, 188, 37, 0.08), rgba(255, 149, 0, 0.08));
   transform: scale(1.01);
   box-shadow: 0 12px 40px rgba(255, 188, 37, 0.15);
@@ -260,10 +260,10 @@ function reset() {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--cta-primary-bg, #FFBC25), #FF9500);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
   border-radius: 18px;
   box-shadow: 0 6px 20px rgba(255, 188, 37, 0.25);
-  transition: transform 0.3s var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+  transition: transform 0.3s var(--ease-spring);
 }
 
 .docx-panel__drop-icon-wrap--bounce {
@@ -272,24 +272,24 @@ function reset() {
 
 .docx-panel__drop-icon-wrap .li-icon {
   font-size: 32px;
-  color: #fff;
+  color: var(--color-bg);
 }
 
 .docx-panel__drop-title {
   font-size: 17px;
   font-weight: 700;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
   margin: 0;
 }
 
 .docx-panel__drop-sub {
   font-size: 13px;
-  color: #8e8ea0;
+  color: var(--color-text-muted);
   margin: 0;
 }
 
 .docx-panel__drop-sub strong {
-  color: #555;
+  color: var(--color-text);
 }
 
 .docx-panel__drop-formats {
@@ -300,11 +300,11 @@ function reset() {
 
 .docx-panel__format-chip {
   padding: 3px 10px;
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--color-border);
   border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
-  color: #666;
+  color: var(--color-text);
 }
 
 /* ── Converting Animation ── */
@@ -329,7 +329,7 @@ function reset() {
   position: absolute;
   inset: 0;
   border: 3px solid rgba(255, 188, 37, 0.15);
-  border-top-color: var(--cta-primary-bg, #FFBC25);
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -340,7 +340,7 @@ function reset() {
 
 .docx-panel__loader-icon {
   font-size: 24px;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
   animation: pulse-icon 1.5s ease-in-out infinite;
 }
 
@@ -352,7 +352,7 @@ function reset() {
 .docx-panel__converting-text {
   font-size: 14px;
   font-weight: 600;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
   margin: 0;
 }
 
@@ -367,7 +367,7 @@ function reset() {
 .docx-panel__progress-fill {
   height: 100%;
   width: 40%;
-  background: linear-gradient(90deg, var(--cta-primary-bg, #FFBC25), #FF9500);
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-strong));
   border-radius: 4px;
   animation: progress-slide 1.2s ease-in-out infinite;
 }
@@ -382,7 +382,7 @@ function reset() {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  animation: outputReveal 0.5s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  animation: outputReveal 0.5s var(--ease-out) both;
   min-height: 0;
 }
 
@@ -402,7 +402,7 @@ function reset() {
 
 .docx-panel__toggle-group {
   display: flex;
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--color-border);
   border-radius: 12px;
   padding: 3px;
 }
@@ -418,9 +418,9 @@ function reset() {
   font-weight: 500;
   cursor: pointer;
   background: transparent;
-  color: #8e8ea0;
+  color: var(--color-text-muted);
   font-family: inherit;
-  transition: all 0.25s var(--ease-smooth, cubic-bezier(0.4, 0, 0.2, 1));
+  transition: all 0.25s var(--ease-enter);
 }
 
 .docx-panel__toggle .li-icon {
@@ -428,12 +428,12 @@ function reset() {
 }
 
 .docx-panel__toggle:hover {
-  color: #555;
+  color: var(--color-text);
 }
 
 .docx-panel__toggle--active {
   background: white;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   font-weight: 600;
 }
@@ -449,7 +449,7 @@ function reset() {
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #8e8ea0;
+  color: var(--color-text-muted);
   padding: 6px 12px;
   background: rgba(0, 0, 0, 0.03);
   border-radius: 8px;
@@ -457,7 +457,7 @@ function reset() {
 
 .docx-panel__file-info .li-icon {
   font-size: 16px;
-  color: var(--cta-primary-bg, #FFBC25);
+  color: var(--color-accent);
 }
 
 .docx-panel__new-btn {
@@ -465,13 +465,13 @@ function reset() {
   align-items: center;
   gap: 4px;
   padding: 8px 16px;
-  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  border: 1.5px solid var(--color-border-strong);
   border-radius: 10px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   background: transparent;
-  color: #666;
+  color: var(--color-text);
   font-family: inherit;
   transition: all 0.25s ease;
 }
@@ -481,8 +481,8 @@ function reset() {
 }
 
 .docx-panel__new-btn:hover {
-  border-color: var(--cta-primary-bg, #FFBC25);
-  color: var(--color-on-surface, #1a1a2e);
+  border-color: var(--color-accent);
+  color: var(--color-text);
   background: rgba(255, 188, 37, 0.05);
 }
 
@@ -544,7 +544,7 @@ function reset() {
   font-size: 12px;
   padding: 10px 14px;
   border-radius: 10px;
-  animation: msgSlide 0.4s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  animation: msgSlide 0.4s var(--ease-out) both;
 }
 
 @keyframes msgSlide {
@@ -562,7 +562,7 @@ function reset() {
 }
 .docx-panel__msg--error {
   background: rgba(200, 62, 59, 0.06);
-  color: var(--color-error, #C83E3B);
+  color: var(--color-danger);
 }
 .docx-panel__msg--info {
   background: rgba(16, 185, 129, 0.06);
@@ -578,7 +578,7 @@ function reset() {
 }
 
 .view-fade-enter-active {
-  transition: all 0.3s var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+  transition: all 0.3s var(--ease-out);
 }
 .view-fade-leave-active {
   transition: all 0.15s ease-in;

@@ -11,8 +11,8 @@ const urls = Object.freeze(Object.fromEntries(
   }),
 ))
 
-export function iconUrl(name, filled = false) {
+export function iconUrl(name) {
   const normalized = String(name || '').trim().replaceAll('-', '_')
   if (!normalized) return ''
-  return urls[`${normalized}${filled ? '_fill' : ''}`] || urls[normalized] || ''
+  return urls[normalized] || ''
 }

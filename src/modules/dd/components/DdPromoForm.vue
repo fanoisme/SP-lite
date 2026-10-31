@@ -40,7 +40,7 @@
             :title="form.promo_name.trim() ? 'Generate from the promo name' : 'Enter a promo name first'"
             @click="generate"
           >
-            <LiIcon name="autorenew" />
+            <LiIcon name="refresh-cw" />
             Generate
           </button>
         </div>
@@ -439,39 +439,39 @@ async function submit() {
 </script>
 
 <style scoped>
-.ddpromoform { display: flex; flex-direction: column; gap: var(--space-sm, 12px); }
+.ddpromoform { display: flex; flex-direction: column; gap: var(--space-2); }
 
 .ddpromoform__problems {
   margin: 0; padding: 10px 14px 10px 30px;
   list-style: disc;
-  font-size: 13px; color: var(--color-red-400, #C83E3B);
+  font-size: 13px; color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08);
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-md);
 }
 .ddpromoform__problems li + li { margin-top: 3px; }
 
 .ddpromoform__note {
-  margin: 0; font-size: 12.5px; color: var(--color-gray-600, #808080);
+  margin: 0; font-size: 12.5px; color: var(--color-text-muted);
 }
 .ddpromoform__note code {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
-  background: rgba(0, 0, 0, 0.04); border-radius: 5px; padding: 1px 6px;
+  font-family: var(--font-mono); font-size: 12px;
+  background: var(--color-border); border-radius: 5px; padding: 1px 6px;
 }
 
 .ddpromoform__grid {
   display: grid; grid-template-columns: 1fr 1fr;
-  gap: var(--space-sm, 12px) var(--space-md, 16px);
+  gap: var(--space-2) var(--space-3);
   align-items: start;
 }
 
 .ddpromoform__section {
   grid-column: 1 / -1;
-  margin: var(--space-sm, 12px) 0 0;
+  margin: var(--space-2) 0 0;
   padding-bottom: 5px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--color-border);
   font-size: 11px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 
 /* An input plus the checkbox or button that modifies it, kept on one line so
@@ -482,35 +482,34 @@ async function submit() {
 .ddpromoform__check {
   display: flex; align-items: center; gap: 6px;
   flex: 0 0 auto; padding-bottom: 22px;
-  font-size: 12px; color: var(--color-gray-600, #808080);
+  font-size: 12px; color: var(--color-text-muted);
   white-space: nowrap; cursor: pointer;
 }
 
 .ddpromoform__generate {
   display: inline-flex; align-items: center; gap: 5px;
   flex: 0 0 auto; margin-bottom: 22px;
-  padding: 10px 14px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 12px; font-weight: 600; color: var(--color-gray-700, #666);
+  padding: 10px 14px; border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill); background: transparent;
+  font-size: 12px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms; white-space: nowrap;
 }
-.ddpromoform__generate:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
+.ddpromoform__generate:hover:not(:disabled) { background: var(--color-border); }
 .ddpromoform__generate:disabled { opacity: 0.45; cursor: not-allowed; }
 .ddpromoform__generate .li-icon { font-size: 16px; }
 
 .ddpromoform__channel {
-  display: flex; flex-direction: column; gap: var(--space-sm, 12px);
-  padding: 12px; border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: var(--radius-sm, 12px); background: rgba(0, 0, 0, 0.02);
+  display: flex; flex-direction: column; gap: var(--space-2);
+  padding: 12px; border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); background: rgba(0, 0, 0, 0.02);
 }
 .ddpromoform__channel-name {
   font-size: 12px; font-weight: 700;
   letter-spacing: 0.05em; text-transform: uppercase;
-  color: var(--color-gray-600, #808080);
+  color: var(--color-text-muted);
 }
 .ddpromoform__channel .ddpromoform__check { padding-bottom: 0; }
-.ddpromoform__muted { margin: 0; font-size: 12px; color: var(--color-gray-400, #B3B3B3); }
+.ddpromoform__muted { margin: 0; font-size: 12px; color: var(--color-text-placeholder); }
 
 @media (max-width: 640px) {
   .ddpromoform__grid { grid-template-columns: 1fr; }

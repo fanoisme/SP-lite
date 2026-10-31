@@ -1,94 +1,103 @@
 <template>
   <LiToast />
+  <LiCommandPalette v-model="paletteOpen" :commands="commands" @execute="runCommand" />
 
   <!-- Landing/login render full-bleed, without the app shell -->
   <router-view v-if="isBareRoute" />
 
-  <div v-else class="sp-app" :class="{ 'sp-app--sidebar-open': sidebarOpen }">
-    <!-- Ambient mesh background -->
-    <div class="sp-mesh-bg">
-      <div class="mesh-orb mesh-orb--1"></div>
-      <div class="mesh-orb mesh-orb--2"></div>
-      <div class="mesh-orb mesh-orb--3"></div>
-    </div>
+  <div v-else class="sp-shell">
+    <!-- Shell B: product top bar, 56, sticky -->
+    <header class="sp-topbar">
+      <router-link to="/dashboard" class="sp-topbar__home" aria-label="SP-lite home">
+        <LiLogo size="sm" :show-subtitle="false" />
+      </router-link>
 
-    <!-- Mobile overlay -->
-    <Transition name="fade">
-      <div v-if="sidebarOpen" class="sp-overlay" @click="sidebarOpen = false" />
-    </Transition>
-
-    <!-- Sidebar -->
-    <aside class="sp-sidebar" :class="{ 'sp-sidebar--open': sidebarOpen }">
-      <div class="sp-sidebar__header">
-        <LiLogo size="sm" :animate="true" :show-subtitle="true" />
-        <button class="sp-sidebar__close" aria-label="Close navigation menu" @click="sidebarOpen = false">
-          <LiIcon name="close" />
-        </button>
-      </div>
-
-      <nav class="sp-sidebar__nav">
-        <div class="sp-sidebar__section-label">Tools</div>
-        <router-link
-          v-for="mod in modules"
-          :key="mod.path"
-          :to="mod.path"
-          class="sp-sidebar__item"
-          :class="{ 'sp-sidebar__item--active': isActive(mod.path) }"
-          @click="sidebarOpen = false"
-        >
-          <span class="sp-sidebar__item-indicator"></span>
-          <LiIcon :name="mod.icon" class="sp-sidebar__item-icon" />
-          <span class="sp-sidebar__item-label">{{ mod.label }}</span>
-        </router-link>
-
-        <template v-if="isAdmin">
-          <div class="sp-sidebar__section-label">Admin</div>
+      <!-- Products dropdown (module switcher) -->
+      <nav class="sp-topbar__nav" aria-label="Modules">
+        <LiDropdown v-if="modules.length" align="left">
+          <template #trigger>
+            <button class="sp-products" :aria-expanded="undefined">
+              <LiIcon v-if="currentModule?.icon" :name="currentModule.icon" size="sm" />
+              <span class="sp-products__label">{{ currentModule?.label || 'Modules' }}</span>
+              <LiIcon name="chevron-down" size="sm" />
+            </button>
+          </template>
           <router-link
-            to="/admin"
-            class="sp-sidebar__item"
-            :class="{ 'sp-sidebar__item--active': isActive('/admin') }"
-            @click="sidebarOpen = false"
+            v-for="mod in modules"
+            :key="mod.path"
+            :to="mod.path"
+            class="sp-menu-item"
+            :class="{ 'is-current': isActive(mod.path) }"
+            role="menuitem"
           >
-            <span class="sp-sidebar__item-indicator"></span>
-            <LiIcon name="admin_panel_settings" class="sp-sidebar__item-icon" />
-            <span class="sp-sidebar__item-label">Admin</span>
+            <LiIcon :name="mod.icon" size="sm" />
+            <span>{{ mod.label }}</span>
           </router-link>
-        </template>
+          <router-link v-if="isAdmin" to="/admin" class="sp-menu-item" :class="{ 'is-current': isActive('/admin') }" role="menuitem">
+            <LiIcon name="shield" size="sm" />
+            <span>Admin</span>
+          </router-link>
+        </LiDropdown>
       </nav>
 
-      <div class="sp-sidebar__footer">
-        <router-link
-          to="/profile"
-          class="sp-sidebar__user"
-          :class="{ 'sp-sidebar__user--active': isActive('/profile') }"
-          @click="sidebarOpen = false"
+      <div class="sp-topbar__end">
+        <button class="sp-icon-btn" aria-label="Search (Ctrl K)" title="Search" @click="paletteOpen = true">
+          <LiIcon name="search" size="sm" />
+          <kbd class="sp-kbd">Ctrl K</kbd>
+        </button>
+        <button
+          class="sp-icon-btn"
+          :aria-label="theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'"
+          @click="toggleTheme"
         >
-          <LiIcon name="account_circle" />
-          <span class="sp-sidebar__user-name">{{ profile?.username || session?.user?.email }}</span>
+          <LiIcon :name="themeIcon" size="sm" />
+        </button>
+        <router-link to="/profile" class="sp-topbar__avatar" aria-label="Profile">
+          <LiAvatar :initials="initials" size="sm" />
         </router-link>
-        <button class="sp-sidebar__source sp-sidebar__logout" @click="handleLogout">
-          <LiIcon name="logout" />
-          <span>Sign out</span>
+        <button class="sp-icon-btn sp-topbar__menu-btn" aria-label="Open navigation menu" @click="menuOpen = true">
+          <LiIcon name="menu" size="sm" />
         </button>
       </div>
-    </aside>
+    </header>
 
-    <!-- Module content -->
+    <!-- Module content: the one scrolling region -->
     <main class="sp-main">
-      <!-- Mobile header -->
-      <div class="sp-mobile-header">
-        <button class="sp-hamburger" aria-label="Open navigation menu" @click="sidebarOpen = true">
-          <LiIcon name="menu" />
-        </button>
-        <span class="sp-mobile-title">{{ currentModule?.label || 'SP-lite' }}</span>
-      </div>
-
       <router-view v-slot="{ Component, route: r }">
         <Transition name="page" mode="out-in">
           <component :is="Component" :key="r.path" />
         </Transition>
       </router-view>
     </main>
+
+    <!-- Mobile menu sheet (< 900) -->
+    <LiBottomSheet v-model="menuOpen" title="Modules">
+      <nav class="sp-sheet-nav" aria-label="Modules">
+        <router-link
+          v-for="mod in modules"
+          :key="mod.path"
+          :to="mod.path"
+          class="sp-menu-item"
+          :class="{ 'is-current': isActive(mod.path) }"
+          @click="menuOpen = false"
+        >
+          <LiIcon :name="mod.icon" size="sm" />
+          <span>{{ mod.label }}</span>
+        </router-link>
+        <router-link v-if="isAdmin" to="/admin" class="sp-menu-item" :class="{ 'is-current': isActive('/admin') }" @click="menuOpen = false">
+          <LiIcon name="shield" size="sm" />
+          <span>Admin</span>
+        </router-link>
+        <router-link to="/profile" class="sp-menu-item" :class="{ 'is-current': isActive('/profile') }" @click="menuOpen = false">
+          <LiIcon name="circle-user" size="sm" />
+          <span>Profile</span>
+        </router-link>
+        <button class="sp-menu-item sp-menu-item--danger" @click="handleLogout">
+          <LiIcon name="log-out" size="sm" />
+          <span>Sign out</span>
+        </button>
+      </nav>
+    </LiBottomSheet>
   </div>
 </template>
 
@@ -98,14 +107,21 @@ import { useRoute, useRouter } from 'vue-router'
 import router from './router/index.js'
 import { useAuth } from './composables/useAuth.js'
 import { useAccess } from './composables/useAccess.js'
+import { useTheme } from './composables/useTheme.js'
 import { useToast } from './lib/composables/useToast.js'
 import LiToast from './lib/components/LiToast.vue'
 import LiLogo from './lib/components/LiLogo.vue'
+import LiIcon from './lib/components/LiIcon.vue'
+import LiAvatar from './lib/components/LiAvatar.vue'
+import LiDropdown from './lib/components/LiDropdown.vue'
+import LiBottomSheet from './lib/components/LiBottomSheet.vue'
+import LiCommandPalette from './lib/components/LiCommandPalette.vue'
 
 const route = useRoute()
 const routerInstance = useRouter()
 const { session, profile, isAdmin, signOut } = useAuth()
 const { canModule } = useAccess()
+const { theme, toggleTheme } = useTheme()
 
 // Supabase appends ?error=...&error_description=... to the redirect URL when
 // an email link (magic link/signup confirmation) is invalid or expired.
@@ -119,9 +135,9 @@ if (authError) {
 
 const isBareRoute = computed(() => route.name === 'landing' || route.name === 'login')
 
-// Sidebar Tools list — only modules the user's role grants (canModule reads
-// the session-resolved set, which already excludes globally-disabled modules).
-// 'admin' is rendered separately under the Admin section.
+// Module list — only modules the user's role grants (canModule reads the
+// session-resolved set, which already excludes globally-disabled modules).
+// 'admin' renders in its own menu slot.
 const modules = computed(() =>
   router.options.routes
     .filter(r => r.meta?.module && r.meta.module !== 'admin')
@@ -129,356 +145,259 @@ const modules = computed(() =>
     .map(r => ({ path: r.path, label: r.meta.label, icon: r.meta.icon }))
 )
 
-const sidebarOpen = ref(false)
-
 const currentModule = computed(() =>
   modules.value.find(m => route.path.startsWith(m.path)) ||
-  (route.path.startsWith('/admin') ? { label: 'Admin' } : undefined) ||
-  (route.path.startsWith('/profile') ? { label: 'Profile' } : undefined),
+  (route.path.startsWith('/admin') ? { label: 'Admin', icon: 'shield' } : undefined) ||
+  (route.path.startsWith('/profile') ? { label: 'Profile', icon: 'circle-user' } : undefined),
 )
+
+const initials = computed(() => {
+  const name = profile.value?.full_name || profile.value?.username || session.value?.user?.email || ''
+  return name.slice(0, 2).toUpperCase()
+})
+
+const paletteOpen = ref(false)
+const menuOpen = ref(false)
+
+const themeIcon = computed(() => (theme.value === 'dark' ? 'sun' : 'moon'))
+
+// Presentation-layer palette only (spec §Ruling 6): navigation + static commands.
+const commands = computed(() => [
+  {
+    label: 'Go to',
+    items: [
+      ...modules.value.map(m => ({ id: `go-${m.path}`, label: m.label, action: () => routerInstance.push(m.path) })),
+      { id: 'go-profile', label: 'Profile', action: () => routerInstance.push('/profile') },
+      ...(isAdmin.value ? [{ id: 'go-admin', label: 'Admin', action: () => routerInstance.push('/admin') }] : []),
+    ],
+  },
+  {
+    label: 'Actions',
+    items: [
+      { id: 'toggle-theme', label: theme.value === 'dark' ? 'Switch to light theme' : 'Switch to dark theme', action: toggleTheme },
+      { id: 'sign-out', label: 'Sign out', action: handleLogout },
+    ],
+  },
+])
+
+function runCommand(command) {
+  command?.action?.()
+}
 
 function isActive(path) {
   return route.path.startsWith(path)
 }
 
 async function handleLogout() {
+  menuOpen.value = false
   await signOut()
   routerInstance.push({ name: 'landing' })
 }
 
 watch(() => route.path, () => {
-  sidebarOpen.value = false
+  menuOpen.value = false
 })
 </script>
 
 <style scoped>
-.sp-app {
-  position: relative;
+/* Shell B (LAYOUTS.md): sticky top bar 56, one soft header shadow, fluid content. */
+.sp-shell {
   min-height: 100vh;
   display: flex;
-}
-
-/* ── Mesh Background ── */
-.sp-mesh-bg {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  z-index: 0;
-  pointer-events: none;
-}
-
-.mesh-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(40px);
-  opacity: 0.25;
-  animation: mesh-drift 25s ease-in-out infinite alternate;
-  contain: layout style;
-}
-
-.mesh-orb--1 {
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, var(--color-yellow-100, #FFF3D6), transparent 70%);
-  top: -15%;
-  right: -10%;
-  animation-duration: 22s;
-}
-
-.mesh-orb--2 {
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, var(--color-blue-100, #E6E6FF), transparent 70%);
-  bottom: -15%;
-  left: 15%;
-  animation-duration: 28s;
-  animation-delay: -5s;
-}
-
-.mesh-orb--3 {
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, var(--color-yellow-100, #FFF3D6), transparent 70%);
-  top: 40%;
-  left: 40%;
-  opacity: 0.15;
-  animation-duration: 32s;
-  animation-delay: -10s;
-}
-
-@keyframes mesh-drift {
-  0% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -20px) scale(1.05); }
-  66% { transform: translate(-20px, 15px) scale(0.95); }
-  100% { transform: translate(10px, -10px) scale(1.02); }
-}
-
-/* ── Overlay ── */
-.sp-overlay {
-  display: none;
-}
-
-/* ── Sidebar ── */
-.sp-sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 250px;
-  z-index: var(--z-sticky, 30);
-  display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-right: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 1px 0 4px rgba(0, 0, 0, 0.03);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.sp-sidebar__header {
-  padding: 20px 16px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+.sp-topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  height: 56px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: var(--space-6);
+  padding: 0 var(--space-4);
+  background: var(--color-bg);
+  box-shadow: var(--shadow-header);
 }
 
-.sp-sidebar__close {
+.sp-topbar__home {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  text-decoration: none;
+}
+
+.sp-topbar__nav {
   display: none;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 8px;
-  color: #888;
-  transition: all 0.2s ease;
+  min-width: 0;
 }
 
-.sp-sidebar__close:hover {
-  background: rgba(0, 0, 0, 0.05);
-  color: #333;
-}
-
-.sp-sidebar__nav {
-  flex: 1;
-  padding: 12px 10px;
-  overflow-y: auto;
-}
-
-.sp-sidebar__section-label {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #b0b0c0;
-  padding: 8px 12px 8px;
-}
-
-.sp-sidebar__item {
+.sp-topbar__end {
+  margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 12px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #6b6b80;
-  text-decoration: none;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  margin-bottom: 2px;
+  gap: var(--space-1);
+}
+
+.sp-icon-btn {
   position: relative;
+  display: inline-grid;
+  place-items: center;
+  height: 32px;
+  min-width: 32px;
+  padding: 0 var(--space-2);
+  gap: var(--space-2);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: var(--text-xs);
+  transition: background var(--dur-quick), color var(--dur-quick), transform var(--dur-instant);
 }
 
-.sp-sidebar__item-indicator {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 3px;
-  height: 0;
-  background: var(--cta-primary-bg, #FFBC25);
-  border-radius: 0 3px 3px 0;
-  transition: height 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+.sp-icon-btn:hover {
+  background: var(--color-hover);
+  color: var(--color-text-strong);
 }
 
-.sp-sidebar__item:hover {
-  color: var(--color-gray-900, #1a1a2e);
-  background: rgba(0, 0, 0, 0.03);
+.sp-icon-btn:active { transform: scale(0.92); }
+
+.sp-icon-btn:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
-.sp-sidebar__item--active {
-  color: var(--color-gray-900, #1a1a2e);
-  background: rgba(255, 188, 37, 0.1);
-  font-weight: 600;
+.sp-kbd {
+  font-family: var(--font-sans);
+  font-size: var(--text-micro);
+  font-weight: 700;
+  color: var(--color-text-muted);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  padding: 1px 5px;
 }
 
-.sp-sidebar__item--active .sp-sidebar__item-indicator {
-  height: 20px;
+.sp-topbar__avatar {
+  display: inline-flex;
+  margin-left: var(--space-1);
+  border-radius: 50%;
 }
 
-.sp-sidebar__item--active .sp-sidebar__item-icon {
-  color: var(--cta-primary-bg, #FFBC25);
+.sp-topbar__avatar:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
-.sp-sidebar__item-icon {
-  font-size: 20px;
-  flex-shrink: 0;
-  transition: color 0.25s ease;
-}
+.sp-topbar__menu-btn { display: inline-grid; }
 
-.sp-sidebar__footer {
-  padding: 12px 14px;
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
-}
-
-.sp-sidebar__user {
-  display: flex;
+/* Products switcher */
+.sp-products {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 10px;
-  font-size: 12px;
+  gap: var(--space-2);
+  height: 32px;
+  padding: 0 var(--space-3);
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--color-accent-tint);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-sm);
   font-weight: 600;
-  color: var(--color-gray-900, #1a1a2e);
-  text-decoration: none;
-  border-radius: 10px;
-  transition: background 0.2s ease;
+  cursor: pointer;
+  max-width: 220px;
+  transition: background var(--dur-quick);
 }
 
-.sp-sidebar__user:hover,
-.sp-sidebar__user--active {
-  background: rgba(0, 0, 0, 0.03);
+.sp-products:hover { background: var(--color-accent-soft); }
+
+.sp-products:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
-.sp-sidebar__user .li-icon {
-  font-size: 20px;
-  color: var(--cta-primary-bg, #FFBC25);
-}
-
-.sp-sidebar__user-name {
+.sp-products__label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.sp-sidebar__logout {
-  background: none;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-  font-family: inherit;
-}
-
-.sp-sidebar__source {
+/* Menu items (dropdown + sheet) */
+.sp-menu-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #8e8ea0;
+  gap: var(--space-2);
+  width: 100%;
+  height: 32px;
+  padding: 0 var(--space-2);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-align: left;
   text-decoration: none;
-  padding: 8px 10px;
-  border-radius: 10px;
-  transition: background 0.2s ease;
+  cursor: pointer;
 }
 
-.sp-sidebar__source:hover {
-  background: rgba(0, 0, 0, 0.03);
-  color: var(--color-gray-900, #1a1a2e);
+.sp-menu-item :deep(.li-icon) { color: var(--color-text-muted); }
+
+.sp-menu-item:hover {
+  background: var(--color-hover);
 }
 
-.sp-sidebar__source .li-icon {
-  font-size: 16px;
+.sp-menu-item:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -2px;
 }
 
-/* ── Mobile Header ── */
-.sp-mobile-header {
-  display: none;
+.sp-menu-item.is-current {
+  background: var(--color-selected);
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--color-accent-strong);
 }
 
-/* ── Page Transition ── */
-.page-enter-active { transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
-.page-leave-active { transition: all 0.15s ease-in; }
-.page-enter-from { opacity: 0; transform: translateY(10px); }
-.page-leave-to { opacity: 0; transform: translateY(-4px); }
+.sp-menu-item--danger { color: var(--color-danger); }
+.sp-menu-item--danger :deep(.li-icon) { color: var(--color-danger); }
 
-.fade-enter-active { transition: opacity 0.25s ease; }
-.fade-leave-active { transition: opacity 0.2s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
+.sp-sheet-nav {
+  display: grid;
+  gap: 2px;
+  padding-bottom: var(--space-4);
+}
 
-/* ── Main Content ── */
+/* Content */
 .sp-main {
-  position: relative;
-  z-index: var(--z-content, 10);
   flex: 1;
-  margin-left: 250px;
-  padding: 24px;
-  min-height: 100vh;
+  padding: var(--space-6) var(--space-6) var(--space-12);
+  max-width: 1240px;
+  width: 100%;
+  margin: 0 auto;
 }
 
-/* ── Responsive ── */
-@media (max-width: 900px) {
-  .sp-sidebar { transform: translateX(-100%); }
-  .sp-sidebar--open { transform: translateX(0); }
-  .sp-sidebar__close { display: flex; }
+/* Page transition — state change only, short */
+.page-enter-active { transition: opacity var(--dur-short) var(--ease-enter), transform var(--dur-short) var(--ease-enter); }
+.page-leave-active { transition: opacity 120ms var(--ease-exit); }
+.page-enter-from { opacity: 0; transform: translateY(8px); }
+.page-leave-to { opacity: 0; }
 
-  .sp-overlay {
-    display: block;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-    z-index: 25;
-  }
+@media (min-width: 900px) {
+  .sp-topbar__nav { display: block; }
+  .sp-topbar__menu-btn { display: none; }
+  .sp-topbar { padding: 0 var(--space-6); }
+}
 
+@media (max-width: 899px) {
   .sp-main {
-    margin-left: 0;
-    padding: 16px;
-    padding-top: 72px;
-  }
-
-  .sp-mobile-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 56px;
-    padding: 0 16px;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    z-index: 20;
-  }
-
-  .sp-hamburger {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 10px;
-    color: var(--color-gray-700, #333);
-    transition: background 0.2s ease;
-  }
-
-  .sp-hamburger:hover { background: rgba(0, 0, 0, 0.04); }
-  .sp-hamburger .li-icon { font-size: 24px; }
-
-  .sp-mobile-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--color-gray-900, #1a1a2e);
+    padding: var(--space-4) var(--space-4) var(--space-8);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mesh-orb { animation: none; }
   .page-enter-active, .page-leave-active { transition-duration: 0ms; }
 }
 </style>

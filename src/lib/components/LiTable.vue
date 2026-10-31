@@ -15,9 +15,9 @@
             <div class="li-table-th-content">
               {{ col.label }}
               <span v-if="col.sortable" class="li-table-sort-icon">
-                <LiIcon v-if="sortKey !== col.key" name="unfold_more" size="sm" />
-                <LiIcon v-else-if="sortOrder === 'asc'" name="arrow_upward" size="sm" />
-                <LiIcon v-else name="arrow_downward" size="sm" />
+                <LiIcon v-if="sortKey !== col.key" name="unfold-vertical" size="sm" />
+                <LiIcon v-else-if="sortOrder === 'asc'" name="arrow-up" size="sm" />
+                <LiIcon v-else name="arrow-down" size="sm" />
               </span>
             </div>
           </th>
@@ -116,34 +116,41 @@ watch(selectedRows, (newVal) => {
 </script>
 
 <style scoped>
+/* Allo table (app.css .table-wrap / table.t): 36px header, 40px rows, sticky header. */
 .li-table-container {
+  position: relative;
   width: 100%;
   overflow-x: auto;
-  border-radius: var(--radius-md, 8px);
-  border: 1px solid var(--color-gray-200, #E6E6E6);
-  font-family: var(--font-family, 'Inter', sans-serif);
-  background: var(--color-gray-0, #FFFFFF);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
 }
 
 .li-table {
   width: 100%;
+  min-width: 680px;
   border-collapse: collapse;
   text-align: left;
 }
 
-.li-table th, .li-table td {
-  padding: 16px;
-  border-bottom: 1px solid var(--color-gray-200, #E6E6E6);
-  font-size: var(--text-sm, 16px);
+.li-table th {
+  position: sticky;
+  top: 0;
+  height: 36px;
+  padding: 0 12px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
 }
 
-.li-table th {
-  background-color: var(--color-gray-50, #F9F9F9);
-  color: var(--color-gray-600, #808080);
-  font-weight: 600;
-  font-size: var(--text-xs, 14px);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+.li-table td {
+  height: 40px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  color: var(--color-text);
 }
 
 .li-table th.is-sortable {
@@ -152,16 +159,15 @@ watch(selectedRows, (newVal) => {
 }
 
 .li-table th.is-sortable:hover {
-  background-color: var(--color-gray-100, #F2F2F2);
-  color: var(--color-gray-900, #333333);
+  color: var(--color-text);
 }
 
 .li-table tbody tr {
-  transition: background-color var(--dur-short, 200ms);
+  transition: background var(--dur-quick);
 }
 
 .li-table tbody tr:hover {
-  background-color: var(--color-gray-50, #F9F9F9);
+  background: var(--color-hover);
 }
 
 .li-table tbody tr:last-child td {
@@ -169,34 +175,37 @@ watch(selectedRows, (newVal) => {
 }
 
 .li-table-th-content {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 
 .li-table-sort-icon {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-muted);
+}
+
+.li-table-sort-icon :deep(.li-icon) {
+  transition: transform var(--dur-short) var(--ease-spring);
 }
 
 .li-table th.is-sortable:hover .li-table-sort-icon {
-  color: var(--color-gray-600, #808080);
+  color: var(--color-text);
 }
 
 .li-table-select-col {
-  width: 48px;
+  width: 40px;
   text-align: center;
 }
 
-.text-left { text-align: left; justify-content: flex-start; }
-.text-center { text-align: center; justify-content: center; }
-.text-right { text-align: right; justify-content: flex-end; }
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
 
 .li-table-loading, .li-table-empty {
   text-align: center;
-  padding: 32px 16px;
-  color: var(--color-gray-500, #999999);
-  font-style: italic;
+  padding: 32px 12px;
+  color: var(--color-text-muted);
 }
 </style>

@@ -13,7 +13,7 @@
               <h2 class="li-modal-title">{{ title }}</h2>
             </slot>
             <button v-if="closable" class="li-modal-close" @click="close" aria-label="Close">
-              <LiIcon name="close" size="lg" />
+              <LiIcon name="x" size="lg" />
             </button>
           </div>
           
@@ -89,28 +89,25 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+/* Allo dialog (app.css .scrim/.dialog): radius 14, pop shadow, expo-in enter. */
 .li-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--color-overlay, rgba(34, 34, 51, 0.8));
+  inset: 0;
+  background: var(--color-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: var(--space-l, 16px);
+  z-index: var(--z-modal);
+  padding: var(--space-4);
 }
 
 .li-modal {
-  background-color: var(--color-gray-0, #FFFFFF);
-  border-radius: var(--radius-lg, 16px);
-  box-shadow: var(--shadow-modal, 0 16px 48px rgba(0, 0, 0, 0.15));
-  font-family: var(--font-family, 'Inter', sans-serif);
+  background: var(--color-bg);
+  border-radius: 14px;
+  box-shadow: 0 24px 64px -12px rgba(0, 5, 58, 0.28);
   display: flex;
   flex-direction: column;
-  max-height: 90vh;
+  max-height: 85vh;
   width: 100%;
 }
 
@@ -122,58 +119,70 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-xl, 24px) var(--space-xl, 24px) var(--space-l, 16px);
+  padding: 20px 24px var(--space-2);
 }
 
 .li-modal-title {
   margin: 0;
-  font-size: var(--text-lg, 24px);
-  font-weight: 700;
-  color: var(--color-gray-900, #333333);
+  font-size: var(--text-lg);
+  line-height: var(--leading-lg);
+  font-weight: 600;
+  color: var(--color-text-strong);
 }
 
 .li-modal-close {
   background: transparent;
   border: none;
-  color: var(--color-gray-500, #999999);
+  color: var(--color-text-muted);
   cursor: pointer;
   padding: 4px;
-  border-radius: var(--radius-sm, 4px);
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: background var(--dur-quick), color var(--dur-quick);
 }
 
 .li-modal-close:hover {
-  color: var(--color-gray-900, #333333);
-  background-color: var(--color-gray-100, #F2F2F2);
+  color: var(--color-text-strong);
+  background: var(--color-hover);
+}
+
+.li-modal-close:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 .li-modal-body {
-  padding: 0 var(--space-xl, 24px) var(--space-xl, 24px);
+  padding: var(--space-2) 24px;
   overflow-y: auto;
-  font-size: var(--text-sm, 16px);
-  color: var(--color-gray-700, #666666);
-  line-height: var(--leading-body, 1.5);
+  display: grid;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  line-height: var(--leading-sm);
 }
 
 .li-modal-footer {
-  padding: var(--space-l, 16px) var(--space-xl, 24px) var(--space-xl, 24px);
+  padding: var(--space-4) 24px 20px;
   display: flex;
   justify-content: flex-end;
-  gap: var(--space-m, 12px);
+  gap: var(--space-2);
 }
 
-/* Transitions */
-.modal-fade-enter-active,
+/* Transitions — Allo dialog-in/out */
+.modal-fade-enter-active {
+  transition: opacity var(--dur-medium) var(--ease-out);
+}
 .modal-fade-leave-active {
-  transition: opacity var(--dur-medium, 300ms) var(--ease-out);
+  transition: opacity 160ms var(--ease-exit);
 }
 
-.modal-fade-enter-active .li-modal,
+.modal-fade-enter-active .li-modal {
+  transition: transform var(--dur-medium) var(--ease-enter);
+}
 .modal-fade-leave-active .li-modal {
-  transition: transform var(--dur-medium, 300ms) var(--ease-out);
+  transition: transform 160ms var(--ease-exit);
 }
 
 .modal-fade-enter-from,
@@ -181,8 +190,10 @@ onUnmounted(() => {
   opacity: 0;
 }
 
-.modal-fade-enter-from .li-modal,
+.modal-fade-enter-from .li-modal {
+  transform: translateY(12px) scale(0.97);
+}
 .modal-fade-leave-to .li-modal {
-  transform: scale(0.95) translateY(20px);
+  transform: scale(0.98);
 }
 </style>

@@ -118,9 +118,9 @@ async function onToggleFeature(mId, fId, on) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-m, 12px);
-  padding-bottom: var(--space-m, 12px);
-  border-bottom: 1px solid var(--color-gray-100, #f2f2f2);
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-surface-2);
 }
 
 .ard__head-main {
@@ -134,24 +134,24 @@ async function onToggleFeature(mId, fId, on) {
   margin: 0;
   font-size: 18px;
   font-weight: 700;
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
 }
 
 .ard__summary {
   font-size: 12px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 .ard__list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-s, 8px);
-  margin-top: var(--space-m, 12px);
+  gap: var(--space-2);
+  margin-top: var(--space-3);
 }
 
 .ard__mod {
-  padding: var(--space-m, 12px) 0;
-  border-top: 1px solid var(--color-gray-100, #f2f2f2);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--color-surface-2);
 }
 
 .ard__mod:first-child {
@@ -163,17 +163,17 @@ async function onToggleFeature(mId, fId, on) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-m, 12px);
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 
 .ard__check {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
   cursor: pointer;
   user-select: none;
 }
@@ -181,7 +181,7 @@ async function onToggleFeature(mId, fId, on) {
 .ard__check input[type='checkbox'] {
   width: 16px;
   height: 16px;
-  accent-color: var(--cta-primary-bg, #ffbc25);
+  accent-color: var(--color-accent);
   cursor: pointer;
 }
 
@@ -191,7 +191,7 @@ async function onToggleFeature(mId, fId, on) {
 
 .ard__mod-icon {
   font-size: 20px;
-  color: var(--color-gray-400, #b3b3b3);
+  color: var(--color-text-placeholder);
 }
 
 .ard__mod-label {
@@ -200,14 +200,14 @@ async function onToggleFeature(mId, fId, on) {
 
 .ard__mod-desc {
   font-size: 12px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 .ard__feats {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs, 4px);
-  padding: var(--space-s, 8px) 0 var(--space-xs, 4px) var(--space-xl, 28px);
+  gap: var(--space-1);
+  padding: var(--space-2) 0 var(--space-1) var(--space-6);
 }
 
 .ard__check--sub {
@@ -217,22 +217,22 @@ async function onToggleFeature(mId, fId, on) {
 
 .ard__feat-label {
   font-size: 13px;
-  color: var(--color-on-surface-variant, #666);
+  color: var(--color-text-muted);
 }
 
 .ard__feat-desc {
   font-size: 11px;
-  color: var(--color-on-surface-muted, #999);
-  margin-left: var(--space-xs, 4px);
+  color: var(--color-text-muted);
+  margin-left: var(--space-1);
 }
 
 .ard__hint {
   display: flex;
   align-items: center;
-  gap: var(--space-xs, 6px);
-  margin: var(--space-s, 8px) 0 0;
+  gap: var(--space-1);
+  margin: var(--space-2) 0 0;
   font-size: 12px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
   font-style: italic;
 }
 
@@ -242,19 +242,19 @@ async function onToggleFeature(mId, fId, on) {
 
 .ard__done-btn {
   padding: 10px 24px;
-  background: var(--cta-primary-bg, #ffbc25);
-  color: var(--cta-primary-text, #1e1e1e);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 13px;
   font-weight: 700;
-  font-family: var(--font-body, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   cursor: pointer;
-  transition: all var(--dur-short, 200ms) var(--ease-out);
+  transition: all var(--dur-short) var(--ease-out);
 }
 
 .ard__done-btn:hover {
-  background: var(--cta-primary-hover, #ffb60a);
+  background: var(--color-accent-strong);
   transform: translateY(-1px);
 }
 </style>

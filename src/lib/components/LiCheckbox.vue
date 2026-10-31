@@ -1,10 +1,10 @@
 <template>
   <label class="li-checkbox-wrapper" :class="{ 'li-checkbox-disabled': disabled }">
     <div class="li-checkbox-input-container">
-      <input 
-        type="checkbox" 
-        class="sr-only" 
-        :checked="modelValue" 
+      <input
+        type="checkbox"
+        class="sr-only"
+        :checked="modelValue"
         :disabled="disabled"
         :indeterminate="indeterminate"
         @change="handleChange"
@@ -12,19 +12,19 @@
         @blur="isFocused = false"
         ref="inputRef"
       />
-      <div 
-        class="li-checkbox-box" 
-        :class="{ 
-          'is-checked': modelValue || indeterminate, 
+      <div
+        class="li-checkbox-box"
+        :class="{
+          'is-checked': modelValue || indeterminate,
           'is-focused': isFocused,
-          'is-round': round 
+          'is-round': round
         }"
       >
-        <LiIcon v-if="indeterminate" name="remove" size="xxs" />
+        <LiIcon v-if="indeterminate" name="minus" size="xxs" />
         <LiIcon v-else-if="modelValue" name="check" size="xxs" />
       </div>
     </div>
-    
+
     <div v-if="label || description || $slots.default" class="li-checkbox-content">
       <div class="li-checkbox-label">
         <slot>{{ label }}</slot>
@@ -70,12 +70,13 @@ const handleChange = (e) => {
 </script>
 
 <style scoped>
+/* Allo checkbox (app.css .check): 16px box fills text-strong, tick inherits bg colour. */
 .li-checkbox-wrapper {
   display: inline-flex;
   align-items: flex-start;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   cursor: pointer;
-  font-family: var(--font-family, 'Inter', sans-serif);
+  user-select: none;
 }
 
 .li-checkbox-disabled {
@@ -85,33 +86,38 @@ const handleChange = (e) => {
 
 .li-checkbox-input-container {
   position: relative;
-  padding-top: 2px; /* align with first line of text */
+  padding-top: 2px;
+  display: inline-flex;
 }
 
 .li-checkbox-box {
-  width: 20px;
-  height: 20px;
-  border: 1.5px solid var(--color-gray-400, #B3B3B3);
-  border-radius: var(--radius-sm, 4px);
-  background-color: var(--color-gray-0, #FFFFFF);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-gray-0, #FFFFFF);
-  transition: all var(--dur-micro, 120ms) var(--ease-out);
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--color-border-input);
+  border-radius: var(--radius-xs);
+  background: var(--color-bg);
+  display: grid;
+  place-items: center;
+  color: var(--color-bg);
+  transition: background var(--dur-quick), border-color var(--dur-quick), transform var(--dur-instant);
 }
 
 .li-checkbox-box.is-round {
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
+}
+
+.li-checkbox-wrapper:active .li-checkbox-box {
+  transform: scale(0.88);
 }
 
 .li-checkbox-box.is-checked {
-  background-color: var(--color-orange-400, #FF6B00);
-  border-color: var(--color-orange-400, #FF6B00);
+  background: var(--color-text-strong);
+  border-color: var(--color-text-strong);
 }
 
 .li-checkbox-box.is-focused {
-  box-shadow: 0 0 0 2px var(--color-gray-0, #fff), 0 0 0 4px var(--color-orange-400, #FF6B00);
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 .li-checkbox-content {
@@ -121,14 +127,14 @@ const handleChange = (e) => {
 }
 
 .li-checkbox-label {
-  font-size: var(--text-sm, 16px);
-  color: var(--color-gray-900, #333333);
-  line-height: 24px;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  line-height: var(--leading-sm);
 }
 
 .li-checkbox-description {
-  font-size: var(--text-xs, 14px);
-  color: var(--color-gray-600, #808080);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
 }
 
 .sr-only {
@@ -140,5 +146,9 @@ const handleChange = (e) => {
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .li-checkbox-wrapper:active .li-checkbox-box { transform: none; }
 }
 </style>

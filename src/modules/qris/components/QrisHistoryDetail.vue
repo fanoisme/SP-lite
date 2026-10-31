@@ -51,7 +51,7 @@
         <div class="detail__raw-wrap">
           <code class="detail__raw">{{ detail.qr_value }}</code>
           <button class="detail__copy-btn" @click="copyRaw" :aria-label="copied ? 'QR value copied' : 'Copy QR value'" :title="copied ? 'Copied!' : 'Copy'">
-            <LiIcon :name="copied ? 'check' : 'content_copy'" />
+            <LiIcon :name="copied ? 'check' : 'copy'" />
           </button>
         </div>
       </div>
@@ -83,7 +83,7 @@
 
     <template #footer>
       <button class="detail__action-btn" @click="$emit('load-to-generator', detail)">
-        <LiIcon name="edit" />
+        <LiIcon name="pencil" />
         Load to Generator
       </button>
     </template>
@@ -159,14 +159,14 @@ function formatDate(dateStr) {
   justify-content: center;
   gap: 12px;
   padding: 40px;
-  color: var(--color-gray-500, #999);
+  color: var(--color-text-muted);
   font-size: 14px;
 }
 
 .detail__spinner {
   width: 20px;
   height: 20px;
-  border: 2px solid var(--color-gray-200, #E6E6E6);
+  border: 2px solid var(--color-border);
   border-bottom-color: transparent;
   border-radius: 50%;
   animation: detail-spin 600ms linear infinite;
@@ -185,8 +185,8 @@ function formatDate(dateStr) {
 }
 
 .detail__qr-wrap {
-  background: rgba(255, 255, 255, 0.6);
-  border-radius: var(--radius-md, 16px);
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
   padding: 12px;
   display: flex;
   justify-content: center;
@@ -215,13 +215,13 @@ function formatDate(dateStr) {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-gray-500, #999);
+  color: var(--color-text-muted);
 }
 
 .detail__hl-value {
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-gray-900, #333);
+  color: var(--color-text-strong);
 }
 
 .detail__hl-value--mono {
@@ -230,19 +230,19 @@ function formatDate(dateStr) {
 }
 
 .detail__hl-value--valid {
-  color: var(--color-success, #10B981);
+  color: var(--color-success);
   font-weight: 600;
 }
 
 .detail__hl-value--invalid {
-  color: var(--color-error, #C83E3B);
+  color: var(--color-danger);
   font-weight: 600;
 }
 
 .detail__type-badge {
   display: inline-block;
   padding: 2px 8px;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
@@ -250,13 +250,13 @@ function formatDate(dateStr) {
 }
 
 .detail__type-badge--emvco {
-  background: var(--color-info-container, #E6E6FF);
-  color: var(--color-on-info-container, #0047B2);
+  background: var(--color-info-soft);
+  color: var(--color-info);
 }
 
 .detail__type-badge--proprietary {
-  background: var(--color-warning-container, #FFF3D6);
-  color: var(--color-on-warning-container, #FF3000);
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
 }
 
 /* ── Section ── */
@@ -271,7 +271,7 @@ function formatDate(dateStr) {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-gray-500, #999);
+  color: var(--color-text-muted);
   margin: 0;
 }
 
@@ -280,8 +280,8 @@ function formatDate(dateStr) {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  background: var(--color-gray-100, #F2F2F2);
-  border-radius: var(--radius-xs, 8px);
+  background: var(--color-surface-2);
+  border-radius: var(--radius-sm);
   padding: 12px;
 }
 
@@ -291,7 +291,7 @@ function formatDate(dateStr) {
   font-size: 11px;
   line-height: 1.6;
   word-break: break-all;
-  color: var(--color-gray-700, #666);
+  color: var(--color-text);
   margin: 0;
   white-space: pre-wrap;
 }
@@ -302,14 +302,14 @@ function formatDate(dateStr) {
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   transition: all 200ms;
   flex-shrink: 0;
 }
 
 .detail__copy-btn:hover {
-  color: var(--color-gray-700, #666);
-  background: rgba(0, 0, 0, 0.05);
+  color: var(--color-text);
+  background: var(--color-border);
 }
 
 .detail__copy-btn .li-icon {
@@ -318,8 +318,8 @@ function formatDate(dateStr) {
 
 /* ── Tags Table ── */
 .detail__tags-table {
-  border: 1px solid var(--color-gray-200, #E6E6E6);
-  border-radius: var(--radius-xs, 8px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   overflow: hidden;
   font-size: 12px;
 }
@@ -329,9 +329,9 @@ function formatDate(dateStr) {
   grid-template-columns: 60px 1fr 1fr 50px;
   gap: 8px;
   padding: 8px 12px;
-  background: var(--color-gray-100, #F2F2F2);
+  background: var(--color-surface-2);
   font-weight: 700;
-  color: var(--color-gray-600, #888);
+  color: var(--color-text-muted);
   text-transform: uppercase;
   font-size: 10px;
   letter-spacing: 0.5px;
@@ -342,8 +342,8 @@ function formatDate(dateStr) {
   grid-template-columns: 60px 1fr 1fr 50px;
   gap: 8px;
   padding: 6px 12px;
-  border-top: 1px solid var(--color-gray-100, #F2F2F2);
-  color: var(--color-gray-700, #666);
+  border-top: 1px solid var(--color-surface-2);
+  color: var(--color-text);
 }
 
 .detail__tags-row:hover {
@@ -353,11 +353,11 @@ function formatDate(dateStr) {
 .detail__tag-id {
   font-family: 'SF Mono', 'Fira Code', monospace;
   font-weight: 600;
-  color: var(--color-gray-900, #333);
+  color: var(--color-text-strong);
 }
 
 .detail__tag-name {
-  color: var(--color-gray-600, #888);
+  color: var(--color-text-muted);
   font-size: 11px;
 }
 
@@ -369,7 +369,7 @@ function formatDate(dateStr) {
 
 .detail__tag-len {
   text-align: center;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 
 /* ── Footer ── */
@@ -380,7 +380,7 @@ function formatDate(dateStr) {
 
 .detail__date {
   font-size: 12px;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
 }
 
 /* ── Action Button ── */
@@ -389,16 +389,15 @@ function formatDate(dateStr) {
   align-items: center;
   gap: 6px;
   padding: 8px 16px;
-  background: var(--cta-primary-bg, #FFBC25);
-  color: var(--cta-primary-text, #1E1E1E);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   border: none;
-  border-radius: var(--radius-pill, 999px);
+  border-radius: var(--radius-pill);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: transform 200ms var(--ease-out);
-  font-family: var(--font-body, 'Inter', sans-serif);
-}
+  }
 
 .detail__action-btn:hover {
   transform: translateY(-1px);

@@ -8,7 +8,7 @@
       <div class="ddpromo__actions">
         <p class="ddpromo__count">{{ total }} {{ total === 1 ? 'rule' : 'rules' }}</p>
         <button class="ddpromo__ghost" type="button" :disabled="exporting" @click="exportXlsx">
-          <LiIcon name="file_save" />
+          <LiIcon name="save" />
           Export XLSX
         </button>
         <button v-if="canCreate" class="ddpromo__ghost" type="button" @click="showBulk = true">
@@ -16,7 +16,7 @@
           Bulk Upload
         </button>
         <button v-if="canCreate" class="ddpromo__add" type="button" @click="openCreate">
-          <LiIcon name="add" />
+          <LiIcon name="plus" />
           Add Promo
         </button>
       </div>
@@ -25,7 +25,7 @@
     <!-- Someone else wrote to qrdd_promo_rules while this page was open. The
          page is not reloaded from under the reader — they may be mid-edit. -->
     <div v-if="stale && !staleDismissed" class="ddpromo__stale">
-      <LiIcon name="sync_problem" />
+      <LiIcon name="refresh-cw-off" />
       <span class="ddpromo__stale-text">
         {{ staleCount }} {{ staleCount === 1 ? 'change' : 'changes' }}
         <template v-if="staleBy"> by {{ staleBy }}</template>
@@ -33,7 +33,7 @@
       </span>
       <button class="ddpromo__stale-btn" type="button" @click="refresh">Reload</button>
       <button class="ddpromo__stale-x" type="button" aria-label="Dismiss" @click="staleDismissed = true">
-        <LiIcon name="close" />
+        <LiIcon name="x" />
       </button>
     </div>
 
@@ -125,10 +125,10 @@
       <template #cell-actions="{ row }">
         <div class="ddpromo__row-actions">
           <button v-if="canUpdate" class="ddpromo__icon" type="button" :aria-label="`Edit promo ${row.promo_id}`" title="Edit" @click="openEdit(row)">
-            <LiIcon name="edit" />
+            <LiIcon name="pencil" />
           </button>
           <button v-if="canCreate" class="ddpromo__icon" type="button" :aria-label="`Duplicate promo ${row.promo_id}`" title="Duplicate" @click="openDuplicate(row)">
-            <LiIcon name="content_copy" />
+            <LiIcon name="copy" />
           </button>
           <button
             v-if="canDelete"
@@ -138,7 +138,7 @@
             title="Delete"
             @click="askDelete(row)"
           >
-            <LiIcon name="delete" />
+            <LiIcon name="trash-2" />
           </button>
         </div>
       </template>
@@ -487,31 +487,30 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.ddpromo { display: flex; flex-direction: column; gap: var(--space-md, 16px); }
+.ddpromo { display: flex; flex-direction: column; gap: var(--space-3); }
 .ddpromo__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .ddpromo__title { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -0.4px; }
-.ddpromo__sub { font-size: 14px; color: var(--color-gray-500, #8e8ea0); margin: 2px 0 0; }
-.ddpromo__count { font-size: 13px; color: var(--color-gray-500, #8e8ea0); margin: 0; white-space: nowrap; }
+.ddpromo__sub { font-size: 14px; color: var(--color-text-muted); margin: 2px 0 0; }
+.ddpromo__count { font-size: 13px; color: var(--color-text-muted); margin: 0; white-space: nowrap; }
 .ddpromo__actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .ddpromo__error {
-  font-size: 13px; color: var(--color-red-400, #C83E3B);
+  font-size: 13px; color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08);
-  border-radius: var(--radius-sm, 12px); padding: 10px 14px; margin: 0;
+  border-radius: var(--radius-md); padding: 10px 14px; margin: 0;
 }
 .ddpromo__pagination { display: flex; justify-content: center; }
 
 .ddpromo__filters {
   display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto;
-  gap: var(--space-sm, 12px); align-items: end;
+  gap: var(--space-2); align-items: end;
 }
 .ddpromo__reset {
-  padding: 10px 18px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 13px; font-weight: 600; color: var(--color-gray-700, #666);
+  padding: 10px 18px; border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill); background: transparent;
+  font-size: 13px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms;
 }
-.ddpromo__reset:hover { background: rgba(0, 0, 0, 0.04); }
+.ddpromo__reset:hover { background: var(--color-border); }
 
 @media (max-width: 1100px) {
   .ddpromo__filters { grid-template-columns: 1fr 1fr; }
@@ -519,20 +518,19 @@ onMounted(() => {
 
 .ddpromo__ghost, .ddpromo__add {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border-radius: var(--radius-pill, 999px);
-  font-family: var(--font-body, 'Inter', sans-serif);
+  padding: 8px 16px; border-radius: var(--radius-pill);
   font-size: 13px; font-weight: 600;
   cursor: pointer; transition: all 200ms; white-space: nowrap;
 }
 .ddpromo__ghost {
-  border: 1px solid rgba(0, 0, 0, 0.1); background: transparent;
-  color: var(--color-gray-700, #666);
+  border: 1px solid var(--color-border-strong); background: transparent;
+  color: var(--color-text);
 }
-.ddpromo__ghost:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
+.ddpromo__ghost:hover:not(:disabled) { background: var(--color-border); }
 .ddpromo__ghost:disabled { opacity: 0.45; cursor: not-allowed; }
 .ddpromo__add {
-  border: none; background: var(--cta-primary-bg, #FFBC25);
-  color: var(--cta-primary-text, #1E1E1E);
+  border: none; background: var(--color-accent);
+  color: var(--color-on-accent);
 }
 .ddpromo__add:hover { transform: translateY(-1px); }
 .ddpromo__ghost .li-icon,
@@ -540,34 +538,33 @@ onMounted(() => {
 
 .ddpromo__stale {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 14px; border-radius: var(--radius-sm, 12px);
-  background: var(--color-yellow-100, #FFF3D6);
+  padding: 10px 14px; border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
   border: 1px solid rgba(244, 166, 0, 0.35);
-  font-size: 13px; color: var(--color-gray-800, #4D4D4D);
+  font-size: 13px; color: var(--color-text);
 }
 .ddpromo__stale-text { flex: 1; }
-.ddpromo__stale .li-icon { font-size: 19px; color: var(--color-yellow-500, #F4A600); }
+.ddpromo__stale .li-icon { font-size: 19px; color: var(--color-accent-text); }
 .ddpromo__stale-btn {
   padding: 5px 14px; border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: var(--radius-pill, 999px); background: var(--color-gray-0, #fff);
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 12px; font-weight: 700; color: var(--color-gray-800, #4D4D4D);
+  border-radius: var(--radius-pill); background: var(--color-bg);
+  font-size: 12px; font-weight: 700; color: var(--color-text);
   cursor: pointer;
 }
-.ddpromo__stale-btn:hover { background: rgba(0, 0, 0, 0.04); }
+.ddpromo__stale-btn:hover { background: var(--color-border); }
 .ddpromo__stale-x {
   display: inline-flex; border: none; background: none; padding: 2px;
-  color: var(--color-gray-600, #808080); cursor: pointer;
+  color: var(--color-text-muted); cursor: pointer;
 }
 .ddpromo__stale-x .li-icon { font-size: 17px; color: inherit; }
 
 .ddpromo__code {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
-  background: rgba(0, 0, 0, 0.04); border-radius: 5px; padding: 1px 6px;
+  font-family: var(--font-mono); font-size: 12px;
+  background: var(--color-border); border-radius: 5px; padding: 1px 6px;
 }
 .ddpromo__name { font-weight: 600; }
-.ddpromo__muted { color: var(--color-gray-400, #aaa); }
-.ddpromo__meta { font-size: 12px; color: var(--color-gray-500, #8e8ea0); line-height: 1.4; }
+.ddpromo__muted { color: var(--color-text-placeholder); }
+.ddpromo__meta { font-size: 12px; color: var(--color-text-muted); line-height: 1.4; }
 .ddpromo__period { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
 .ddpromo__dates { font-size: 13px; }
 
@@ -575,12 +572,12 @@ onMounted(() => {
 .ddpromo__icon {
   display: inline-flex; align-items: center; justify-content: center;
   padding: 6px; border: none; background: none;
-  border-radius: var(--radius-sm, 12px);
-  color: var(--color-gray-400, #B3B3B3);
+  border-radius: var(--radius-md);
+  color: var(--color-text-placeholder);
   cursor: pointer; transition: all 200ms;
 }
-.ddpromo__icon:hover { color: var(--cta-primary-bg, #FFBC25); background: rgba(255, 188, 37, 0.12); }
-.ddpromo__icon--danger:hover { color: var(--color-red-400, #C83E3B); background: rgba(200, 62, 59, 0.08); }
+.ddpromo__icon:hover { color: var(--color-accent); background: rgba(255, 188, 37, 0.12); }
+.ddpromo__icon--danger:hover { color: var(--color-danger); background: rgba(200, 62, 59, 0.08); }
 .ddpromo__icon .li-icon { font-size: 18px; }
 
 .ddpromo__confirm { margin: 0; font-size: 14px; line-height: 1.55; }

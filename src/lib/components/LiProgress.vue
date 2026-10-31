@@ -25,32 +25,34 @@ const clampedValue = computed(() => Math.max(0, Math.min(100, props.value)))
 </script>
 
 <style scoped>
+/* Allo progress (app.css .progress): accent-soft track, accent-strong fill, one sheen. */
 .li-progress {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-family: 'Inter', system-ui, sans-serif;
+  gap: var(--space-2);
 }
 
 .li-progress__track {
   flex: 1;
+  position: relative;
   height: 6px;
-  background: var(--color-gray-200, #E6E6E6);
-  border-radius: 999px;
+  background: var(--color-accent-soft);
+  border-radius: var(--radius-xs);
   overflow: hidden;
 }
 
 .li-progress__fill {
-  height: 100%;
-  border-radius: 999px;
-  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: var(--radius-xs);
+  transition: width 900ms var(--ease-enter);
 }
 
-.li-progress__fill--brand   { background: var(--color-orange-400, #FF6B00); }
-.li-progress__fill--success { background: var(--color-green-400, #10B981); }
-.li-progress__fill--warning { background: var(--color-orange-400, #FF6B00); }
-.li-progress__fill--error   { background: var(--color-red-400, #C83E3B); }
-.li-progress__fill--info    { background: var(--color-blue-400, #2563EB); }
+.li-progress__fill--brand   { background: var(--color-accent-strong); }
+.li-progress__fill--success { background: var(--color-success); }
+.li-progress__fill--warning { background: var(--color-warning); }
+.li-progress__fill--error   { background: var(--color-danger); }
+.li-progress__fill--info    { background: var(--color-info); }
 
 .li-progress--indeterminate .li-progress__fill {
   animation: li-progress-indeterminate 1.5s ease-in-out infinite;
@@ -63,11 +65,12 @@ const clampedValue = computed(() => Math.max(0, Math.min(100, props.value)))
 }
 
 .li-progress__value {
-  font-size: 12px;
+  font-size: var(--text-xs);
   font-weight: 600;
-  color: var(--color-gray-600, #808080);
+  color: var(--color-text-muted);
   min-width: 32px;
   text-align: right;
   flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
 }
 </style>

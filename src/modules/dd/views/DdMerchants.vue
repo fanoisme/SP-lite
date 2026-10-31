@@ -8,7 +8,7 @@
       <div class="ddmer__actions">
         <p class="ddmer__count">{{ total }} {{ total === 1 ? 'merchant' : 'merchants' }}</p>
         <button class="ddmer__btn" type="button" :disabled="exporting || !total" @click="exportXlsx">
-          <LiIcon name="file_save" />
+          <LiIcon name="save" />
           {{ exporting ? 'Exporting…' : 'Export XLSX' }}
         </button>
         <button v-if="canCreate" class="ddmer__btn" type="button" @click="showBulk = true">
@@ -16,7 +16,7 @@
           Bulk Upload
         </button>
         <button v-if="canCreate" class="ddmer__btn ddmer__btn--primary" type="button" @click="openForm(null)">
-          <LiIcon name="add" />
+          <LiIcon name="plus" />
           Add Merchant
         </button>
       </div>
@@ -26,7 +26,7 @@
          offers the reload rather than performing it: a silent re-sort under a
          reader mid-scan is worse than a stale row. -->
     <div v-if="stale && !bannerDismissed" class="ddmer__stale">
-      <LiIcon name="sync_problem" />
+      <LiIcon name="refresh-cw-off" />
       <span class="ddmer__stale-text">
         {{ staleCount }} {{ staleCount === 1 ? 'change' : 'changes' }}
         <template v-if="staleBy">by {{ staleBy }}</template>
@@ -34,7 +34,7 @@
       </span>
       <button class="ddmer__stale-action" type="button" @click="refresh">Refresh</button>
       <button class="ddmer__stale-close" type="button" aria-label="Dismiss" @click="bannerDismissed = true">
-        <LiIcon name="close" />
+        <LiIcon name="x" />
       </button>
     </div>
 
@@ -80,10 +80,10 @@
       <template #cell-actions="{ row }">
         <div class="ddmer__row-actions">
           <button v-if="canUpdate" class="ddmer__icon-btn" type="button" :aria-label="`Edit merchant ${row.merchant_id}`" title="Edit" @click="openForm(row)">
-            <LiIcon name="edit" />
+            <LiIcon name="pencil" />
           </button>
           <button v-if="canDelete" class="ddmer__icon-btn ddmer__icon-btn--danger" type="button" :aria-label="`Delete merchant ${row.merchant_id}`" title="Delete" @click="askDelete(row)">
-            <LiIcon name="delete" />
+            <LiIcon name="trash-2" />
           </button>
         </div>
       </template>
@@ -302,49 +302,47 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.ddmer { display: flex; flex-direction: column; gap: var(--space-md, 16px); }
+.ddmer { display: flex; flex-direction: column; gap: var(--space-3); }
 .ddmer__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .ddmer__title { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -0.4px; }
-.ddmer__sub { font-size: 14px; color: var(--color-gray-500, #8e8ea0); margin: 2px 0 0; }
-.ddmer__count { font-size: 13px; color: var(--color-gray-500, #8e8ea0); margin: 0; white-space: nowrap; }
+.ddmer__sub { font-size: 14px; color: var(--color-text-muted); margin: 2px 0 0; }
+.ddmer__count { font-size: 13px; color: var(--color-text-muted); margin: 0; white-space: nowrap; }
 .ddmer__error {
-  font-size: 13px; color: var(--color-red-400, #C83E3B);
+  font-size: 13px; color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08);
-  border-radius: var(--radius-sm, 12px); padding: 10px 14px; margin: 0;
+  border-radius: var(--radius-md); padding: 10px 14px; margin: 0;
 }
 .ddmer__pagination { display: flex; justify-content: center; }
 
 .ddmer__actions { display: flex; align-items: center; gap: 8px; }
 .ddmer__btn {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 13px; font-weight: 600; color: var(--color-gray-700, #666);
+  padding: 8px 16px; border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill); background: transparent;
+  font-size: 13px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms; white-space: nowrap;
 }
-.ddmer__btn:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
+.ddmer__btn:hover:not(:disabled) { background: var(--color-border); }
 .ddmer__btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .ddmer__btn .li-icon { font-size: 17px; }
 .ddmer__btn--primary {
-  background: var(--cta-primary-bg, #FFBC25);
-  color: var(--cta-primary-text, #1E1E1E);
-  border-color: var(--cta-primary-bg, #FFBC25);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
 }
-.ddmer__btn--primary:hover:not(:disabled) { background: var(--cta-primary-hover, #FAB000); }
+.ddmer__btn--primary:hover:not(:disabled) { background: var(--color-accent-strong); }
 
 .ddmer__filters {
   display: grid; grid-template-columns: 2fr 1fr 1fr auto;
-  gap: var(--space-sm, 12px); align-items: end;
+  gap: var(--space-2); align-items: end;
 }
 .ddmer__reset {
-  padding: 10px 18px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-pill, 999px); background: transparent;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 13px; font-weight: 600; color: var(--color-gray-700, #666);
+  padding: 10px 18px; border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-pill); background: transparent;
+  font-size: 13px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms;
 }
-.ddmer__reset:hover { background: rgba(0, 0, 0, 0.04); }
+.ddmer__reset:hover { background: var(--color-border); }
 
 @media (max-width: 1100px) {
   .ddmer__filters { grid-template-columns: 1fr 1fr; }
@@ -355,47 +353,46 @@ onMounted(() => {
 .ddmer__stale {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 14px; margin: 0;
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-md);
   background: rgba(255, 188, 37, 0.14);
   border: 1px solid rgba(255, 188, 37, 0.5);
-  font-size: 13px; color: var(--color-gray-800, #4D4D4D);
+  font-size: 13px; color: var(--color-text);
 }
 .ddmer__stale .li-icon { font-size: 18px; }
 .ddmer__stale-text { flex: 1; }
 .ddmer__stale-action {
   border: none; background: transparent; padding: 4px 8px;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 13px; font-weight: 700; color: var(--color-gray-900, #333);
+  font-size: 13px; font-weight: 700; color: var(--color-text-strong);
   text-decoration: underline; cursor: pointer;
 }
 .ddmer__stale-close {
   border: none; background: transparent; padding: 2px; line-height: 0;
-  color: var(--color-gray-600, #808080); cursor: pointer;
+  color: var(--color-text-muted); cursor: pointer;
 }
-.ddmer__stale-close:hover { color: var(--color-gray-900, #333); }
+.ddmer__stale-close:hover { color: var(--color-text-strong); }
 
 /* Same monospace treatment the audit log gives a column name: these are keys,
    not prose, and a leading zero has to read as part of the value. */
 .ddmer__id {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
-  background: rgba(0, 0, 0, 0.04); border-radius: 5px; padding: 1px 6px;
+  font-family: var(--font-mono); font-size: 12px;
+  background: var(--color-border); border-radius: 5px; padding: 1px 6px;
 }
 .ddmer__name { font-weight: 600; }
-.ddmer__muted { color: var(--color-gray-400, #aaa); }
+.ddmer__muted { color: var(--color-text-placeholder); }
 .ddmer__when { font-size: 13px; }
-.ddmer__when small { display: block; font-size: 11px; color: var(--color-gray-400, #aaa); }
+.ddmer__when small { display: block; font-size: 11px; color: var(--color-text-placeholder); }
 
 .ddmer__row-actions { display: inline-flex; align-items: center; gap: 2px; }
 .ddmer__icon-btn {
   background: none; border: none; cursor: pointer; padding: 6px;
-  border-radius: var(--radius-sm, 12px);
+  border-radius: var(--radius-md);
   display: inline-flex; align-items: center; justify-content: center;
-  color: var(--color-gray-400, #B3B3B3); transition: all 200ms;
+  color: var(--color-text-placeholder); transition: all 200ms;
 }
-.ddmer__icon-btn:hover { color: var(--cta-primary-bg, #FFBC25); background: rgba(255, 188, 37, 0.12); }
-.ddmer__icon-btn--danger:hover { color: var(--color-red-400, #C83E3B); background: rgba(200, 62, 59, 0.08); }
+.ddmer__icon-btn:hover { color: var(--color-accent); background: rgba(255, 188, 37, 0.12); }
+.ddmer__icon-btn--danger:hover { color: var(--color-danger); background: rgba(200, 62, 59, 0.08); }
 .ddmer__icon-btn .li-icon { font-size: 18px; }
 
 .ddmer__confirm { margin: 0 0 8px; font-size: 14px; }
-.ddmer__confirm-note { margin: 0; font-size: 12.5px; color: var(--color-gray-500, #8e8ea0); }
+.ddmer__confirm-note { margin: 0; font-size: 12.5px; color: var(--color-text-muted); }
 </style>

@@ -114,7 +114,7 @@
       </p>
 
       <p v-if="dateAssumed.length" class="ddbulk__ignored">
-        <LiIcon name="event" />
+        <LiIcon name="calendar" />
         Read {{ dateAssumed.join(', ') }} — converted to YYYY-MM-DD.
       </p>
 
@@ -129,13 +129,13 @@
           </template>
           <template #cell-__view="{ row }">
             <button class="ddbulk__view" type="button" :aria-label="`Inspect row ${row.__line}`" title="Inspect this row" @click="openDetail(row.__line)">
-              <LiIcon name="chevron_right" />
+              <LiIcon name="chevron-right" />
             </button>
           </template>
         </LiTable>
 
         <p v-if="!filteredRows.length" class="ddbulk__none">
-          <LiIcon name="filter_alt_off" />
+          <LiIcon name="filter-x" />
           Nothing matches. <button type="button" class="ddbulk__linkbtn" @click="statusFilter = ''; rowSearch = ''">Clear the filter</button>
         </p>
         <p v-else-if="visibleRows.length < filteredRows.length" class="ddbulk__more">
@@ -772,16 +772,16 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
 
 <style scoped>
 .ddbulk__title { margin: 0; font-size: 18px; font-weight: 700; letter-spacing: -0.2px; }
-.ddbulk__sub { margin: 2px 0 0; font-size: 13px; color: var(--color-gray-500, #8e8ea0); }
+.ddbulk__sub { margin: 2px 0 0; font-size: 13px; color: var(--color-text-muted); }
 
-.ddbulk__stepper { margin-bottom: var(--space-l, 16px); }
-.ddbulk__pane { display: flex; flex-direction: column; gap: var(--space-m, 12px); }
+.ddbulk__stepper { margin-bottom: var(--space-4); }
+.ddbulk__pane { display: flex; flex-direction: column; gap: var(--space-3); }
 
-.ddbulk__tpl { display: flex; align-items: center; gap: var(--space-s, 8px); flex-wrap: wrap; }
+.ddbulk__tpl { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
 .ddbulk__cols {
   flex: 1; min-width: 0;
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 10.5px;
-  color: var(--color-on-surface-muted, #999);
+  font-family: var(--font-mono); font-size: 10.5px;
+  color: var(--color-text-muted);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 
@@ -790,19 +790,19 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
 .ddbulk__or {
   display: flex; align-items: center; gap: 10px;
   font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;
-  color: var(--color-gray-400, #aaa);
+  color: var(--color-text-placeholder);
 }
 .ddbulk__or::before, .ddbulk__or::after {
-  content: ''; flex: 1; height: 1px; background: rgba(0, 0, 0, 0.08);
+  content: ''; flex: 1; height: 1px; background: var(--color-border-strong);
 }
 .ddbulk__paste :deep(textarea) {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px; white-space: pre;
+  font-family: var(--font-mono); font-size: 12px; white-space: pre;
 }
 
 .ddbulk__error {
-  margin: 0; font-size: 13px; color: var(--color-error, #C83E3B);
-  background: var(--color-error-container, rgba(200, 62, 59, 0.08));
-  border-radius: var(--radius-sm, 12px); padding: 10px 14px;
+  margin: 0; font-size: 13px; color: var(--color-danger);
+  background: var(--color-danger-soft);
+  border-radius: var(--radius-md); padding: 10px 14px;
 }
 
 
@@ -817,38 +817,38 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
 
 .ddbulk__view {
   border: none; background: transparent; cursor: pointer; padding: 2px 4px;
-  color: var(--color-gray-400, #aaa); display: inline-flex;
+  color: var(--color-text-placeholder); display: inline-flex;
 }
-.ddbulk__view:hover { color: #6366F1; }
+.ddbulk__view:hover { color: var(--color-accent-text); }
 .ddbulk__view .li-icon { font-size: 17px; }
 
-.ddbulk__detail { display: flex; flex-direction: column; gap: var(--space-m, 12px); }
+.ddbulk__detail { display: flex; flex-direction: column; gap: var(--space-3); }
 .ddbulk__detail-head { display: flex; align-items: center; gap: 8px; }
 .ddbulk__detail-key {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
+  font-family: var(--font-mono); font-size: 12px;
   background: rgba(0,0,0,0.04); border-radius: 5px; padding: 2px 7px;
 }
 .ddbulk__detail-problems {
-  margin: 0; padding: 10px 14px 10px 28px; border-radius: var(--radius-sm, 12px);
-  background: rgba(200, 62, 59, 0.08); color: var(--color-red-400, #C83E3B);
+  margin: 0; padding: 10px 14px 10px 28px; border-radius: var(--radius-md);
+  background: rgba(200, 62, 59, 0.08); color: var(--color-danger);
   font-size: 13px; line-height: 1.6;
 }
 .ddbulk__detail-fields {
   display: grid; grid-template-columns: minmax(140px, 40%) 1fr;
   gap: 1px; margin: 0; background: rgba(0,0,0,0.06);
-  border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-sm, 12px); overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-md); overflow: hidden;
 }
 .ddbulk__detail-fields dt,
-.ddbulk__detail-fields dd { margin: 0; padding: 8px 12px; background: #fff; font-size: 13px; }
-.ddbulk__detail-fields dt { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; color: var(--color-gray-700, #555); }
+.ddbulk__detail-fields dd { margin: 0; padding: 8px 12px; background: var(--color-bg); font-size: 13px; }
+.ddbulk__detail-fields dt { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; color: var(--color-text); }
 .ddbulk__detail-fields dt code {
-  font-family: var(--font-mono, ui-monospace, monospace); font-size: 11px;
-  color: var(--color-gray-400, #aaa);
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--color-text-placeholder);
 }
 .ddbulk__detail-fields dt.is-missing { background: rgba(0,0,0,0.02); }
-.ddbulk__detail-note { font-size: 10px; letter-spacing: 0.3px; color: var(--color-gray-400, #aaa); }
+.ddbulk__detail-note { font-size: 10px; letter-spacing: 0.3px; color: var(--color-text-placeholder); }
 .ddbulk__detail-fields dd { word-break: break-word; }
-.ddbulk__detail-fields dd.is-empty { color: var(--color-gray-400, #aaa); }
+.ddbulk__detail-fields dd.is-empty { color: var(--color-text-placeholder); }
 
 
 
@@ -864,23 +864,23 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
   max-width: 220px; overflow: hidden; text-overflow: ellipsis;
 }
 .ddbulk__grid :deep(th) { position: sticky; top: 0; z-index: 1; }
-.ddbulk__problems { color: var(--color-error, #C83E3B); white-space: normal; }
-.ddbulk__muted { color: var(--color-gray-400, #aaa); }
-.ddbulk__more { margin: 0; font-size: 11.5px; color: var(--color-on-surface-muted, #999); }
+.ddbulk__problems { color: var(--color-danger); white-space: normal; }
+.ddbulk__muted { color: var(--color-text-placeholder); }
+.ddbulk__more { margin: 0; font-size: 11.5px; color: var(--color-text-muted); }
 
-.ddbulk__tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-m, 12px); }
+.ddbulk__tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); }
 .ddbulk__tile {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: var(--space-l, 16px); border-radius: var(--radius-md, 16px);
-  background: rgba(0, 0, 0, 0.04);
+  padding: var(--space-4); border-radius: var(--radius-lg);
+  background: var(--color-border);
 }
 .ddbulk__tile b { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; }
-.ddbulk__tile span { font-size: 12px; color: var(--color-gray-500, #8e8ea0); }
-.ddbulk__tile--new { background: var(--color-success-container, #E6F4EA); color: var(--color-on-success-container, #137333); }
-.ddbulk__tile--update { background: var(--color-info-container, #E6E6FF); color: var(--color-on-info-container, #0047B2); }
-.ddbulk__tile--error { background: var(--color-error-container, #FDECEE); color: var(--color-on-error-container, #A33129); }
+.ddbulk__tile span { font-size: 12px; color: var(--color-text-muted); }
+.ddbulk__tile--new { background: var(--color-success-soft); color: var(--color-success); }
+.ddbulk__tile--update { background: var(--color-info-soft); color: var(--color-info); }
+.ddbulk__tile--error { background: var(--color-danger-soft); color: var(--color-danger); }
 
-.ddbulk__ok { margin: 0; font-size: 13px; color: var(--color-gray-500, #8e8ea0); }
+.ddbulk__ok { margin: 0; font-size: 13px; color: var(--color-text-muted); }
 .ddbulk__failhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .ddbulk__failtitle { margin: 0; font-size: 13px; font-weight: 600; }
 .ddbulk__fails {
@@ -889,89 +889,88 @@ watch(() => props.modelValue, (open) => { if (open) reset() })
 }
 .ddbulk__fail {
   display: flex; gap: 10px; font-size: 12px; line-height: 1.5;
-  padding: 6px 10px; border-radius: var(--radius-xs, 8px);
-  background: var(--color-error-container, #FDECEE);
+  padding: 6px 10px; border-radius: var(--radius-sm);
+  background: var(--color-danger-soft);
 }
-.ddbulk__failkey { flex: none; font-weight: 700; color: var(--color-on-error-container, #A33129); }
-.ddbulk__failmsg { color: var(--color-gray-700, #666); }
+.ddbulk__failkey { flex: none; font-weight: 700; color: var(--color-danger); }
+.ddbulk__failmsg { color: var(--color-text); }
 
 @media (max-width: 640px) {
   .ddbulk__tiles { grid-template-columns: 1fr; }
 }
 .ddbulk__ignored {
   display: flex; align-items: center; gap: 6px; margin: 0;
-  font-size: 12px; color: var(--color-gray-500, #8e8ea0);
+  font-size: 12px; color: var(--color-text-muted);
 }
 .ddbulk__ignored .li-icon { font-size: 15px; }
 
 /* ── Preview toolbar ─────────────────────────────────────────────────────── */
 .ddbulk__toolbar {
   display: flex; align-items: center; justify-content: space-between;
-  gap: var(--space-m, 12px); flex-wrap: wrap;
+  gap: var(--space-3); flex-wrap: wrap;
 }
 
 /* Segmented control: one row of verdicts, the live one lifted out of the
    track. Reads as a set of mutually exclusive choices, which it is. */
 .ddbulk__tabs {
   display: inline-flex; padding: 3px; gap: 2px;
-  background: rgba(0, 0, 0, 0.04); border-radius: var(--radius-pill, 999px);
+  background: var(--color-border); border-radius: var(--radius-pill);
 }
 .ddbulk__tab {
   display: inline-flex; align-items: baseline; gap: 5px;
   border: none; background: transparent; cursor: pointer;
-  padding: 6px 14px; border-radius: var(--radius-pill, 999px);
-  font-family: var(--font-body, 'Inter', sans-serif);
-  color: var(--color-gray-700, #555); transition: background 160ms, color 160ms, box-shadow 160ms;
+  padding: 6px 14px; border-radius: var(--radius-pill);
+  color: var(--color-text); transition: background 160ms, color 160ms, box-shadow 160ms;
 }
 .ddbulk__tab-n { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .ddbulk__tab-l { font-size: 12px; }
 .ddbulk__tab:disabled { opacity: 0.35; cursor: not-allowed; }
-.ddbulk__tab:not(:disabled):hover { background: rgba(0, 0, 0, 0.05); }
+.ddbulk__tab:not(:disabled):hover { background: var(--color-border); }
 .ddbulk__tab.is-on {
-  background: #fff; color: var(--color-on-surface, #1a1a2e);
+  background: var(--color-bg); color: var(--color-text);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.10);
 }
 /* Colour only carries the verdict on the active tab; colouring all four at
    rest would make the strip read as four warnings. */
 .ddbulk__tab.is-on.is-new .ddbulk__tab-n { color: #0F8A5F; }
 .ddbulk__tab.is-on.is-update .ddbulk__tab-n { color: #B26B00; }
-.ddbulk__tab.is-on.is-error .ddbulk__tab-n { color: var(--color-red-400, #C83E3B); }
+.ddbulk__tab.is-on.is-error .ddbulk__tab-n { color: var(--color-danger); }
 
 .ddbulk__tools { display: inline-flex; align-items: center; gap: 8px; }
 .ddbulk__find {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 7px 12px; min-width: 240px;
-  border: 1px solid rgba(0, 0, 0, 0.1); border-radius: var(--radius-pill, 999px);
-  background: #fff; transition: border-color 160ms, box-shadow 160ms;
+  border: 1px solid var(--color-border-strong); border-radius: var(--radius-pill);
+  background: var(--color-bg); transition: border-color 160ms, box-shadow 160ms;
 }
-.ddbulk__find:focus-within { border-color: #6366F1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12); }
-.ddbulk__find .li-icon { font-size: 17px; color: var(--color-gray-400, #aaa); }
+.ddbulk__find:focus-within { border-color: var(--color-accent-text); box-shadow: 0 0 0 3px rgba(201, 133, 0, 0.12); }
+.ddbulk__find .li-icon { font-size: 17px; color: var(--color-text-placeholder); }
 .ddbulk__find input {
   border: none; outline: none; background: transparent; width: 100%;
-  font-family: var(--font-body, 'Inter', sans-serif); font-size: 13px;
-  color: var(--color-on-surface, #1a1a2e);
+  font-size: 13px;
+  color: var(--color-text);
 }
 .ddbulk__find input::-webkit-search-cancel-button { cursor: pointer; }
 
 .ddbulk__linkbtn {
   border: none; background: transparent; cursor: pointer; padding: 4px 2px;
-  font-family: var(--font-body, 'Inter', sans-serif); font-size: 12px; font-weight: 600;
-  color: #6366F1;
+  font-size: 12px; font-weight: 600;
+  color: var(--color-accent-text);
 }
 .ddbulk__linkbtn:hover { text-decoration: underline; }
 
 .ddbulk__none {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   padding: 28px 16px; margin: 0; font-size: 13px;
-  color: var(--color-gray-500, #8e8ea0);
+  color: var(--color-text-muted);
 }
 .ddbulk__none .li-icon { font-size: 19px; }
 
 .ddbulk__view {
   border: none; background: transparent; cursor: pointer; padding: 2px;
-  color: var(--color-gray-400, #aaa); display: inline-flex; border-radius: 50%;
+  color: var(--color-text-placeholder); display: inline-flex; border-radius: 50%;
   transition: background 160ms, color 160ms;
 }
-.ddbulk__view:hover { background: rgba(99, 102, 241, 0.1); color: #6366F1; }
+.ddbulk__view:hover { background: rgba(201, 133, 0, 0.1); color: var(--color-accent-text); }
 .ddbulk__view .li-icon { font-size: 18px; }
 </style>

@@ -7,7 +7,7 @@
       :aria-label="prevLabel || 'Previous page'"
       @click="goTo(currentPage - 1)"
     >
-      <LiIcon name="chevron_left" size="sm" />
+      <LiIcon name="chevron-left" size="sm" />
       <span v-if="showLabels" class="li-pagination__nav-label">{{ prevLabel || 'Prev' }}</span>
     </button>
 
@@ -35,7 +35,7 @@
       @click="goTo(currentPage + 1)"
     >
       <span v-if="showLabels" class="li-pagination__nav-label">{{ nextLabel || 'Next' }}</span>
-      <LiIcon name="chevron_right" size="sm" />
+      <LiIcon name="chevron-right" size="sm" />
     </button>
   </nav>
 </template>
@@ -111,7 +111,6 @@ function goTo(page) {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  font-family: 'Inter', system-ui, sans-serif;
   user-select: none;
 }
 
@@ -131,11 +130,10 @@ function goTo(page) {
   border: 1px solid transparent;
   border-radius: 6px;
   background: transparent;
-  font-family: 'Inter', system-ui, sans-serif;
   font-size: 13px;
   font-weight: 500;
   line-height: 1;
-  color: var(--color-gray-700, #666666);
+  color: var(--color-text);
   cursor: pointer;
   transition: background 0.15s cubic-bezier(0.4, 0, 0.2, 1),
               color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
@@ -143,18 +141,18 @@ function goTo(page) {
 }
 
 .li-pagination__btn:hover:not(:disabled):not(.li-pagination__btn--active) {
-  background: var(--color-gray-100, #F2F2F2);
-  color: var(--color-gray-900, #333333);
+  background: var(--color-surface-2);
+  color: var(--color-text-strong);
 }
 
 .li-pagination__btn--active {
-  background: var(--color-yellow-100, #FFF3D6);
-  color: var(--color-yellow-500, #F4A600);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-text);
   font-weight: 600;
 }
 
 .li-pagination__btn:focus-visible {
-  outline: 2px solid var(--color-orange-400, #FF6B00);
+  outline: 2px solid var(--color-accent-strong);
   outline-offset: 2px;
 }
 
@@ -180,7 +178,7 @@ function goTo(page) {
   min-width: 32px;
   height: 32px;
   font-size: 16px;
-  color: var(--color-gray-400, #B3B3B3);
+  color: var(--color-text-placeholder);
   letter-spacing: 0.1em;
 }
 </style>

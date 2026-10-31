@@ -13,7 +13,7 @@
         iconLeft="shield_person"
       />
       <div v-if="error" class="adm-rmodal__error">
-        <LiIcon name="error" />
+        <LiIcon name="circle-x" />
         {{ error }}
       </div>
     </div>
@@ -60,18 +60,18 @@ async function onSubmit() {
 .adm-rmodal__form {
   display: flex;
   flex-direction: column;
-  gap: var(--space-l, 16px);
+  gap: var(--space-4);
 }
 
 .adm-rmodal__error {
   display: flex;
   align-items: center;
-  gap: var(--space-xs, 4px);
+  gap: var(--space-1);
   font-size: 13px;
-  color: var(--color-error, #C83E3B);
-  padding: var(--space-s, 8px);
-  background: var(--color-error-container, #FDECEE);
-  border-radius: var(--radius-sm, 12px);
+  color: var(--color-danger);
+  padding: var(--space-2);
+  background: var(--color-danger-soft);
+  border-radius: var(--radius-sm);
 }
 
 .adm-rmodal__error .li-icon {
@@ -80,7 +80,7 @@ async function onSubmit() {
 
 .adm-rmodal__actions {
   display: flex;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   justify-content: flex-end;
 }
 </style>

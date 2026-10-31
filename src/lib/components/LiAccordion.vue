@@ -48,6 +48,5 @@ provide('li-accordion', { isExpanded, toggle })
 .li-accordion {
   display: flex;
   flex-direction: column;
-  font-family: 'Inter', system-ui, sans-serif;
-}
+  }
 </style>
