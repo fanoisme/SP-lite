@@ -330,7 +330,7 @@ onMounted(load)
 </script>
 
 <style scoped>
-.ddash { display: flex; flex-direction: column; gap: var(--space-lg, 24px); }
+.ddash { display: flex; flex-direction: column; gap: var(--space-4); }
 
 .ddash__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .ddash__title { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -0.4px; }
@@ -353,7 +353,7 @@ onMounted(load)
 /* ── Headline counts ───────────────────────────────────────────────────── */
 .ddash__kpis {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: var(--space-md, 16px);
+  gap: var(--space-3);
 }
 .ddash__kpi {
   position: relative; display: flex; flex-direction: column;
@@ -390,7 +390,7 @@ a.ddash__kpi:hover {
  */
 .ddash__sections {
   display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-md, 16px); align-items: start;
+  gap: var(--space-3); align-items: start;
 }
 .ddash__card {
   display: flex; flex-direction: column; gap: 12px; min-width: 0;

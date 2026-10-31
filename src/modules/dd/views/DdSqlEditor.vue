@@ -680,32 +680,32 @@ onMounted(() => { if (canRead.value) mountAll() })
 </script>
 
 <style scoped>
-.ddsql { display: flex; flex-direction: column; gap: var(--space-md, 16px); }
+.ddsql { display: flex; flex-direction: column; gap: var(--space-3); }
 .ddsql__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
 .ddsql__title { font-size: 24px; font-weight: 800; margin: 0; letter-spacing: -0.4px; }
-.ddsql__sub { font-size: 14px; color: var(--color-gray-500, #8e8ea0); margin: 2px 0 0; }
+.ddsql__sub { font-size: 14px; color: var(--color-text-muted); margin: 2px 0 0; }
 .ddsql__actions { display: flex; align-items: center; gap: 12px; }
-.ddsql__count { font-size: 13px; color: var(--color-gray-500, #8e8ea0); margin: 0; white-space: nowrap; }
+.ddsql__count { font-size: 13px; color: var(--color-text-muted); margin: 0; white-space: nowrap; }
 
 .ddsql__reload {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 16px; border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: var(--radius-pill, 999px); background: transparent;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  font-size: 13px; font-weight: 600; color: var(--color-gray-700, #666);
+  font-family: var(--font-sans);
+  font-size: 13px; font-weight: 600; color: var(--color-text);
   cursor: pointer; transition: all 200ms; white-space: nowrap;
 }
 .ddsql__reload:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
 .ddsql__reload:disabled { opacity: 0.45; cursor: not-allowed; }
 .ddsql__reload .li-icon { font-size: 17px; }
 
-.ddsql__grid { display: grid; grid-template-columns: 250px 1fr; gap: var(--space-md, 16px); align-items: start; }
+.ddsql__grid { display: grid; grid-template-columns: 250px 1fr; gap: var(--space-3); align-items: start; }
 @media (max-width: 1000px) {
   .ddsql__grid { grid-template-columns: 1fr; }
 }
 
 /* ── sidebar ── */
-.ddsql__side { display: flex; flex-direction: column; gap: var(--space-sm, 12px); min-width: 0; }
+.ddsql__side { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
 .ddsql__panel {
   border: 1px solid rgba(0, 0, 0, 0.07);
   border-radius: var(--radius-sm, 12px);
@@ -714,26 +714,26 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__panel-title {
   display: flex; align-items: center; justify-content: space-between;
   margin: 0 0 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--color-gray-500, #8e8ea0);
+  text-transform: uppercase; color: var(--color-text-muted);
 }
 .ddsql__panel-clear {
   border: none; background: transparent; padding: 0; cursor: pointer;
   font: inherit; font-size: 10px; letter-spacing: 0.04em;
-  color: var(--color-gray-500, #8e8ea0); text-decoration: underline;
+  color: var(--color-text-muted); text-decoration: underline;
 }
-.ddsql__hint { margin: 0; font-size: 12px; line-height: 1.5; color: var(--color-gray-400, #aaa); }
+.ddsql__hint { margin: 0; font-size: 12px; line-height: 1.5; color: var(--color-text-placeholder); }
 
 .ddsql__table-head {
   width: 100%; display: flex; align-items: center; gap: 4px;
   padding: 5px 6px; border: none; background: transparent;
   border-radius: var(--radius-xs, 8px); cursor: pointer; text-align: left;
   font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px;
-  color: var(--color-gray-700, #666); transition: background 200ms;
+  color: var(--color-text); transition: background 200ms;
 }
 .ddsql__table-head:hover { background: rgba(0, 0, 0, 0.04); }
 .ddsql__table-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ddsql__table-rows { font-size: 11px; color: var(--color-gray-400, #aaa); }
-.ddsql__chev { font-size: 16px; transition: transform 200ms; color: var(--color-gray-400, #aaa); }
+.ddsql__table-rows { font-size: 11px; color: var(--color-text-placeholder); }
+.ddsql__chev { font-size: 16px; transition: transform 200ms; color: var(--color-text-placeholder); }
 .ddsql__chev.is-open { transform: rotate(90deg); }
 
 .ddsql__cols { padding: 2px 0 6px; }
@@ -741,17 +741,17 @@ onMounted(() => { if (canRead.value) mountAll() })
   display: block; width: 100%; padding: 3px 6px 3px 24px;
   border: none; background: transparent; border-radius: var(--radius-xs, 8px);
   font-family: var(--font-mono, ui-monospace, monospace); font-size: 11.5px;
-  color: var(--color-gray-500, #8e8ea0); text-align: left; cursor: pointer;
+  color: var(--color-text-muted); text-align: left; cursor: pointer;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   transition: all 200ms;
 }
-.ddsql__col:hover { background: rgba(0, 0, 0, 0.05); color: var(--color-gray-900, #1a1a1a); }
-.ddsql__col--all { color: var(--color-gray-400, #aaa); font-style: italic; }
+.ddsql__col:hover { background: rgba(0, 0, 0, 0.05); color: var(--color-text-strong); }
+.ddsql__col--all { color: var(--color-text-placeholder); font-style: italic; }
 
 .ddsql__denied {
   display: flex; gap: 6px; margin: 10px 0 0; padding: 8px;
   border-radius: var(--radius-xs, 8px); background: rgba(0, 0, 0, 0.04);
-  font-size: 11px; line-height: 1.5; color: var(--color-gray-500, #8e8ea0);
+  font-size: 11px; line-height: 1.5; color: var(--color-text-muted);
 }
 .ddsql__denied .li-icon { font-size: 15px; flex: none; }
 
@@ -760,8 +760,8 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__save-btn {
   flex: none; padding: 8px 12px; border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: var(--radius-pill, 999px); background: transparent;
-  font-family: var(--font-body, 'Inter', sans-serif); font-size: 12px; font-weight: 600;
-  color: var(--color-gray-700, #666); cursor: pointer; transition: all 200ms;
+  font-family: var(--font-sans); font-size: 12px; font-weight: 600;
+  color: var(--color-text); cursor: pointer; transition: all 200ms;
 }
 .ddsql__save-btn:hover:not(:disabled) { background: rgba(0, 0, 0, 0.04); }
 .ddsql__save-btn:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -771,50 +771,50 @@ onMounted(() => { if (canRead.value) mountAll() })
   flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px;
   padding: 5px 6px; border: none; background: transparent;
   border-radius: var(--radius-xs, 8px); cursor: pointer; text-align: left;
-  font-family: var(--font-body, 'Inter', sans-serif); font-size: 12px;
-  color: var(--color-gray-700, #666); transition: background 200ms;
+  font-family: var(--font-sans); font-size: 12px;
+  color: var(--color-text); transition: background 200ms;
 }
 .ddsql__item-main:hover { background: rgba(0, 0, 0, 0.04); }
 .ddsql__item-sql {
   flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   font-family: var(--font-mono, ui-monospace, monospace); font-size: 11px;
 }
-.ddsql__item-ms { flex: none; font-size: 10px; color: var(--color-gray-400, #aaa); }
+.ddsql__item-ms { flex: none; font-size: 10px; color: var(--color-text-placeholder); }
 .ddsql__item-del {
   flex: none; display: flex; padding: 3px; border: none; background: transparent;
-  border-radius: 50%; cursor: pointer; color: var(--color-gray-400, #aaa);
+  border-radius: 50%; cursor: pointer; color: var(--color-text-placeholder);
   opacity: 0; transition: opacity 200ms, background 200ms;
 }
 .ddsql__item:hover .ddsql__item-del { opacity: 1; }
-.ddsql__item-del:hover { background: rgba(0, 0, 0, 0.06); color: var(--color-red-400, #C83E3B); }
+.ddsql__item-del:hover { background: rgba(0, 0, 0, 0.06); color: var(--color-danger); }
 .ddsql__item-del .li-icon { font-size: 15px; }
 
 .ddsql__dot { flex: none; width: 6px; height: 6px; border-radius: 50%; }
-.ddsql__dot.is-ok { background: var(--color-green-500, #059669); }
-.ddsql__dot.is-bad { background: var(--color-red-400, #C83E3B); }
+.ddsql__dot.is-ok { background: var(--color-success); }
+.ddsql__dot.is-bad { background: var(--color-danger); }
 
 /* ── editor ── */
-.ddsql__main { display: flex; flex-direction: column; gap: var(--space-sm, 12px); min-width: 0; }
+.ddsql__main { display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
 .ddsql__bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .ddsql__bar-hint {
-  margin-left: auto; font-size: 11px; color: var(--color-gray-400, #aaa);
+  margin-left: auto; font-size: 11px; color: var(--color-text-placeholder);
   font-family: var(--font-mono, ui-monospace, monospace);
 }
 
 .ddsql__editor {
   width: 100%; box-sizing: border-box; resize: vertical;
   padding: 14px; border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: var(--radius-sm, 12px); background: var(--color-gray-0, #fff);
+  border-radius: var(--radius-sm, 12px); background: var(--color-bg);
   font-family: var(--font-mono, ui-monospace, 'JetBrains Mono', monospace);
-  font-size: 13px; line-height: 1.7; color: var(--color-gray-900, #1a1a1a);
+  font-size: 13px; line-height: 1.7; color: var(--color-text-strong);
   /* Tab is bound to indentation, so the caret stays inside the query. */
   tab-size: 2; outline: none; transition: border-color 200ms;
 }
-.ddsql__editor:focus { border-color: var(--color-orange-400, #FF6B00); }
+.ddsql__editor:focus { border-color: var(--color-accent-strong); }
 
 .ddsql__problem {
   background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-sm, 12px);
-  padding: 10px 14px; color: var(--color-red-400, #C83E3B);
+  padding: 10px 14px; color: var(--color-danger);
 }
 .ddsql__problem-msg { margin: 0; font-size: 13px; line-height: 1.55; white-space: pre-wrap; }
 .ddsql__problem-at { margin: 4px 0 0; font-size: 11px; opacity: 0.8; }
@@ -823,20 +823,20 @@ onMounted(() => { if (canRead.value) mountAll() })
   font-size: 12px; line-height: 1.4; white-space: pre; overflow-x: auto;
 }
 .ddsql__error {
-  font-size: 12px; color: var(--color-red-400, #C83E3B);
+  font-size: 12px; color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-xs, 8px);
   padding: 6px 10px; margin: 0 0 8px;
 }
 
 .ddsql__result-head { display: flex; align-items: center; gap: 10px; }
-.ddsql__result-note { font-size: 13px; color: var(--color-gray-500, #8e8ea0); }
-.ddsql__result-ms { margin-left: auto; font-size: 11px; color: var(--color-gray-400, #aaa); }
+.ddsql__result-note { font-size: 13px; color: var(--color-text-muted); }
+.ddsql__result-ms { margin-left: auto; font-size: 11px; color: var(--color-text-placeholder); }
 
 .ddsql__value { font-family: var(--font-mono, ui-monospace, monospace); font-size: 12px; }
 /* A NULL must not look like an empty string — the difference matters here. */
 .ddsql__null {
   font-style: normal; font-size: 11px; letter-spacing: 0.4px;
-  color: var(--color-gray-400, #aaa);
+  color: var(--color-text-placeholder);
 }
 
 /* ── confirm modal ── */
@@ -850,8 +850,8 @@ onMounted(() => { if (canRead.value) mountAll() })
 .ddsql__facts { display: flex; flex-wrap: wrap; gap: 20px; margin: 0; }
 .ddsql__facts dt {
   font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-  color: var(--color-gray-500, #8e8ea0); margin-bottom: 2px;
+  color: var(--color-text-muted); margin-bottom: 2px;
 }
 .ddsql__facts dd { margin: 0; font-size: 14px; font-weight: 600; }
-.ddsql__muted { color: var(--color-gray-400, #aaa); font-weight: 400; font-size: 12px; }
+.ddsql__muted { color: var(--color-text-placeholder); font-weight: 400; font-size: 12px; }
 </style>
