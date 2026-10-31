@@ -76,6 +76,14 @@ const routes = [
     meta: { label: 'Profile', icon: 'circle-user' },
     component: () => import('../modules/profile/views/ProfileView.vue'),
   },
+  // The one router addition the restyle allows (spec §Ruling 5): a gated
+  // catch-all so unknown paths render the L7 screen inside the shell
+  // instead of a blank frame.
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: () => import('../modules/errors/views/NotFoundView.vue'),
+  },
 ]
 
 const router = createRouter({

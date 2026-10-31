@@ -170,7 +170,7 @@ const executeSelected = (command) => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--color-overlay));
+  background-color: var(--color-overlay);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: flex-start;
