@@ -77,13 +77,13 @@ async function onToggle(on) {
 <style scoped>
 .amd__desc {
   font-size: 13px;
-  color: var(--color-on-surface-muted, #999);
-  margin: 0 0 var(--space-m, 12px);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-3);
 }
 
 .amd__section {
-  padding: var(--space-m, 12px) 0;
-  border-top: 1px solid var(--color-gray-100, #f2f2f2);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--color-surface-2);
 }
 
 .amd__section:first-of-type {
@@ -92,26 +92,26 @@ async function onToggle(on) {
 }
 
 .amd__heading {
-  margin: 0 0 var(--space-s, 8px);
+  margin: 0 0 var(--space-2);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 .amd__switch {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   font-size: 13px;
   font-weight: 600;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
   cursor: pointer;
   user-select: none;
-  padding: var(--space-xs, 6px) var(--space-m, 12px);
+  padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-pill, 999px);
-  background: rgba(0, 0, 0, 0.04);
+  background: var(--color-border);
 }
 
 .amd__switch.is-on {
@@ -122,7 +122,7 @@ async function onToggle(on) {
 .amd__switch input[type='checkbox'] {
   width: 16px;
   height: 16px;
-  accent-color: var(--cta-primary-bg, #ffbc25);
+  accent-color: var(--color-accent);
   cursor: pointer;
 }
 
@@ -132,13 +132,13 @@ async function onToggle(on) {
 
 .amd__lock {
   font-size: 16px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 .amd__hint {
-  margin: var(--space-s, 8px) 0 0;
+  margin: var(--space-2) 0 0;
   font-size: 12px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
   font-style: italic;
 }
 
@@ -148,56 +148,56 @@ async function onToggle(on) {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs, 6px);
+  gap: var(--space-1);
 }
 
 .amd__feat {
   font-size: 13px;
-  color: var(--color-on-surface-variant, #666);
+  color: var(--color-text-muted);
 }
 
 .amd__feat strong {
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
   font-weight: 600;
 }
 
 .amd__feat-desc {
-  margin-left: var(--space-xs, 6px);
-  color: var(--color-on-surface-muted, #999);
+  margin-left: var(--space-1);
+  color: var(--color-text-muted);
 }
 
 .amd__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-xs, 6px);
+  gap: var(--space-1);
 }
 
 .amd__chip {
   display: inline-flex;
   align-items: center;
-  padding: var(--space-xs, 4px) var(--space-m, 12px);
+  padding: var(--space-1) var(--space-3);
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-on-surface-variant, #666);
-  background: rgba(0, 0, 0, 0.04);
+  color: var(--color-text-muted);
+  background: var(--color-border);
   border-radius: var(--radius-pill, 999px);
 }
 
 .amd__done-btn {
   padding: 10px 24px;
-  background: var(--cta-primary-bg, #ffbc25);
-  color: var(--cta-primary-text, #1e1e1e);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   border: none;
   border-radius: var(--radius-pill, 999px);
   font-size: 13px;
   font-weight: 700;
-  font-family: var(--font-body, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   cursor: pointer;
   transition: all var(--dur-short, 200ms) var(--ease-out);
 }
 
 .amd__done-btn:hover {
-  background: var(--cta-primary-hover, #ffb60a);
+  background: var(--color-accent-strong);
   transform: translateY(-1px);
 }
 </style>

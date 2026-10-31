@@ -235,7 +235,7 @@ function formatDate(dateStr) {
 }
 
 .detail__hl-value--invalid {
-  color: var(--color-error, var(--color-danger));
+  color: var(--color-danger, var(--color-danger));
   font-weight: 600;
 }
 
@@ -250,13 +250,13 @@ function formatDate(dateStr) {
 }
 
 .detail__type-badge--emvco {
-  background: var(--color-info-container, #E6E6FF);
-  color: var(--color-on-info-container, #0047B2);
+  background: var(--color-info-soft);
+  color: var(--color-info);
 }
 
 .detail__type-badge--proprietary {
-  background: var(--color-warning-container, #FFF3D6);
-  color: var(--color-on-warning-container, #FF3000);
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
 }
 
 /* ── Section ── */

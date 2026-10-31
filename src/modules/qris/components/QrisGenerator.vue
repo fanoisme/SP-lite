@@ -614,8 +614,8 @@ async function pasteFromClipboard() {
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: var(--color-error-container, #FDECEE);
-  color: var(--color-on-error-container, var(--color-danger));
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 500;

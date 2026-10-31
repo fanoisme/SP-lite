@@ -274,13 +274,13 @@ function expiryClass(dateStr) {
 }
 
 .hist__type-badge--emvco {
-  background: var(--color-info-container, #E6E6FF);
-  color: var(--color-on-info-container, #0047B2);
+  background: var(--color-info-soft);
+  color: var(--color-info);
 }
 
 .hist__type-badge--proprietary {
-  background: var(--color-warning-container, #FFF3D6);
-  color: var(--color-on-warning-container, #FF3000);
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
 }
 
 .hist__date {

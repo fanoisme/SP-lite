@@ -212,13 +212,13 @@ function copyRaw() {
 }
 
 .tag-viewer__crc--ok {
-  background: var(--color-success-container, #ECFF8F);
-  color: var(--color-on-success-container, #17A3E6);
+  background: var(--color-success-soft);
+  color: var(--color-success);
 }
 
 .tag-viewer__crc--fail {
-  background: var(--color-error-container, #FDECEE);
-  color: var(--color-on-error-container, var(--color-danger));
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
 }
 
 .tag-viewer__crc .li-icon {

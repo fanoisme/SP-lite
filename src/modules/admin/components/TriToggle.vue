@@ -33,7 +33,7 @@ const options = [
   gap: 4px;
   padding: 3px;
   border-radius: var(--radius-pill, 999px);
-  background: var(--color-gray-100, #f2f2f2);
+  background: var(--color-surface-2);
 }
 
 .tri__btn {
@@ -41,33 +41,33 @@ const options = [
   border: none;
   border-radius: var(--radius-pill, 999px);
   background: transparent;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
   font-size: 12px;
   font-weight: 600;
-  font-family: var(--font-body, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   cursor: pointer;
   transition: all var(--dur-short, 200ms) var(--ease-out);
   white-space: nowrap;
 }
 
 .tri__btn:hover:not(.tri__btn--active) {
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
 }
 
 /* Active state per mode */
 .tri__btn--grant.tri__btn--active {
-  background: var(--color-success, #10B981);
-  color: var(--color-gray-0, #fff);
+  background: var(--color-success, var(--color-success));
+  color: var(--color-bg);
 }
 
 .tri__btn--deny.tri__btn--active {
-  background: var(--color-error, #C83E3B);
-  color: var(--color-gray-0, #fff);
+  background: var(--color-danger);
+  color: var(--color-bg);
 }
 
 .tri__btn--inherit.tri__btn--active {
-  background: var(--color-gray-0, #fff);
-  color: var(--color-on-surface, #333);
-  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.08));
+  background: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: var(--shadow-card);
 }
 </style>

@@ -92,7 +92,7 @@ function handleTab(e) {
 .code-editor__label {
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-on-surface, #1a1a2e);
+  color: var(--color-text);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -113,7 +113,7 @@ function handleTab(e) {
 }
 
 .code-editor:not(.code-editor--readonly) .code-editor__wrapper:focus-within {
-  border-color: var(--cta-primary-bg, var(--color-accent));
+  border-color: var(--color-accent);
   box-shadow: 0 0 0 3px rgba(255, 188, 37, 0.1);
 }
 

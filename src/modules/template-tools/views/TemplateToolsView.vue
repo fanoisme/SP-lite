@@ -110,10 +110,10 @@ onMounted(() => {
 .tpl-tools {
   max-width: 1280px;
   margin: 0 auto;
-  padding: var(--space-lg, 24px) var(--space-xl, 32px);
+  padding: var(--space-4) var(--space-6);
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg, 24px);
+  gap: var(--space-4);
 }
 
 /* ── Header ── */
@@ -276,7 +276,7 @@ onMounted(() => {
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--color-bg);
   border-radius: 20px;
-  padding: var(--space-lg, 24px);
+  padding: var(--space-4);
   box-shadow: 0 4px 24px var(--color-border), 0 1px 4px rgba(0, 0, 0, 0.02);
   transition: box-shadow 0.4s ease;
 }
@@ -303,7 +303,7 @@ onMounted(() => {
 
 @media (max-width: 768px) {
   .tpl-tools {
-    padding: var(--space-md, 16px);
+    padding: var(--space-3);
   }
 
   .tpl-tools__title {
@@ -325,7 +325,7 @@ onMounted(() => {
   }
 
   .tpl-tools__card {
-    padding: var(--space-md, 16px);
+    padding: var(--space-3);
   }
 }
 </style>

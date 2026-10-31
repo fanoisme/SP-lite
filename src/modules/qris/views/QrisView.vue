@@ -266,10 +266,10 @@ onUnmounted(() => {
 .qris {
   max-width: 1280px;
   margin: 0 auto;
-  padding: var(--space-lg, 24px) var(--space-xl, 32px);
+  padding: var(--space-4) var(--space-6);
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg, 24px);
+  gap: var(--space-4);
   animation: qris-reveal 0.6s var(--ease-enter)) both;
 }
 
@@ -349,10 +349,10 @@ onUnmounted(() => {
 .qris__tabs {
   display: flex;
   position: relative;
-  background: var(--glass-bg-light, var(--color-bg));
+  background: var(--color-bg), var(--color-bg));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border, rgba(0, 0, 0, 0.06));
+  border: 1px solid var(--color-border), rgba(0, 0, 0, 0.06));
   border-radius: var(--radius-lg);
   padding: 5px;
   gap: 2px;
@@ -423,7 +423,7 @@ onUnmounted(() => {
   height: calc(100% - 10px);
   background: var(--color-bg);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm, 0 2px 8px var(--color-border), 0 4px 16px rgba(0, 0, 0, 0.02));
+  box-shadow: var(--shadow-card);
   transition: all 0.35s var(--ease-spring));
   z-index: 0;
 }
@@ -492,10 +492,10 @@ onUnmounted(() => {
   background: rgba(255, 255, 255, 0.65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border, var(--color-bg));
+  border: 1px solid var(--color-border), var(--color-bg));
   border-radius: var(--radius-lg);
   padding: var(--space-6);
-  box-shadow: var(--shadow-sm, 0 2px 8px var(--color-border), 0 4px 16px rgba(0, 0, 0, 0.02));
+  box-shadow: var(--shadow-card);
   transition: box-shadow var(--dur-long) var(--ease-out);
   animation: card-stagger 0.5s var(--ease-enter)) both;
 }
@@ -515,7 +515,7 @@ onUnmounted(() => {
 
 .qris__left:hover,
 .qris__right:hover {
-  box-shadow: var(--shadow-md, 0 4px 16px rgba(0, 0, 0, 0.06), 0 8px 32px var(--color-border));
+  box-shadow: var(--shadow-pop);
 }
 
 /* ── Result ── */
@@ -537,7 +537,7 @@ onUnmounted(() => {
   padding: var(--space-6);
   background: rgba(255, 255, 255, 0.6);
   border-radius: var(--radius-lg);
-  border: 1px solid var(--glass-border, var(--color-bg));
+  border: 1px solid var(--color-border), var(--color-bg));
 }
 
 .qris__qr-img {
@@ -605,10 +605,10 @@ onUnmounted(() => {
   background: rgba(255, 255, 255, 0.65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border, var(--color-bg));
+  border: 1px solid var(--color-border), var(--color-bg));
   border-radius: var(--radius-lg);
   padding: var(--space-6);
-  box-shadow: var(--shadow-sm, 0 2px 8px var(--color-border), 0 4px 16px rgba(0, 0, 0, 0.02));
+  box-shadow: var(--shadow-card);
   animation: card-stagger 0.5s 0.15s var(--ease-enter)) both;
 }
 
@@ -649,8 +649,8 @@ onUnmounted(() => {
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .qris {
-    padding: var(--space-md, 16px);
-    gap: var(--space-md, 16px);
+    padding: var(--space-3);
+    gap: var(--space-3);
   }
 
   .qris__title {

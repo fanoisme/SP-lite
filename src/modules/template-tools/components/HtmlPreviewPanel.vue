@@ -686,7 +686,7 @@ onBeforeUnmount(() => {
 .html-preview {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md, 16px);
+  gap: var(--space-3);
 }
 
 .html-preview__layout {

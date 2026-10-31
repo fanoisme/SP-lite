@@ -178,15 +178,15 @@ async function download(selectedOnly) {
 .vf {
   max-width: 1100px;
   margin: 0 auto;
-  padding: var(--space-lg, 24px);
+  padding: var(--space-4);
 }
 
 .vf__header {
-  margin-bottom: var(--space-xl, 32px);
+  margin-bottom: var(--space-6);
 }
 
 .vf__title {
-  font-size: var(--text-2xl, 24px);
+  font-size: var(--text-xl), 24px);
   font-weight: 700;
   color: var(--color-text-strong);
   margin: 0 0 var(--space-1);
@@ -201,7 +201,7 @@ async function download(selectedOnly) {
 .vf__body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg, 24px);
+  gap: var(--space-4);
 }
 
 /* ── Upload Zone ── */
@@ -209,11 +209,11 @@ async function download(selectedOnly) {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-sm, 8px);
-  padding: var(--space-2xl, 40px) var(--space-lg, 24px);
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-4);
   border: 2px dashed var(--color-border-strong);
   border-radius: var(--radius-lg, 16px);
-  background: var(--color-glass-light, rgba(255, 255, 255, 0.6));
+  background: var(--color-bg), rgba(255, 255, 255, 0.6));
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -241,11 +241,11 @@ async function download(selectedOnly) {
 .vf__slider-hint { font-size: var(--text-xs, 11px); color: var(--color-text-placeholder); }
 
 /* ── Actions ── */
-.vf__actions { display: flex; gap: var(--space-sm, 8px); flex-wrap: wrap; }
+.vf__actions { display: flex; gap: var(--space-2); flex-wrap: wrap; }
 
 .vf__btn {
   display: inline-flex; align-items: center; gap: var(--space-1);
-  padding: var(--space-sm, 8px) var(--space-lg, 24px);
+  padding: var(--space-2) var(--space-4);
   font-size: var(--text-sm, 13px); font-weight: 600;
   border: none; border-radius: var(--radius-md, 12px);
   cursor: pointer; transition: all 0.2s ease;
@@ -258,11 +258,11 @@ async function download(selectedOnly) {
 .vf__btn--primary {
   background: var(--color-accent); color: var(--color-text-strong);
 }
-.vf__btn--primary:hover { background: var(--cta-primary-hover, #e6a820); }
+.vf__btn--primary:hover { background: var(--color-accent-strong); }
 .vf__btn--primary:disabled { background: var(--color-accent); opacity: 0.4; }
 
 .vf__btn--sm {
-  padding: var(--space-1) var(--space-md, 16px);
+  padding: var(--space-1) var(--space-3);
   font-size: var(--text-xs, 11px);
 }
 
@@ -270,9 +270,9 @@ async function download(selectedOnly) {
 
 /* ── Progress ── */
 .vf__progress {
-  display: flex; align-items: center; gap: var(--space-sm, 8px);
-  padding: var(--space-md, 16px);
-  background: var(--color-glass-light, rgba(255, 255, 255, 0.6));
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-bg), rgba(255, 255, 255, 0.6));
   border-radius: var(--radius-md, 12px);
   font-size: var(--text-sm, 13px); color: var(--color-text-muted);
 }
@@ -289,31 +289,31 @@ async function download(selectedOnly) {
 
 /* ── Error / Status ── */
 .vf__error {
-  display: flex; align-items: center; gap: var(--space-sm, 8px);
-  padding: var(--space-md, 16px);
+  display: flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-3);
   background: rgba(200, 62, 59, 0.08); border-radius: var(--radius-md, 12px);
   font-size: var(--text-sm, 13px); color: var(--color-danger);
 }
 .vf__error .li-icon { font-size: 18px; }
 
 .vf__status {
-  display: flex; align-items: center; gap: var(--space-sm, 8px);
-  font-size: var(--text-sm, 13px); color: var(--color-green-600, var(--color-success));
+  display: flex; align-items: center; gap: var(--space-2);
+  font-size: var(--text-sm, 13px); color: var(--color-success), var(--color-success));
 }
 .vf__status .li-icon { font-size: 18px; }
 
 /* ── Toolbar ── */
 .vf__toolbar {
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
-  gap: var(--space-sm, 8px);
-  padding: var(--space-md, 16px);
-  background: var(--color-glass-light, rgba(255, 255, 255, 0.6));
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-bg), rgba(255, 255, 255, 0.6));
   border-radius: var(--radius-md, 12px);
   border: 1px solid var(--color-border);
 }
 
 .vf__toolbar-info {
-  display: flex; align-items: center; gap: var(--space-sm, 8px);
+  display: flex; align-items: center; gap: var(--space-2);
   font-size: var(--text-sm, 13px); color: var(--color-text-muted);
 }
 
@@ -330,32 +330,32 @@ async function download(selectedOnly) {
 .vf__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: var(--space-md, 16px);
+  gap: var(--space-3);
 }
 
 .vf__card {
   position: relative;
   border-radius: var(--radius-md, 12px);
   overflow: hidden;
-  background: var(--color-glass-light, var(--color-bg));
-  box-shadow: var(--shadow-sm, 0 1px 3px var(--color-border-strong));
+  background: var(--color-bg), var(--color-bg));
+  box-shadow: var(--shadow-card);
   border: 2px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .vf__card:hover {
-  box-shadow: var(--shadow-md, 0 4px 12px var(--color-border-strong));
+  box-shadow: var(--shadow-pop);
   transform: translateY(-2px);
 }
 
 .vf__card--selected {
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 1px var(--cta-primary-bg), var(--shadow-sm);
+  box-shadow: 0 0 0 1px var(--color-accent), var(--shadow-card);
 }
 
 .vf__card--selected:hover {
-  box-shadow: 0 0 0 1px var(--cta-primary-bg), var(--shadow-md);
+  box-shadow: 0 0 0 1px var(--color-accent), var(--shadow-pop);
 }
 
 .vf__card-check {
@@ -377,7 +377,7 @@ async function download(selectedOnly) {
 }
 
 .vf__card-meta {
-  padding: var(--space-sm, 8px) var(--space-md, 16px);
+  padding: var(--space-2) var(--space-3);
 }
 
 .vf__card-label {
@@ -391,7 +391,7 @@ async function download(selectedOnly) {
 .vf__card-details {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-sm, 8px);
+  gap: var(--space-2);
 }
 
 .vf__card-detail {
@@ -411,7 +411,7 @@ async function download(selectedOnly) {
 @media (max-width: 640px) {
   .vf__grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-sm, 8px);
+    gap: var(--space-2);
   }
 
   .vf__toolbar {
@@ -429,7 +429,7 @@ async function download(selectedOnly) {
   }
 
   .vf__card-meta {
-    padding: var(--space-1) var(--space-sm, 8px);
+    padding: var(--space-1) var(--space-2);
   }
 
   .vf__card-details {

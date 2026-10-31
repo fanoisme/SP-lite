@@ -197,7 +197,7 @@ function reset() {
 .docx-panel {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md, 16px);
+  gap: var(--space-3);
   overflow: hidden;
   min-height: 0;
 }
@@ -562,7 +562,7 @@ function reset() {
 }
 .docx-panel__msg--error {
   background: rgba(200, 62, 59, 0.06);
-  color: var(--color-error, var(--color-danger));
+  color: var(--color-danger, var(--color-danger));
 }
 .docx-panel__msg--info {
   background: rgba(16, 185, 129, 0.06);

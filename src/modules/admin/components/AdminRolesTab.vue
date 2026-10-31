@@ -94,36 +94,36 @@ function deleteTooltip(role) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--space-l, 16px);
+  margin-bottom: var(--space-4);
 }
 
 .adm-roles__heading {
-  font-family: var(--font-display, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-weight: 700;
   font-size: 16px;
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
   margin: 0;
 }
 
 .adm-roles__add-btn {
   display: flex;
   align-items: center;
-  gap: var(--space-s, 6px);
+  gap: var(--space-2);
   padding: 10px 20px;
-  background: var(--cta-primary-bg, #ffbc25);
-  color: var(--cta-primary-text, #1e1e1e);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   border: none;
   border-radius: var(--radius-pill, 999px);
   font-weight: 600;
   font-size: 13px;
-  font-family: var(--font-body, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   cursor: pointer;
   transition: all var(--dur-short, 200ms) var(--ease-out);
   white-space: nowrap;
 }
 
 .adm-roles__add-btn:hover {
-  background: var(--cta-primary-hover, #ffb60a);
+  background: var(--color-accent-strong);
   transform: translateY(-2px);
 }
 
@@ -135,17 +135,17 @@ function deleteTooltip(role) {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-m, 12px);
-  padding: var(--space-2xl, 32px);
-  color: var(--color-on-surface-muted, #999);
+  gap: var(--space-3);
+  padding: var(--space-8);
+  color: var(--color-text-muted);
   font-size: 13px;
 }
 
 .adm-roles__spinner {
   width: 20px;
   height: 20px;
-  border: 2.5px solid rgba(0, 0, 0, 0.06);
-  border-top-color: var(--cta-primary-bg, #ffbc25);
+  border: 2.5px solid var(--color-border);
+  border-top-color: var(--color-accent);
   border-radius: 50%;
   animation: adm-roles-spin 0.8s linear infinite;
 }
@@ -157,26 +157,26 @@ function deleteTooltip(role) {
 .adm-roles__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: var(--space-m, 12px);
+  gap: var(--space-3);
 }
 
 .adm-roles__card {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--space-s, 6px);
-  padding: var(--space-l, 16px);
-  background: var(--color-gray-0, #fff);
-  border: 1px solid var(--color-gray-100, #f2f2f2);
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-surface-2);
   border-radius: var(--radius-md, 16px);
-  box-shadow: var(--shadow-sm, 0 1px 3px rgba(0, 0, 0, 0.04));
+  box-shadow: var(--shadow-card);
   cursor: pointer;
   transition: all var(--dur-short, 200ms) var(--ease-out);
 }
 
 .adm-roles__card:hover {
-  border-color: var(--cta-primary-bg, #ffbc25);
-  box-shadow: var(--shadow-md, 0 6px 20px rgba(0, 0, 0, 0.06));
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-pop);
   transform: translateY(-2px);
 }
 
@@ -184,41 +184,41 @@ function deleteTooltip(role) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
 }
 
 .adm-roles__card-name {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-s, 6px);
+  gap: var(--space-2);
   font-weight: 700;
   font-size: 15px;
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
 }
 
 .adm-roles__card-icon {
   font-size: 20px;
-  color: var(--color-gray-400, #b3b3b3);
+  color: var(--color-text-placeholder);
 }
 
 .adm-roles__card-meta {
   font-size: 12px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 .adm-roles__card-actions {
   display: flex;
-  gap: var(--space-xs, 4px);
-  margin-top: var(--space-xs, 4px);
+  gap: var(--space-1);
+  margin-top: var(--space-1);
 }
 
 .adm-roles__action-btn {
   background: none;
   border: none;
   cursor: pointer;
-  padding: var(--space-s, 6px);
+  padding: var(--space-2);
   border-radius: var(--radius-sm, 12px);
-  color: var(--color-gray-400, #b3b3b3);
+  color: var(--color-text-placeholder);
   transition: all var(--dur-short, 200ms) var(--ease-out);
   display: inline-flex;
   align-items: center;
@@ -226,12 +226,12 @@ function deleteTooltip(role) {
 }
 
 .adm-roles__action-btn:hover:not(:disabled) {
-  color: var(--color-on-surface-variant, #666);
-  background: rgba(0, 0, 0, 0.05);
+  color: var(--color-text-muted);
+  background: var(--color-border);
 }
 
 .adm-roles__action-btn--danger:hover:not(:disabled) {
-  color: var(--color-error, #c83e3b);
+  color: var(--color-danger);
   background: rgba(200, 62, 59, 0.08);
 }
 
@@ -248,10 +248,10 @@ function deleteTooltip(role) {
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  margin-top: var(--space-s, 8px);
+  margin-top: var(--space-2);
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 .adm-roles__card-cta .li-icon {
@@ -260,7 +260,7 @@ function deleteTooltip(role) {
 }
 
 .adm-roles__card:hover .adm-roles__card-cta {
-  color: var(--color-on-surface-variant, #666);
+  color: var(--color-text-muted);
 }
 
 .adm-roles__card:hover .adm-roles__card-cta .li-icon {

@@ -153,35 +153,35 @@ function tryClose() {
 .aud__spinner {
   display: flex;
   justify-content: center;
-  padding: var(--space-xl, 32px);
+  padding: var(--space-6);
 }
 
 .aud__drawer {
   display: flex;
   flex-direction: column;
-  gap: var(--space-l, 20px);
+  gap: var(--space-4);
 }
 
 /* Section 1 — identity */
 .aud__identity {
   display: flex;
   align-items: center;
-  gap: var(--space-m, 12px);
-  padding-bottom: var(--space-m, 12px);
-  border-bottom: 1px solid var(--color-gray-100, #f2f2f2);
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-surface-2);
 }
 
 .aud__avatar {
   width: 40px;
   height: 40px;
   border-radius: var(--radius-sm, 12px);
-  background: linear-gradient(135deg, var(--color-blue-100, #E6E6FF), var(--color-blue-200, #60A5FA));
+  background: linear-gradient(135deg, var(--color-info-soft), var(--color-info-soft, #60A5FA));
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 15px;
   font-weight: 700;
-  color: var(--color-blue-500, #0047B2);
+  color: var(--color-info);
   flex-shrink: 0;
 }
 
@@ -193,13 +193,13 @@ function tryClose() {
   margin: 0;
   font-size: 18px;
   font-weight: 700;
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
 }
 
 .aud__muted {
   margin: 4px 0 0;
   font-size: 13px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 .aud__sep {
@@ -209,36 +209,36 @@ function tryClose() {
 
 .aud__role-tag {
   font-weight: 600;
-  color: var(--color-on-surface-variant, #666);
+  color: var(--color-text-muted);
 }
 
 /* Section titles */
 .aud__section-title {
-  margin: 0 0 var(--space-s, 8px);
+  margin: 0 0 var(--space-2);
   font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 .aud__hint {
-  margin: 0 0 var(--space-m, 12px);
+  margin: 0 0 var(--space-3);
   font-size: 12px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 /* Section 2 — effective */
 .aud__eff-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
 }
 
 .aud__eff-mod {
   display: flex;
   align-items: center;
-  gap: var(--space-m, 12px);
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 
@@ -246,7 +246,7 @@ function tryClose() {
   min-width: 140px;
   font-weight: 600;
   font-size: 13px;
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
 }
 
 .aud__chips {
@@ -258,22 +258,22 @@ function tryClose() {
 .aud__chip {
   padding: 2px 10px;
   border-radius: var(--radius-pill, 999px);
-  background: var(--color-gray-100, #f2f2f2);
+  background: var(--color-surface-2);
   font-size: 11px;
   font-weight: 500;
-  color: var(--color-on-surface-variant, #666);
+  color: var(--color-text-muted);
 }
 
 /* Section 3 — overrides */
 .aud__overrides {
   display: flex;
   flex-direction: column;
-  gap: var(--space-m, 12px);
+  gap: var(--space-3);
 }
 
 .aud__ov-mod {
-  padding: var(--space-s, 8px) 0;
-  border-top: 1px solid var(--color-gray-100, #f2f2f2);
+  padding: var(--space-2) 0;
+  border-top: 1px solid var(--color-surface-2);
 }
 
 .aud__ov-mod:first-of-type {
@@ -285,70 +285,70 @@ function tryClose() {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-m, 12px);
+  gap: var(--space-3);
   padding: 4px 0;
 }
 
 .aud__ov-row--sub {
-  padding-left: var(--space-m, 12px);
+  padding-left: var(--space-3);
 }
 
 .aud__feat-name {
   font-size: 13px;
-  color: var(--color-on-surface-variant, #666);
+  color: var(--color-text-muted);
 }
 
 .aud__note {
   display: flex;
   align-items: center;
-  gap: var(--space-s, 8px);
+  gap: var(--space-2);
   margin: 0;
-  padding: var(--space-m, 12px) var(--space-l, 16px);
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md, 12px);
-  background: var(--color-gray-100, #f2f2f2);
+  background: var(--color-surface-2);
   font-size: 13px;
-  color: var(--color-on-surface-variant, #666);
+  color: var(--color-text-muted);
 }
 
 .aud__note .li-icon {
   font-size: 18px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
 }
 
 /* Footer buttons — mirror .admin__cancel-btn / .adm-users__add-btn */
 .aud__cancel-btn {
   padding: 10px 20px;
   background: none;
-  border: 1.5px solid var(--color-outline, #ccc);
+  border: 1.5px solid var(--color-border-strong);
   border-radius: var(--radius-pill, 999px);
   font-size: 13px;
   font-weight: 600;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  color: var(--color-on-surface-variant, #666);
+  font-family: var(--font-sans);
+  color: var(--color-text-muted);
   cursor: pointer;
   transition: all var(--dur-short, 200ms) var(--ease-out);
 }
 
 .aud__cancel-btn:hover {
-  border-color: var(--color-gray-400, #b3b3b3);
-  color: var(--color-on-surface, #333);
+  border-color: var(--color-text-placeholder);
+  color: var(--color-text);
 }
 
 .aud__save-btn {
   padding: 10px 24px;
-  background: var(--cta-primary-bg, #FFBC25);
-  color: var(--cta-primary-text, #1e1e1e);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   border: none;
   border-radius: var(--radius-pill, 999px);
   font-size: 13px;
   font-weight: 700;
-  font-family: var(--font-body, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   cursor: pointer;
   transition: all var(--dur-short, 200ms) var(--ease-out);
 }
 
 .aud__save-btn:hover:not(:disabled) {
-  background: var(--cta-primary-hover, #FFB60A);
+  background: var(--color-accent-strong);
   transform: translateY(-1px);
 }
 

@@ -258,8 +258,8 @@ async function onChangePassword() {
 .profile {
   max-width: 900px;
   margin: 0 auto;
-  padding-top: var(--space-xl, 24px);
-  animation: profile-enter 500ms var(--ease-smooth) both;
+  padding-top: var(--space-6);
+  animation: profile-enter 500ms var(--ease-enter) both;
 }
 
 @keyframes profile-enter {
@@ -271,38 +271,38 @@ async function onChangePassword() {
 .profile__header {
   display: flex;
   align-items: center;
-  gap: var(--space-l, 16px);
-  margin-bottom: var(--space-xl, 24px);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
 .profile__header-badge {
   width: 48px;
   height: 48px;
   border-radius: var(--radius-md, 16px);
-  background: linear-gradient(135deg, var(--cta-primary-bg, #FFBC25), var(--color-orange-300, #FF8C00));
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-strong));
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
 }
 
 .profile__header-badge .li-icon {
   font-size: 24px;
-  color: var(--cta-primary-text, #1E1E1E);
+  color: var(--color-on-accent);
 }
 
 .profile__header-text {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs, 4px);
+  gap: var(--space-1);
 }
 
 .profile__title {
-  font-family: var(--font-display, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-weight: 700;
   font-size: 28px;
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
   margin: 0;
   letter-spacing: -0.5px;
   line-height: 1.1;
@@ -310,7 +310,7 @@ async function onChangePassword() {
 
 .profile__subtitle {
   font-size: 14px;
-  color: var(--color-on-surface-muted, #999);
+  color: var(--color-text-muted);
   margin: 0;
 }
 
@@ -318,23 +318,23 @@ async function onChangePassword() {
 .profile__msg {
   display: flex;
   align-items: center;
-  gap: var(--space-s, 8px);
-  padding: var(--space-m, 12px) var(--space-l, 16px);
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-sm, 12px);
   font-size: 13px;
   font-weight: 500;
-  margin-bottom: var(--space-l, 16px);
+  margin-bottom: var(--space-4);
 }
 
 .profile__msg--error {
-  background: var(--color-error-container, #FDECEE);
-  color: var(--color-on-error-container, #A33129);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
   border: 1px solid rgba(163, 49, 41, 0.12);
 }
 
 .profile__msg--success {
-  background: var(--color-success-container, #ECFF8F);
-  color: var(--color-on-success-container, #17A3E6);
+  background: var(--color-success-soft);
+  color: var(--color-success);
   border: 1px solid rgba(23, 163, 230, 0.12);
 }
 
@@ -352,7 +352,7 @@ async function onChangePassword() {
   background: none;
   border: none;
   cursor: pointer;
-  padding: var(--space-xs, 4px);
+  padding: var(--space-1);
   color: inherit;
   opacity: 0.5;
   border-radius: var(--radius-xs, 8px);
@@ -361,14 +361,14 @@ async function onChangePassword() {
 
 .profile__msg-close:hover {
   opacity: 1;
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--color-border);
 }
 
 .profile__msg-close .li-icon {
   font-size: 16px;
 }
 
-.profile-msg-enter-active { transition: all 300ms var(--ease-smooth); }
+.profile-msg-enter-active { transition: all 300ms var(--ease-enter); }
 .profile-msg-leave-active { transition: all 200ms var(--ease-out); }
 .profile-msg-enter-from { opacity: 0; transform: translateY(-8px); }
 .profile-msg-leave-to { opacity: 0; transform: translateY(-4px); }
@@ -377,23 +377,23 @@ async function onChangePassword() {
 .profile__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-l, 16px);
+  gap: var(--space-4);
 }
 
 /* ── Card ── */
 .profile__card {
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--color-bg);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.12));
+  border: 1px solid var(--color-border, var(--color-border));
   border-radius: var(--radius-lg, 24px);
-  padding: var(--space-xl, 24px);
-  box-shadow: var(--shadow-sm);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
-  gap: var(--space-l, 16px);
-  animation: profile-card-in 600ms var(--ease-smooth) both;
-  animation-delay: calc(var(--card-delay, 0) * 120ms);
+  gap: var(--space-4);
+  animation: profile-card-in 600ms var(--ease-enter) both;
+  animation-delay: calc(120ms, 0) * 120ms);
 }
 
 @keyframes profile-card-in {
@@ -404,14 +404,14 @@ async function onChangePassword() {
 .profile__card-header {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-m, 12px);
+  gap: var(--space-3);
 }
 
 .profile__card-icon {
   width: 40px;
   height: 40px;
   border-radius: var(--radius-sm, 12px);
-  background: var(--color-warning-container, #FFF3D6);
+  background: var(--color-warning-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -420,22 +420,22 @@ async function onChangePassword() {
 
 .profile__card-icon .li-icon {
   font-size: 20px;
-  color: var(--color-on-warning-container, #FF3000);
+  color: var(--color-warning);
 }
 
 .profile__card-icon--secondary {
-  background: var(--color-info-container, #E6E6FF);
+  background: var(--color-info-soft);
 }
 
 .profile__card-icon--secondary .li-icon {
-  color: var(--color-on-info-container, #0047B2);
+  color: var(--color-info);
 }
 
 .profile__card-title {
-  font-family: var(--font-display, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-weight: 700;
   font-size: 16px;
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
   margin: 0;
   line-height: 1.3;
 }
@@ -444,41 +444,41 @@ async function onChangePassword() {
 .profile__avatar-section {
   display: flex;
   align-items: center;
-  gap: var(--space-l, 16px);
-  padding-bottom: var(--space-l, 16px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .profile__avatar {
   width: 56px;
   height: 56px;
   border-radius: var(--radius-md, 16px);
-  background: linear-gradient(135deg, var(--cta-primary-bg, #FFBC25), var(--color-orange-200, #FFA726));
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-soft), #FFA726));
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
 }
 
 .profile__avatar-letter {
-  font-family: var(--font-display, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-weight: 700;
   font-size: 24px;
-  color: var(--cta-primary-text, #1E1E1E);
+  color: var(--color-on-accent);
 }
 
 .profile__avatar-info {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs, 4px);
+  gap: var(--space-1);
 }
 
 .profile__avatar-name {
-  font-family: var(--font-display, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   font-weight: 700;
   font-size: 18px;
-  color: var(--color-on-surface, #333);
+  color: var(--color-text);
 }
 
 .profile__role-chip {
@@ -494,32 +494,32 @@ async function onChangePassword() {
 }
 
 .profile__role-chip--admin {
-  background: var(--color-error-container, #FDECEE);
-  color: var(--color-on-error-container, #A33129);
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
 }
 
 .profile__role-chip--user {
-  background: var(--color-warning-container, #FFF3D6);
-  color: var(--color-on-warning-container, #FF3000);
+  background: var(--color-warning-soft);
+  color: var(--color-warning);
 }
 
 /* ── Fields ── */
 .profile__fields {
   display: flex;
   flex-direction: column;
-  gap: var(--space-m, 12px);
+  gap: var(--space-3);
 }
 
 .profile__field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs, 4px);
+  gap: var(--space-1);
 }
 
 .profile__label {
   font-size: 12px;
   font-weight: 600;
-  color: var(--color-on-surface-variant, #808080);
+  color: var(--color-text-muted);
   letter-spacing: 0.01em;
 }
 
@@ -537,7 +537,7 @@ async function onChangePassword() {
   position: absolute;
   left: 12px;
   font-size: 16px;
-  color: var(--color-on-surface-muted, #B3B3B3);
+  color: var(--color-text-muted);
   pointer-events: none;
   transition: color 200ms var(--ease-out);
 }
@@ -545,29 +545,29 @@ async function onChangePassword() {
 .profile__input {
   width: 100%;
   padding: 10px 12px 10px 38px;
-  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  border: 1.5px solid var(--color-border-strong);
   border-radius: var(--radius-sm, 12px);
   font-size: 14px;
-  font-family: var(--font-body, 'Inter', sans-serif);
-  color: var(--color-on-surface, #333);
+  font-family: var(--font-sans);
+  color: var(--color-text);
   background: rgba(255, 255, 255, 0.6);
   outline: none;
   transition: border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out), background 200ms var(--ease-out);
 }
 
 .profile__input:focus {
-  border-color: var(--color-yellow-400, #F9C700);
-  box-shadow: 0 0 0 3px rgba(249, 199, 0, 0.12), var(--shadow-sm);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(249, 199, 0, 0.12), var(--shadow-card);
   background: rgba(255, 255, 255, 0.9);
 }
 
 .profile__input::placeholder {
-  color: var(--color-on-surface-muted, #B3B3B3);
+  color: var(--color-text-muted);
 }
 
 .profile__input:disabled {
-  background: var(--color-surface-disabled, #EDF0F2);
-  color: var(--color-on-surface-muted, #999);
+  background: var(--color-surface-2), #EDF0F2);
+  color: var(--color-text-muted);
   cursor: not-allowed;
 }
 
@@ -576,39 +576,39 @@ async function onChangePassword() {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-s, 8px);
-  padding: 12px var(--space-xl, 24px);
+  gap: var(--space-2);
+  padding: 12px var(--space-6);
   border: none;
   border-radius: var(--radius-pill, 999px);
   font-size: 14px;
   font-weight: 700;
-  font-family: var(--font-body, 'Inter', sans-serif);
+  font-family: var(--font-sans);
   cursor: pointer;
   transition: transform 300ms var(--ease-out), box-shadow 300ms var(--ease-out), background 200ms var(--ease-out);
 }
 
 .profile__btn--primary {
-  background: var(--cta-primary-bg, #FFBC25);
-  color: var(--cta-primary-text, #1E1E1E);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   box-shadow: 0 2px 8px rgba(255, 188, 37, 0.25);
 }
 
 .profile__btn--primary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-md), 0 4px 16px rgba(255, 188, 37, 0.3);
-  background: var(--cta-primary-hover, #FFB60A);
+  box-shadow: var(--shadow-pop), 0 4px 16px rgba(255, 188, 37, 0.3);
+  background: var(--color-accent-strong);
 }
 
 .profile__btn--secondary {
-  background: var(--color-gray-100, #F2F2F2);
-  color: var(--color-on-surface, #333);
-  border: 1px solid var(--color-outline-variant, #E6E6E6);
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
 }
 
 .profile__btn--secondary:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-  background: var(--color-gray-200, #E6E6E6);
+  box-shadow: var(--shadow-card);
+  background: var(--color-border);
 }
 
 .profile__btn:disabled {
@@ -638,7 +638,7 @@ async function onChangePassword() {
 
 /* ── Input error state ── */
 .profile__input-wrap--error .profile__input {
-  border-color: var(--color-error, #CC3B33);
+  border-color: var(--color-danger);
   box-shadow: 0 0 0 3px rgba(204, 59, 51, 0.1);
 }
 
@@ -651,7 +651,7 @@ async function onChangePassword() {
 .profile__field-error {
   font-size: 11px;
   font-weight: 500;
-  color: var(--color-error, #CC3B33);
+  color: var(--color-danger);
   margin-top: 2px;
 }
 
@@ -666,7 +666,7 @@ async function onChangePassword() {
   border-radius: var(--radius-xs, 8px);
   border: none;
   background: transparent;
-  color: var(--color-on-surface-muted, #B3B3B3);
+  color: var(--color-text-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -675,8 +675,8 @@ async function onChangePassword() {
 }
 
 .profile__input-action:hover:not(:disabled) {
-  background: var(--color-success-container, #ECFF8F);
-  color: var(--color-on-success-container, #17A3E6);
+  background: var(--color-success-soft);
+  color: var(--color-success);
 }
 
 .profile__input-action:disabled {
