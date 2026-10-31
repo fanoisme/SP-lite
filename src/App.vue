@@ -544,6 +544,10 @@ kbd {
 }
 
 .sidebar--collapsed .sidebar__foot { justify-content: center; }
+/* Collapsed rail is 56px: the Profile link would crowd the expand button
+   past the overflow-hidden edge and make it unclickable — Profile stays
+   reachable from the avatar menu instead. */
+.sidebar--collapsed .sidebar__settings { display: none; }
 
 .sidebar__settings {
   display: flex;
